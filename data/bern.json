@@ -313,5 +313,26 @@
    "LOCATION:Zofingerhaus\\, Alpeneggstrasse 8\\, 3012 Bern",
    "CATEGORIES:Rotaract"
   ]
+ },
+ "223068": {
+  "detail": {
+   "description": "Unser Dezember-Stammtisch findet draussen statt!\n\nWir treffen uns am Berner Sternenmarkt auf der Kleinen Schanze. Rund 80 Holzhütten stehen dort. Vieles kommt aus der Region. Wir trinken zäme einen Glüehwy und plaudern. Wer Hunger hat, geht mit ans Fondue.\n\nBringt gern Freunde mit. Gäste sind herzlich willkommen.\n\nGut zu wissen: Die Kleine Schanze war früher Teil der Stadtmauer. Sie ist fast 400 Jahre alt. Heute gehört sie zum UNESCO-Welterbe.\n\nTreffpunkt: Beim grossen Weihnachtsbaum\nMitnehmen: warme Kleider und Gmüetlechkeit :)\n\nACHTUNG: Der Markt ist bargeldlos. Bezahlt wird mit Karte oder Twint.",
+   "image": "https://bern.rotaract.ch/de/media/cache/resolve/rotary_website_content_grid_images/rc/Ph0YyLDV/6aef3f5d75b91.png?filters%5Bfocus_point_crop%5D%5Bfocus%5D%5B0%5D=0.00&filters%5Bfocus_point_crop%5D%5Bfocus%5D%5B1%5D=0.00&v=1.5.16",
+   "registration": "Anmeldung bis: Mittwoch, 16. Dezember 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000"
+  },
+  "first_seen": "20261107T151310Z",
+  "modified": "20261107T151310Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223068@rotary.ch",
+   "SUMMARY:Stammtisch am Stärnemärit – Glüehwy auf der Kleinen Schanze",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/223068",
+   "DTSTART;TZID=Europe/Zurich:20261216T180000",
+   "DTEND;TZID=Europe/Zurich:20261216T210000",
+   "LOCATION:Stärnemärit Kleine Schanze Bern",
+   "CATEGORIES:Rotaract"
+  ]
  }
 }
