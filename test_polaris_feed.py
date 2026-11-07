@@ -160,7 +160,7 @@ assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] 
 pg = share_page({"id": "1", "title": 'Stamm "<Test>"', "start": "2026-12-10T19:00", "allday": False, "location": "Luzern",
                  "description": "A & B\n\nC", "image": "https://x.ch/a.png?v=1"}, "Rotaract Luzern")
 assert 'content="Stamm &quot;&lt;Test&gt;&quot; · 10.12.2026 19:00"' in pg and "<Test>" not in pg.split("<title>")[1].split("</title>")[0]
-assert 'og:image" content="https://x.ch/a.png?v=1"' in pg and 'url=../?event=1' in pg and "Rotaract Luzern · Luzern. A &amp; B C" in pg
+assert 'og:image" content="https://x.ch/a.png?v=1"' in pg and 'url=../event.html?id=1' in pg and "Rotaract Luzern · Luzern. A &amp; B C" in pg
 
 long = {"x": {"status": "active", "vevent": event("x", "20261210T190000", "ä" * 100), "sequence": 0, "modified": "T"}}
 cal = build_calendar({"name": "Test", "lang": "de"}, long, NOW)

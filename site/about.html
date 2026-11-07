@@ -4,106 +4,66 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>What is Rotaract? · Rotaract Events</title>
-<meta name="description" content="Rotaract explained in two minutes: who can join, what clubs do, what it costs, and how to find the club nearest to you in Switzerland and Liechtenstein.">
+<meta name="description" content="Rotaract in one minute: learn, help, celebrate. Find the club nearest to you in Switzerland and Liechtenstein.">
 <meta property="og:title" content="What is Rotaract?">
-<meta property="og:description" content="Rotaract explained in two minutes, and the club nearest to you.">
+<meta property="og:description" content="Learn. Help. Celebrate. Find the Rotaract club nearest to you.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="app.css">
 <script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
 <script src="i18n.js"></script>
+<script src="common.js" defer></script>
 </head>
-<body>
+<body data-page="about">
 <header>
   <div class="wrap bar">
     <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
-    <div class="actions" id="actions"><button class="icon-btn" id="share" type="button" data-t="ab_share"></button><a class="icon-btn" href="./" data-t="back"></a></div>
+    <nav class="actions" id="actions"><button class="icon-btn" id="share" type="button" data-t="ab_share"></button><a class="icon-btn" href="./" data-t="home"></a></nav>
   </div>
 </header>
 <main class="wrap about">
-  <section class="hero-about">
-    <img src="rotaract.svg" alt="Rotaract">
-    <h1 data-t="ab_title"></h1>
-    <p data-t="ab_lead"></p>
-    <div class="facts" id="facts"></div>
+  <!-- the morph: three stacked words; the active one opens with picture and line while the others shrink out of the way -->
+  <div class="track" id="track">
+    <div class="stage" id="stage">
+      <div class="prog" id="prog" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="words" id="words"></div>
+      <div class="hint" aria-hidden="true"><span data-t="scroll"></span><i>⌄</i></div>
+    </div>
+  </div>
+  <section class="after">
+    <h2 data-t="ab_people"></h2>
+    <p class="lead" data-t="ab_people_t"></p>
+    <div id="cta"></div>
+    <a class="more" href="about-more.html"><b data-t="ab_more"></b><span data-t="ab_more_sub"></span></a>
+    <h3 data-t="faq"></h3>
+    <div class="qa" id="qa"></div>
   </section>
-
-  <section class="card qa" id="qa"></section>
-
-  <section class="card">
-    <h2 data-t="ab_find"></h2>
-    <div class="place" style="max-width:420px"><input type="text" id="place" data-t-ph="ab_find_ph" data-t-label="ab_find_ph" autocomplete="off"><button class="chip" id="go" type="button" data-t="ab_find_btn"></button><button class="chip" id="locate" type="button" data-t-label="locate" data-t-title="locate">📍</button></div>
-    <div class="hint" id="hint"></div>
-    <div id="nearest"></div>
-    <p class="meta" style="margin-top:12px"><span data-t="ab_join"></span> <a href="https://join.rotaract.ch" target="_blank" rel="noopener">join.rotaract.ch</a></p>
-  </section>
-
-  <div class="links" style="justify-content:center;margin-top:20px"><a class="primary" href="./" data-t="ab_events_cta"></a><a href="subscribe.html" data-t="sub_title"></a></div>
   <footer><span data-t="made_by"></span> · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener" data-t="source"></a></footer>
 </main>
 <div class="toast" id="toast" role="status"></div>
-<script>
-const $ = id => document.getElementById(id);
-applyI18n();
-$("actions").prepend(langSelect());
-function el(tag, attrs = {}, ...children) {
-  const n = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) { if (k === "class") n.className = v; else if (k === "style") n.style.cssText = v; else n.setAttribute(k, v); }
-  for (const c of children) if (c != null && c !== false) n.append(c);
-  return n;
-}
-function onColor(hex) { const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255); return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5 ? "#1f1c26" : "#fff"; }
-function km(a, b) { const rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]); const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); }
-let toastTimer;
-function toast(msg) { const tt = $("toast"); tt.textContent = msg; tt.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => tt.classList.remove("show"), 2200); }
-// numbers count up once they scroll into view
-function countUp(node, target, suffix = "") {
-  const dur = 900, t0 = performance.now(), reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const step = now => { const p = reduce ? 1 : Math.min(1, (now - t0) / dur), v = Math.round(target * (1 - Math.pow(1 - p, 3))); node.textContent = v.toLocaleString(LOCALE) + suffix; if (p < 1) requestAnimationFrame(step); };
-  requestAnimationFrame(step);
-}
-for (let i = 1; i <= 5; i++) $("qa").append(el("details", { name: "qa" }, el("summary", {}, t("ab_q" + i)), el("p", {}, t("ab_a" + i))));
-$("share").addEventListener("click", async () => {
-  const data = { title: t("ab_title"), text: t("ab_lead"), url: location.href.split("?")[0] };
-  if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(data.url); toast(t("copied")); }
+<script defer>
+addEventListener("DOMContentLoaded", async () => {
+  applyI18n();
+  $("actions").prepend(langSelect());
+  const PIL = [["learn", "#0067c8"], ["help", "#009739"], ["party", "#d41367"]];
+  for (let i = 1; i <= 5; i++) $("qa").append(el("details", { name: "qa" }, el("summary", {}, t("ab_q" + i)), el("p", {}, t("ab_a" + i))));
+  $("share").addEventListener("click", async () => { const data = { title: t("ab_title"), text: t("ab_lead"), url: location.href.split("?")[0] }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(data.url); toast(t("copied")); } });
+  await loadData();
+  $("cta").append(ctaBlock());
+  const pics = D.data.events.filter(e => e.image).slice(-9).map(e => e.image);
+  const words = $("words");
+  PIL.forEach(([k, col], i) => {
+    const w = el("div", { class: "w", style: `--p:${col}` },
+      el("div", { class: "word" }, t("ab_" + k) + "."),
+      el("div", { class: "open" }, el("div", {}, el("div", { class: "pic" }, el("img", { src: pics[i * 2 + 1] || pics[i], alt: "", loading: "lazy", referrerpolicy: "no-referrer" })), el("p", {}, t("ab_" + k + "_t")))));
+    words.append(w);
+  });
+  let cur = -1;
+  const set = i => { if (i === cur) return; cur = i; [...words.children].forEach((w, k) => w.classList.toggle("on", k === i)); [...$("prog").children].forEach((d, k) => d.classList.toggle("on", k === i)); $("stage").style.setProperty("--p", PIL[i][1]); };
+  const onScroll = () => { const tr = $("track"), r = tr.getBoundingClientRect(), range = tr.offsetHeight - innerHeight; const p = range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 1; set(Math.min(2, Math.floor(p * 3))); };
+  addEventListener("scroll", onScroll, { passive: true }); addEventListener("resize", onScroll); onScroll();
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) [...words.children].forEach(w => w.classList.add("on"));
 });
-let data;
-function showNearest(here) {
-  const near = data.clubs.filter(c => c.coords && c.district).map(c => ({ c, d: km(here, c.coords) })).sort((a, b) => a.d - b.d).slice(0, 3);
-  $("nearest").replaceChildren(el("h3", {}, t("ab_nearest")), ...near.map(({ c, d }, i) => el("a", { class: "feed clubrow", href: "club.html?id=" + c.id, style: `--c:${c.color};--on-c:${onColor(c.color)};--i:${i}` },
-    el("div", { class: "name" }, c.logo ? el("img", { src: c.logo, alt: "" }) : null, c.name, el("span", { class: "meta" }, ` · ${Math.round(d)} km`)),
-    el("span", { class: "meta" }, c.district ? t("d" + c.district) : ""))));
-}
-async function find() {
-  const q = $("place").value.trim(); if (!q) return;
-  $("hint").textContent = t("locating");
-  try {
-    const url = "https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&sr=4326&limit=1&searchText=" + encodeURIComponent(q);
-    const r = (await (await fetch(url)).json()).results?.[0];
-    if (!r) { $("hint").textContent = t("place_nf"); return; }
-    $("hint").textContent = "📍 " + r.attrs.label.replace(/<[^>]+>/g, "");
-    showNearest([r.attrs.lat, r.attrs.lon]);
-  } catch { $("hint").textContent = t("place_err"); }
-}
-$("go").addEventListener("click", find);
-$("place").addEventListener("keydown", e => { if (e.key === "Enter") find(); });
-$("locate").addEventListener("click", () => {
-  if (!navigator.geolocation) return;
-  $("hint").textContent = t("locating");
-  navigator.geolocation.getCurrentPosition(p => { $("hint").textContent = t("your_location"); showNearest([p.coords.latitude, p.coords.longitude]); }, () => { $("hint").textContent = t("loc_na"); });
-});
-(async () => {
-  data = await (await fetch("events.json", { cache: "no-cache" })).json();
-  const now = new Date(), yearAgo = new Date(now.getTime() - 365 * 864e5);
-  const clubs = data.clubs.filter(c => c.district).length;
-  const lastYear = data.events.filter(e => { const s = new Date(e.start); return s >= yearAgo && s <= now; }).length;
-  const upcoming = data.events.filter(e => new Date(e.end) >= now).length;
-  for (const [n, key, suffix] of [[clubs, "ab_f_clubs", ""], [lastYear, "ab_f_events", ""], [upcoming, "ab_f_upcoming", ""], [10000, "ab_f_world", "+"]]) {
-    const num = el("b", {}, "0");
-    $("facts").append(el("div", { class: "fact" }, num, el("span", {}, t(key))));
-    countUp(num, n, suffix);
-  }
-})();
 </script>
 </body>
 </html>

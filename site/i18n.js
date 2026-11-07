@@ -259,3 +259,53 @@ Object.assign(I18N.it, {
   ab_share: "Condividi questa pagina", ab_events_cta: "Vedi tutti gli eventi",
 });
 Object.assign(I18N.en, { appearance: "Appearance" }); Object.assign(I18N.de, { appearance: "Darstellung" }); Object.assign(I18N.fr, { appearance: "Apparence" }); Object.assign(I18N.it, { appearance: "Aspetto" });
+
+// home / discover / event page / club page / about morph + subpage
+Object.assign(I18N.en, {
+  home: "Home", discover: "Discover", discover_title: "Discover all of Rotaract", discover_cta: "Discover everything", search_mine_ph: "Search in your clubs…",
+  no_clubs_yet: "No clubs chosen yet", choose_clubs: "Choose your clubs", or_discover: "Or discover everything first.", back: "‹ Back",
+  next_event: "Next event", in_days: "in {n} days", more_events: "More events", photos: "Pictures", details: "Details", your_club: "Your club", go: "Go →", faq: "Questions", scroll: "scroll",
+  ab_learn: "Learn", ab_help: "Help", ab_party: "Celebrate",
+  ab_learn_t: "Talks and company visits with people you'd never meet otherwise.", ab_help_t: "Projects you can still see in the evening.", ab_party_t: "Stamm, trips, the conference. Friends in every city.",
+  ab_people: "Young people, 18 to 30.", ab_people_t: "16 clubs between Geneva and Chur. Come to an event; the rest follows.",
+  ab_find_title: "No club yet? Find yours", ab_more: "Rotary, districts & the world", ab_more_sub: "In pictures, one minute →", ab_back: "‹ Learn. Help. Celebrate.",
+  sp_rotary: "Rotaract is part of Rotary", sp_rotary_t: "Since 1968. Every club has a Rotary club as its sponsor; at 30 it's the natural next step.",
+  sp_dist: "16 clubs, three districts", sp_dist_t: "From Geneva to Chur. One conference a year, all together.",
+  sp_world: "And the world", sp_world_t: "10,000 clubs in 180 countries. A club abroad takes you in like at home.",
+});
+Object.assign(I18N.de, {
+  home: "Start", discover: "Entdecken", discover_title: "Ganz Rotaract entdecken", discover_cta: "Alles entdecken", search_mine_ph: "In deinen Clubs suchen…",
+  no_clubs_yet: "Noch keine Clubs gewählt", choose_clubs: "Clubs wählen", or_discover: "Oder zuerst alles entdecken.", back: "‹ Zurück",
+  next_event: "Nächster Anlass", in_days: "in {n} Tagen", more_events: "Weitere Anlässe", photos: "Bilder", details: "Details", your_club: "Dein Club", go: "Los →", faq: "Fragen", scroll: "scrollen",
+  ab_learn: "Lernen", ab_help: "Helfen", ab_party: "Feiern",
+  ab_learn_t: "Vorträge und Firmenbesuche mit Leuten, die man sonst nie trifft.", ab_help_t: "Projekte, die man am Abend noch sieht.", ab_party_t: "Stamm, Reisen, Konferenz. Freunde in jeder Stadt.",
+  ab_people: "Junge Leute, 18 bis 30.", ab_people_t: "16 Clubs zwischen Genf und Chur. Komm an einen Anlass, der Rest ergibt sich.",
+  ab_find_title: "Noch keinen Club? Finde deinen", ab_more: "Rotary, Distrikte & die Welt", ab_more_sub: "In Bildern, eine Minute →", ab_back: "‹ Lernen. Helfen. Feiern.",
+  sp_rotary: "Rotaract gehört zu Rotary", sp_rotary_t: "Seit 1968. Jeder Club hat einen Rotary Club als Paten; mit 30 ist das der natürliche nächste Schritt.",
+  sp_dist: "16 Clubs, drei Distrikte", sp_dist_t: "Von Genf bis Chur. Eine Konferenz pro Jahr, alle zusammen.",
+  sp_world: "Und die Welt", sp_world_t: "10'000 Clubs in 180 Ländern. Ein Club im Ausland nimmt dich auf wie zu Hause.",
+});
+Object.assign(I18N.fr, {
+  home: "Accueil", discover: "Découvrir", discover_title: "Découvrir tout Rotaract", discover_cta: "Tout découvrir", search_mine_ph: "Chercher dans vos clubs…",
+  no_clubs_yet: "Aucun club choisi", choose_clubs: "Choisir vos clubs", or_discover: "Ou commencez par tout découvrir.", back: "‹ Retour",
+  next_event: "Prochain événement", in_days: "dans {n} jours", more_events: "Autres événements", photos: "Photos", details: "Détails", your_club: "Votre club", go: "Y aller →", faq: "Questions", scroll: "défiler",
+  ab_learn: "Apprendre", ab_help: "Aider", ab_party: "Fêter",
+  ab_learn_t: "Conférences et visites d'entreprises avec des gens qu'on ne croiserait jamais.", ab_help_t: "Des projets qu'on voit encore le soir même.", ab_party_t: "Stamm, voyages, la conférence. Des amis dans chaque ville.",
+  ab_people: "Des jeunes de 18 à 30 ans.", ab_people_t: "16 clubs entre Genève et Coire. Venez à un événement, le reste suit.",
+  ab_find_title: "Pas encore de club ? Trouvez le vôtre", ab_more: "Rotary, districts & le monde", ab_more_sub: "En images, une minute →", ab_back: "‹ Apprendre. Aider. Fêter.",
+  sp_rotary: "Rotaract fait partie du Rotary", sp_rotary_t: "Depuis 1968. Chaque club a un Rotary club pour parrain ; à 30 ans, c'est la suite naturelle.",
+  sp_dist: "16 clubs, trois districts", sp_dist_t: "De Genève à Coire. Une conférence par an, tous ensemble.",
+  sp_world: "Et le monde", sp_world_t: "10 000 clubs dans 180 pays. Un club à l'étranger vous accueille comme chez vous.",
+});
+Object.assign(I18N.it, {
+  home: "Home", discover: "Scopri", discover_title: "Scopri tutto Rotaract", discover_cta: "Scopri tutto", search_mine_ph: "Cerca nei tuoi club…",
+  no_clubs_yet: "Nessun club scelto", choose_clubs: "Scegli i tuoi club", or_discover: "Oppure scopri prima tutto.", back: "‹ Indietro",
+  next_event: "Prossimo evento", in_days: "tra {n} giorni", more_events: "Altri eventi", photos: "Foto", details: "Dettagli", your_club: "Il tuo club", go: "Vai →", faq: "Domande", scroll: "scorri",
+  ab_learn: "Imparare", ab_help: "Aiutare", ab_party: "Festeggiare",
+  ab_learn_t: "Conferenze e visite aziendali con persone che altrimenti non incontreresti mai.", ab_help_t: "Progetti che la sera si vedono ancora.", ab_party_t: "Stamm, viaggi, la conferenza. Amici in ogni città.",
+  ab_people: "Giovani dai 18 ai 30 anni.", ab_people_t: "16 club tra Ginevra e Coira. Vieni a un evento, il resto viene da sé.",
+  ab_find_title: "Nessun club ancora? Trova il tuo", ab_more: "Rotary, distretti e il mondo", ab_more_sub: "In immagini, un minuto →", ab_back: "‹ Imparare. Aiutare. Festeggiare.",
+  sp_rotary: "Rotaract fa parte del Rotary", sp_rotary_t: "Dal 1968. Ogni club ha un Rotary club come padrino; a 30 anni è il passo successivo naturale.",
+  sp_dist: "16 club, tre distretti", sp_dist_t: "Da Ginevra a Coira. Una conferenza all'anno, tutti insieme.",
+  sp_world: "E il mondo", sp_world_t: "10'000 club in 180 paesi. Un club all'estero ti accoglie come a casa.",
+});
