@@ -552,7 +552,7 @@ async function guessClubs() {
     if (!r?.latitude) r = await fetch("https://ipwho.is/", opts).then(r => r.json()).catch(() => null);
     const here = [Number(r?.latitude), Number(r?.longitude)];
     if (here[0] && ["CH", "LI"].includes(r.country_code)) {
-      const near = state.data.clubs.filter(c => c.coords).map(c => ({ id: c.id, d: km(here, c.coords) })).filter(x => x.d <= 35).sort((a, b) => a.d - b.d);
+      const near = state.data.clubs.filter(c => c.coords && c.district).map(c => ({ id: c.id, d: km(here, c.coords) }))  // real clubs only, not the national entry.filter(x => x.d <= 35).sort((a, b) => a.d - b.d);
       if (near.length) return near.slice(0, 2).map(x => x.id);
     }
   } catch {}
