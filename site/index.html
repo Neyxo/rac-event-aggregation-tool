@@ -158,6 +158,21 @@
   .tabs { display: flex; gap: 6px; margin: 10px 0 4px; }
   .tabs button { border: 1px solid var(--line); background: var(--surface-2); border-radius: 99px; padding: 4px 12px; font-size: .85rem; }
   .tabs button[aria-selected=true] { background: var(--azure); color: #fff; border-color: var(--azure); }
+  dialog.ob { border: 0; border-radius: 20px; padding: 0; width: min(460px, calc(100% - 32px)); background: var(--surface); color: var(--text); box-shadow: 0 20px 60px -20px rgba(0,0,0,.5); }
+  dialog.ob::backdrop { background: rgba(20,16,30,.55); backdrop-filter: blur(2px); }
+  .ob-in { padding: 20px 20px 16px; }
+  .ob .bar2 { display: flex; gap: 6px; margin-bottom: 16px; }
+  .ob .bar2 i { flex: 1; height: 4px; border-radius: 99px; background: var(--line); }
+  .ob .bar2 i.on { background: var(--accent); }
+  .ob h2 { margin: 0 0 6px; font-size: 1.25rem; }
+  .ob p { margin: 0 0 14px; color: var(--muted); font-size: .95rem; }
+  .ob .chips { display: flex; flex-wrap: wrap; gap: 8px; max-height: 42vh; overflow: auto; }
+  .ob .nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 18px; }
+  .ob .btn { background: var(--accent); color: var(--on-accent); border: 0; border-radius: 99px; padding: 10px 18px; font-weight: 600; }
+  .ob .skip { background: none; border: 0; color: var(--muted); font-weight: 600; }
+  .ob .feeds { gap: 8px; }
+  .ob .credit { font-size: .78rem; color: var(--muted); margin-top: 14px; text-align: center; }
+  footer a { color: var(--muted); }
   footer { color: var(--muted); font-size: .8rem; margin: 28px 0 calc(32px + env(safe-area-inset-bottom)); text-align: center; }
   .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: .9rem; box-shadow: var(--shadow); opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
   .toast.show { opacity: 1; }
@@ -238,10 +253,12 @@
     <h2 style="margin-top:18px;font-size:.95rem">Share with others</h2>
     <p>Anyone with the link can use it right away in their browser, no installation needed.</p>
     <div class="linkbox"><input type="text" id="link" readonly><button type="button" id="copy">Copy</button></div>
+    <p class="meta" style="margin-top:14px"><a href="#" id="rerun">Show the welcome steps again</a></p>
   </section>
 
   <footer id="footer"></footer>
 </main>
+<dialog class="ob" id="ob" aria-labelledby="obTitle"><div class="ob-in" id="obBody"></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -578,21 +595,94 @@ function renderInstall() {
     b.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; });
     body.append(b); return;
   }
+  body.append(installGuide());
+}
+const GUIDES = {
+  ios: ["Open this page in Safari (other browsers can't install on iPhone).", "Tap the Share button (the square with an arrow, at the bottom).", "Scroll down and tap \"Add to Home Screen\", then \"Add\"."],
+  android: ["Open this page in Chrome.", "Tap the ⋮ menu in the top right.", "Tap \"Add to Home screen\" or \"Install app\", then confirm."],
+  desktop: ["Open this page in Chrome or Edge.", "Click the install icon at the right end of the address bar (a screen with an arrow).", "Click \"Install\". Or simply bookmark the page."],
+};
+function installGuide() {
   const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const guides = {
-    ios: ["Open this page in Safari (other browsers can't install on iPhone).", "Tap the Share button (the square with an arrow, at the bottom).", "Scroll down and tap \"Add to Home Screen\", then \"Add\"."],
-    android: ["Open this page in Chrome.", "Tap the ⋮ menu in the top right.", "Tap \"Add to Home screen\" or \"Install app\", then confirm."],
-    desktop: ["Open this page in Chrome or Edge.", "Click the install icon at the right end of the address bar (a screen with an arrow).", "Click \"Install\". Or simply bookmark the page."],
-  };
   const tabs = el("div", { class: "tabs", role: "tablist" }), steps = el("ol", { class: "steps" });
-  const show = key => { for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key)); steps.replaceChildren(...guides[key].map(s => el("li", {}, s))); };
+  const show = key => { for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key)); steps.replaceChildren(...GUIDES[key].map(s => el("li", {}, s))); };
   for (const [key, name] of [["ios", "iPhone / iPad"], ["android", "Android"], ["desktop", "Computer"]]) {
     const b = el("button", { type: "button", role: "tab", "data-key": key }, name);
     b.addEventListener("click", () => show(key));
     tabs.append(b);
   }
-  body.append(tabs, steps);
   show(ios ? "ios" : /Android/.test(ua) ? "android" : "desktop");
+  return el("div", {}, tabs, steps);
+}
+
+// --- onboarding (first visit): clubs pre-selected from a rough location guess, then subscribe, then install
+async function guessClubs() {
+  try {
+    const ctl = new AbortController(); setTimeout(() => ctl.abort(), 3500);
+    const opts = { signal: ctl.signal };
+    // Approximate location of the connection, no permission prompt. Nothing is stored.
+    let r = await fetch("https://get.geojs.io/v1/ip/geo.json", opts).then(r => r.json()).catch(() => null);
+    if (!r?.latitude) r = await fetch("https://ipwho.is/", opts).then(r => r.json()).catch(() => null);
+    const here = [Number(r?.latitude), Number(r?.longitude)];
+    if (here[0] && ["CH", "LI"].includes(r.country_code)) {
+      const near = state.data.clubs.filter(c => c.coords).map(c => ({ id: c.id, d: km(here, c.coords) })).filter(x => x.d <= 35).sort((a, b) => a.d - b.d);
+      if (near.length) return near.slice(0, 2).map(x => x.id);
+    }
+  } catch {}
+  const lang = (navigator.language || "").slice(0, 2);
+  return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[lang] || [];
+}
+async function onboarding() {
+  const dlg = $("ob"), body = $("obBody"), sel = new Set(await guessClubs());
+  let step = 0;
+  const finish = () => {
+    state.clubSel = new Set(sel); store.set("rac.onboarded", true);
+    renderClubChips(); render(); dlg.close();
+    if (sel.size) toast("Showing " + [...sel].map(id => state.clubs[id]?.short).join(", "));
+  };
+  const draw = () => {
+    body.replaceChildren(el("div", { class: "bar2" }, ...[0, 1, 2].map(i => el("i", { class: i <= step ? "on" : "" }))));
+    const nav = (nextLabel, skip) => el("div", { class: "nav" }, skip ? el("button", { class: "skip", type: "button" }, skip) : el("span"), el("button", { class: "btn", type: "button" }, nextLabel));
+    if (step === 0) {
+      const chips = el("div", { class: "chips" });
+      const all = el("button", { class: "chip", type: "button", "aria-pressed": String(sel.size === 0) }, "All clubs");
+      all.addEventListener("click", () => { sel.clear(); draw(); });
+      chips.append(all);
+      for (const c of state.data.clubs) {
+        const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(sel.has(c.id)) }, clubMark(c), c.short);
+        b.addEventListener("click", () => { sel.has(c.id) ? sel.delete(c.id) : sel.add(c.id); draw(); });
+        chips.append(b);
+      }
+      const n = nav("Next", "Skip");
+      n.lastChild.addEventListener("click", () => { step = 1; draw(); });
+      n.firstChild.addEventListener("click", finish);
+      body.append(el("h2", { id: "obTitle" }, "Welcome 👋"),
+        el("p", {}, "Which clubs are you interested in? " + (sel.size ? "We pre-selected the nearest ones from your approximate location (no location access needed)." : "Pick one or more, or keep all.")),
+        chips, n);
+    } else if (step === 1) {
+      const ids = sel.size ? [...sel] : [];
+      const feeds = el("div", { class: "feeds" }, ...ids.map(id => feedRow(state.clubs[id], id + ".ics", null)), feedRow({ name: "All clubs" }, "all.ics", null));
+      const n = nav("Next", "Not now");
+      n.lastChild.addEventListener("click", () => { step = 2; draw(); });
+      n.firstChild.addEventListener("click", () => { step = 2; draw(); });
+      body.append(el("h2", { id: "obTitle" }, "Subscribe to the calendar?"),
+        el("p", {}, "Events then appear in your phone's calendar and stay up to date by themselves."), feeds, n);
+    } else {
+      const n = nav("Done", installPrompt ? "Not now" : null);
+      n.lastChild.addEventListener("click", finish);
+      if (installPrompt) n.firstChild.addEventListener("click", finish);
+      let how;
+      if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, "✓ Already installed.");
+      else if (installPrompt) { how = el("button", { class: "install-btn", type: "button" }, "Install app"); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); }
+      else how = installGuide();
+      body.append(el("h2", { id: "obTitle" }, "Install as an app?"),
+        el("p", {}, "An icon on your home screen, opens instantly, works offline. You can also do this later via \"Install\"."), how, n,
+        el("div", { class: "credit" }, "Made by Jean-Michel Carrel · Rotaract Club Luzern"));
+    }
+  };
+  draw();
+  dlg.addEventListener("cancel", ev => { ev.preventDefault(); finish(); });
+  dlg.showModal();
 }
 async function share() {
   const url = new URL(location.href); url.hash = "";
@@ -622,7 +712,9 @@ async function init() {
     const cs = state.data.clubs.filter(c => c.district === d).sort((a, b) => a.name.localeCompare(b.name));
     if (cs.length) $("feeds").append(el("h3", {}, name), ...cs.map(c => feedRow(c, c.id + ".ics", upcomingBy[c.id] || 0)));
   }
-  $("footer").textContent = `Updated ${new Date(state.data.generated).toLocaleString("en-GB")} · Members-only events aren't shown · Registration happens on Polaris`;
+  $("footer").replaceChildren(`Updated ${new Date(state.data.generated).toLocaleString("en-GB")} · Members-only events aren't shown · Registration happens on Polaris`, el("br"),
+    "Made by Jean-Michel Carrel for Rotaract Club Luzern · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, "Source & data on GitHub"));
+  $("rerun").addEventListener("click", ev => { ev.preventDefault(); onboarding(); });
 
   const p = new URLSearchParams(location.search), shared = [...p.keys()].length > 0;
   const src = shared ? { ...Object.fromEntries(p), clubs: p.get("clubs")?.split(",").filter(Boolean) || [], d: p.get("d")?.split(",").filter(Boolean) || [] } : prefs;
@@ -649,6 +741,7 @@ async function init() {
   for (const b of $("views").children) b.setAttribute("aria-pressed", String(b.dataset.view === state.view));
   setMode(src.mode === "month" ? "month" : "list");
   if (state.view === "near" && !state.center) locateMe();
+  if (!shared && !store.get("rac.onboarded", false)) onboarding();
 }
 init();
 </script>
