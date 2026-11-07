@@ -196,3 +196,66 @@ function langSelect() {
   s.addEventListener("change", () => { try { localStorage.setItem("rac.lang", JSON.stringify(s.value)); } catch {} const u = new URL(location.href); u.searchParams.delete("lang"); location.href = u.href; });
   return s;
 }
+
+// settings, scope, about page
+Object.assign(I18N.en, {
+  settings: "Settings", my_clubs: "My clubs", everything: "Everything", main_club: "Main club", also_show: "Also show", none: "None",
+  set_hint: "Your main club and the clubs you also follow make up the \"My clubs\" view. Searching and filtering never changes this.",
+  theme_light: "Light", theme_dark: "Dark", about: "What is Rotaract?", change: "Change", home_banner: "Your clubs", no_home: "No main club chosen yet",
+  ob_main: "Your main club", ob_also: "Also interested in",
+  ab_title: "What is Rotaract?", ab_lead: "Rotaract is the Rotary community for young adults (roughly 18 to 30): local clubs that organise service projects, talks, company visits and plenty of social events, and that belong to a worldwide network.",
+  ab_f_clubs: "clubs in Switzerland & Liechtenstein", ab_f_events: "public events in the last 12 months", ab_f_upcoming: "upcoming events", ab_f_world: "clubs worldwide",
+  ab_q1: "Who can join?", ab_a1: "Anyone aged about 18 to 30 who likes the idea of doing something useful with friends. You don't need to know a Rotarian; just come to an event and say hello.",
+  ab_q2: "What do clubs do?", ab_a2: "Three things: service (hands-on projects and fundraising for good causes), personal and professional development (talks, company visits, workshops) and friendship (Stamm, dinners, trips, the yearly conference). Every club mixes these a bit differently.",
+  ab_q3: "What does it cost?", ab_a3: "A yearly membership fee, typically a few hundred francs, which covers the club's activities. Events have their own, usually small, costs. Guests can usually join events for free or at cost.",
+  ab_q4: "How does Rotaract relate to Rotary?", ab_a4: "Rotary International is the parent organisation; every Rotaract club is sponsored by a Rotary club. Rotaract was founded in 1968 and now has about 10,000 clubs in more than 180 countries.",
+  ab_q5: "How do I start?", ab_a5: "Pick an event from the list, register on Polaris (the clubs' website) and come along. After a few visits the club will invite you to become a member.",
+  ab_find: "Find a club near you", ab_find_ph: "Your town or postcode", ab_find_btn: "Search", ab_nearest: "Nearest clubs", ab_join: "Not sure which club? Write to the national team at join.rotaract.ch.",
+  ab_share: "Share this page", ab_events_cta: "See all events",
+});
+Object.assign(I18N.de, {
+  settings: "Einstellungen", my_clubs: "Meine Clubs", everything: "Alles", main_club: "Hauptclub", also_show: "Auch anzeigen", none: "Keiner",
+  set_hint: "Dein Hauptclub und die Clubs, denen du auch folgst, bilden die Ansicht «Meine Clubs». Suchen und Filtern ändert das nie.",
+  theme_light: "Hell", theme_dark: "Dunkel", about: "Was ist Rotaract?", change: "Ändern", home_banner: "Deine Clubs", no_home: "Noch kein Hauptclub gewählt",
+  ob_main: "Dein Hauptclub", ob_also: "Auch interessiert an",
+  ab_title: "Was ist Rotaract?", ab_lead: "Rotaract ist die Rotary-Community für junge Erwachsene (etwa 18 bis 30): lokale Clubs, die Sozialprojekte, Vorträge, Firmenbesuche und viele gesellige Anlässe organisieren und zu einem weltweiten Netzwerk gehören.",
+  ab_f_clubs: "Clubs in der Schweiz & Liechtenstein", ab_f_events: "öffentliche Anlässe in den letzten 12 Monaten", ab_f_upcoming: "kommende Anlässe", ab_f_world: "Clubs weltweit",
+  ab_q1: "Wer kann mitmachen?", ab_a1: "Alle zwischen etwa 18 und 30, die Lust haben, mit Freunden etwas Sinnvolles zu tun. Du musst niemanden bei Rotary kennen: komm einfach an einen Anlass und sag Hallo.",
+  ab_q2: "Was machen die Clubs?", ab_a2: "Drei Dinge: Service (Hands-on-Projekte und Spendensammeln für gute Zwecke), persönliche und berufliche Entwicklung (Vorträge, Firmenbesuche, Workshops) und Freundschaft (Stamm, Essen, Reisen, die jährliche Konferenz). Jeder Club mischt das etwas anders.",
+  ab_q3: "Was kostet es?", ab_a3: "Ein Jahresbeitrag, meist ein paar hundert Franken, der die Clubaktivitäten deckt. Anlässe haben eigene, meist kleine Kosten. Gäste können in der Regel gratis oder zum Selbstkostenpreis mitkommen.",
+  ab_q4: "Wie hängt Rotaract mit Rotary zusammen?", ab_a4: "Rotary International ist die Dachorganisation; jeder Rotaract Club wird von einem Rotary Club gesponsert. Rotaract wurde 1968 gegründet und hat heute rund 10'000 Clubs in über 180 Ländern.",
+  ab_q5: "Wie fange ich an?", ab_a5: "Such dir einen Anlass aus der Liste, melde dich auf Polaris (der Website der Clubs) an und komm vorbei. Nach ein paar Besuchen lädt dich der Club ein, Mitglied zu werden.",
+  ab_find: "Finde einen Club in deiner Nähe", ab_find_ph: "Dein Ort oder deine PLZ", ab_find_btn: "Suchen", ab_nearest: "Nächste Clubs", ab_join: "Unsicher, welcher Club? Schreib dem nationalen Team auf join.rotaract.ch.",
+  ab_share: "Diese Seite teilen", ab_events_cta: "Alle Anlässe ansehen",
+});
+Object.assign(I18N.fr, {
+  settings: "Réglages", my_clubs: "Mes clubs", everything: "Tout", main_club: "Club principal", also_show: "Afficher aussi", none: "Aucun",
+  set_hint: "Votre club principal et les clubs que vous suivez forment la vue « Mes clubs ». Chercher et filtrer ne change jamais cela.",
+  theme_light: "Clair", theme_dark: "Sombre", about: "Qu'est-ce que Rotaract ?", change: "Modifier", home_banner: "Vos clubs", no_home: "Aucun club principal choisi",
+  ob_main: "Votre club principal", ob_also: "Aussi intéressé par",
+  ab_title: "Qu'est-ce que Rotaract ?", ab_lead: "Rotaract est la communauté Rotary des jeunes adultes (environ 18 à 30 ans) : des clubs locaux qui organisent des projets sociaux, des conférences, des visites d'entreprises et beaucoup d'événements conviviaux, au sein d'un réseau mondial.",
+  ab_f_clubs: "clubs en Suisse & au Liechtenstein", ab_f_events: "événements publics ces 12 derniers mois", ab_f_upcoming: "événements à venir", ab_f_world: "clubs dans le monde",
+  ab_q1: "Qui peut participer ?", ab_a1: "Toute personne d'environ 18 à 30 ans qui a envie de faire quelque chose d'utile entre amis. Pas besoin de connaître un Rotarien : venez à un événement et dites bonjour.",
+  ab_q2: "Que font les clubs ?", ab_a2: "Trois choses : le service (projets concrets et collectes pour de bonnes causes), le développement personnel et professionnel (conférences, visites d'entreprises, ateliers) et l'amitié (stamm, repas, voyages, la conférence annuelle). Chaque club mélange cela à sa façon.",
+  ab_q3: "Combien ça coûte ?", ab_a3: "Une cotisation annuelle, en général quelques centaines de francs, qui couvre les activités du club. Les événements ont leurs propres coûts, souvent modestes. Les invités participent en général gratuitement ou à prix coûtant.",
+  ab_q4: "Quel lien avec le Rotary ?", ab_a4: "Le Rotary International est l'organisation faîtière ; chaque club Rotaract est parrainé par un Rotary club. Rotaract a été fondé en 1968 et compte aujourd'hui environ 10 000 clubs dans plus de 180 pays.",
+  ab_q5: "Comment commencer ?", ab_a5: "Choisissez un événement dans la liste, inscrivez-vous sur Polaris (le site des clubs) et venez. Après quelques visites, le club vous proposera de devenir membre.",
+  ab_find: "Trouver un club près de chez vous", ab_find_ph: "Votre localité ou NPA", ab_find_btn: "Chercher", ab_nearest: "Clubs les plus proches", ab_join: "Pas sûr du club ? Écrivez à l'équipe nationale sur join.rotaract.ch.",
+  ab_share: "Partager cette page", ab_events_cta: "Voir tous les événements",
+});
+Object.assign(I18N.it, {
+  settings: "Impostazioni", my_clubs: "I miei club", everything: "Tutto", main_club: "Club principale", also_show: "Mostra anche", none: "Nessuno",
+  set_hint: "Il tuo club principale e i club che segui formano la vista «I miei club». Cercare e filtrare non la cambia mai.",
+  theme_light: "Chiaro", theme_dark: "Scuro", about: "Cos'è Rotaract?", change: "Modifica", home_banner: "I tuoi club", no_home: "Nessun club principale scelto",
+  ob_main: "Il tuo club principale", ob_also: "Interessato anche a",
+  ab_title: "Cos'è Rotaract?", ab_lead: "Rotaract è la comunità Rotary dei giovani adulti (circa 18–30 anni): club locali che organizzano progetti sociali, conferenze, visite aziendali e tanti eventi conviviali, parte di una rete mondiale.",
+  ab_f_clubs: "club in Svizzera e Liechtenstein", ab_f_events: "eventi pubblici negli ultimi 12 mesi", ab_f_upcoming: "eventi in arrivo", ab_f_world: "club nel mondo",
+  ab_q1: "Chi può partecipare?", ab_a1: "Chiunque abbia circa 18–30 anni e voglia fare qualcosa di utile con amici. Non serve conoscere un rotariano: vieni a un evento e saluta.",
+  ab_q2: "Cosa fanno i club?", ab_a2: "Tre cose: servizio (progetti concreti e raccolte fondi per buone cause), crescita personale e professionale (conferenze, visite aziendali, workshop) e amicizia (stamm, cene, viaggi, la conferenza annuale). Ogni club le combina a modo suo.",
+  ab_q3: "Quanto costa?", ab_a3: "Una quota annuale, di solito qualche centinaio di franchi, che copre le attività del club. Gli eventi hanno costi propri, in genere contenuti. Gli ospiti partecipano di solito gratis o a prezzo di costo.",
+  ab_q4: "Che rapporto c'è con il Rotary?", ab_a4: "Il Rotary International è l'organizzazione madre; ogni club Rotaract è sponsorizzato da un Rotary club. Rotaract è nato nel 1968 e oggi conta circa 10'000 club in oltre 180 paesi.",
+  ab_q5: "Come inizio?", ab_a5: "Scegli un evento dalla lista, iscriviti su Polaris (il sito dei club) e vieni. Dopo qualche visita il club ti inviterà a diventare socio.",
+  ab_find: "Trova un club vicino a te", ab_find_ph: "La tua località o NPA", ab_find_btn: "Cerca", ab_nearest: "Club più vicini", ab_join: "Non sai quale club? Scrivi al team nazionale su join.rotaract.ch.",
+  ab_share: "Condividi questa pagina", ab_events_cta: "Vedi tutti gli eventi",
+});
+Object.assign(I18N.en, { appearance: "Appearance" }); Object.assign(I18N.de, { appearance: "Darstellung" }); Object.assign(I18N.fr, { appearance: "Apparence" }); Object.assign(I18N.it, { appearance: "Aspetto" });

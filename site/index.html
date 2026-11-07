@@ -22,11 +22,11 @@
 <a class="skip" href="#results" data-t="skip_to">Skip to events</a>
 <header>
   <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events">Events</span></a>
+    <a class="brand" href="./" id="brand"><img src="rotaract.svg" alt="Rotaract"><span data-t="events">Events</span></a>
     <div class="actions" id="actions">
-      <button class="icon-btn" id="theme" type="button" data-t-label="theme" aria-label="Switch light/dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A5.5 5.5 0 0 1 13.4 3.1C13 3 12.5 3 12 3z"/></svg></button>
-      <button class="icon-btn" id="share" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><span data-t="share">Share</span></button>
-      <a class="icon-btn" href="#install"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span data-t="install">Install</span></a>
+      <a class="icon-btn" href="about.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span data-t="about"></span></a>
+      <button class="icon-btn" id="share" type="button" data-t-label="share"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><span data-t="share"></span></button>
+      <button class="icon-btn" id="settingsBtn" type="button" data-t-label="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-t="settings"></span></button>
     </div>
   </div>
 </header>
@@ -34,6 +34,8 @@
 <div class="banner" id="stale" role="status" hidden></div>
 
 <main class="wrap">
+  <div class="home" id="home" hidden></div>
+
   <div class="filters">
     <div class="top">
       <div class="search">
@@ -43,6 +45,10 @@
       <button class="fbtn" id="fbtn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg><span data-t="filters">Filters</span><span class="n" id="fcount" hidden></span></button>
     </div>
     <div class="row" id="views" role="group" data-t-label="filters">
+      <div class="seg scope" id="scope" role="group" hidden>
+        <button type="button" data-scope="mine" data-t="my_clubs"></button>
+        <button type="button" data-scope="all" data-t="everything"></button>
+      </div>
       <button class="chip" type="button" data-view="all" data-t="v_all"></button>
       <button class="chip" type="button" data-view="week" data-t="v_week"></button>
       <button class="chip" type="button" data-view="weekend" data-t="v_weekend"></button>
@@ -85,30 +91,25 @@
     <p data-t="sub_text"></p>
     <div class="links"><a class="primary" href="subscribe.html" data-t="sub_cta"></a></div>
   </section>
-
-  <section class="card" id="install">
-    <h2 data-t="inst_title"></h2>
-    <p data-t="inst_text"></p>
-    <div id="installBody"></div>
-    <h2 style="margin-top:18px;font-size:.95rem" data-t="share_title"></h2>
-    <p data-t="share_text"></p>
-    <div class="linkbox"><input type="text" id="link" readonly data-t-label="share_title"><button type="button" id="copy" data-t="copy"></button></div>
-    <p class="meta" style="margin-top:14px"><a href="#" id="rerun" data-t="rerun"></a></p>
+  <section class="card about-teaser">
+    <h2 data-t="ab_title"></h2>
+    <p data-t="ab_lead"></p>
+    <div class="links"><a class="primary" href="about.html" data-t="about"></a></div>
   </section>
 
   <footer id="footer"></footer>
 </main>
 <dialog class="ob" id="ob" aria-labelledby="obTitle"><div class="ob-in" id="obBody"></div></dialog>
+<dialog class="ob" id="settingsDlg" aria-labelledby="setTitle"><div class="ob-in" id="setBody"></div></dialog>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
 const $ = id => document.getElementById(id);
-const PREFS_KEY = "rac.prefs", SAVED_KEY = "rac.saved";
+const SETTINGS_KEY = "rac.settings", SAVED_KEY = "rac.saved";
 const DISTRICTS = { "1980": t("d1980"), "1990": t("d1990"), "2000": t("d2000") };
-const state = { data: null, clubs: {}, view: "all", mode: "list", clubSel: new Set(), distSel: new Set(), center: null, centerLabel: "",
-                saved: new Set(), open: new Set(), month: null, day: null };
+const state = { data: null, clubs: {}, view: "all", mode: "list", scope: "all", clubSel: new Set(), distSel: new Set(), center: null, centerLabel: "",
+                saved: new Set(), open: new Set(), month: null, day: null, settings: { home: "", also: [] } };
 applyI18n();
-$("actions").prepend(langSelect());
 
 // --- helpers. Text only, never innerHTML: all event text comes from Polaris.
 function el(tag, attrs = {}, ...children) {
@@ -139,6 +140,7 @@ function onColor(hex) { // white or dark text on a club colour
 function clubStyle(id) { const c = state.clubs[id]?.color || "#d41367"; return `--c:${c};--on-c:${onColor(c)}`; }
 function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading: "lazy" }) : el("span", { class: "dot" }); }
 function clubLabel(id) { const c = state.clubs[id]; return c ? c.name + (c.district ? ` (D${c.district})` : "") : id; }
+function myClubs() { return [state.settings.home, ...state.settings.also].filter(id => state.clubs[id]); }
 function km(a, b) {
   const rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
@@ -151,11 +153,71 @@ async function geocode(text) {
 }
 const startOfDay = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+function setTheme(next) { store.set("rac.theme", next); document.documentElement.dataset.theme = next; }
 
-// --- theme: light by default; the toggle switches and remembers.
-function toggleTheme() {
-  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  store.set("rac.theme", next); document.documentElement.dataset.theme = next;
+// --- settings (the only thing that persists): main club + clubs you also follow
+function saveSettings() { store.set(SETTINGS_KEY, state.settings); renderHome(); renderClubChips(); }
+function renderHome() {
+  const mine = myClubs(), box = $("home"), home = state.clubs[state.settings.home];
+  $("scope").hidden = !mine.length;
+  if (!mine.length || state.scope !== "mine") { box.hidden = true; return; }
+  box.hidden = false;
+  const lead = home || state.clubs[mine[0]];
+  const change = el("button", { class: "ghost", type: "button" }, t("change"));
+  change.addEventListener("click", openSettings);
+  box.replaceChildren(el("div", { class: "home-in", style: clubStyle(lead.id) },
+    lead.logo ? el("img", { class: "crest", src: lead.logo, alt: "" }) : null,
+    el("div", { class: "ht" },
+      el("div", { class: "meta" }, t("home_banner")),
+      el("h2", {}, el("a", { href: "club.html?id=" + lead.id }, lead.name)),
+      mine.length > 1 ? el("div", { class: "also" }, ...mine.slice(1).map(id => { const c = state.clubs[id]; return el("a", { class: "mini", href: "club.html?id=" + id, title: c.name, style: clubStyle(id) }, clubMark(c), c.short); })) : null),
+    change));
+}
+function clubPicker(selected, onPick, { single = false, exclude = [] } = {}) {
+  const chips = el("div", { class: "chips" });
+  if (single) {
+    const none = el("button", { class: "chip", type: "button", "aria-pressed": String(!selected) }, t("none"));
+    none.addEventListener("click", () => onPick(""));
+    chips.append(none);
+  }
+  for (const c of state.data.clubs) {
+    if (exclude.includes(c.id)) continue;
+    const on = single ? selected === c.id : selected.has(c.id);
+    const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(on), "aria-label": c.name, role: single ? "radio" : undefined }, clubMark(c), c.short);
+    b.addEventListener("click", () => onPick(c.id));
+    chips.append(b);
+  }
+  return chips;
+}
+function openSettings() {
+  const dlg = $("settingsDlg"), body = $("setBody");
+  const draw = () => {
+    const s = state.settings;
+    body.replaceChildren(
+      el("h2", { id: "setTitle", tabindex: "-1" }, t("settings")),
+      el("p", {}, t("set_hint")),
+      el("h3", {}, t("main_club")),
+      clubPicker(s.home, id => { s.home = id; s.also = s.also.filter(x => x !== id); saveSettings(); draw(); }, { single: true }),
+      el("h3", {}, t("also_show")),
+      clubPicker(new Set(s.also), id => { s.also = s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id]; saveSettings(); draw(); }, { exclude: [s.home] }),
+      el("h3", {}, t("language")), langSelect(),
+      el("h3", {}, t("appearance")),
+      el("div", { class: "chips" }, ...[["light", t("theme_light")], ["dark", t("theme_dark")]].map(([k, name]) => {
+        const b = el("button", { class: "chip", type: "button", "aria-pressed": String(document.documentElement.dataset.theme === k) }, name);
+        b.addEventListener("click", () => { setTheme(k); draw(); }); return b;
+      })),
+      el("h3", {}, t("inst_title")), installBlock(),
+      el("h3", {}, t("share_title")), el("p", { class: "meta" }, t("share_text")),
+      (() => { const box = el("div", { class: "linkbox" }, el("input", { type: "text", readonly: "", value: location.origin + location.pathname, "aria-label": t("share_title") }), el("button", { type: "button" }, t("copy")));
+        box.lastChild.addEventListener("click", async () => { await navigator.clipboard.writeText(box.firstChild.value); toast(t("copied")); }); return box; })(),
+      el("div", { class: "links", style: "margin-top:14px" },
+        (() => { const b = el("button", { class: "linkbtn", type: "button" }, t("rerun")); b.addEventListener("click", () => { dlg.close(); onboarding(); }); return b; })(),
+        el("a", { href: "about.html" }, t("about"))),
+      (() => { const n = el("div", { class: "nav" }, el("span"), el("button", { class: "btn", type: "button" }, t("done"))); n.lastChild.addEventListener("click", () => dlg.close()); return n; })());
+  };
+  draw();
+  dlg.showModal(); $("setTitle").focus();
+  dlg.addEventListener("close", () => { if (state.scope === "mine" && !myClubs().length) setScope("all"); else render(); }, { once: true });
 }
 
 // --- location
@@ -183,22 +245,30 @@ function locateMe() {
   }, () => { hint(t("loc_na")); if (state.view === "near") setView("all"); });
 }
 
-// --- views & modes
+// --- views, scope & modes
 function setView(v) {
   state.view = v;
-  for (const b of $("views").children) b.setAttribute("aria-pressed", String(b.dataset.view === v));
+  for (const b of $("views").querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.view === v));
   if (v === "near" && !state.center) locateMe(); else render();
+}
+function setScope(s) {
+  state.scope = myClubs().length ? s : "all";
+  for (const b of $("scope").children) b.setAttribute("aria-pressed", String(b.dataset.scope === state.scope));
+  state.clubSel.clear(); state.distSel.clear();
+  renderHome(); renderClubChips(); render();
 }
 function setMode(m) {
   state.mode = m;
-  for (const b of document.querySelectorAll(".seg button")) b.setAttribute("aria-pressed", String(b.dataset.mode === m));
-  $("views").style.display = m === "month" ? "none" : "";
+  for (const b of document.querySelectorAll(".summary .seg button")) b.setAttribute("aria-pressed", String(b.dataset.mode === m));
+  for (const b of $("views").querySelectorAll(".chip")) b.style.display = m === "month" ? "none" : "";
   render();
 }
 function toggleIn(set, id) { set.has(id) ? set.delete(id) : set.add(id); renderClubChips(); render(); }
 function renderClubChips() {
+  const mine = state.scope === "mine" ? myClubs() : null;
   const drow = $("districts");
   drow.replaceChildren(el("span", { class: "rowlabel" }, t("district")));
+  drow.hidden = !!mine;
   const dall = el("button", { class: "chip district", type: "button", "aria-pressed": String(state.distSel.size === 0) }, t("all"));
   dall.addEventListener("click", () => { state.distSel.clear(); renderClubChips(); render(); });
   drow.append(dall);
@@ -213,7 +283,8 @@ function renderClubChips() {
   all.addEventListener("click", () => { state.clubSel.clear(); renderClubChips(); render(); });
   row.append(all);
   for (const c of state.data.clubs) {
-    if (state.distSel.size && !state.distSel.has(c.district)) continue; // only clubs of the chosen districts
+    if (mine && !mine.includes(c.id)) continue;
+    if (state.distSel.size && !state.distSel.has(c.district)) continue;
     const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(state.clubSel.has(c.id)), "aria-label": c.name }, clubMark(c), c.short);
     b.addEventListener("click", () => toggleIn(state.clubSel, c.id));
     row.append(b);
@@ -235,6 +306,7 @@ function weekendRange(now) {
 // --- filtering (shared by list and month)
 function baseMatches(e) {
   const q = fold($("q").value.trim());
+  if (state.scope === "mine") { const mine = myClubs(); if (mine.length && !e.clubs.some(c => mine.includes(c))) return false; }
   if (state.distSel.size && !e.clubs.some(c => state.distSel.has(state.clubs[c]?.district))) return false;
   if (state.clubSel.size && !e.clubs.some(c => state.clubSel.has(c))) return false;
   if (q) {
@@ -269,8 +341,8 @@ async function shareEvent(e) {
   else { await navigator.clipboard.writeText(url); toast(t("copied")); }
 }
 
-function card(e) {
-  const start = new Date(e.start), end = new Date(e.end), dist = distanceOf(e), open = state.open.has(e.id);
+function card(e, i = 0) {
+  const start = new Date(e.start), end = new Date(e.end), dist = distanceOf(e), open = state.open.has(e.id), lead = state.clubs[e.clubs[0]] || {};
   const when = e.allday ? fmtWeekday.format(start) + " · " + t("all_day") : fmtWhen.format(start) + (sameDay(start, end) ? "–" + fmtTime.format(end) : "");
   const where = [e.location, dist != null ? Math.round(dist) + " km" : null].filter(Boolean).join(" · ");
   const star = el("button", { class: "star", type: "button", "aria-pressed": String(state.saved.has(e.id)), "aria-label": t("save") + ": " + e.title }, starSvg());
@@ -283,7 +355,8 @@ function card(e) {
     if (state.view === "saved") render();
   });
   const title = el("button", { type: "button", "aria-expanded": String(open) }, e.title);
-  const art = el("article", { class: "event" + (e.cancelled ? " cancelled" : ""), style: clubStyle(e.clubs[0]), id: "ev-" + e.id },
+  const art = el("article", { class: "event" + (e.cancelled ? " cancelled" : "") + (open ? " open" : ""), style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
+    lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true", loading: "lazy" }) : null,
     el("div", { class: "date", "aria-hidden": "true" }, el("b", {}, fmtDay.format(start)), el("span", {}, fmtMon.format(start))),
     el("div", { class: "body" },
       el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, title),
@@ -309,7 +382,7 @@ function card(e) {
         el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, t("add_cal")),
         shareBtn)));
   }
-  const toggle = () => { open ? state.open.delete(e.id) : state.open.add(e.id); art.replaceWith(card(e)); };
+  const toggle = () => { open ? state.open.delete(e.id) : state.open.add(e.id); const n = card(e, 0); n.style.setProperty("--i", "0"); n.classList.add("still"); art.replaceWith(n); };
   title.addEventListener("click", toggle);
   art.addEventListener("click", ev => { if (!ev.target.closest("a, button, .detail")) toggle(); });
   return art;
@@ -317,11 +390,11 @@ function card(e) {
 
 function list(events, byMonth = true) {
   const frag = document.createDocumentFragment();
-  let month = "";
+  let month = "", i = 0;
   for (const e of events) {
     const m = fmtMonth.format(new Date(e.start));
     if (byMonth && m !== month) { frag.append(el("h3", {}, m)); month = m; }
-    frag.append(card(e));
+    frag.append(card(e, i++));
   }
   return frag;
 }
@@ -407,13 +480,14 @@ function render() {
   out.replaceChildren(); out.removeAttribute("aria-busy");
   state.mode === "month" ? renderMonth(out) : renderList(out);
   $("clear").hidden = !($("q").value || state.clubSel.size || state.distSel.size || $("place").value || $("radius").value || state.view !== "all" || state.mode !== "list");
-  savePrefs();
+  syncUrl();
 }
 
-// --- preferences: URL (shareable) wins over what you used last time
-function savePrefs() {
+// --- the URL mirrors the current filters so a view can be shared; nothing here is remembered
+function syncUrl() {
   const p = new URLSearchParams();
   if ($("q").value) p.set("q", $("q").value);
+  if (state.scope === "all" && myClubs().length) p.set("scope", "all");
   if (state.distSel.size) p.set("d", [...state.distSel].join(","));
   if (state.clubSel.size) p.set("clubs", [...state.clubSel].join(","));
   if ($("place").value) p.set("place", $("place").value);
@@ -421,12 +495,16 @@ function savePrefs() {
   if (state.view !== "all") p.set("view", state.view);
   if (state.mode !== "list") p.set("mode", state.mode);
   history.replaceState(null, "", p.toString() ? "?" + p : location.pathname);
-  store.set(PREFS_KEY, { clubs: [...state.clubSel], d: [...state.distSel], place: $("place").value, r: $("radius").value, view: state.view === "near" ? "all" : state.view, mode: state.mode });
 }
 function clearFilters() {
   $("q").value = ""; $("place").value = ""; $("radius").value = ""; hint("");
-  state.center = null; state.clubSel.clear(); state.distSel.clear(); state.day = null;
+  state.center = null; state.clubSel.clear(); state.distSel.clear(); state.day = null; state.month = null;
   renderClubChips(); setMode("list"); setView("all");
+}
+function goHome(ev) {
+  ev?.preventDefault();
+  clearFilters(); setScope("mine"); togglePanel(false);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // --- subscribe + install
@@ -440,18 +518,16 @@ function feedRow(c, file, count) {
       el("a", { href: https }, ".ics")));
 }
 let installPrompt = null;
-window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; renderInstall(); });
-window.addEventListener("appinstalled", () => { installPrompt = null; toast("🎉"); renderInstall(); });
-function renderInstall() {
-  const body = $("installBody");
-  body.replaceChildren();
-  if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) { body.append(el("p", { class: "meta" }, t("inst_done"))); return; }
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
+window.addEventListener("appinstalled", () => { installPrompt = null; toast("🎉"); });
+function installBlock() {
+  if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) return el("p", { class: "meta" }, t("inst_done"));
   if (installPrompt) {
     const b = el("button", { class: "install-btn", type: "button" }, t("inst_btn"));
     b.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; });
-    body.append(b); return;
+    return b;
   }
-  body.append(installGuide());
+  return installGuide();
 }
 function installGuide() {
   const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
@@ -466,7 +542,7 @@ function installGuide() {
   return el("div", {}, tabs, steps);
 }
 
-// --- onboarding (first visit): clubs pre-selected from a rough location guess, then subscribe, then install
+// --- onboarding (first visit): main club + others pre-selected from a rough location guess, then subscribe, then install
 async function guessClubs() {
   try {
     const ctl = new AbortController(); setTimeout(() => ctl.abort(), 3500);
@@ -483,34 +559,29 @@ async function guessClubs() {
   return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || [];
 }
 async function onboarding() {
-  const dlg = $("ob"), body = $("obBody"), sel = new Set(await guessClubs());
+  const dlg = $("ob"), body = $("obBody"), guess = await guessClubs();
+  const s = { home: guess[0] || "", also: guess.slice(1) };
   let step = 0;
   const finish = () => {
-    state.clubSel = new Set(sel); store.set("rac.onboarded", true);
-    renderClubChips(); render(); dlg.close();
-    if (sel.size) toast(t("ob_showing", { clubs: [...sel].map(id => state.clubs[id]?.short).join(", ") }));
+    state.settings = s; store.set(SETTINGS_KEY, s); store.set("rac.onboarded", true);
+    dlg.close(); saveSettings(); setScope("mine");
+    if (myClubs().length) toast(t("ob_showing", { clubs: myClubs().map(id => state.clubs[id]?.short).join(", ") }));
   };
   const draw = () => {
     body.replaceChildren(el("div", { class: "bar2", "aria-hidden": "true" }, ...[0, 1, 2].map(i => el("i", { class: i <= step ? "on" : "" }))));
     const nav = (nextLabel, skip) => el("div", { class: "nav" }, skip ? el("button", { class: "skip", type: "button" }, skip) : el("span"), el("button", { class: "btn", type: "button" }, nextLabel));
     const h2 = el("h2", { id: "obTitle", tabindex: "-1" });
     if (step === 0) {
-      const chips = el("div", { class: "chips" });
-      const all = el("button", { class: "chip", type: "button", "aria-pressed": String(sel.size === 0) }, t("all_clubs"));
-      all.addEventListener("click", () => { sel.clear(); draw(); });
-      chips.append(all);
-      for (const c of state.data.clubs) {
-        const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(sel.has(c.id)), "aria-label": c.name }, clubMark(c), c.short);
-        b.addEventListener("click", () => { sel.has(c.id) ? sel.delete(c.id) : sel.add(c.id); draw(); });
-        chips.append(b);
-      }
       const n = nav(t("next"), t("skip"));
       n.lastChild.addEventListener("click", () => { step = 1; draw(); });
       n.firstChild.addEventListener("click", finish);
       h2.textContent = t("ob_welcome");
-      body.append(h2, el("p", {}, t("ob_q") + " " + (sel.size ? t("ob_pre") : t("ob_pick"))), chips, n);
+      body.append(h2, el("p", {}, t("ob_q") + " " + (s.home ? t("ob_pre") : t("ob_pick"))),
+        el("h3", {}, t("ob_main")), clubPicker(s.home, id => { s.home = id; s.also = s.also.filter(x => x !== id); draw(); }, { single: true }),
+        el("h3", {}, t("ob_also")), clubPicker(new Set(s.also), id => { s.also = s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id]; draw(); }, { exclude: [s.home] }),
+        n);
     } else if (step === 1) {
-      const ids = sel.size ? [...sel] : [];
+      const ids = [s.home, ...s.also].filter(id => state.clubs[id]);
       const feeds = el("div", { class: "feeds" }, ...ids.map(id => feedRow(state.clubs[id], id + ".ics", null)),
         ids.length ? el("p", { class: "meta", style: "margin:4px 0 0" }, t("ob_or")) : null,
         feedRow({ name: t("all_feed") }, "all.ics", null),
@@ -524,17 +595,13 @@ async function onboarding() {
       const n = nav(t("done"), installPrompt ? t("not_now") : null);
       n.lastChild.addEventListener("click", finish);
       if (installPrompt) n.firstChild.addEventListener("click", finish);
-      let how;
-      if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, t("ob_installed"));
-      else if (installPrompt) { how = el("button", { class: "install-btn", type: "button" }, t("inst_btn")); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); }
-      else how = installGuide();
       h2.textContent = t("ob_inst");
-      body.append(h2, el("p", {}, t("ob_inst_text")), how, n, el("div", { class: "credit" }, t("credit_short")));
+      body.append(h2, el("p", {}, t("ob_inst_text")), installBlock(), n, el("div", { class: "credit" }, t("credit_short")));
     }
     h2.focus();
   };
   draw();
-  dlg.addEventListener("cancel", ev => { ev.preventDefault(); finish(); });
+  dlg.addEventListener("cancel", ev => { ev.preventDefault(); finish(); }, { once: true });
   dlg.showModal();
   $("obTitle").focus();
 }
@@ -555,35 +622,39 @@ if ("serviceWorker" in navigator) {
 
 // --- boot
 async function init() {
-  $("link").value = location.origin + location.pathname;
-  $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast(t("copied")); });
   $("share").addEventListener("click", share);
-  $("theme").addEventListener("click", toggleTheme);
-  renderInstall();
+  $("settingsBtn").addEventListener("click", openSettings);
+  $("brand").addEventListener("click", goHome);
 
   try { state.data = await (await fetch("events.json", { cache: "no-cache" })).json(); }
   catch { $("summary").textContent = t("offline"); $("results").replaceChildren(); return; }
   state.saved = new Set(store.get(SAVED_KEY, []));
-  const prefs = store.get(PREFS_KEY, {});
   for (const c of state.data.clubs) state.clubs[c.id] = c;
+  // settings; migrate the old "clubs" preference once
+  const old = store.get("rac.prefs", null);
+  state.settings = store.get(SETTINGS_KEY, old?.clubs?.length ? { home: old.clubs[0], also: old.clubs.slice(1) } : { home: "", also: [] });
+  state.settings.also = (state.settings.also || []).filter(id => state.clubs[id] && id !== state.settings.home);
+  if (!state.clubs[state.settings.home]) state.settings.home = "";
+  if (old) { localStorage.removeItem("rac.prefs"); store.set(SETTINGS_KEY, state.settings); }
+
   const generated = new Date(state.data.generated);
   if (Date.now() - generated > 30 * 3600e3) { $("stale").textContent = t("stale", { t: fmtStamp.format(generated) }); $("stale").hidden = false; }
   $("footer").replaceChildren(t("updated", { t: fmtStamp.format(generated) }) + " · " + t("members_only"), el("br"),
     t("made_by") + " · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source")));
-  $("rerun").addEventListener("click", ev => { ev.preventDefault(); onboarding(); });
 
   const p = new URLSearchParams(location.search), eventId = p.get("event");
   p.delete("lang"); p.delete("event");
   const shared = [...p.keys()].length > 0 || !!eventId;
-  const src = shared ? { ...Object.fromEntries(p), clubs: p.get("clubs")?.split(",").filter(Boolean) || [], d: p.get("d")?.split(",").filter(Boolean) || [] } : prefs;
-  $("q").value = src.q || "";
-  $("radius").value = src.r || "";
-  $("place").value = src.place || "";
-  state.clubSel = new Set((src.clubs || []).filter(c => state.clubs[c]));
-  state.distSel = new Set((src.d || []).filter(d => DISTRICTS[d]));
-  renderClubChips();
-  $("fbtn").addEventListener("click", () => togglePanel());
+  $("q").value = p.get("q") || "";
+  $("radius").value = p.get("r") || "";
+  $("place").value = p.get("place") || "";
+  state.clubSel = new Set((p.get("clubs") || "").split(",").filter(c => state.clubs[c]));
+  state.distSel = new Set((p.get("d") || "").split(",").filter(d => DISTRICTS[d]));
+  state.scope = myClubs().length && !(shared || p.get("scope") === "all") ? "mine" : "all";
+  for (const b of $("scope").children) b.setAttribute("aria-pressed", String(b.dataset.scope === state.scope));
+  renderHome(); renderClubChips();
 
+  $("fbtn").addEventListener("click", () => togglePanel());
   let timer;
   $("q").addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(render, 150); });
   $("radius").addEventListener("change", () => { renderClubChips(); render(); });
@@ -591,16 +662,17 @@ async function init() {
   $("place").addEventListener("keydown", ev => { if (ev.key === "Enter") $("place").blur(); });
   $("locate").addEventListener("click", locateMe);
   $("clear").addEventListener("click", clearFilters);
-  for (const b of $("views").children) b.addEventListener("click", () => setView(b.dataset.view));
-  for (const b of document.querySelectorAll(".seg button")) b.addEventListener("click", () => setMode(b.dataset.mode));
+  for (const b of $("views").querySelectorAll(".chip")) b.addEventListener("click", () => setView(b.dataset.view));
+  for (const b of $("scope").children) b.addEventListener("click", () => setScope(b.dataset.scope));
+  for (const b of document.querySelectorAll(".summary .seg button")) b.addEventListener("click", () => setMode(b.dataset.mode));
 
   if ($("place").value) await setPlace($("place").value);
-  state.view = src.view || "all";
+  state.view = p.get("view") || "all";
   // A shared event link opens that event, in the Past view if it's over.
   const target = eventId && state.data.events.find(e => e.id === eventId);
   if (target) { state.open.add(eventId); state.view = new Date(target.end) < new Date() ? "past" : "all"; }
-  for (const b of $("views").children) b.setAttribute("aria-pressed", String(b.dataset.view === state.view));
-  setMode(src.mode === "month" ? "month" : "list");
+  for (const b of $("views").querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.view === state.view));
+  setMode(p.get("mode") === "month" ? "month" : "list");
   if (target) $("ev-" + eventId)?.scrollIntoView({ block: "start" });
   if (state.view === "near" && !state.center) locateMe();
   if (!shared && !store.get("rac.onboarded", false)) onboarding();

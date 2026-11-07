@@ -1,7 +1,7 @@
 // App shell: serve from cache, refresh in the background and tell the page when the shell changed.
 // Events: network first, cache as offline fallback. No version bumps needed: every successful fetch updates the cache.
 const CACHE = "rac-events";
-const SHELL = ["./", "index.html", "app.css", "i18n.js", "subscribe.html", "club.html", "manifest.webmanifest", "icon.svg", "rotaract.svg", "icon-192.png", "icon-512.png"];
+const SHELL = ["./", "index.html", "app.css", "i18n.js", "subscribe.html", "club.html", "about.html", "manifest.webmanifest", "icon.svg", "rotaract.svg", "icon-192.png", "icon-512.png"];
 const SHELL_FILES = /\/(index\.html|app\.css|i18n\.js)?$/;
 
 self.addEventListener("install", e => {

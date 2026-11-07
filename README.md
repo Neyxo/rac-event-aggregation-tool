@@ -12,7 +12,9 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 - Districts: D1980 (central & north-west), D1990 (west), D2000 (east), used as a filter and shown in the event details and feed list.
 - Installable as an app (PWA): "Install" on the page shows the steps per platform; the last loaded events stay readable offline.
 - First visit: a short welcome (your clubs → subscribe → install). The clubs are pre-selected from the connection's approximate location (one lookup at get.geojs.io, fallback ipwho.is; no permission prompt, nothing stored), or from the browser language if that fails. "Show the welcome steps again" is in the Install section.
-- Remembers your clubs, place, view and layout on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
+- Settings (gear in the header): one **main club** plus clubs you **also show**, language, light/dark, install, share, welcome again. Those are the only things remembered on the device; searching and filtering never changes them. "My clubs | Everything" switches between your clubs (with a banner in your club's colours) and all of Switzerland. Tapping the Rotaract logo always returns to your "My clubs" view.
+- `about.html`: "What is Rotaract?" with live numbers, expandable questions, and a club finder by place or location, in all four languages. Linked from the header and the settings.
+- Remembers starred events on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
 - Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?d=1980`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
 - UI in German, French, Italian or English: picked from the device language, switchable in the header, or `?lang=de`. Strings live in `site/i18n.js`.
