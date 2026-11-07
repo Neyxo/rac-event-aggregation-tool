@@ -5,13 +5,17 @@
 #   backfill = on the club's first run, import every past year Polaris offers
 #              (otherwise history starts with the current year)
 #   short    = label on the club chips in the app
-#   color    = club colour in the app (Rotary brand palette by default, change freely)
-#   logo     = optional URL of a club crest/logo shown in the app (none on Polaris, so add your own)
+#   color    = club colour in the app: the dominant tint of its crest (change freely)
+#   logo     = crest shown in the app: the canton's coat of arms, or the city's for city clubs
+#              (site/crests/, from Wikimedia Commons; Swiss/LI official coats of arms are public domain)
+#   district = Rotary district: 1980 central/north-west, 1990 west, 2000 east; empty = national
 
 [[clubs]]
 id = "luzern"
+logo = "crests/luzern.svg"
+district = "1980"
 short = "Luzern"
-color = "#d41367"
+color = "#0b5cad"
 name = "Rotaract Luzern"
 base_url = "https://rotaract-luzern.ch"
 lang = "de"
@@ -20,8 +24,10 @@ backfill = true
 
 [[clubs]]
 id = "sempachersee"
+logo = "crests/sempachersee.svg"
+district = "1980"
 short = "Sempach"
-color = "#f7a81b"
+color = "#c1121f"
 name = "Rotaract Sempachersee"
 base_url = "https://rotaract-sempachersee.ch"
 lang = "de"
@@ -29,8 +35,10 @@ city = "Sursee"
 
 [[clubs]]
 id = "bern"
+logo = "crests/bern.svg"
+district = "1990"
 short = "Bern"
-color = "#e02927"
+color = "#e3141a"
 name = "Rotaract Bern"
 base_url = "https://bern.rotaract.ch"
 lang = "de"
@@ -38,8 +46,10 @@ city = "Bern"
 
 [[clubs]]
 id = "basel"
+logo = "crests/basel.svg"
+district = "1980"
 short = "Basel"
-color = "#17458f"
+color = "#2a2a2e"
 name = "Rotaract Basel"
 base_url = "https://rotaract-basel.ch"
 lang = "de"
@@ -47,8 +57,10 @@ city = "Basel"
 
 [[clubs]]
 id = "baden"
+logo = "crests/baden.svg"
+district = "1980"
 short = "Baden"
-color = "#019fcb"
+color = "#d42e2e"
 name = "Rotaract Baden"
 base_url = "https://baden.rotaract.ch"
 lang = "de"
@@ -56,8 +68,10 @@ city = "Baden"
 
 [[clubs]]
 id = "solothurn"
+logo = "crests/solothurn.svg"
+district = "1980"
 short = "Solothurn"
-color = "#5e8e3e"
+color = "#e30613"
 name = "Rotaract Solothurn"
 base_url = "https://rotaract-solothurn.ch"
 lang = "de"
@@ -65,8 +79,10 @@ city = "Solothurn"
 
 [[clubs]]
 id = "zuerich"
+logo = "crests/zuerich.svg"
+district = "2000"
 short = "Zürich"
-color = "#0067c8"
+color = "#1f78d1"
 name = "Rotaract Zürich"
 base_url = "https://rotaract-zuerich.ch"
 lang = "de"
@@ -74,8 +90,10 @@ city = "Zürich"
 
 [[clubs]]
 id = "zurich-international"
+logo = "crests/zurich-international.svg"
+district = "2000"
 short = "ZH Intl"
-color = "#00adbb"
+color = "#1d4f9a"
 name = "Rotaract Zurich International"
 base_url = "https://zurich-international.rotaract.ch"
 lang = "en"
@@ -83,8 +101,10 @@ city = "Zürich"
 
 [[clubs]]
 id = "winterthur"
+logo = "crests/winterthur.svg"
+district = "2000"
 short = "Winterthur"
-color = "#ff7600"
+color = "#c8102e"
 name = "Rotaract Winterthur"
 base_url = "https://winterthur.rotaract.ch"
 lang = "de"
@@ -92,8 +112,10 @@ city = "Winterthur"
 
 [[clubs]]
 id = "stgallen"
+logo = "crests/stgallen.svg"
+district = "2000"
 short = "St. Gallen"
-color = "#009739"
+color = "#009640"
 name = "Rotaract St. Gallen"
 base_url = "https://rotaract-stgallen.ch"
 lang = "de"
@@ -101,8 +123,10 @@ city = "St. Gallen"
 
 [[clubs]]
 id = "chur-herrschaft"
+logo = "crests/chur-herrschaft.svg"
+district = "2000"
 short = "Chur"
-color = "#901f93"
+color = "#4a6fa5"
 name = "Rotaract Chur-Herrschaft"
 base_url = "https://chur-herrschaft.rotaract.ch"
 lang = "de"
@@ -110,8 +134,10 @@ city = "Chur"
 
 [[clubs]]
 id = "liechtenstein"
+logo = "crests/liechtenstein.svg"
+district = "2000"
 short = "LI"
-color = "#872175"
+color = "#002b7f"
 name = "Rotaract Liechtenstein"
 base_url = "https://rotaract.li"
 lang = "de"
@@ -119,8 +145,10 @@ city = "Vaduz"
 
 [[clubs]]
 id = "fribourg"
+logo = "crests/fribourg.svg"
+district = "1990"
 short = "Fribourg"
-color = "#0c3c7c"
+color = "#555560"
 name = "Rotaract Fribourg"
 base_url = "https://fribourg.rotaract.ch"
 lang = "fr"
@@ -128,8 +156,10 @@ city = "Fribourg"
 
 [[clubs]]
 id = "geneve-international"
+logo = "crests/geneve-international.svg"
+district = "1990"
 short = "GE Intl"
-color = "#9f7fbd"
+color = "#d9a300"
 name = "Rotaract Genève International"
 base_url = "https://geneve-international.rotaract.ch"
 lang = "fr"
@@ -137,8 +167,10 @@ city = "Genève"
 
 [[clubs]]
 id = "ticino"
+logo = "crests/ticino.svg"
+district = "2000"
 short = "Ticino"
-color = "#c8102e"
+color = "#0066b3"
 name = "Rotaract Ticino"
 base_url = "https://rotaract-ticino.ch"
 lang = "it"
@@ -146,8 +178,10 @@ city = "Lugano"
 
 [[clubs]]
 id = "schweiz"
+logo = "crests/schweiz.svg"
+district = ""
 short = "CH/LI"
-color = "#d41367"
+color = "#d52b1e"
 name = "Rotaract Schweiz/Liechtenstein (national)"
 base_url = "https://rotaract.ch"
 lang = "de"
