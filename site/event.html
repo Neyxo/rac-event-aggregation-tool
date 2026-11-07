@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotaract Events</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
+</head>
+<body data-page="event">
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
+    <nav class="actions" id="actions"><a class="icon-btn" href="javascript:history.length>1?history.back():location.assign('./')" data-t="back"></a></nav>
+  </div>
+</header>
+<main class="wrap evpage" id="main"><div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div></main>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+addEventListener("DOMContentLoaded", async () => {
+  applyI18n();
+  await loadData();
+  const id = new URLSearchParams(location.search).get("id"), e = D.data.events.find(e => e.id === id), main = $("main");
+  if (!e) { main.replaceChildren(el("div", { class: "empty" }, t("empty"), el("br"), el("a", { class: "linkbtn", href: "./" }, t("show_all")))); return; }
+  document.title = e.title + " · Rotaract Events";
+  const s = new Date(e.start), en = new Date(e.end), lead = club(e.clubs[0]);
+  const share = el("button", { type: "button", class: "linkbtn" }, t("share_event"));
+  share.addEventListener("click", async () => { const url = new URL(`e/${e.id}.html`, location.href).href; const data = { title: e.title, text: `${e.title} · ${fmt.full.format(s)}${e.location ? " · " + e.location : ""}`, url }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(url); toast(t("copied")); } });
+  main.replaceChildren(
+    el("article", { class: "evdetail", style: clubStyle(lead.id) },
+      e.image ? el("div", { class: "hero" }, el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" })) : null,
+      el("div", { class: "head" },
+        el("div", { class: "date", "aria-hidden": "true" }, el("b", {}, fmt.day.format(s)), el("span", {}, fmt.mon.format(s))),
+        el("div", {}, el("h1", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e)), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))),
+        starButton(e)),
+      el("div", { class: "links" }, el("a", { class: "primary", href: e.url, target: "_blank", rel: "noopener" }, t("register")), el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, t("add_cal")), share),
+      el("p", { class: "desc" }, e.description || t("no_desc")),
+      el("dl", { class: "kv" },
+        el("dt", {}, t("when")), el("dd", {}, fmt.full.format(s) + (e.allday ? "" : ", " + fmt.time.format(s) + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""))),
+        e.location ? el("dt", {}, t("where")) : null, e.location ? el("dd", {}, e.location) : null,
+        e.registration ? el("dt", {}, t("registration")) : null, e.registration ? el("dd", {}, e.registration) : null,
+        el("dt", {}, t("club")), el("dd", {}, ...e.clubs.flatMap((c, i) => [i ? " & " : null, el("a", { href: "club.html?id=" + c }, clubLabel(c))])))),
+    el("h3", {}, t("more_events")),
+    ...D.data.events.filter(x => x.id !== e.id && !isPast(x) && x.clubs.some(c => e.clubs.includes(c))).slice(0, 3).map((x, i) => eventCard(x, i)),
+    el("footer", {}, t("made_by")));
+});
+</script>
+</body>
+</html>

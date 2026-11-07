@@ -6,24 +6,25 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 
 **https://neyxo.github.io/rac-event-aggregation-tool/**
 
-- Quick views: Upcoming, This week, Weekend, Near me, Saved, Past. The Filters button opens district, clubs (any number) and place/radius. List or month calendar layout.
+- Two pages: **Home** (`index.html`) shows your main club and the clubs you also follow, with quick views (Upcoming, This week, Weekend, Saved, Past) and a search within them; **Discover** (`discover.html`) is all of Rotaract with every filter (search, district, clubs, place/radius, Near me) and the list or month layout. Searching or filtering never changes your settings.
+- Tapping an event opens its page (`event.html?id=…`: picture, details, register, add to calendar, share, more events of that club); tapping a club chip opens the club page.
 - Each event shows its picture, full description and registration info from Polaris (the picture is only linked, not copied).
 - Light theme by default, dark via the toggle. Each club has its canton's coat of arms (the city's for city clubs) and a matching colour, set in `clubs.toml` (`logo`, `color`, `short`, `district`). The crests in `site/crests/` come from Wikimedia Commons; Swiss and Liechtenstein official coats of arms are public domain.
 - Districts: D1980 (central & north-west), D1990 (west), D2000 (east), used as a filter and shown in the event details and feed list.
 - Installable as an app (PWA): "Install" on the page shows the steps per platform; the last loaded events stay readable offline.
 - First visit: a short welcome (your clubs → subscribe → install). The clubs are pre-selected from the connection's approximate location (one lookup at get.geojs.io, fallback ipwho.is; no permission prompt, nothing stored), or from the browser language if that fails. "Show the welcome steps again" is in the Install section.
 - Settings (gear in the header): one **main club** plus clubs you **also show**, language, light/dark, install, share, welcome again. Those are the only things remembered on the device; searching and filtering never changes them. "My clubs | Everything" switches between your clubs (with a banner in your club's colours) and all of Switzerland. Tapping the Rotaract logo always returns to your "My clubs" view.
-- `about.html`: "What is Rotaract?" with live numbers, expandable questions, and a club finder by place or location, in all four languages. Linked from the header and the settings.
+- `about.html`: "What is Rotaract?" as a scroll story (Learn · Help · Celebrate), then "your club" or "find your club", FAQ, and `about-more.html` (Rotary, districts, the world: frosted panes over a Swiss map of the clubs by district and a world map). All four languages.
 - Remembers starred events on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
 - Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?d=1980`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
 - UI in German, French, Italian or English: picked from the device language, switchable in the header, or `?lang=de`. Strings live in `site/i18n.js`.
 - Share button per event: the link `e/<id>.html` shows title and picture when pasted into WhatsApp etc., then opens the app on that event (`?event=<id>`).
-- Club pages: `club.html?id=bern` (crest, district, next events, subscribe).
+- Club pages: `club.html?id=bern` (colour hero, next event with countdown, picture strip, more events, subscribe). The strip uses `photos` from `clubs.toml` if set, otherwise pictures of past events.
 - A yellow banner appears when the data is older than 30 hours; a toast offers a refresh when a new version of the app was fetched in the background.
 - Hidden pages (not linked from the UI): `dev.html` (last build, per-club counts, failures, this device's service worker/caches/prefs, reset buttons) and `map.html` (events on the swisstopo map, via Leaflet from cdnjs).
 
-Pages: `index.html`, `subscribe.html`, `club.html`, `dev.html`, `map.html`, shared `app.css` and `i18n.js`, all in `site/`. The build copies them to `public/`, adds the per-event share pages under `public/e/` and `status.json` (last run, per-club counts, failures). Plain HTML/CSS/JS, no build step; the only library is Leaflet on the hidden map page.
+Pages: `index.html`, `discover.html`, `event.html`, `club.html`, `about.html`, `about-more.html`, `subscribe.html`, `dev.html`, `map.html`; shared `app.css`, `i18n.js`, `common.js` (helpers, settings, cards, call to action) and `app.js` (home/discover), all in `site/`. The build copies them to `public/`, adds the per-event share pages under `public/e/` and `status.json` (last run, per-club counts, failures). Plain HTML/CSS/JS, no build step; the only library is Leaflet on the hidden map page.
 
 Feeds, refreshed every 6 hours:
 - one per club: `webcal://neyxo.github.io/rac-event-aggregation-tool/<club-id>.ics` (ids in `clubs.toml`)
@@ -73,3 +74,7 @@ Add a `[[clubs]]` entry to `clubs.toml` (Polaris website, language, city). The c
 - Settings → Actions → General → Workflow permissions: **Read and write** (to commit `data/`).
 
 The workflow `.github/workflows/feeds.yml` runs every 6 hours, and also on every push or manual run.
+
+## Design lab
+
+The side-by-side design variants used to pick the current look live on the local `design-lab` branch (`lab/`), served with `python3 -m http.server 8766` from the repo root at `/lab/events.html` etc. It is not pushed.

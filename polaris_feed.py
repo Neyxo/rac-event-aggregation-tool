@@ -310,7 +310,7 @@ def site_data(clubs, histories, now, cache):
         "generated": now.isoformat(timespec="minutes"),
         "clubs": [{"id": c["id"], "name": c["name"], "short": c.get("short", c["name"]), "url": c["base_url"],
                    "color": c.get("color", "#d41367"), "logo": c.get("logo", ""), "district": c.get("district", ""),
-                   "coords": locate("", c.get("city", ""), cache)} for c in clubs],
+                   "coords": locate("", c.get("city", ""), cache), "photos": c.get("photos", [])} for c in clubs],
         "events": sorted(events.values(), key=lambda e: e["start"]),
     }
 
@@ -328,8 +328,8 @@ def share_page(e, club_names):
 <meta property="og:title" content="{esc(e["title"])} · {when}">
 <meta property="og:description" content="{esc(club_names)}{' · ' + esc(e['location']) if e['location'] else ''}. {desc}">
 {image}<meta name="twitter:card" content="summary_large_image">
-<meta http-equiv="refresh" content="0; url=../?event={esc(e["id"])}">
-</head><body><p><a href="../?event={esc(e["id"])}">{esc(e["title"])}</a></p></body></html>
+<meta http-equiv="refresh" content="0; url=../event.html?id={esc(e["id"])}">
+</head><body><p><a href="../event.html?id={esc(e["id"])}">{esc(e["title"])}</a></p></body></html>
 """
 
 

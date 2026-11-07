@@ -8,6 +8,7 @@
 #   color    = club colour in the app: the dominant tint of its crest (change freely)
 #   logo     = crest shown in the app: the canton's coat of arms, or the city's for city clubs
 #              (site/crests/, from Wikimedia Commons; Swiss/LI official coats of arms are public domain)
+#   photos   = optional list of picture URLs for the strip on the club page (otherwise: pictures of past events)
 #   district = Rotary district: 1980 central/north-west, 1990 west, 2000 east; empty = national
 
 [[clubs]]

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotary, districts & the world · Rotaract Events</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>const LEAFLET = window.L;</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
+</head>
+<body data-page="about-more" class="frosted">
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
+    <nav class="actions" id="actions"><a class="icon-btn" href="about.html" data-t="ab_back"></a></nav>
+  </div>
+</header>
+<main class="wrap more">
+  <h1 data-t="ab_more"></h1>
+  <!-- each section: a full-bleed visual with a frosted pane carrying one line -->
+  <section class="vis" id="rotary"><img class="bg" alt="" referrerpolicy="no-referrer"><div class="pane"><img class="wheel" src="rotaract.svg" alt="Rotaract"><b data-t="sp_rotary"></b><span data-t="sp_rotary_t"></span></div></section>
+  <section class="vis map"><div class="bg" id="swiss"></div><div class="pane"><b data-t="sp_dist"></b><span data-t="sp_dist_t"></span><div class="leg" id="leg"></div></div></section>
+  <section class="vis map"><div class="bg" id="world"></div><div class="pane"><b data-t="sp_world"></b><span data-t="sp_world_t"></span></div></section>
+  <div id="cta"></div>
+  <footer><span data-t="made_by"></span></footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+addEventListener("DOMContentLoaded", async () => {
+  applyI18n();
+  await loadData();
+  $("cta").append(ctaBlock());
+  const pics = D.data.events.filter(e => e.image).slice(-9).map(e => e.image);
+  document.querySelector("#rotary .bg").src = pics[2] || pics[0] || "";
+  const dc = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
+  $("leg").append(...Object.entries(dc).map(([d, c]) => el("span", { style: "color:" + c }, "D" + d)));
+  const opts = { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, keyboard: false };
+  const m1 = LEAFLET.map("swiss", opts);
+  LEAFLET.tileLayer("https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg", { maxZoom: 18 }).addTo(m1);
+  const pts = D.data.clubs.filter(c => c.coords && c.district);
+  for (const c of pts) LEAFLET.circleMarker(c.coords, { radius: 7, color: "#fff", weight: 2, fillColor: dc[c.district], fillOpacity: 1 }).addTo(m1).bindTooltip(c.name);
+  m1.fitBounds(pts.map(c => c.coords), { padding: [24, 24] });
+  const m2 = LEAFLET.map("world", opts).setView([22, 10], 1);
+  LEAFLET.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 5 }).addTo(m2);
+  // dots on major cities, illustrating the worldwide network
+  for (const [la, lo] of [[47, 8], [51.5, -0.1], [40.7, -74], [34, -118], [19.4, -99], [-23.5, -46.6], [-34.6, -58.4], [30, 31.2], [-1.3, 36.8], [-26.2, 28], [6.5, 3.4], [28.6, 77.2], [19, 72.8], [1.3, 103.8], [35.7, 139.7], [37.6, 127], [31.2, 121.5], [-33.9, 151.2], [-37.8, 145], [41.9, 12.5], [48.9, 2.3], [52.5, 13.4], [55.8, 37.6], [-12, -77], [4.7, -74.1], [25.3, 55.3], [14.6, 121], [-6.2, 106.8], [13.8, 100.5], [45.4, -75.7]])
+    LEAFLET.circleMarker([la, lo], { radius: 4, color: "#fff", weight: 1, fillColor: "#d41367", fillOpacity: .95 }).addTo(m2);
+});
+</script>
+</body>
+</html>
