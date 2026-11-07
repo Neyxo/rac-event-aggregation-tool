@@ -1,0 +1,254 @@
+{
+ "209335": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-209335@rotary.ch",
+   "SUMMARY:Meeting La Virgule Présentation",
+   "DESCRIPTION:Site internet: https://lespacedapres.ch/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/209335",
+   "DTSTART;TZID=Europe/Zurich:20260204T190000",
+   "DTEND;TZID=Europe/Zurich:20260204T203000",
+   "LOCATION:L’ESPACE\\, 1 Rue du 23-Août\\, 1205 Genève\\, Suisse",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210907": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210907@rotary.ch",
+   "SUMMARY:Street Kids presentation",
+   "DESCRIPTION:Site internet: https://lespacedapres.ch/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/210907",
+   "DTSTART;TZID=Europe/Zurich:20260401T190000",
+   "LOCATION:L’ESPACE\\, 1 Rue du 23-Août\\, 1205 Genève\\, Suisse",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260401T210000"
+  ]
+ },
+ "212234": {
+  "detail": {
+   "description": "",
+   "image": "https://geneve-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/AMFqltCk/69d95c7e61c71.png?v=1.5.16",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212234@rotary.ch",
+   "SUMMARY:Presentation Joëlle  Payom - 21st May event",
+   "DESCRIPTION:Site internet: https://lespacedapres.ch/\\nConférencier(s): Jöelle Payom",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/212234",
+   "DTSTART;TZID=Europe/Zurich:20260415T190000",
+   "DTEND;TZID=Europe/Zurich:20260415T210000",
+   "LOCATION:L’ESPACE\\, 1 Rue du 23-Août\\, 1205 Genève\\, Switzerland",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212685": {
+  "detail": {
+   "description": "",
+   "image": "https://geneve-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/SWYbVJgB/6a194c016550e.jpg?v=1.5.16",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212685@rotary.ch",
+   "SUMMARY:« Project Management and How it applies to Life and Career » by Ashley Knight",
+   "DESCRIPTION:Site internet: https://lespacedapres.ch/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/212685",
+   "DTSTART;TZID=Europe/Zurich:20260603T190000",
+   "DTEND;TZID=Europe/Zurich:20260603T203000",
+   "LOCATION:L’ESPACE\\, 1 Rue du 23-Août\\, 1205 Genève\\, Suisse",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212727": {
+  "detail": {
+   "description": "",
+   "image": "https://geneve-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/pxqR4cIY/69ee0e8298d2a.jpg?v=1.5.16",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212727@rotary.ch",
+   "SUMMARY:Activity - MiniGolf Bar",
+   "DESCRIPTION:Site internet: https://www.rollersgolf.com/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/212727",
+   "DTSTART;TZID=Europe/Zurich:20260429T190000",
+   "DTEND;TZID=Europe/Zurich:20260429T213000",
+   "LOCATION:MiniGolf Bar\\, Ruelle des Templiers 4\\,  1207 Eaux-Vives\\, Genève",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212895": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212895@rotary.ch",
+   "SUMMARY:Arts Center Ecole Internationale - Exposition",
+   "DESCRIPTION:",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/212895",
+   "DTSTART;TZID=Europe/Zurich:20260506T190000",
+   "DTEND;TZID=Europe/Zurich:20260506T203000",
+   "LOCATION:7 rue Marie-Thérèse Maurette\\, 1208 Genève",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221457": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221457@rotary.ch",
+   "SUMMARY:Statutory meeting",
+   "DESCRIPTION:Site internet: https://mia-ge.ch/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/221457",
+   "DTSTART;TZID=Europe/Zurich:20260930T190000",
+   "DTEND;TZID=Europe/Zurich:20260930T210000",
+   "LOCATION:Maison Internationale des Associations\\, Rue des Savoises 15\\, 1205 Genève\\, Switzerland",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221961": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221961@rotary.ch",
+   "SUMMARY:Statutory meeting",
+   "DESCRIPTION:Site internet: https://www.beau-rivage.com/fr/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/221961",
+   "DTSTART;TZID=Europe/Zurich:20261014T190000",
+   "DTEND;TZID=Europe/Zurich:20261014T210000",
+   "LOCATION:Beau-Rivage Genève\\, Quai du Mont-Blanc 13\\, 1201 Genève",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "222522": {
+  "detail": {
+   "description": "",
+   "image": "https://geneve-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/kouRZrZc/6adf1115aedd4.png?v=1.5.16",
+   "registration": "La date limite d'inscription est dépassée"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222522@rotary.ch",
+   "SUMMARY:Club Meeting | “The Jewel Inside Us” with Manuela Morelli",
+   "DESCRIPTION:Site internet: https://www.beau-rivage.com/fr/\\nConférencier(s): Manuela Morelli",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/222522",
+   "DTSTART;TZID=Europe/Zurich:20261028T190000",
+   "DTEND;TZID=Europe/Zurich:20261028T210000",
+   "LOCATION:Beau-Rivage Genève\\, Quai du Mont-Blanc 13\\, 1201 Genève",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "222523": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": "Date limite d'inscription: lundi 9 novembre 2026 à 19:00\n\nNombre max. de participants: 30"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222523@rotary.ch",
+   "SUMMARY:Club Meeting | “From Lab to Patient: The Fight to Develop a Cancer Treatment in Challenging Times“",
+   "DESCRIPTION:Site internet: https://www.beau-rivage.com/fr/\\nConférencier(s): Hesham Ismail Hamed",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/222523",
+   "DTSTART;TZID=Europe/Zurich:20261111T190000",
+   "DTEND;TZID=Europe/Zurich:20261111T210000",
+   "LOCATION:Beau-Rivage Genève\\, Quai du Mont-Blanc 13\\, 1201 Genève",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "222524": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": "Date limite d'inscription: mercredi 25 novembre 2026 à 15:00\n\nNombre max. de participants: 40"
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222524@rotary.ch",
+   "SUMMARY:Statutory meeting",
+   "DESCRIPTION:Site internet: https://www.beau-rivage.com/fr/",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/222524",
+   "DTSTART;TZID=Europe/Zurich:20261125T190000",
+   "DTEND;TZID=Europe/Zurich:20261125T210000",
+   "LOCATION:Beau-Rivage Genève\\, Quai du Mont-Blanc 13\\, 1201 Genève",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "222674": {
+  "detail": {
+   "description": "",
+   "image": "https://geneve-international.rotaract.ch/fr/media/cache/resolve/rotary_website_content_grid_images/rc/S4P5bMj6/6ae34e2642062.PNG?filters%5Bfocus_point_crop%5D%5Bfocus%5D%5B0%5D=0&filters%5Bfocus_point_crop%5D%5Bfocus%5D%5B1%5D=0&v=1.5.16",
+   "registration": ""
+  },
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222674@rotary.ch",
+   "SUMMARY:Samedi du Partage | Volunteering event",
+   "DESCRIPTION:",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/222674",
+   "DTSTART;TZID=Europe/Zurich:20261128T080000",
+   "DTEND;TZID=Europe/Zurich:20261128T180000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}
