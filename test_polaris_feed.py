@@ -2,7 +2,7 @@
 import copy
 import datetime as dt
 
-from polaris_feed import build_calendar, clean_vevent, ics_text, locate, parse_detail, site_data, sync, unfold
+from polaris_feed import build_calendar, clean_vevent, ics_text, locate, parse_detail, share_page, site_data, sync, unfold
 
 # Shape of a real Polaris per-event .ics: folded lines, random UID, DTSTAMP,
 # duplicate DTSTART, DTEND == DTSTART.
@@ -155,6 +155,12 @@ assert site["clubs"][0]["coords"] == [47.0, 8.0], "club city geocoded for the on
 assert "old-cancelled" not in ids and "c" in ids, "same visibility rule as the feed"
 assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
 assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"
+
+# --- share page: HTML-safe, carries picture + redirect
+pg = share_page({"id": "1", "title": 'Stamm "<Test>"', "start": "2026-12-10T19:00", "allday": False, "location": "Luzern",
+                 "description": "A & B\n\nC", "image": "https://x.ch/a.png?v=1"}, "Rotaract Luzern")
+assert 'content="Stamm &quot;&lt;Test&gt;&quot; · 10.12.2026 19:00"' in pg and "<Test>" not in pg.split("<title>")[1].split("</title>")[0]
+assert 'og:image" content="https://x.ch/a.png?v=1"' in pg and 'url=../?event=1' in pg and "Rotaract Luzern · Luzern. A &amp; B C" in pg
 
 long = {"x": {"status": "active", "vevent": event("x", "20261210T190000", "ä" * 100), "sequence": 0, "modified": "T"}}
 cal = build_calendar({"name": "Test", "lang": "de"}, long, NOW)

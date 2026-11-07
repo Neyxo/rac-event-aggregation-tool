@@ -15,45 +15,49 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
 </head>
 <body>
+<a class="skip" href="#results" data-t="skip_to">Skip to events</a>
 <header>
   <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span>Events</span></a>
-    <div class="actions">
-      <button class="icon-btn" id="theme" type="button" aria-label="Switch light/dark"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A5.5 5.5 0 0 1 13.4 3.1C13 3 12.5 3 12 3z"/></svg></button>
-      <button class="icon-btn" id="share" type="button"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</button>
-      <a class="icon-btn" href="#install"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>Install</a>
+    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events">Events</span></a>
+    <div class="actions" id="actions">
+      <button class="icon-btn" id="theme" type="button" data-t-label="theme" aria-label="Switch light/dark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.4A5.5 5.5 0 0 1 13.4 3.1C13 3 12.5 3 12 3z"/></svg></button>
+      <button class="icon-btn" id="share" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><span data-t="share">Share</span></button>
+      <a class="icon-btn" href="#install"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg><span data-t="install">Install</span></a>
     </div>
   </div>
 </header>
-<div class="credits"><div class="wrap">Every public Rotaract event in Switzerland &amp; Liechtenstein · made by Jean-Michel Carrel, Rotaract Club Luzern · <a href="subscribe.html">Subscribe</a> · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener">GitHub</a></div></div>
+<div class="credits"><div class="wrap"><span data-t="credits"></span> · <a href="subscribe.html" data-t="subscribe">Subscribe</a> · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener">GitHub</a></div></div>
+<div class="banner" id="stale" role="status" hidden></div>
 
 <main class="wrap">
   <div class="filters">
     <div class="top">
       <div class="search">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="search" id="q" placeholder="Search events, places, clubs…" autocomplete="off">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="q" data-t-ph="search_ph" data-t-label="search" autocomplete="off">
       </div>
-      <button class="fbtn" id="fbtn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></svg>Filters<span class="n" id="fcount" hidden></span></button>
+      <button class="fbtn" id="fbtn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg><span data-t="filters">Filters</span><span class="n" id="fcount" hidden></span></button>
     </div>
-    <div class="row" id="views" role="group" aria-label="Quick views">
-      <button class="chip" type="button" data-view="all">Upcoming</button>
-      <button class="chip" type="button" data-view="week">This week</button>
-      <button class="chip" type="button" data-view="weekend">Weekend</button>
-      <button class="chip" type="button" data-view="near">Near me</button>
-      <button class="chip" type="button" data-view="saved">Saved ★</button>
-      <button class="chip" type="button" data-view="past">Past</button>
+    <div class="row" id="views" role="group" data-t-label="filters">
+      <button class="chip" type="button" data-view="all" data-t="v_all"></button>
+      <button class="chip" type="button" data-view="week" data-t="v_week"></button>
+      <button class="chip" type="button" data-view="weekend" data-t="v_weekend"></button>
+      <button class="chip" type="button" data-view="near" data-t="v_near"></button>
+      <button class="chip" type="button" data-view="saved" data-t="v_saved"></button>
+      <button class="chip" type="button" data-view="past" data-t="v_past"></button>
     </div>
     <div class="panel" id="panel" hidden>
-      <div class="row" id="districts" role="group" aria-label="Districts"><span class="rowlabel">District</span></div>
-      <div class="row" id="clubs" role="group" aria-label="Clubs"><span class="rowlabel">Clubs</span></div>
+      <div class="row" id="districts" role="group" data-t-label="district"></div>
+      <div class="row" id="clubs" role="group" data-t-label="clubs"></div>
       <div class="tools">
-        <input type="text" id="place" placeholder="Near a place or postcode" autocomplete="off">
-        <button class="chip" type="button" id="locate" title="Use my location">📍</button>
-        <select id="radius" aria-label="Radius">
-          <option value="">Any distance</option>
+        <input type="text" id="place" data-t-ph="place_ph" data-t-label="place_ph" autocomplete="off">
+        <button class="chip" type="button" id="locate" data-t-title="locate" data-t-label="locate">📍</button>
+        <select id="radius" data-t-label="radius">
+          <option value="" data-t="any_distance"></option>
           <option value="10">10 km</option>
           <option value="25">25 km</option>
           <option value="50">50 km</option>
@@ -64,28 +68,32 @@
     </div>
   </div>
 
-  <div class="summary"><span id="summary">Loading events…</span>
-    <div class="r"><button type="button" class="clear" id="clear" hidden>Clear</button>
-      <div class="seg" role="group" aria-label="Layout">
-        <button type="button" data-mode="list" aria-pressed="true">List</button>
-        <button type="button" data-mode="month" aria-pressed="false">Month</button>
+  <div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span>
+    <div class="r"><button type="button" class="clear" id="clear" hidden data-t="clear"></button>
+      <div class="seg" role="group" data-t-label="layout">
+        <button type="button" data-mode="list" aria-pressed="true" data-t="list"></button>
+        <button type="button" data-mode="month" aria-pressed="false" data-t="month"></button>
       </div></div></div>
-  <div id="results"></div>
+  <div id="results" aria-busy="true">
+    <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
+    <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
+    <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
+  </div>
 
   <section class="card" id="subscribe">
-    <h2>Subscribe to a calendar</h2>
-    <p>Puts the events into your phone's calendar and keeps them up to date by itself. One calendar per club, or one with every club in Switzerland &amp; Liechtenstein.</p>
-    <div class="links"><a class="primary" href="subscribe.html">Choose calendars &amp; see how</a></div>
+    <h2 data-t="sub_title"></h2>
+    <p data-t="sub_text"></p>
+    <div class="links"><a class="primary" href="subscribe.html" data-t="sub_cta"></a></div>
   </section>
 
   <section class="card" id="install">
-    <h2>Install on your phone</h2>
-    <p>Works like an app: an icon on your home screen, opens instantly, and shows the last events you saw even when you're offline. Nothing to download from an app store.</p>
+    <h2 data-t="inst_title"></h2>
+    <p data-t="inst_text"></p>
     <div id="installBody"></div>
-    <h2 style="margin-top:18px;font-size:.95rem">Share with others</h2>
-    <p>Anyone with the link can use it right away in their browser, no installation needed.</p>
-    <div class="linkbox"><input type="text" id="link" readonly><button type="button" id="copy">Copy</button></div>
-    <p class="meta" style="margin-top:14px"><a href="#" id="rerun">Show the welcome steps again</a></p>
+    <h2 style="margin-top:18px;font-size:.95rem" data-t="share_title"></h2>
+    <p data-t="share_text"></p>
+    <div class="linkbox"><input type="text" id="link" readonly data-t-label="share_title"><button type="button" id="copy" data-t="copy"></button></div>
+    <p class="meta" style="margin-top:14px"><a href="#" id="rerun" data-t="rerun"></a></p>
   </section>
 
   <footer id="footer"></footer>
@@ -96,9 +104,11 @@
 <script>
 const $ = id => document.getElementById(id);
 const PREFS_KEY = "rac.prefs", SAVED_KEY = "rac.saved";
-const DISTRICTS = { "1980": "D1980 · Central & North-West", "1990": "D1990 · West", "2000": "D2000 · East" };
+const DISTRICTS = { "1980": t("d1980"), "1990": t("d1990"), "2000": t("d2000") };
 const state = { data: null, clubs: {}, view: "all", mode: "list", clubSel: new Set(), distSel: new Set(), center: null, centerLabel: "",
                 saved: new Set(), open: new Set(), month: null, day: null };
+applyI18n();
+$("actions").prepend(langSelect());
 
 // --- helpers. Text only, never innerHTML: all event text comes from Polaris.
 function el(tag, attrs = {}, ...children) {
@@ -114,7 +124,14 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
 let toastTimer;
-function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2200); }
+function toast(msg, action) {
+  const tt = $("toast");
+  tt.replaceChildren(msg);
+  if (action) { const b = el("button", { type: "button" }, action.label); b.addEventListener("click", action.fn); tt.append(b); }
+  tt.classList.add("show"); clearTimeout(toastTimer);
+  if (!action) toastTimer = setTimeout(() => tt.classList.remove("show"), 2200);
+}
+const fold = s => (s || "").normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 function onColor(hex) { // white or dark text on a club colour
   const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255);
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5 ? "#1f1c26" : "#fff";
@@ -135,14 +152,11 @@ async function geocode(text) {
 const startOfDay = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
-// --- theme
-// Light by default; the toggle switches and remembers.
-function applyTheme(t) { document.documentElement.dataset.theme = t === "dark" ? "dark" : "light"; }
+// --- theme: light by default; the toggle switches and remembers.
 function toggleTheme() {
   const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  store.set("rac.theme", next); applyTheme(next);
+  store.set("rac.theme", next); document.documentElement.dataset.theme = next;
 }
-applyTheme(store.get("rac.theme", "light"));
 
 // --- location
 function hint(text) { $("placeHint").textContent = text; $("placeHint").hidden = !text; }
@@ -152,21 +166,21 @@ async function setPlace(text) {
     try {
       const hit = await geocode(text);
       if (hit) { state.center = hit.coords; state.centerLabel = hit.label; hint("📍 " + hit.label); }
-      else hint("Place not found");
-    } catch { hint("Couldn't look up the place (offline?)"); }
+      else hint(t("place_nf"));
+    } catch { hint(t("place_err")); }
   }
   if (state.center && !$("radius").value) $("radius").value = "25";
   render();
 }
 function locateMe() {
-  if (!navigator.geolocation) { toast("Location isn't available here"); return; }
-  hint("Locating…");
+  if (!navigator.geolocation) { toast(t("loc_none")); return; }
+  hint(t("locating"));
   navigator.geolocation.getCurrentPosition(pos => {
-    state.center = [pos.coords.latitude, pos.coords.longitude]; state.centerLabel = "you";
-    $("place").value = ""; hint("📍 Your location");
+    state.center = [pos.coords.latitude, pos.coords.longitude]; state.centerLabel = t("you");
+    $("place").value = ""; hint(t("your_location"));
     if (!$("radius").value) $("radius").value = "25";
     render();
-  }, () => { hint("Location not available"); if (state.view === "near") setView("all"); });
+  }, () => { hint(t("loc_na")); if (state.view === "near") setView("all"); });
 }
 
 // --- views & modes
@@ -184,8 +198,8 @@ function setMode(m) {
 function toggleIn(set, id) { set.has(id) ? set.delete(id) : set.add(id); renderClubChips(); render(); }
 function renderClubChips() {
   const drow = $("districts");
-  drow.replaceChildren(el("span", { class: "rowlabel" }, "District"));
-  const dall = el("button", { class: "chip district", type: "button", "aria-pressed": String(state.distSel.size === 0) }, "All");
+  drow.replaceChildren(el("span", { class: "rowlabel" }, t("district")));
+  const dall = el("button", { class: "chip district", type: "button", "aria-pressed": String(state.distSel.size === 0) }, t("all"));
   dall.addEventListener("click", () => { state.distSel.clear(); renderClubChips(); render(); });
   drow.append(dall);
   for (const [d, name] of Object.entries(DISTRICTS)) {
@@ -194,13 +208,13 @@ function renderClubChips() {
     drow.append(b);
   }
   const row = $("clubs");
-  row.replaceChildren(el("span", { class: "rowlabel" }, "Clubs"));
-  const all = el("button", { class: "chip", type: "button", "aria-pressed": String(state.clubSel.size === 0) }, "All");
+  row.replaceChildren(el("span", { class: "rowlabel" }, t("clubs")));
+  const all = el("button", { class: "chip", type: "button", "aria-pressed": String(state.clubSel.size === 0) }, t("all"));
   all.addEventListener("click", () => { state.clubSel.clear(); renderClubChips(); render(); });
   row.append(all);
   for (const c of state.data.clubs) {
     if (state.distSel.size && !state.distSel.has(c.district)) continue; // only clubs of the chosen districts
-    const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(state.clubSel.has(c.id)) }, clubMark(c), c.short);
+    const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(state.clubSel.has(c.id)), "aria-label": c.name }, clubMark(c), c.short);
     b.addEventListener("click", () => toggleIn(state.clubSel, c.id));
     row.append(b);
   }
@@ -220,11 +234,11 @@ function weekendRange(now) {
 
 // --- filtering (shared by list and month)
 function baseMatches(e) {
-  const q = $("q").value.trim().toLowerCase();
+  const q = fold($("q").value.trim());
   if (state.distSel.size && !e.clubs.some(c => state.distSel.has(state.clubs[c]?.district))) return false;
   if (state.clubSel.size && !e.clubs.some(c => state.clubSel.has(c))) return false;
   if (q) {
-    const hay = [e.title, e.description, e.location, ...e.clubs.map(c => state.clubs[c]?.name || c)].join(" ").toLowerCase();
+    const hay = fold([e.title, e.description, e.location, ...e.clubs.map(c => state.clubs[c]?.name || c)].join(" "));
     if (!q.split(/\s+/).every(w => hay.includes(w))) return false;
   }
   return true;
@@ -238,33 +252,41 @@ function withinRadius(e) {
 }
 
 // --- cards
-const fmtDay = new Intl.DateTimeFormat("en-GB", { day: "numeric" });
-const fmtMon = new Intl.DateTimeFormat("en-GB", { month: "short" });
-const fmtMonth = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" });
-const fmtWhen = new Intl.DateTimeFormat("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit" });
-const fmtTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit" });
-const fmtWeekday = new Intl.DateTimeFormat("en-GB", { weekday: "long" });
-const fmtFull = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-const starSvg = () => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z"); s.append(p); return s; };
+const fmtDay = new Intl.DateTimeFormat(LOCALE, { day: "numeric" });
+const fmtMon = new Intl.DateTimeFormat(LOCALE, { month: "short" });
+const fmtMonth = new Intl.DateTimeFormat(LOCALE, { month: "long", year: "numeric" });
+const fmtWhen = new Intl.DateTimeFormat(LOCALE, { weekday: "short", hour: "2-digit", minute: "2-digit" });
+const fmtTime = new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" });
+const fmtWeekday = new Intl.DateTimeFormat(LOCALE, { weekday: "long" });
+const fmtFull = new Intl.DateTimeFormat(LOCALE, { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const fmtStamp = new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const starSvg = () => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true"); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z"); s.append(p); return s; };
+
+async function shareEvent(e) {
+  const url = new URL(`e/${e.id}.html`, location.href).href;
+  const data = { title: e.title, text: `${e.title} · ${fmtFull.format(new Date(e.start))}${e.location ? " · " + e.location : ""}`, url };
+  if (navigator.share) { try { await navigator.share(data); } catch {} }
+  else { await navigator.clipboard.writeText(url); toast(t("copied")); }
+}
 
 function card(e) {
   const start = new Date(e.start), end = new Date(e.end), dist = distanceOf(e), open = state.open.has(e.id);
-  const when = e.allday ? fmtWeekday.format(start) + " · all day" : fmtWhen.format(start) + (sameDay(start, end) ? "–" + fmtTime.format(end) : "");
+  const when = e.allday ? fmtWeekday.format(start) + " · " + t("all_day") : fmtWhen.format(start) + (sameDay(start, end) ? "–" + fmtTime.format(end) : "");
   const where = [e.location, dist != null ? Math.round(dist) + " km" : null].filter(Boolean).join(" · ");
-  const star = el("button", { class: "star", type: "button", "aria-pressed": String(state.saved.has(e.id)), "aria-label": "Save event" }, starSvg());
+  const star = el("button", { class: "star", type: "button", "aria-pressed": String(state.saved.has(e.id)), "aria-label": t("save") + ": " + e.title }, starSvg());
   star.addEventListener("click", ev => {
     ev.stopPropagation();
     state.saved.has(e.id) ? state.saved.delete(e.id) : state.saved.add(e.id);
     store.set(SAVED_KEY, [...state.saved]);
     star.setAttribute("aria-pressed", String(state.saved.has(e.id)));
-    toast(state.saved.has(e.id) ? "Saved ★" : "Removed from saved");
+    toast(state.saved.has(e.id) ? t("saved") : t("unsaved"));
     if (state.view === "saved") render();
   });
   const title = el("button", { type: "button", "aria-expanded": String(open) }, e.title);
-  const art = el("article", { class: "event" + (e.cancelled ? " cancelled" : ""), style: clubStyle(e.clubs[0]) },
-    el("div", { class: "date" }, el("b", {}, fmtDay.format(start)), el("span", {}, fmtMon.format(start))),
+  const art = el("article", { class: "event" + (e.cancelled ? " cancelled" : ""), style: clubStyle(e.clubs[0]), id: "ev-" + e.id },
+    el("div", { class: "date", "aria-hidden": "true" }, el("b", {}, fmtDay.format(start)), el("span", {}, fmtMon.format(start))),
     el("div", { class: "body" },
-      el("h4", {}, e.cancelled ? el("span", { class: "badge" }, "Cancelled") : null, title),
+      el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, title),
       el("div", { class: "meta" }, when),
       where ? el("div", { class: "meta where", title: where }, where) : null,
       el("div", { class: "tags" }, ...e.clubs.map(c => el("span", { class: "tag", style: clubStyle(c) }, clubMark(state.clubs[c] || {}), state.clubs[c]?.short || c)))),
@@ -272,17 +294,20 @@ function card(e) {
       e.image && !open ? el("img", { class: "thumb", src: e.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null,
       star));
   if (open) {
+    const shareBtn = el("button", { type: "button", class: "linkbtn" }, t("share_event"));
+    shareBtn.addEventListener("click", () => shareEvent(e));
     art.append(el("div", { class: "detail" },
       e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null,
-      el("p", {}, e.description || "No description on Polaris."),
+      el("p", {}, e.description || t("no_desc")),
       el("dl", { class: "kv" },
-        el("dt", {}, "When"), el("dd", {}, fmtFull.format(start) + (e.allday ? "" : ", " + fmtTime.format(start) + (sameDay(start, end) ? "–" + fmtTime.format(end) : ""))),
-        e.location ? el("dt", {}, "Where") : null, e.location ? el("dd", {}, e.location) : null,
-        e.registration ? el("dt", {}, "Registration") : null, e.registration ? el("dd", {}, e.registration) : null,
-        el("dt", {}, "Club"), el("dd", {}, e.clubs.map(clubLabel).join(" & "))),
+        el("dt", {}, t("when")), el("dd", {}, fmtFull.format(start) + (e.allday ? "" : ", " + fmtTime.format(start) + (sameDay(start, end) ? "–" + fmtTime.format(end) : ""))),
+        e.location ? el("dt", {}, t("where")) : null, e.location ? el("dd", {}, e.location) : null,
+        e.registration ? el("dt", {}, t("registration")) : null, e.registration ? el("dd", {}, e.registration) : null,
+        el("dt", {}, t("club")), el("dd", {}, ...e.clubs.flatMap((c, i) => [i ? " & " : null, el("a", { href: "club.html?id=" + c }, clubLabel(c))]))),
       el("div", { class: "links" },
-        el("a", { class: "primary", href: e.url, target: "_blank", rel: "noopener" }, "Register on Polaris"),
-        el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, "Add to calendar"))));
+        el("a", { class: "primary", href: e.url, target: "_blank", rel: "noopener" }, t("register")),
+        el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, t("add_cal")),
+        shareBtn)));
   }
   const toggle = () => { open ? state.open.delete(e.id) : state.open.add(e.id); art.replaceWith(card(e)); };
   title.addEventListener("click", toggle);
@@ -317,17 +342,16 @@ function renderList(out) {
     matches.push(e);
   }
   if (state.view === "past") matches.reverse();
-  const n = matches.length, label = { all: "upcoming", week: "in the next 7 days", weekend: "this weekend", near: "near you", saved: "saved", past: "past" }[state.view];
-  const parts = [`${n} event${n === 1 ? "" : "s"} ${label}`];
+  const n = matches.length;
+  const parts = [t("s_" + state.view, { n: nEvents(n) })];
   const radius = Number($("radius").value) || (state.view === "near" ? 25 : null);
-  if (state.center && radius) parts.push(`within ${radius} km of ${state.centerLabel}`);
-  if (noLocation) parts.push(`${noLocation} without a known location hidden`);
+  if (state.center && radius) parts.push(t("within", { r: radius, place: state.centerLabel }));
+  if (noLocation) parts.push(t("no_location", { n: noLocation }));
   $("summary").textContent = parts.join(" · ");
   if (!n) {
-    const msg = state.view === "saved" ? "Nothing saved yet. Tap the star on an event to keep it here." : "No events match.";
-    const btn = el("button", { type: "button" }, "Show all upcoming");
+    const btn = el("button", { type: "button" }, t("show_all"));
     btn.addEventListener("click", clearFilters);
-    out.append(el("div", { class: "empty" }, msg, el("br"), btn));
+    out.append(el("div", { class: "empty" }, state.view === "saved" ? t("empty_saved") : t("empty"), el("br"), btn));
   }
   out.append(list(matches));
 }
@@ -350,20 +374,20 @@ function renderMonth(out) {
     }
   }
   const inMonth = events.filter(e => { const s = new Date(e.start); return s >= first && s <= new Date(last.getTime() + 864e5); });
-  $("summary").textContent = `${inMonth.length} event${inMonth.length === 1 ? "" : "s"} in ${fmtMonth.format(m)}`;
+  $("summary").textContent = t("s_month", { n: nEvents(inMonth.length), m: fmtMonth.format(m) });
 
-  const prev = el("button", { type: "button", "aria-label": "Previous month" }, "‹"), next = el("button", { type: "button", "aria-label": "Next month" }, "›");
+  const prev = el("button", { type: "button", "aria-label": t("prev_month") }, "‹"), next = el("button", { type: "button", "aria-label": t("next_month") }, "›");
   prev.addEventListener("click", () => { state.month = new Date(m.getFullYear(), m.getMonth() - 1, 1); state.day = null; render(); });
   next.addEventListener("click", () => { state.month = new Date(m.getFullYear(), m.getMonth() + 1, 1); state.day = null; render(); });
-  const today = el("button", { type: "button" }, "Today");
+  const today = el("button", { type: "button" }, t("today"));
   today.addEventListener("click", () => { state.month = new Date(now.getFullYear(), now.getMonth(), 1); state.day = startOfDay(now); render(); });
-  const grid = el("div", { class: "grid" }, ...["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(d => el("div", { class: "dow" }, d)));
+  const grid = el("div", { class: "grid", role: "grid" }, ...t("dow").map(d => el("div", { class: "dow", role: "columnheader" }, d)));
   const cells = lead + last.getDate() > 35 ? 42 : 35;
   for (let i = 0; i < cells; i++) {
     const d = new Date(gridStart); d.setDate(gridStart.getDate() + i);
     const evs = byDay[d.toDateString()] || [];
     const cell = el("button", { type: "button", class: "day" + (d.getMonth() !== m.getMonth() ? " other" : "") + (sameDay(d, now) ? " today" : ""),
-      "aria-pressed": String(state.day && sameDay(d, state.day)), "aria-label": fmtFull.format(d) + `, ${evs.length} events` },
+      "aria-pressed": String(state.day && sameDay(d, state.day)), "aria-label": fmtFull.format(d) + ", " + t("n_on_day", { n: evs.length }) },
       el("span", { class: "n" }, d.getDate()),
       ...evs.slice(0, 3).map(e => el("span", { class: "pill", style: clubStyle(e.clubs[0]), title: e.title }, e.title)),
       evs.length > 3 ? el("span", { class: "more" }, `+${evs.length - 3}`) : null);
@@ -372,15 +396,15 @@ function renderMonth(out) {
   }
   out.append(el("div", { class: "month" }, el("div", { class: "mhead" }, prev, el("h2", {}, fmtMonth.format(m)), el("div", {}, today, " ", next)), grid));
   const shown = state.day ? (byDay[state.day.toDateString()] || []) : inMonth;
-  const dl = el("div", { class: "daylist" }, el("h3", {}, state.day ? fmtFull.format(state.day) : "All events in " + fmtMonth.format(m)));
-  dl.append(shown.length ? list(shown, false) : el("p", { class: "meta" }, "No events on this day."));
+  const dl = el("div", { class: "daylist" }, el("h3", {}, state.day ? fmtFull.format(state.day) : t("all_in", { m: fmtMonth.format(m) })));
+  dl.append(shown.length ? list(shown, false) : el("p", { class: "meta" }, t("no_day")));
   out.append(dl);
 }
 
 function render() {
   if (!state.data) return;
   const out = $("results");
-  out.replaceChildren();
+  out.replaceChildren(); out.removeAttribute("aria-busy");
   state.mode === "month" ? renderMonth(out) : renderList(out);
   $("clear").hidden = !($("q").value || state.clubSel.size || state.distSel.size || $("place").value || $("radius").value || state.view !== "all" || state.mode !== "list");
   savePrefs();
@@ -409,37 +433,32 @@ function clearFilters() {
 function feedRow(c, file, count) {
   const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:");
   return el("div", { class: "feed" },
-    el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.name, count != null ? el("span", { class: "meta" }, ` · ${count} upcoming`) : null),
+    el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.name, count != null ? el("span", { class: "meta" }, t("n_upcoming", { n: count })) : null),
     el("div", { class: "l" },
-      el("a", { href: webcal }, "Apple / Outlook"),
-      el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, "Google"),
+      el("a", { href: webcal }, t("apple")),
+      el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, t("google")),
       el("a", { href: https }, ".ics")));
 }
 let installPrompt = null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; renderInstall(); });
-window.addEventListener("appinstalled", () => { installPrompt = null; toast("Installed 🎉"); renderInstall(); });
+window.addEventListener("appinstalled", () => { installPrompt = null; toast("🎉"); renderInstall(); });
 function renderInstall() {
   const body = $("installBody");
   body.replaceChildren();
-  if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) { body.append(el("p", { class: "meta" }, "✓ You're using the installed app.")); return; }
+  if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) { body.append(el("p", { class: "meta" }, t("inst_done"))); return; }
   if (installPrompt) {
-    const b = el("button", { class: "install-btn", type: "button" }, "Install app");
+    const b = el("button", { class: "install-btn", type: "button" }, t("inst_btn"));
     b.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; });
     body.append(b); return;
   }
   body.append(installGuide());
 }
-const GUIDES = {
-  ios: ["Open this page in Safari (other browsers can't install on iPhone).", "Tap the Share button (the square with an arrow, at the bottom).", "Scroll down and tap \"Add to Home Screen\", then \"Add\"."],
-  android: ["Open this page in Chrome.", "Tap the ⋮ menu in the top right.", "Tap \"Add to Home screen\" or \"Install app\", then confirm."],
-  desktop: ["Open this page in Chrome or Edge.", "Click the install icon at the right end of the address bar (a screen with an arrow).", "Click \"Install\". Or simply bookmark the page."],
-};
 function installGuide() {
   const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   const tabs = el("div", { class: "tabs", role: "tablist" }), steps = el("ol", { class: "steps" });
-  const show = key => { for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key)); steps.replaceChildren(...GUIDES[key].map(s => el("li", {}, s))); };
-  for (const [key, name] of [["ios", "iPhone / iPad"], ["android", "Android"], ["desktop", "Computer"]]) {
-    const b = el("button", { type: "button", role: "tab", "data-key": key }, name);
+  const show = key => { for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key)); steps.replaceChildren(...t("g_" + key).map(s => el("li", {}, s))); };
+  for (const key of ["ios", "android", "desktop"]) {
+    const b = el("button", { type: "button", role: "tab", "data-key": key }, t(key));
     b.addEventListener("click", () => show(key));
     tabs.append(b);
   }
@@ -461,8 +480,7 @@ async function guessClubs() {
       if (near.length) return near.slice(0, 2).map(x => x.id);
     }
   } catch {}
-  const lang = (navigator.language || "").slice(0, 2);
-  return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[lang] || [];
+  return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || [];
 }
 async function onboarding() {
   const dlg = $("ob"), body = $("obBody"), sel = new Set(await guessClubs());
@@ -470,83 +488,93 @@ async function onboarding() {
   const finish = () => {
     state.clubSel = new Set(sel); store.set("rac.onboarded", true);
     renderClubChips(); render(); dlg.close();
-    if (sel.size) toast("Showing " + [...sel].map(id => state.clubs[id]?.short).join(", "));
+    if (sel.size) toast(t("ob_showing", { clubs: [...sel].map(id => state.clubs[id]?.short).join(", ") }));
   };
   const draw = () => {
-    body.replaceChildren(el("div", { class: "bar2" }, ...[0, 1, 2].map(i => el("i", { class: i <= step ? "on" : "" }))));
+    body.replaceChildren(el("div", { class: "bar2", "aria-hidden": "true" }, ...[0, 1, 2].map(i => el("i", { class: i <= step ? "on" : "" }))));
     const nav = (nextLabel, skip) => el("div", { class: "nav" }, skip ? el("button", { class: "skip", type: "button" }, skip) : el("span"), el("button", { class: "btn", type: "button" }, nextLabel));
+    const h2 = el("h2", { id: "obTitle", tabindex: "-1" });
     if (step === 0) {
       const chips = el("div", { class: "chips" });
-      const all = el("button", { class: "chip", type: "button", "aria-pressed": String(sel.size === 0) }, "All clubs");
+      const all = el("button", { class: "chip", type: "button", "aria-pressed": String(sel.size === 0) }, t("all_clubs"));
       all.addEventListener("click", () => { sel.clear(); draw(); });
       chips.append(all);
       for (const c of state.data.clubs) {
-        const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(sel.has(c.id)) }, clubMark(c), c.short);
+        const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(sel.has(c.id)), "aria-label": c.name }, clubMark(c), c.short);
         b.addEventListener("click", () => { sel.has(c.id) ? sel.delete(c.id) : sel.add(c.id); draw(); });
         chips.append(b);
       }
-      const n = nav("Next", "Skip");
+      const n = nav(t("next"), t("skip"));
       n.lastChild.addEventListener("click", () => { step = 1; draw(); });
       n.firstChild.addEventListener("click", finish);
-      body.append(el("h2", { id: "obTitle" }, "Welcome 👋"),
-        el("p", {}, "Which clubs are you interested in? " + (sel.size ? "We pre-selected the nearest ones from your approximate location (no location access needed)." : "Pick one or more, or keep all.")),
-        chips, n);
+      h2.textContent = t("ob_welcome");
+      body.append(h2, el("p", {}, t("ob_q") + " " + (sel.size ? t("ob_pre") : t("ob_pick"))), chips, n);
     } else if (step === 1) {
       const ids = sel.size ? [...sel] : [];
       const feeds = el("div", { class: "feeds" }, ...ids.map(id => feedRow(state.clubs[id], id + ".ics", null)),
-        ids.length ? el("p", { class: "meta", style: "margin:4px 0 0" }, "Or everything at once:") : null,
-        feedRow({ name: "All Rotaract events in CH & LI (every club)" }, "all.ics", null),
-        el("p", { class: "meta", style: "margin:6px 0 0" }, "Step-by-step help: ", el("a", { href: "subscribe.html", target: "_blank" }, "subscribe page")));
-      const n = nav("Next", "Not now");
+        ids.length ? el("p", { class: "meta", style: "margin:4px 0 0" }, t("ob_or")) : null,
+        feedRow({ name: t("all_feed") }, "all.ics", null),
+        el("p", { class: "meta", style: "margin:6px 0 0" }, t("ob_help"), el("a", { href: "subscribe.html", target: "_blank" }, t("ob_help_link"))));
+      const n = nav(t("next"), t("not_now"));
       n.lastChild.addEventListener("click", () => { step = 2; draw(); });
       n.firstChild.addEventListener("click", () => { step = 2; draw(); });
-      body.append(el("h2", { id: "obTitle" }, "Subscribe to the calendar?"),
-        el("p", {}, "Events then appear in your phone's calendar and stay up to date by themselves."), feeds, n);
+      h2.textContent = t("ob_sub");
+      body.append(h2, el("p", {}, t("ob_sub_text")), feeds, n);
     } else {
-      const n = nav("Done", installPrompt ? "Not now" : null);
+      const n = nav(t("done"), installPrompt ? t("not_now") : null);
       n.lastChild.addEventListener("click", finish);
       if (installPrompt) n.firstChild.addEventListener("click", finish);
       let how;
-      if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, "✓ Already installed.");
-      else if (installPrompt) { how = el("button", { class: "install-btn", type: "button" }, "Install app"); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); }
+      if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, t("ob_installed"));
+      else if (installPrompt) { how = el("button", { class: "install-btn", type: "button" }, t("inst_btn")); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); }
       else how = installGuide();
-      body.append(el("h2", { id: "obTitle" }, "Install as an app?"),
-        el("p", {}, "An icon on your home screen, opens instantly, works offline. You can also do this later via \"Install\"."), how, n,
-        el("div", { class: "credit" }, "Made by Jean-Michel Carrel · Rotaract Club Luzern"));
+      h2.textContent = t("ob_inst");
+      body.append(h2, el("p", {}, t("ob_inst_text")), how, n, el("div", { class: "credit" }, t("credit_short")));
     }
+    h2.focus();
   };
   draw();
   dlg.addEventListener("cancel", ev => { ev.preventDefault(); finish(); });
   dlg.showModal();
+  $("obTitle").focus();
 }
 async function share() {
   const url = new URL(location.href); url.hash = "";
-  const data = { title: "Rotaract Events", text: "All Rotaract events in Switzerland & Liechtenstein", url: url.href };
+  const data = { title: "Rotaract Events", text: t("share_app"), url: url.href };
   if (navigator.share) { try { await navigator.share(data); } catch {} }
-  else { await navigator.clipboard.writeText(url.href); toast("Link copied"); }
+  else { await navigator.clipboard.writeText(url.href); toast(t("copied")); }
+}
+
+// --- service worker: register, and offer a refresh when a newer app shell was fetched in the background
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.addEventListener("message", ev => {
+    if (ev.data?.type === "updated") toast(t("new_version"), { label: t("refresh"), fn: () => location.reload() });
+  });
 }
 
 // --- boot
 async function init() {
   $("link").value = location.origin + location.pathname;
-  $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast("Link copied"); });
+  $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast(t("copied")); });
   $("share").addEventListener("click", share);
   $("theme").addEventListener("click", toggleTheme);
   renderInstall();
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 
   try { state.data = await (await fetch("events.json", { cache: "no-cache" })).json(); }
-  catch { $("summary").textContent = "Couldn't load events. Are you online?"; return; }
+  catch { $("summary").textContent = t("offline"); $("results").replaceChildren(); return; }
   state.saved = new Set(store.get(SAVED_KEY, []));
   const prefs = store.get(PREFS_KEY, {});
-  const now = new Date(), upcomingBy = {};
-  for (const e of state.data.events) if (new Date(e.end) >= now) for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1;
   for (const c of state.data.clubs) state.clubs[c.id] = c;
-  $("footer").replaceChildren(`Updated ${new Date(state.data.generated).toLocaleString("en-GB")} · Members-only events aren't shown · Registration happens on Polaris`, el("br"),
-    "Made by Jean-Michel Carrel for Rotaract Club Luzern · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, "Source & data on GitHub"));
+  const generated = new Date(state.data.generated);
+  if (Date.now() - generated > 30 * 3600e3) { $("stale").textContent = t("stale", { t: fmtStamp.format(generated) }); $("stale").hidden = false; }
+  $("footer").replaceChildren(t("updated", { t: fmtStamp.format(generated) }) + " · " + t("members_only"), el("br"),
+    t("made_by") + " · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source")));
   $("rerun").addEventListener("click", ev => { ev.preventDefault(); onboarding(); });
 
-  const p = new URLSearchParams(location.search), shared = [...p.keys()].length > 0;
+  const p = new URLSearchParams(location.search), eventId = p.get("event");
+  p.delete("lang"); p.delete("event");
+  const shared = [...p.keys()].length > 0 || !!eventId;
   const src = shared ? { ...Object.fromEntries(p), clubs: p.get("clubs")?.split(",").filter(Boolean) || [], d: p.get("d")?.split(",").filter(Boolean) || [] } : prefs;
   $("q").value = src.q || "";
   $("radius").value = src.r || "";
@@ -568,8 +596,12 @@ async function init() {
 
   if ($("place").value) await setPlace($("place").value);
   state.view = src.view || "all";
+  // A shared event link opens that event, in the Past view if it's over.
+  const target = eventId && state.data.events.find(e => e.id === eventId);
+  if (target) { state.open.add(eventId); state.view = new Date(target.end) < new Date() ? "past" : "all"; }
   for (const b of $("views").children) b.setAttribute("aria-pressed", String(b.dataset.view === state.view));
   setMode(src.mode === "month" ? "month" : "list");
+  if (target) $("ev-" + eventId)?.scrollIntoView({ block: "start" });
   if (state.view === "near" && !state.center) locateMe();
   if (!shared && !store.get("rac.onboarded", false)) onboarding();
 }

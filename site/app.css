@@ -174,3 +174,28 @@
     .thumb { width: 72px; height: 56px; }
     .tools input { width: 100%; }
   }
+
+  /* accessibility, skeletons, language, banners */
+  .skip { position: absolute; left: -999px; top: 8px; background: var(--accent); color: #fff; padding: 8px 12px; border-radius: 8px; z-index: 20; }
+  .skip:focus { left: 8px; }
+  .lang { font: inherit; font-size: .82rem; font-weight: 600; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); color: var(--text); padding: 5px 8px; }
+  .banner { background: #fff4d6; color: #6b4a00; border-bottom: 1px solid #f2d78a; font-size: .88rem; padding: 8px 16px; text-align: center; }
+  :root[data-theme=dark] .banner { background: #3a2e10; color: #ffd98a; border-color: #5a4718; }
+  .skel { display: grid; grid-template-columns: 54px 1fr; gap: 12px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px; }
+  .skel .b { background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; }
+  .skel .d { height: 54px; } .skel .t { height: 18px; width: 70%; margin-bottom: 8px; } .skel .m { height: 12px; width: 50%; margin-bottom: 6px; } .skel .s { width: 35%; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .toast button { margin-left: 10px; background: var(--accent); color: #fff; border: 0; border-radius: 99px; padding: 4px 10px; font-weight: 600; }
+  .toast.show { pointer-events: auto; }
+  .linkbtn { background: none; border: 1px solid var(--line); border-radius: 99px; padding: 7px 14px; font-weight: 600; font-size: .88rem; color: var(--text); }
+  @media (prefers-reduced-motion: reduce) { *, ::before, ::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  /* club page */
+  .hero { display: flex; align-items: center; gap: 16px; }
+  .hero img { width: 72px; height: 72px; object-fit: contain; }
+  .hero h1 { margin: 0; font-size: 1.4rem; }
+  /* dev page */
+  table.dev { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  .dev th, .dev td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .dev pre { white-space: pre-wrap; font-size: .8rem; background: var(--surface-2); padding: 8px; border-radius: 8px; }
+  #map { height: 72vh; border-radius: 14px; margin-top: 12px; }
+  @media (max-width: 600px) { #actions .icon-btn span { display: none; } #actions .icon-btn { padding: 6px 9px; } }

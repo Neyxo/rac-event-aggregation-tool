@@ -15,7 +15,13 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 - Remembers your clubs, place, view and layout on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
 - Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?d=1980`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
-`subscribe.html` is a separate page with per-platform instructions and all feeds (everything CH & LI, then per club by district). The site is in `site/` (`index.html`, `subscribe.html`, shared `app.css`); the build copies it to `public/` next to the feeds and `events.json`. Plain HTML/CSS/JS, no build step, no libraries.
+- UI in German, French, Italian or English: picked from the device language, switchable in the header, or `?lang=de`. Strings live in `site/i18n.js`.
+- Share button per event: the link `e/<id>.html` shows title and picture when pasted into WhatsApp etc., then opens the app on that event (`?event=<id>`).
+- Club pages: `club.html?id=bern` (crest, district, next events, subscribe).
+- A yellow banner appears when the data is older than 30 hours; a toast offers a refresh when a new version of the app was fetched in the background.
+- Hidden pages (not linked from the UI): `dev.html` (last build, per-club counts, failures, this device's service worker/caches/prefs, reset buttons) and `map.html` (events on the swisstopo map, via Leaflet from cdnjs).
+
+Pages: `index.html`, `subscribe.html`, `club.html`, `dev.html`, `map.html`, shared `app.css` and `i18n.js`, all in `site/`. The build copies them to `public/`, adds the per-event share pages under `public/e/` and `status.json` (last run, per-club counts, failures). Plain HTML/CSS/JS, no build step; the only library is Leaflet on the hidden map page.
 
 Feeds, refreshed every 6 hours:
 - one per club: `webcal://neyxo.github.io/rac-event-aggregation-tool/<club-id>.ics` (ids in `clubs.toml`)

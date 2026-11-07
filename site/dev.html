@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dev · Rotaract Events</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+</head>
+<body>
+<header><div class="wrap bar"><a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span>Dev</span></a>
+  <div class="actions"><a class="icon-btn" href="map.html">Map</a><a class="icon-btn" href="https://github.com/Neyxo/rac-event-aggregation-tool/actions/workflows/feeds.yml" target="_blank" rel="noopener">Actions</a><a class="icon-btn" href="./">‹ App</a></div></div></header>
+<main class="wrap">
+  <section class="card"><h2>Last build</h2><div id="build" class="meta">Loading status.json…</div><div id="failures"></div></section>
+  <section class="card"><h2>Clubs</h2><table class="dev" id="clubs"><thead><tr><th>Club</th><th>District</th><th>History</th><th>Upcoming</th><th>Cancelled</th><th>No detail</th><th>Feed</th></tr></thead><tbody></tbody></table></section>
+  <section class="card"><h2>This device</h2><div id="device" class="meta"></div><pre id="local"></pre>
+    <div class="links"><button class="linkbtn" id="clearLocal" type="button">Clear local data & caches</button><button class="linkbtn" id="unreg" type="button">Unregister service worker</button><a href="status.json">status.json</a><a href="events.json">events.json</a></div></section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+function el(tag, attrs = {}, ...children) { const n = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) k === "class" ? n.className = v : n.setAttribute(k, v); for (const c of children) if (c != null && c !== false) n.append(c); return n; }
+(async () => {
+  const [status, data] = await Promise.all([fetch("status.json", { cache: "no-cache" }).then(r => r.json()), fetch("events.json", { cache: "no-cache" }).then(r => r.json())]);
+  const gen = new Date(data.generated), age = Math.round((Date.now() - gen) / 36e5);
+  $("build").textContent = `Generated ${gen.toLocaleString()} (${age} h ago) · ${status.events} visible events · ${status.with_image} with picture · ${status.without_location} without location · stamp ${status.generated}`;
+  $("failures").append(status.failures.length ? el("pre", {}, status.failures.join("\n")) : el("p", { class: "meta" }, "No failures in the last run."));
+  const now = new Date(), up = {};
+  for (const e of data.events) if (new Date(e.end) >= now) for (const c of e.clubs) up[c] = (up[c] || 0) + 1;
+  for (const c of data.clubs) {
+    const s = status.clubs[c.id] || {};
+    $("clubs").tBodies[0].append(el("tr", {}, el("td", {}, el("a", { href: "club.html?id=" + c.id }, c.name)), el("td", {}, c.district || "–"), el("td", {}, s.events ?? "?"), el("td", {}, up[c.id] || 0), el("td", {}, s.cancelled ?? "?"), el("td", {}, s.without_detail ?? "?"), el("td", {}, el("a", { href: c.id + ".ics" }, ".ics"))));
+  }
+  const reg = "serviceWorker" in navigator ? await navigator.serviceWorker.getRegistration() : null;
+  const names = "caches" in window ? await caches.keys() : [];
+  let cached = 0; for (const n of names) cached += (await (await caches.open(n)).keys()).length;
+  $("device").textContent = `${navigator.userAgent}\nSW: ${reg ? (reg.active ? "active" : "registered") : "none"} · caches: ${names.join(", ") || "none"} (${cached} entries) · standalone: ${matchMedia("(display-mode: standalone)").matches} · lang: ${navigator.language}`;
+  const local = {}; for (const k of Object.keys(localStorage)) if (k.startsWith("rac.")) local[k] = localStorage.getItem(k);
+  $("local").textContent = JSON.stringify(local, null, 1);
+  $("clearLocal").addEventListener("click", async () => { for (const k of Object.keys(localStorage)) if (k.startsWith("rac.")) localStorage.removeItem(k); for (const n of names) await caches.delete(n); location.reload(); });
+  $("unreg").addEventListener("click", async () => { if (reg) await reg.unregister(); location.reload(); });
+})();
+</script>
+</body>
+</html>
