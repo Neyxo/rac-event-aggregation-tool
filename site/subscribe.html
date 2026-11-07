@@ -10,45 +10,43 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="stylesheet" href="app.css">
 <script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
 </head>
 <body>
 <header>
   <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span>Events</span></a>
-    <div class="actions"><a class="icon-btn" href="./">‹ Back to events</a></div>
+    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
+    <div class="actions" id="actions"><a class="icon-btn" href="./" data-t="back"></a></div>
   </div>
 </header>
 
 <main class="wrap">
   <section class="card">
-    <h2>Subscribe to a calendar</h2>
-    <p>A subscription puts the events into the calendar app you already use and keeps them up to date by itself: new events appear, moved ones move, cancelled ones are marked. Nothing to install. Members-only events are not included; registration still happens on Polaris.</p>
-    <div class="how">
-      <details><summary>iPhone / iPad (Apple Calendar)</summary><ol><li>Tap <b>Apple / Outlook</b> next to a calendar below.</li><li>Confirm "Subscribe" in the dialog that opens.</li><li>Done. It updates by itself (Settings › Calendar › Accounts lets you change how often).</li></ol></details>
-      <details><summary>Google Calendar</summary><ol><li>Tap <b>Google</b> next to a calendar below. On a phone this opens the Google Calendar website; sign in if asked.</li><li>Confirm "Add calendar".</li><li>In the Google Calendar app, open Settings and make sure the new calendar is switched on. Google refreshes subscribed calendars every few hours up to a day.</li></ol></details>
-      <details><summary>Android (Samsung or other calendar apps)</summary><ol><li>Use the <b>Google</b> button: most Android calendar apps show your Google calendars.</li><li>Then enable the new calendar in your calendar app's settings.</li></ol></details>
-      <details><summary>Outlook / Windows / Mac</summary><ol><li>Tap <b>Apple / Outlook</b>. On a Mac this opens Calendar; in Outlook choose "Add calendar › Subscribe from web".</li><li>If nothing opens, copy the <b>.ics</b> link and paste it into "Add calendar from URL" in your calendar app.</li></ol></details>
-    </div>
+    <h2 data-t="sub_title"></h2>
+    <p data-t="sp_intro"></p>
+    <div class="how" id="how"></div>
   </section>
 
   <section class="card" id="all">
-    <h2>Everything</h2>
-    <p>One calendar with every public Rotaract event in Switzerland &amp; Liechtenstein, all clubs together.</p>
+    <h2 data-t="sp_all"></h2>
+    <p data-t="sp_all_text"></p>
     <div class="feeds" id="feedAll"></div>
   </section>
 
   <section class="card">
-    <h2>Per club</h2>
-    <p>Subscribe to the clubs you care about. You can add several.</p>
+    <h2 data-t="sp_club"></h2>
+    <p data-t="sp_club_text"></p>
     <div class="feeds" id="feeds"></div>
   </section>
 
-  <footer>Made by Jean-Michel Carrel for Rotaract Club Luzern · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener">Source &amp; data on GitHub</a></footer>
+  <footer><span data-t="made_by"></span> · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener" data-t="source"></a></footer>
 </main>
 
 <script>
 const $ = id => document.getElementById(id);
-const DISTRICTS = { "1980": "District 1980 · Central & North-West", "1990": "District 1990 · West", "2000": "District 2000 · East", "": "National" };
+applyI18n();
+$("actions").prepend(langSelect());
+const DISTRICTS = { "1980": t("d1980"), "1990": t("d1990"), "2000": t("d2000"), "": t("national") };
 function el(tag, attrs = {}, ...children) {
   const n = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) { if (k === "class") n.className = v; else if (k === "style") n.style.cssText = v; else n.setAttribute(k, v); }
@@ -59,18 +57,22 @@ function onColor(hex) { const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(
 function feedRow(c, file, count) {
   const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:");
   return el("div", { class: "feed" },
-    el("div", { class: "name", style: c.color ? `--c:${c.color};--on-c:${onColor(c.color)}` : "" }, c.logo ? el("img", { src: c.logo, alt: "" }) : null, c.name, count != null ? el("span", { class: "meta" }, ` · ${count} upcoming`) : null),
+    el("div", { class: "name", style: c.color ? `--c:${c.color};--on-c:${onColor(c.color)}` : "" }, c.logo ? el("img", { src: c.logo, alt: "" }) : null,
+      c.id ? el("a", { href: "club.html?id=" + c.id, style: "color:inherit;text-decoration:none" }, c.name) : c.name, count != null ? el("span", { class: "meta" }, t("n_upcoming", { n: count })) : null),
     el("div", { class: "l" },
-      el("a", { href: webcal }, "Apple / Outlook"),
-      el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, "Google"),
+      el("a", { href: webcal }, t("apple")),
+      el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, t("google")),
       el("a", { href: https }, ".ics")));
+}
+for (const k of ["ios", "google", "android", "outlook"]) {
+  $("how").append(el("details", {}, el("summary", {}, t("sp_" + k)), el("ol", {}, ...t("sp_" + k + "_s").map(s => el("li", {}, s)))));
 }
 (async () => {
   const data = await (await fetch("events.json", { cache: "no-cache" })).json();
   const now = new Date(), upcomingBy = {};
   let total = 0;
   for (const e of data.events) if (new Date(e.end) >= now) { total++; for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1; }
-  $("feedAll").append(feedRow({ name: "All Rotaract events in Switzerland & Liechtenstein" }, "all.ics", total));
+  $("feedAll").append(feedRow({ name: t("sp_all_feed") }, "all.ics", total));
   for (const [d, name] of Object.entries(DISTRICTS)) {
     const cs = data.clubs.filter(c => c.district === d).sort((a, b) => a.name.localeCompare(b.name));
     if (cs.length) $("feeds").append(el("h3", {}, name), ...cs.map(c => feedRow(c, c.id + ".ics", upcomingBy[c.id] || 0)));

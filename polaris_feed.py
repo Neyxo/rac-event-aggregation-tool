@@ -315,6 +315,34 @@ def site_data(clubs, histories, now, cache):
     }
 
 
+def share_page(e, club_names):
+    """Tiny page per event so a shared link shows title + picture in WhatsApp etc., then opens the app on that event."""
+    esc = html.escape
+    desc = esc(" ".join(e["description"].split())[:200])
+    when = dt.datetime.fromisoformat(e["start"]).strftime("%d.%m.%Y" if e["allday"] else "%d.%m.%Y %H:%M")
+    image = f'<meta property="og:image" content="{esc(e["image"])}">\n' if e["image"] else ""
+    return f"""<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(e["title"])}</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="{esc(e["title"])} · {when}">
+<meta property="og:description" content="{esc(club_names)}{' · ' + esc(e['location']) if e['location'] else ''}. {desc}">
+{image}<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="refresh" content="0; url=../?event={esc(e["id"])}">
+</head><body><p><a href="../?event={esc(e["id"])}">{esc(e["title"])}</a></p></body></html>
+"""
+
+
+def write_status(out, site, histories, failures, stamp):
+    clubs = {}
+    for cid, h in histories.items():
+        clubs[cid] = {"events": len(h), "cancelled": sum(r["status"] == "cancelled" for r in h.values()),
+                      "without_detail": sum("detail" not in r and r["status"] == "active" for r in h.values())}
+    status = {"generated": stamp, "events": len(site["events"]), "with_image": sum(bool(e["image"]) for e in site["events"]),
+              "without_location": sum(e["coords"] is None for e in site["events"]), "clubs": clubs, "failures": failures}
+    (out / "status.json").write_text(json.dumps(status, indent=1, ensure_ascii=False) + "\n")
+
+
 def main():
     args = sys.argv[1:] + [None] * 3
     config, out, data = Path(args[0] or "clubs.toml"), Path(args[1] or "public"), Path(args[2] or "data")
@@ -358,6 +386,11 @@ def main():
     cache_path.write_text(json.dumps(cache, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
     (out / "events.json").write_text(json.dumps(site, ensure_ascii=False, separators=(",", ":")))
     shutil.copytree(Path(__file__).with_name("site"), out, dirs_exist_ok=True)
+    names = {c["id"]: c["name"] for c in clubs}
+    (out / "e").mkdir(exist_ok=True)
+    for e in site["events"]:
+        (out / "e" / f"{e['id']}.html").write_text(share_page(e, " & ".join(names.get(c, c) for c in e["clubs"])))
+    write_status(out, site, histories, failures, stamp)
     print(f"site: {len(site['events'])} events, {sum(e['coords'] is None for e in site['events'])} without location")
 
     for f in failures:

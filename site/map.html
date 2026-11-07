@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map · Rotaract Events</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="i18n.js"></script>
+</head>
+<body>
+<header><div class="wrap bar"><a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span>Map</span></a>
+  <div class="actions"><label class="icon-btn"><input type="checkbox" id="past"> <span data-t="v_past"></span></label><a class="icon-btn" href="./" data-t="back"></a></div></div></header>
+<main class="wrap"><p class="summary" id="summary"></p><div id="map"></div></main>
+<script>
+applyI18n();
+const map = L.map("map").setView([46.9, 8.2], 8);
+// Swiss national map from swisstopo (free, no key); OSM outside Switzerland.
+L.tileLayer("https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg", { maxZoom: 18, attribution: "© swisstopo" }).addTo(map);
+const fmt = new Intl.DateTimeFormat(LOCALE, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const layer = L.layerGroup().addTo(map);
+let data;
+function draw() {
+  layer.clearLayers();
+  const now = new Date(), showPast = document.getElementById("past").checked;
+  const clubs = Object.fromEntries(data.clubs.map(c => [c.id, c]));
+  let n = 0;
+  for (const e of data.events) {
+    if (!e.coords || (!showPast && new Date(e.end) < now)) continue;
+    n++;
+    const c = clubs[e.clubs[0]] || {};
+    const m = L.circleMarker(e.coords, { radius: 8, color: "#fff", weight: 1.5, fillColor: c.color || "#d41367", fillOpacity: .9 });
+    const p = document.createElement("div");
+    p.append(Object.assign(document.createElement("b"), { textContent: e.title }), document.createElement("br"), fmt.format(new Date(e.start)) + " · " + (c.short || ""), document.createElement("br"));
+    p.append(Object.assign(document.createElement("a"), { href: "./?event=" + e.id, textContent: "→" }));
+    m.bindPopup(p); layer.addLayer(m);
+  }
+  document.getElementById("summary").textContent = nEvents(n);
+}
+document.getElementById("past").addEventListener("change", draw);
+fetch("events.json", { cache: "no-cache" }).then(r => r.json()).then(d => { data = d; draw(); });
+</script>
+</body>
+</html>
