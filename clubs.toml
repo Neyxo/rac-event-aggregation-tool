@@ -1,0 +1,6 @@
+# One entry per club. `id` becomes the feed file name: public/<id>.ics
+[[clubs]]
+id = "luzern"
+name = "Rotaract Club Luzern"
+base_url = "https://rotaract-luzern.ch"
+lang = "de"
