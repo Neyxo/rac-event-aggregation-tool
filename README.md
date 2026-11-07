@@ -6,12 +6,13 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 
 **https://neyxo.github.io/rac-event-aggregation-tool/**
 
-- Quick views: Upcoming, This week, Weekend, Near me, Saved, Past. Plus search, any number of clubs, place/radius, and a list or month calendar layout.
+- Quick views: Upcoming, This week, Weekend, Near me, Saved, Past. The Filters button opens district, clubs (any number) and place/radius. List or month calendar layout.
 - Each event shows its picture, full description and registration info from Polaris (the picture is only linked, not copied).
-- Light and dark theme (follows the system, with a toggle). Club colours and chip labels come from `clubs.toml` (`color`, `short`; optional `logo` URL for a crest).
+- Light theme by default, dark via the toggle. Each club has its canton's coat of arms (the city's for city clubs) and a matching colour, set in `clubs.toml` (`logo`, `color`, `short`, `district`). The crests in `site/crests/` come from Wikimedia Commons; Swiss and Liechtenstein official coats of arms are public domain.
+- Districts: D1980 (central & north-west), D1990 (west), D2000 (east), used as a filter and shown in the event details and feed list.
 - Installable as an app (PWA): "Install" on the page shows the steps per platform; the last loaded events stay readable offline.
 - Remembers your clubs, place, view and layout on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
-- Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
+- Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?d=1980`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
 The site is in `site/`; the build copies it to `public/` next to the feeds and `events.json`. Plain HTML/CSS/JS, no build step, no libraries.
 
