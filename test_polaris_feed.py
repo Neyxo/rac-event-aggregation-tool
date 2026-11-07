@@ -150,7 +150,7 @@ j = next(e for e in site["events"] if e["id"] == "j")
 assert ids.count("j") == 1 and j["clubs"] == ["luzern", "bern"]
 assert j["image"] == "https://x.ch/a.png" and j["description"] == "Full text" and j["registration"] == "until Friday"
 assert next(e for e in site["events"] if e["id"] == "a")["image"] == "", "no detail yet -> empty, not missing"
-assert site["clubs"][0]["color"] == "#d41367" and site["clubs"][0]["short"] == "L", "defaults"
+assert site["clubs"][0]["color"] == "#d41367" and site["clubs"][0]["short"] == "L" and site["clubs"][0]["district"] == "", "defaults"
 assert "old-cancelled" not in ids and "c" in ids, "same visibility rule as the feed"
 assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
 assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"

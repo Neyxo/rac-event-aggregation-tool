@@ -309,7 +309,7 @@ def site_data(clubs, histories, now, cache):
     return {
         "generated": now.isoformat(timespec="minutes"),
         "clubs": [{"id": c["id"], "name": c["name"], "short": c.get("short", c["name"]), "url": c["base_url"],
-                   "color": c.get("color", "#d41367"), "logo": c.get("logo", "")} for c in clubs],
+                   "color": c.get("color", "#d41367"), "logo": c.get("logo", ""), "district": c.get("district", "")} for c in clubs],
         "events": sorted(events.values(), key=lambda e: e["start"]),
     }
 

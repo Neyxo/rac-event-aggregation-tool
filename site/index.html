@@ -17,13 +17,13 @@
 <style>
   :root {
     --bg: #f5f4f7; --surface: #ffffff; --surface-2: #f0eef3; --text: #1f1c26; --muted: #5f5a6a; --line: #dedae5;
-    --accent: #d41367; --accent-hover: #b50f57; --on-accent: #fff; --danger: #b42318; --today: #fff4f8;
+    --accent: #d41367; --accent-hover: #b50f57; --on-accent: #fff; --azure: #0067c8; --danger: #b42318; --today: #fff4f8;
     --shadow: 0 1px 2px rgba(31,28,38,.05), 0 4px 14px -6px rgba(31,28,38,.10);
     color-scheme: light;
   }
   :root[data-theme=dark] {
     --bg: #17151c; --surface: #211e28; --surface-2: #2a2733; --text: #efecf3; --muted: #aaa4b5; --line: #37333f;
-    --accent: #ff5c9d; --accent-hover: #ff7bb0; --on-accent: #1f1c26; --danger: #ff8a80; --today: #2f2230;
+    --accent: #ff5c9d; --accent-hover: #ff7bb0; --on-accent: #1f1c26; --azure: #5aa9ff; --danger: #ff8a80; --today: #2f2230;
     --shadow: 0 1px 2px rgba(0,0,0,.35), 0 6px 18px -6px rgba(0,0,0,.5);
     color-scheme: dark;
   }
@@ -36,7 +36,7 @@
   .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
 
   /* header */
-  header { background: var(--surface); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top); position: sticky; top: 0; z-index: 5; }
+  header { background: var(--surface); border-bottom: 1px solid var(--line); border-top: 3px solid var(--accent); padding-top: env(safe-area-inset-top); position: sticky; top: 0; z-index: 5; }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 60px; }
   .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
   .brand img { height: 30px; width: auto; display: block; }
@@ -49,30 +49,41 @@
 
   /* filters */
   .filters { padding: 16px 0 4px; }
-  .search { position: relative; }
+  .top { display: flex; gap: 8px; }
+  .search { position: relative; flex: 1; }
+  .fbtn { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 0 14px; font-weight: 600; box-shadow: var(--shadow); }
+  .fbtn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+  .fbtn .n { background: var(--accent); color: var(--on-accent); border-radius: 99px; font-size: .75rem; min-width: 20px; height: 20px; display: inline-grid; place-items: center; padding: 0 5px; }
+  .fbtn .n[hidden] { display: none; }
+  .fbtn[aria-expanded=true] { border-color: var(--azure); color: var(--azure); }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px 12px 12px; margin-top: 10px; }
+  .panel[hidden] { display: none; }
+  .panel .row { padding: 8px 0 2px; }
   .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; }
   .search input { width: 100%; font: inherit; font-size: 1rem; padding: 12px 14px 12px 42px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
   .row { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; align-items: center; }
   .row::-webkit-scrollbar { display: none; }
   .chip { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 99px; padding: 6px 13px; font-size: .9rem; font-weight: 500; line-height: 1.3; }
   .chip:hover { border-color: var(--muted); }
-  .chip[aria-pressed=true] { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .chip[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .chip.district[aria-pressed=true] { background: var(--azure); border-color: var(--azure); color: #fff; }
   .chip .dot { width: 10px; height: 10px; border-radius: 99px; background: var(--c); flex: 0 0 auto; }
-  .chip img { width: 16px; height: 16px; border-radius: 99px; object-fit: cover; }
+  .chip img { width: 18px; height: 18px; object-fit: contain; }
   .chip.club[aria-pressed=true] { background: var(--c); border-color: var(--c); color: var(--on-c); }
   .rowlabel { flex: 0 0 auto; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-right: 2px; }
-  .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
   .tools select, .tools input { font: inherit; font-size: .92rem; padding: 7px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--text); }
   .tools input { width: 170px; }
-  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-left: auto; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   .seg button { background: var(--surface); border: 0; padding: 7px 12px; font-size: .9rem; font-weight: 500; }
-  .seg button[aria-pressed=true] { background: var(--text); color: var(--bg); }
+  .seg button[aria-pressed=true] { background: var(--azure); color: #fff; }
   .hint { font-size: .8rem; color: var(--muted); width: 100%; }
-  .summary { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; color: var(--muted); font-size: .9rem; margin: 14px 2px 8px; }
-  .summary button { background: none; border: 0; color: var(--accent); padding: 0; font-weight: 600; }
+  .summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: .9rem; margin: 14px 2px 8px; }
+  .summary .r { display: flex; align-items: center; gap: 12px; }
+  .summary .clear { background: none; border: 0; color: var(--accent); padding: 0; font-weight: 600; }
 
   /* list */
-  h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 22px 2px 8px; }
+  h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 22px 2px 8px; }
   .event { display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px; }
   .date { text-align: center; background: var(--c); color: var(--on-c); border-radius: 10px; padding: 6px 0 5px; height: fit-content; }
   .date b { display: block; font-size: 1.35rem; line-height: 1.05; }
@@ -86,7 +97,7 @@
   .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .tag { display: inline-flex; align-items: center; gap: 5px; font-size: .76rem; font-weight: 600; color: var(--text); background: var(--surface-2); border-radius: 99px; padding: 2px 9px 2px 6px; }
   .tag .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--c); }
-  .tag img { width: 14px; height: 14px; border-radius: 99px; object-fit: cover; }
+  .tag img { width: 14px; height: 14px; object-fit: contain; }
   .side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
   .thumb { width: 88px; height: 66px; object-fit: cover; border-radius: 10px; background: var(--surface-2); display: block; }
   .star { background: none; border: 0; padding: 2px; color: var(--muted); line-height: 1; }
@@ -117,7 +128,7 @@
   .day { min-height: 84px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; background: var(--surface); text-align: left; font: inherit; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
   .day.other { opacity: .45; }
   .day.today { background: var(--today); border-color: var(--accent); }
-  .day[aria-pressed=true] { outline: 2px solid var(--text); outline-offset: -2px; }
+  .day[aria-pressed=true] { outline: 2px solid var(--azure); outline-offset: -2px; }
   .day .n { font-size: .78rem; font-weight: 600; color: var(--muted); }
   .day.today .n { color: var(--accent); }
   .pill { font-size: .68rem; line-height: 1.25; padding: 1px 5px; border-radius: 4px; background: var(--c); color: var(--on-c); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -136,6 +147,8 @@
   .feeds { display: grid; gap: 6px; }
   .feed { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--surface-2); border-radius: 10px; padding: 8px 12px; }
   .feed .name { display: flex; align-items: center; gap: 8px; }
+  .feed .name img { width: 18px; height: 18px; object-fit: contain; }
+  .feeds h3 { margin: 12px 2px 4px; }
   .feed .l { display: flex; gap: 12px; font-size: .88rem; white-space: nowrap; }
   .steps { margin: 8px 0 0; padding-left: 20px; } .steps li { margin: 4px 0; }
   .install-btn { background: var(--accent); color: var(--on-accent); border: 0; border-radius: 99px; padding: 9px 16px; font-weight: 600; }
@@ -144,7 +157,7 @@
   .linkbox button { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); padding: 0 12px; }
   .tabs { display: flex; gap: 6px; margin: 10px 0 4px; }
   .tabs button { border: 1px solid var(--line); background: var(--surface-2); border-radius: 99px; padding: 4px 12px; font-size: .85rem; }
-  .tabs button[aria-selected=true] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .tabs button[aria-selected=true] { background: var(--azure); color: #fff; border-color: var(--azure); }
   footer { color: var(--muted); font-size: .8rem; margin: 28px 0 calc(32px + env(safe-area-inset-bottom)); text-align: center; }
   .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: .9rem; box-shadow: var(--shadow); opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 10; }
   .toast.show { opacity: 1; }
@@ -154,7 +167,6 @@
     .event { grid-template-columns: 50px 1fr auto; gap: 10px; }
     .thumb { width: 72px; height: 56px; }
     .tools input { width: 100%; }
-    .seg { margin-left: 0; }
   }
 </style>
 </head>
@@ -172,9 +184,12 @@
 
 <main class="wrap">
   <div class="filters">
-    <div class="search">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="search" id="q" placeholder="Search events, places, clubs…" autocomplete="off">
+    <div class="top">
+      <div class="search">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="q" placeholder="Search events, places, clubs…" autocomplete="off">
+      </div>
+      <button class="fbtn" id="fbtn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 24 24"><path d="M3 5h18M6 12h12M10 19h4"/></svg>Filters<span class="n" id="fcount" hidden></span></button>
     </div>
     <div class="row" id="views" role="group" aria-label="Quick views">
       <button class="chip" type="button" data-view="all">Upcoming</button>
@@ -184,26 +199,30 @@
       <button class="chip" type="button" data-view="saved">Saved ★</button>
       <button class="chip" type="button" data-view="past">Past</button>
     </div>
-    <div class="row" id="clubs" role="group" aria-label="Clubs"><span class="rowlabel">Clubs</span></div>
-    <div class="tools">
-      <input type="text" id="place" placeholder="Near a place or postcode" autocomplete="off">
-      <button class="chip" type="button" id="locate" title="Use my location">📍</button>
-      <select id="radius" aria-label="Radius">
-        <option value="">Any distance</option>
-        <option value="10">10 km</option>
-        <option value="25">25 km</option>
-        <option value="50">50 km</option>
-        <option value="100">100 km</option>
-      </select>
-      <div class="seg" role="group" aria-label="Layout">
-        <button type="button" data-mode="list" aria-pressed="true">List</button>
-        <button type="button" data-mode="month" aria-pressed="false">Month</button>
+    <div class="panel" id="panel" hidden>
+      <div class="row" id="districts" role="group" aria-label="Districts"><span class="rowlabel">District</span></div>
+      <div class="row" id="clubs" role="group" aria-label="Clubs"><span class="rowlabel">Clubs</span></div>
+      <div class="tools">
+        <input type="text" id="place" placeholder="Near a place or postcode" autocomplete="off">
+        <button class="chip" type="button" id="locate" title="Use my location">📍</button>
+        <select id="radius" aria-label="Radius">
+          <option value="">Any distance</option>
+          <option value="10">10 km</option>
+          <option value="25">25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+        </select>
+        <div class="hint" id="placeHint" hidden></div>
       </div>
-      <div class="hint" id="placeHint" hidden></div>
     </div>
   </div>
 
-  <div class="summary"><span id="summary">Loading events…</span><button type="button" id="clear" hidden>Clear filters</button></div>
+  <div class="summary"><span id="summary">Loading events…</span>
+    <div class="r"><button type="button" class="clear" id="clear" hidden>Clear</button>
+      <div class="seg" role="group" aria-label="Layout">
+        <button type="button" data-mode="list" aria-pressed="true">List</button>
+        <button type="button" data-mode="month" aria-pressed="false">Month</button>
+      </div></div></div>
   <div id="results"></div>
 
   <section class="card" id="subscribe">
@@ -228,7 +247,8 @@
 <script>
 const $ = id => document.getElementById(id);
 const PREFS_KEY = "rac.prefs", SAVED_KEY = "rac.saved";
-const state = { data: null, clubs: {}, view: "all", mode: "list", clubSel: new Set(), center: null, centerLabel: "",
+const DISTRICTS = { "1980": "D1980 · Central & North-West", "1990": "D1990 · West", "2000": "D2000 · East" };
+const state = { data: null, clubs: {}, view: "all", mode: "list", clubSel: new Set(), distSel: new Set(), center: null, centerLabel: "",
                 saved: new Set(), open: new Set(), month: null, day: null };
 
 // --- helpers. Text only, never innerHTML: all event text comes from Polaris.
@@ -251,7 +271,8 @@ function onColor(hex) { // white or dark text on a club colour
   return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5 ? "#1f1c26" : "#fff";
 }
 function clubStyle(id) { const c = state.clubs[id]?.color || "#d41367"; return `--c:${c};--on-c:${onColor(c)}`; }
-function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : el("span", { class: "dot" }); }
+function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading: "lazy" }) : el("span", { class: "dot" }); }
+function clubLabel(id) { const c = state.clubs[id]; return c ? c.name + (c.district ? ` (D${c.district})` : "") : id; }
 function km(a, b) {
   const rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
@@ -311,21 +332,35 @@ function setMode(m) {
   $("views").style.display = m === "month" ? "none" : "";
   render();
 }
-function toggleClub(id) {
-  state.clubSel.has(id) ? state.clubSel.delete(id) : state.clubSel.add(id);
-  renderClubChips(); render();
-}
+function toggleIn(set, id) { set.has(id) ? set.delete(id) : set.add(id); renderClubChips(); render(); }
 function renderClubChips() {
+  const drow = $("districts");
+  drow.replaceChildren(el("span", { class: "rowlabel" }, "District"));
+  const dall = el("button", { class: "chip district", type: "button", "aria-pressed": String(state.distSel.size === 0) }, "All");
+  dall.addEventListener("click", () => { state.distSel.clear(); renderClubChips(); render(); });
+  drow.append(dall);
+  for (const [d, name] of Object.entries(DISTRICTS)) {
+    const b = el("button", { class: "chip district", type: "button", "aria-pressed": String(state.distSel.has(d)), title: name }, name);
+    b.addEventListener("click", () => toggleIn(state.distSel, d));
+    drow.append(b);
+  }
   const row = $("clubs");
   row.replaceChildren(el("span", { class: "rowlabel" }, "Clubs"));
   const all = el("button", { class: "chip", type: "button", "aria-pressed": String(state.clubSel.size === 0) }, "All");
   all.addEventListener("click", () => { state.clubSel.clear(); renderClubChips(); render(); });
   row.append(all);
   for (const c of state.data.clubs) {
+    if (state.distSel.size && !state.distSel.has(c.district)) continue; // only clubs of the chosen districts
     const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(state.clubSel.has(c.id)) }, clubMark(c), c.short);
-    b.addEventListener("click", () => toggleClub(c.id));
+    b.addEventListener("click", () => toggleIn(state.clubSel, c.id));
     row.append(b);
   }
+  const n = state.distSel.size + (state.clubSel.size ? 1 : 0) + ($("place").value ? 1 : 0) + ($("radius").value ? 1 : 0);
+  $("fcount").textContent = n; $("fcount").hidden = !n;
+}
+function togglePanel(open) {
+  const o = open ?? $("panel").hidden;
+  $("panel").hidden = !o; $("fbtn").setAttribute("aria-expanded", String(o));
 }
 function weekendRange(now) {
   const sat = startOfDay(now); sat.setDate(sat.getDate() + ((6 - sat.getDay()) % 7));
@@ -337,6 +372,7 @@ function weekendRange(now) {
 // --- filtering (shared by list and month)
 function baseMatches(e) {
   const q = $("q").value.trim().toLowerCase();
+  if (state.distSel.size && !e.clubs.some(c => state.distSel.has(state.clubs[c]?.district))) return false;
   if (state.clubSel.size && !e.clubs.some(c => state.clubSel.has(c))) return false;
   if (q) {
     const hay = [e.title, e.description, e.location, ...e.clubs.map(c => state.clubs[c]?.name || c)].join(" ").toLowerCase();
@@ -394,7 +430,7 @@ function card(e) {
         el("dt", {}, "When"), el("dd", {}, fmtFull.format(start) + (e.allday ? "" : ", " + fmtTime.format(start) + (sameDay(start, end) ? "–" + fmtTime.format(end) : ""))),
         e.location ? el("dt", {}, "Where") : null, e.location ? el("dd", {}, e.location) : null,
         e.registration ? el("dt", {}, "Registration") : null, e.registration ? el("dd", {}, e.registration) : null,
-        el("dt", {}, "Club"), el("dd", {}, e.clubs.map(c => state.clubs[c]?.name || c).join(" & "))),
+        el("dt", {}, "Club"), el("dd", {}, e.clubs.map(clubLabel).join(" & "))),
       el("div", { class: "links" },
         el("a", { class: "primary", href: e.url, target: "_blank", rel: "noopener" }, "Register on Polaris"),
         el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, "Add to calendar"))));
@@ -497,7 +533,7 @@ function render() {
   const out = $("results");
   out.replaceChildren();
   state.mode === "month" ? renderMonth(out) : renderList(out);
-  $("clear").hidden = !($("q").value || state.clubSel.size || $("place").value || $("radius").value || state.view !== "all" || state.mode !== "list");
+  $("clear").hidden = !($("q").value || state.clubSel.size || state.distSel.size || $("place").value || $("radius").value || state.view !== "all" || state.mode !== "list");
   savePrefs();
 }
 
@@ -505,17 +541,18 @@ function render() {
 function savePrefs() {
   const p = new URLSearchParams();
   if ($("q").value) p.set("q", $("q").value);
+  if (state.distSel.size) p.set("d", [...state.distSel].join(","));
   if (state.clubSel.size) p.set("clubs", [...state.clubSel].join(","));
   if ($("place").value) p.set("place", $("place").value);
   if ($("radius").value) p.set("r", $("radius").value);
   if (state.view !== "all") p.set("view", state.view);
   if (state.mode !== "list") p.set("mode", state.mode);
   history.replaceState(null, "", p.toString() ? "?" + p : location.pathname);
-  store.set(PREFS_KEY, { clubs: [...state.clubSel], place: $("place").value, r: $("radius").value, view: state.view === "near" ? "all" : state.view, mode: state.mode });
+  store.set(PREFS_KEY, { clubs: [...state.clubSel], d: [...state.distSel], place: $("place").value, r: $("radius").value, view: state.view === "near" ? "all" : state.view, mode: state.mode });
 }
 function clearFilters() {
   $("q").value = ""; $("place").value = ""; $("radius").value = ""; hint("");
-  state.center = null; state.clubSel.clear(); state.day = null;
+  state.center = null; state.clubSel.clear(); state.distSel.clear(); state.day = null;
   renderClubChips(); setMode("list"); setView("all");
 }
 
@@ -580,22 +617,27 @@ async function init() {
   const now = new Date(), upcomingBy = {};
   for (const e of state.data.events) if (new Date(e.end) >= now) for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1;
   for (const c of state.data.clubs) state.clubs[c.id] = c;
-  $("feeds").append(feedRow({ name: "All clubs" }, "all.ics", null),
-    ...[...state.data.clubs].sort((a, b) => a.name.localeCompare(b.name)).map(c => feedRow(c, c.id + ".ics", upcomingBy[c.id] || 0)));
+  $("feeds").append(feedRow({ name: "All clubs" }, "all.ics", null));
+  for (const [d, name] of [...Object.entries(DISTRICTS), ["", "National"]]) {
+    const cs = state.data.clubs.filter(c => c.district === d).sort((a, b) => a.name.localeCompare(b.name));
+    if (cs.length) $("feeds").append(el("h3", {}, name), ...cs.map(c => feedRow(c, c.id + ".ics", upcomingBy[c.id] || 0)));
+  }
   $("footer").textContent = `Updated ${new Date(state.data.generated).toLocaleString("en-GB")} · Members-only events aren't shown · Registration happens on Polaris`;
 
   const p = new URLSearchParams(location.search), shared = [...p.keys()].length > 0;
-  const src = shared ? { ...Object.fromEntries(p), clubs: p.get("clubs")?.split(",").filter(Boolean) || [] } : prefs;
+  const src = shared ? { ...Object.fromEntries(p), clubs: p.get("clubs")?.split(",").filter(Boolean) || [], d: p.get("d")?.split(",").filter(Boolean) || [] } : prefs;
   $("q").value = src.q || "";
   $("radius").value = src.r || "";
   $("place").value = src.place || "";
   state.clubSel = new Set((src.clubs || []).filter(c => state.clubs[c]));
+  state.distSel = new Set((src.d || []).filter(d => DISTRICTS[d]));
   renderClubChips();
+  $("fbtn").addEventListener("click", () => togglePanel());
 
   let timer;
   $("q").addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(render, 150); });
-  $("radius").addEventListener("change", render);
-  $("place").addEventListener("change", () => setPlace($("place").value));
+  $("radius").addEventListener("change", () => { renderClubChips(); render(); });
+  $("place").addEventListener("change", () => { renderClubChips(); setPlace($("place").value); });
   $("place").addEventListener("keydown", ev => { if (ev.key === "Enter") $("place").blur(); });
   $("locate").addEventListener("click", locateMe);
   $("clear").addEventListener("click", clearFilters);
