@@ -10,6 +10,7 @@ the feed from that history:
 Usage: python3 polaris_feed.py [clubs.toml] [out_dir] [data_dir]
 """
 import datetime as dt
+import html
 import json
 import re
 import shutil
@@ -97,6 +98,31 @@ def fetch_event(club, event_id):
     if "BEGIN:VEVENT" not in ics:  # members-only / deleted events redirect to the login page
         return None
     return clean_vevent(ics, event_id)
+
+
+def html_text(fragment):
+    """Rough HTML -> text: paragraphs/line breaks become newlines, tags are dropped, entities decoded."""
+    t = re.sub(r"</p>|</div>|</h\d>", "\n\n", re.sub(r"<br\s*/?>|</li>", "\n", fragment))
+    t = html.unescape(re.sub(r"<[^>]+>", "", t))
+    t = re.sub(r"[ \t]*\n[ \t]*", "\n", re.sub(r"[ \t]+", " ", t))
+    return re.sub(r"\n\n+", "\n\n", t).strip()
+
+
+def parse_detail(page):
+    """Image, full description and registration info from a Polaris event page."""
+    image = re.search(r'property="og:image"\s+content="([^"]+)"', page)
+    desc = re.search(r'ct-block-type-primary-code">(.*?)</div>', page, re.S)
+    reg = re.search(r'event-participant-container">.*?<small>(.*?)</small>', page, re.S)
+    return {
+        "image": html.unescape(image.group(1)) if image else "",
+        "description": html_text(desc.group(1)) if desc else "",
+        "registration": html_text(reg.group(1)) if reg else "",
+    }
+
+
+def fetch_detail(club, event_id):
+    time.sleep(0.5)
+    return parse_detail(get(f"{club['base_url']}/{club['lang']}/agenda/show/{event_id}"))
 
 
 def unfold(ics):
@@ -264,6 +290,7 @@ def site_data(clubs, histories, now, cache):
                 continue
             ev = rec["vevent"]
             location = ics_text(ev, "LOCATION")
+            detail = rec.get("detail", {})
             events[i] = {
                 "id": i,
                 "clubs": [club["id"]],
@@ -274,12 +301,15 @@ def site_data(clubs, histories, now, cache):
                 "location": location,
                 "coords": locate(location, club.get("city", ""), cache),
                 "url": ics_text(ev, "URL"),
-                "description": ics_text(ev, "DESCRIPTION")[:1500],
+                "description": (detail.get("description") or ics_text(ev, "DESCRIPTION"))[:4000],
+                "image": detail.get("image", ""),
+                "registration": detail.get("registration", ""),
                 "cancelled": rec["status"] == "cancelled",
             }
     return {
         "generated": now.isoformat(timespec="minutes"),
-        "clubs": [{"id": c["id"], "name": c["name"], "url": c["base_url"]} for c in clubs],
+        "clubs": [{"id": c["id"], "name": c["name"], "short": c.get("short", c["name"]), "url": c["base_url"],
+                   "color": c.get("color", "#d41367"), "logo": c.get("logo", "")} for c in clubs],
         "events": sorted(events.values(), key=lambda e: e["start"]),
     }
 
@@ -299,6 +329,13 @@ def main():
         try:
             listed = event_ids(club, backfill=not history and club.get("backfill", False))
             errors = sync(history, listed, lambda i: fetch_event(club, i), now, stamp)
+            # Event page (image, full text, registration): fetched once per event, again when the event changed.
+            for i, rec in history.items():
+                if rec["status"] == "active" and ("detail" not in rec or rec["modified"] == stamp):
+                    try:
+                        rec["detail"] = fetch_detail(club, i)
+                    except Exception as e:
+                        errors.append(f"{i} detail: {e}")  # left out; retried next run
             path.write_text(json.dumps(history, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
             failures += [f"{club['id']} {e}" for e in errors]
         except Exception as e:
