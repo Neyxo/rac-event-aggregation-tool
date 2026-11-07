@@ -1,7 +1,7 @@
 // App shell: serve from cache, refresh in the background. Events: network first, cache as offline fallback.
 // No version bumps needed: every successful fetch updates the cache.
 const CACHE = "rac-events";
-const SHELL = ["./", "index.html", "manifest.webmanifest", "icon.svg", "rotaract.svg", "icon-192.png", "icon-512.png"];
+const SHELL = ["./", "index.html", "manifest.webmanifest", "icon.svg", "rotaract.svg", "app.css", "subscribe.html", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

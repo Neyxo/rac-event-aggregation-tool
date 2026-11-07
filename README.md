@@ -15,7 +15,7 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 - Remembers your clubs, place, view and layout on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
 - Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?d=1980`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
-The site is in `site/`; the build copies it to `public/` next to the feeds and `events.json`. Plain HTML/CSS/JS, no build step, no libraries.
+`subscribe.html` is a separate page with per-platform instructions and all feeds (everything CH & LI, then per club by district). The site is in `site/` (`index.html`, `subscribe.html`, shared `app.css`); the build copies it to `public/` next to the feeds and `events.json`. Plain HTML/CSS/JS, no build step, no libraries.
 
 Feeds, refreshed every 6 hours:
 - one per club: `webcal://neyxo.github.io/rac-event-aggregation-tool/<club-id>.ics` (ids in `clubs.toml`)
