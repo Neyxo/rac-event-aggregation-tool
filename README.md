@@ -33,7 +33,13 @@ Members-only events are not included.
 
 ## How events are tracked
 
-Each run syncs Polaris into `data/<club-id>.json`, which the workflow commits, and builds the feeds and site from those files:
+Each run syncs Polaris into `data/<club-id>.json` and builds the feeds and site from those files. The history lives on the **`data` branch** (checked out into `data/` by the workflow and committed there), so `main` only ever has real changes. To work locally:
+
+```bash
+git worktree add data data
+```
+
+Each run then:
 
 - **Past events** are kept for good, even after Polaris drops them from its "upcoming" list or deletes them. They're never re-downloaded.
 - **Changed events** (moved, renamed, …) are updated, and calendars pick up the change (higher `SEQUENCE`).
@@ -51,7 +57,7 @@ History starts with the current year; clubs with `backfill = true` import every 
 
 ```bash
 python3 test_polaris_feed.py
-python3 polaris_feed.py        # updates data/, writes feeds + site to public/
+python3 polaris_feed.py        # updates data/ (the data branch), writes feeds + site to public/
 python3 -m http.server -d public 8000
 ```
 

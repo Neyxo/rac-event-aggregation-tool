@@ -24,6 +24,11 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      # The event history lives on the `data` branch, so the bot's commits never land on main.
+      - uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data
       - run: python3 test_polaris_feed.py
       # A failing club keeps its last good history; the other clubs still update.
       # The run is marked failed at the end so the problem gets noticed.
@@ -31,11 +36,12 @@ jobs:
         continue-on-error: true
         run: python3 polaris_feed.py clubs.toml public data
       - name: Save event history
+        working-directory: data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data
-          git diff --cached --quiet || { git commit -m "Update event history" && git pull --rebase && git push; }
+          git add -A
+          git diff --cached --quiet || { git commit -m "Update event history" && git push; }
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
