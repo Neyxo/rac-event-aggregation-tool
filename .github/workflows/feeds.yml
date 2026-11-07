@@ -8,31 +8,38 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write  # commit the event history in data/
   pages: write
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: feeds
+  cancel-in-progress: false  # never interrupt a history commit
 
 jobs:
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-      - run: python3 test_polaris_feed.py
-      # If Polaris fails, the job fails and the last deployed feeds stay online.
-      - run: python3 polaris_feed.py clubs.toml public
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
-  deploy:
-    needs: build
+  feeds:
     runs-on: ubuntu-24.04
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - run: python3 test_polaris_feed.py
+      # A failing club keeps its last good history; the other clubs still update.
+      # The run is marked failed at the end so the problem gets noticed.
+      - id: feeds
+        continue-on-error: true
+        run: python3 polaris_feed.py clubs.toml public data
+      - name: Save event history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || { git commit -m "Update event history" && git pull --rebase && git push; }
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
       - id: deployment
         uses: actions/deploy-pages@v4
+      - if: steps.feeds.outcome == 'failure'
+        run: echo "::error::Some clubs or events failed to sync, see the feeds step" && exit 1
