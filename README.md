@@ -6,10 +6,12 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 
 **https://neyxo.github.io/rac-event-aggregation-tool/**
 
-- Quick views: Upcoming, This week, Weekend, Near me, Saved, Past. Plus search, club, place/radius.
+- Quick views: Upcoming, This week, Weekend, Near me, Saved, Past. Plus search, any number of clubs, place/radius, and a list or month calendar layout.
+- Each event shows its picture, full description and registration info from Polaris (the picture is only linked, not copied).
+- Light and dark theme (follows the system, with a toggle). Club colours and chip labels come from `clubs.toml` (`color`, `short`; optional `logo` URL for a crest).
 - Installable as an app (PWA): "Install" on the page shows the steps per platform; the last loaded events stay readable offline.
-- Remembers your club, place and view on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
-- Shareable: filters go into the URL, e.g. `?club=bern`, `?place=Luzern&r=50`, `?view=weekend`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
+- Remembers your clubs, place, view and layout on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
+- Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
 The site is in `site/`; the build copies it to `public/` next to the feeds and `events.json`. Plain HTML/CSS/JS, no build step, no libraries.
 
@@ -29,6 +31,7 @@ Each run syncs Polaris into `data/<club-id>.json`, which the workflow commits, a
 - **Safety brake:** a run that would cancel more than half of a club's upcoming events at once is refused, because that's almost certainly a Polaris problem. The club keeps its last good state.
 - **If Polaris is unreachable**, the affected club or event keeps its last good state, the other clubs still update, and the workflow run is marked failed, so GitHub emails you.
 - **Joint events** listed by several clubs appear once, because Polaris event ids are global.
+- **Event pages** (picture URL, full description, registration deadline) are fetched once per event and again when the event changes, so a normal run stays at a few hundred requests.
 
 History starts with the current year; clubs with `backfill = true` import every past year on their first run.
 

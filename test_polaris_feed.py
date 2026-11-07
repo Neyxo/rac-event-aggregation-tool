@@ -2,7 +2,7 @@
 import copy
 import datetime as dt
 
-from polaris_feed import build_calendar, clean_vevent, ics_text, locate, site_data, sync, unfold
+from polaris_feed import build_calendar, clean_vevent, ics_text, locate, parse_detail, site_data, sync, unfold
 
 # Shape of a real Polaris per-event .ics: folded lines, random UID, DTSTAMP,
 # duplicate DTSTART, DTEND == DTSTART.
@@ -119,6 +119,16 @@ assert cal.count("BEGIN:VEVENT") == 5, "past + a + b + d + cancelled c"
 assert cal.index("polaris-past@") < cal.index("polaris-a@") < cal.index("polaris-d@"), "sorted by start"
 assert "SEQUENCE:1" in events and "DTSTAMP:T3" in events
 
+# --- event page details
+PAGE = ('<meta property="og:image" content="https://x.ch/media/cache/a.png?v=1"/>'
+        '<div class="col ct-block-type-primary-code"><p>Erster Absatz &amp; mehr.</p><p>Zweiter<br/>Zeile</p></div>'
+        '<div class="event-participant-container"><h2>Anmeldung</h2><small> Anmeldung bis: Freitag <br/><br/> Max: 20 </small><div id="x">')
+d = parse_detail(PAGE)
+assert d["image"] == "https://x.ch/media/cache/a.png?v=1", d
+assert d["description"] == "Erster Absatz & mehr.\n\nZweiter\nZeile", repr(d["description"])
+assert d["registration"] == "Anmeldung bis: Freitag\n\nMax: 20", repr(d["registration"])
+assert parse_detail("<html></html>") == {"image": "", "description": "", "registration": ""}
+
 # --- site data
 assert ics_text(["LOCATION:Inseliquai\\, 6005 Luzern", "DESCRIPTION:a\\nb\\; c"], "LOCATION") == "Inseliquai, 6005 Luzern"
 assert ics_text(["DESCRIPTION:a\\nb\\; c"], "DESCRIPTION") == "a\nb; c"
@@ -130,12 +140,17 @@ assert locate("Rudolfs Weihnachtsmarkt, Inseliquai, 6005 Luzern", "Bern", cache)
 assert locate("Nowhere", "Luzern", cache) == [47.0, 8.0]
 assert locate("", "Luzern", cache) == [47.0, 8.0]
 
-joint = {"status": "active", "vevent": event("j", "20261201T190000", "Joint"), "sequence": 0, "modified": "T"}
+joint = {"status": "active", "vevent": event("j", "20261201T190000", "Joint"), "sequence": 0, "modified": "T",
+         "detail": {"image": "https://x.ch/a.png", "description": "Full text", "registration": "until Friday"}}
 histories = {"luzern": {**h, "j": joint}, "bern": {"j": joint}}
 clubs = [{"id": "luzern", "name": "L", "base_url": "u", "city": "Luzern"}, {"id": "bern", "name": "B", "base_url": "u", "city": "Luzern"}]
 site = site_data(clubs, histories, NOW, cache)
 ids = [e["id"] for e in site["events"]]
-assert ids.count("j") == 1 and next(e for e in site["events"] if e["id"] == "j")["clubs"] == ["luzern", "bern"]
+j = next(e for e in site["events"] if e["id"] == "j")
+assert ids.count("j") == 1 and j["clubs"] == ["luzern", "bern"]
+assert j["image"] == "https://x.ch/a.png" and j["description"] == "Full text" and j["registration"] == "until Friday"
+assert next(e for e in site["events"] if e["id"] == "a")["image"] == "", "no detail yet -> empty, not missing"
+assert site["clubs"][0]["color"] == "#d41367" and site["clubs"][0]["short"] == "L", "defaults"
 assert "old-cancelled" not in ids and "c" in ids, "same visibility rule as the feed"
 assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
 assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"
