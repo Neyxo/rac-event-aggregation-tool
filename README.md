@@ -11,6 +11,7 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 - Light theme by default, dark via the toggle. Each club has its canton's coat of arms (the city's for city clubs) and a matching colour, set in `clubs.toml` (`logo`, `color`, `short`, `district`). The crests in `site/crests/` come from Wikimedia Commons; Swiss and Liechtenstein official coats of arms are public domain.
 - Districts: D1980 (central & north-west), D1990 (west), D2000 (east), used as a filter and shown in the event details and feed list.
 - Installable as an app (PWA): "Install" on the page shows the steps per platform; the last loaded events stay readable offline.
+- First visit: a short welcome (your clubs → subscribe → install). The clubs are pre-selected from the connection's approximate location (one lookup at get.geojs.io, fallback ipwho.is; no permission prompt, nothing stored), or from the browser language if that fails. "Show the welcome steps again" is in the Install section.
 - Remembers your clubs, place, view and layout on that device. Saved (starred) events are stored on the device too. Nothing is sent anywhere.
 - Shareable: filters go into the URL, e.g. `?clubs=bern,luzern`, `?d=1980`, `?place=Luzern&r=50`, `?view=weekend`, `?mode=month`. A shared link overrides the remembered settings, and anyone can open it without installing anything.
 
