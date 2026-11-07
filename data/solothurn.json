@@ -1,0 +1,18 @@
+{
+ "200559": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-200559@rotary.ch",
+   "SUMMARY:Dreikönigstag-Anlass zu Gunsten von ROKJ (Hands-on)",
+   "DESCRIPTION:",
+   "URL:https://rotaract-solothurn.ch/de/agenda/show/200559",
+   "DTSTART;TZID=Europe/Zurich:20260106T120000",
+   "DTEND;TZID=Europe/Zurich:20260106T200000",
+   "LOCATION:Nähere Informationen zu Treffpunkt\\, Schichten etc. folgen",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

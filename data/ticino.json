@@ -1,0 +1,402 @@
+{
+ "206658": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206658@rotary.ch",
+   "SUMMARY:Assemblea Ordinaria",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/206658",
+   "DTSTART;TZID=Europe/Zurich:20260121T190000",
+   "DTEND;TZID=Europe/Zurich:20260121T213000",
+   "LOCATION:Locanda della Masseria\\, Via Trevano 2\\, 6948 Porza",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "209231": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-209231@rotary.ch",
+   "SUMMARY:Il Rotaract al Rabadan",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/209231",
+   "DTSTART;TZID=Europe/Zurich:20260212T180000",
+   "DTEND;TZID=Europe/Zurich:20260212T230000",
+   "LOCATION:Rabadan\\, Bellinzona",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "209600": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-209600@rotary.ch",
+   "SUMMARY:Tra genitori e schermi: le sfide dell’adolescenza di oggi",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/209600",
+   "DTSTART;TZID=Europe/Zurich:20260305T191500",
+   "LOCATION:Locanda della Masseria\\, Via Trevano 2\\, 6948 Porza",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260305T211500"
+  ]
+ },
+ "209976": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-209976@rotary.ch",
+   "SUMMARY:Alla scoperta delle Marche",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/209976",
+   "DTSTART;TZID=Europe/Zurich:20260514T090000",
+   "DTEND;TZID=Europe/Zurich:20260517T120000",
+   "LOCATION:Cupra Marittima",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210733": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210733@rotary.ch",
+   "SUMMARY:Aperi-Pasqua",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/210733",
+   "DTSTART;TZID=Europe/Zurich:20260402T183000",
+   "LOCATION:Locanda della Masseria\\, Via Trevano 2\\, 6948 Porza",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260402T203000"
+  ]
+ },
+ "211254": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-211254@rotary.ch",
+   "SUMMARY:SERVICE -  STAND PASTO SOSPESO",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/211254",
+   "DTSTART;TZID=Europe/Zurich:20260327T100000",
+   "DTEND;TZID=Europe/Zurich:20260329T190000",
+   "LOCATION:Lugano - Villa Ciani",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "211255": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-211255@rotary.ch",
+   "SUMMARY:SERVICE -  GIORNATA DELLE FAMIGLIE",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/211255",
+   "DTSTART;TZID=Europe/Zurich:20260426T095000",
+   "DTEND;TZID=Europe/Zurich:20260426T161000",
+   "LOCATION:Via Ceresio 15\\, Capannone di Pregassona",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "211258": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-211258@rotary.ch",
+   "SUMMARY:Rokj - \"Nessun bambino ai margini\"",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/211258",
+   "DTSTART;TZID=Europe/Zurich:20260506T180000",
+   "DTEND;TZID=Europe/Zurich:20260506T220000",
+   "LOCATION:Villa Ciani",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212159": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212159@rotary.ch",
+   "SUMMARY:VISITA GUIDATA -  VISMARA & CO SA",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/212159",
+   "DTSTART;TZID=Europe/Zurich:20260429T173000",
+   "DTEND;TZID=Europe/Zurich:20260429T213000",
+   "LOCATION:Vismara - Via alla stampa\\, 21 - Lugano",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212864": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212864@rotary.ch",
+   "SUMMARY:Passaggio delle cariche con assemblea generale",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/212864",
+   "DTSTART;TZID=Europe/Zurich:20260611T191500",
+   "DTEND;TZID=Europe/Zurich:20260611T213000",
+   "LOCATION:Villa Principe Leopoldo",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212951": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212951@rotary.ch",
+   "SUMMARY:PILATES BREAKFAST",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/212951",
+   "DTSTART;TZID=Europe/Zurich:20260509T100000",
+   "DTEND;TZID=Europe/Zurich:20260509T113000",
+   "LOCATION:Parco Tassino",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "215552": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215552@rotary.ch",
+   "SUMMARY:Rotaract Aperitivo con cinema a Paradiso",
+   "DESCRIPTION:Sito web: http://www.rac-luganoceresio.ch/club/activities/agenda.php",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/215552",
+   "DTSTART;TZID=Europe/Zurich:20260701T191500",
+   "DTEND;TZID=Europe/Zurich:20260701T231500",
+   "LOCATION:Lido Riva Caccia + Parco del Guidino Paradiso",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217457": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217457@rotary.ch",
+   "SUMMARY:Alla scoperta di Lugano - La bella sconosciuta e cena al Flamel",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/217457",
+   "DTSTART;TZID=Europe/Zurich:20260715T180000",
+   "DTEND;TZID=Europe/Zurich:20260715T220000",
+   "LOCATION:Piazza Riforma + FLAMEL Restaurant & Mixology Bar",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217600": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217600@rotary.ch",
+   "SUMMARY:Piadina Party in cascina!",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/217600",
+   "DTSTART;TZID=Europe/Zurich:20260730T190000",
+   "DTEND;TZID=Europe/Zurich:20260730T230000",
+   "LOCATION:Cascina di Sorengo\\, Via Cremignone 4G\\, 6924 Sorengo",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218371": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218371@rotary.ch",
+   "SUMMARY:Interclub con RC Locarno al Ristorante Vela Bianca di Ascona",
+   "DESCRIPTION:Sito web: https://www.ristorantevelabianca.ch/",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/218371",
+   "DTSTART;TZID=Europe/Zurich:20260818T190000",
+   "DTEND;TZID=Europe/Zurich:20260818T230000",
+   "LOCATION:Ristorante Vela Bianca Ascona",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218644": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218644@rotary.ch",
+   "SUMMARY:Rotary Youth Exchange con Rotary Lugano",
+   "DESCRIPTION:Sito web: https://www.leopoldohotel.com/it/",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/218644",
+   "DTSTART;TZID=Europe/Zurich:20260824T191500",
+   "DTEND;TZID=Europe/Zurich:20260824T223000",
+   "LOCATION:Villa Principe Leopoldo\\, Via Montalbano 5\\, 6900 Lugano",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218645": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218645@rotary.ch",
+   "SUMMARY:Bracciate aperte",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/218645",
+   "DTSTART;TZID=Europe/Zurich:20260829T160000",
+   "DTEND;TZID=Europe/Zurich:20260829T190000",
+   "LOCATION:Lido di Lugano\\, Via Lido\\, 6900 Lugano",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218646": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218646@rotary.ch",
+   "SUMMARY:Clean-Up Day",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/218646",
+   "DTSTART;TZID=Europe/Zurich:20260919T090000",
+   "DTEND;TZID=Europe/Zurich:20260919T160000",
+   "LOCATION:Ecocentro di Massagno\\, Via Lepori 8\\, 6900 Massagno",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218647": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218647@rotary.ch",
+   "SUMMARY:Run 4 Charity",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/218647",
+   "DTSTART;TZID=Europe/Zurich:20260927T133000",
+   "DTEND;TZID=Europe/Zurich:20260927T163000",
+   "LOCATION:Lugano",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218648": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218648@rotary.ch",
+   "SUMMARY:Future Farmers - Incontro con Lorenzo Tognola",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/218648",
+   "DTSTART;TZID=Europe/Zurich:20261008T190000",
+   "DTEND;TZID=Europe/Zurich:20261008T223000",
+   "LOCATION:Ristorante Buonap\\, Stabile Laboratori Protetti\\, via Collina d'Oro 3\\, 6924 Sorengo",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221804": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221804@rotary.ch",
+   "SUMMARY:Cena con il governatore del distretto Urs Meyer e il Rotary Lugano",
+   "DESCRIPTION:Sito web: https://www.leopoldohotel.com/it/\\nRelatore/i: Urs Meyer",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/221804",
+   "DTSTART;TZID=Europe/Zurich:20261012T191500",
+   "DTEND;TZID=Europe/Zurich:20261012T220000",
+   "LOCATION:Villa Principe Leopoldo\\, via Montalbano 5\\, 6900 Lugano",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221805": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221805@rotary.ch",
+   "SUMMARY:Come sta il Ticino a tavola?",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/221805",
+   "DTSTART;TZID=Europe/Zurich:20261111T191500",
+   "DTEND;TZID=Europe/Zurich:20261111T220000",
+   "LOCATION:Hotel Ristorante Unione\\, Via Henri Guisan 1\\, 6500 Bellinzona",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221806": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221806@rotary.ch",
+   "SUMMARY:ROTARACT INTERDISTRICT CONFERENCE 2027",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/221806",
+   "DTSTART;TZID=Europe/Zurich:20270417T100000",
+   "DTEND;TZID=Europe/Zurich:20270417T180000",
+   "LOCATION:Castelgrande\\, Bellinzona",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221807": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221807@rotary.ch",
+   "SUMMARY:Brunch di Natale",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/221807",
+   "DTSTART;TZID=Europe/Zurich:20261129T104500",
+   "DTEND;TZID=Europe/Zurich:20261129T140000",
+   "LOCATION:Ristorante Ariva\\, Riva Paradiso 3\\, 6900 Paradiso",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "222259": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222259@rotary.ch",
+   "SUMMARY:Conviviale interclub con RC Lugano e RC Lugano-Lago - Intelligenza artificiale con il Prof. Luca Maria Gambardella",
+   "DESCRIPTION:",
+   "URL:https://rotaract-ticino.ch/it/agenda/show/222259",
+   "DTSTART;TZID=Europe/Zurich:20261028T191500",
+   "DTEND;TZID=Europe/Zurich:20261028T221500",
+   "LOCATION:Villa Principe Leopoldo",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

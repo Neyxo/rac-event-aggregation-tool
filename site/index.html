@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotaract Events</title>
+<meta name="description" content="All public Rotaract events in Switzerland and Liechtenstein: this week, near you, by club, or search. Subscribe to a club's calendar.">
+<meta name="theme-color" content="#d41367">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rotaract">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+  :root {
+    --bg: #f4f2f6; --surface: #fff; --surface-2: #faf8fb; --text: #1c1a21; --muted: #6e6879; --line: #e6e2eb;
+    --accent: #d41367; --accent-2: #8f0e49; --on-accent: #fff; --soft: #fbe4ee; --danger: #b42318;
+    --shadow: 0 1px 2px rgba(28,26,33,.06), 0 6px 20px -8px rgba(28,26,33,.14);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121016; --surface: #1c1922; --surface-2: #221e2a; --text: #eeeaf2; --muted: #a39cb0; --line: #302b38;
+      --accent: #ff4f98; --accent-2: #ff8ab9; --on-accent: #1c1922; --soft: #3a1b2a; --danger: #ff8a80;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -8px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  button { font: inherit; cursor: pointer; }
+
+  /* header */
+  header { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); color: #fff; padding: calc(16px + env(safe-area-inset-top)) 16px 54px; }
+  .bar { max-width: 820px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; }
+  .brand svg { width: 30px; height: 30px; }
+  .bar .actions { display: flex; gap: 8px; }
+  .ghost { background: rgba(255,255,255,.16); color: #fff; border: 1px solid rgba(255,255,255,.35); border-radius: 99px; padding: 6px 12px; font-size: .85rem; font-weight: 600; }
+  .ghost:hover { background: rgba(255,255,255,.26); }
+  .tagline { max-width: 820px; margin: 14px auto 0; opacity: .92; font-size: .95rem; }
+
+  main { max-width: 820px; margin: -38px auto 0; padding: 0 16px calc(48px + env(safe-area-inset-bottom)); }
+
+  /* search + filters */
+  .panel { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); padding: 12px; }
+  .search { position: relative; }
+  .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); }
+  .search input { width: 100%; font: inherit; font-size: 1rem; padding: 11px 12px 11px 38px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); }
+  input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 12px 0 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: 0 0 auto; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); border-radius: 99px; padding: 6px 13px; font-size: .9rem; font-weight: 500; }
+  .chip[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .more { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 8px; }
+  .field label { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 3px 2px; }
+  .field select, .field input { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); }
+  .place { display: flex; gap: 6px; }
+  .place button { flex: 0 0 auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); padding: 0 10px; }
+  .hint { font-size: .78rem; color: var(--muted); margin: 3px 0 0 2px; min-height: 1.1em; }
+
+  /* results */
+  .summary { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; color: var(--muted); font-size: .9rem; margin: 20px 2px 6px; }
+  .summary button { background: none; border: 0; color: var(--accent); padding: 0; font-size: .9rem; }
+  h2 { font-size: 1.05rem; margin: 26px 2px 8px; }
+  h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 22px 2px 8px; }
+  .event { display: grid; grid-template-columns: 58px 1fr auto; gap: 12px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px; border-left: 4px solid hsl(var(--hue) 70% 50%); }
+  .date { text-align: center; background: hsl(var(--hue) 70% 50% / .14); color: hsl(var(--hue) 60% 35%); border-radius: 10px; padding: 7px 0; height: fit-content; }
+  @media (prefers-color-scheme: dark) { .date { color: hsl(var(--hue) 80% 78%); } }
+  .date b { display: block; font-size: 1.4rem; line-height: 1.05; }
+  .date span { font-size: .7rem; text-transform: uppercase; font-weight: 600; letter-spacing: .04em; }
+  .event h4 { margin: 0 0 3px; font-size: 1.02rem; line-height: 1.3; }
+  .event h4 a { color: var(--text); text-decoration: none; }
+  .event h4 a:hover { color: var(--accent); }
+  .meta { color: var(--muted); font-size: .87rem; }
+  .club { display: inline-block; font-size: .78rem; font-weight: 600; color: hsl(var(--hue) 60% 38%); background: hsl(var(--hue) 70% 50% / .12); border-radius: 99px; padding: 1px 8px; margin: 4px 6px 0 0; }
+  @media (prefers-color-scheme: dark) { .club { color: hsl(var(--hue) 80% 78%); } }
+  .cancelled h4 a { text-decoration: line-through; }
+  .badge { display: inline-block; font-size: .72rem; font-weight: 700; color: var(--danger); border: 1px solid currentColor; border-radius: 99px; padding: 0 7px; margin-right: 6px; vertical-align: 2px; }
+  .star { align-self: start; background: none; border: 0; padding: 4px; color: var(--muted); line-height: 1; }
+  .star svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .star[aria-pressed=true] { color: #e8a317; }
+  .star[aria-pressed=true] svg { fill: currentColor; }
+  details { margin-top: 6px; font-size: .9rem; grid-column: 2 / -1; }
+  summary { cursor: pointer; color: var(--accent); font-weight: 500; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  details p { white-space: pre-line; margin: 8px 0; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .links a { display: inline-block; text-decoration: none; font-weight: 600; font-size: .85rem; border: 1px solid var(--line); border-radius: 99px; padding: 5px 12px; color: var(--text); }
+  .links a.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .empty { text-align: center; color: var(--muted); padding: 36px 12px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); }
+  .empty button { margin-top: 10px; border: 1px solid var(--line); background: var(--surface-2); border-radius: 99px; padding: 6px 14px; color: var(--text); }
+
+  /* subscribe + install */
+  section.card { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow); padding: 16px; margin-top: 28px; }
+  section.card h2 { margin: 0 0 4px; }
+  section.card > p { margin: 0 0 12px; color: var(--muted); font-size: .92rem; }
+  .feeds { display: grid; gap: 6px; }
+  .feed { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+  .feed .l { display: flex; gap: 10px; font-size: .88rem; white-space: nowrap; }
+  .steps { margin: 8px 0 0; padding-left: 20px; }
+  .steps li { margin: 4px 0; }
+  .install-btn { background: var(--accent); color: var(--on-accent); border: 0; border-radius: 99px; padding: 9px 16px; font-weight: 600; }
+  .linkbox { display: flex; gap: 6px; margin-top: 8px; }
+  .linkbox input { flex: 1; font: inherit; font-size: .9rem; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); }
+  .linkbox button { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); color: var(--text); padding: 0 12px; }
+  .tabs { display: flex; gap: 6px; margin: 10px 0 4px; }
+  .tabs button { border: 1px solid var(--line); background: var(--surface-2); color: var(--text); border-radius: 99px; padding: 4px 12px; font-size: .85rem; }
+  .tabs button[aria-selected=true] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  footer { color: var(--muted); font-size: .8rem; margin-top: 28px; text-align: center; }
+  .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: .9rem; box-shadow: var(--shadow); opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .more { grid-template-columns: 1fr; }
+    .feed { flex-direction: column; align-items: flex-start; }
+    .event { grid-template-columns: 52px 1fr auto; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="#fff" opacity=".18"/><circle cx="32" cy="32" r="22" fill="none" stroke="#fff" stroke-width="5"/><circle cx="32" cy="32" r="7" fill="#fff"/></svg>
+      Rotaract Events
+    </div>
+    <div class="actions">
+      <button class="ghost" id="share" type="button">Share</button>
+      <a class="ghost" href="#install" style="text-decoration:none">Install</a>
+    </div>
+  </div>
+  <p class="tagline">Every public Rotaract event in Switzerland &amp; Liechtenstein, in one place.</p>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="q" placeholder="Search events, places, clubs…" autocomplete="off">
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Quick views">
+      <button class="chip" type="button" data-view="all">Upcoming</button>
+      <button class="chip" type="button" data-view="week">This week</button>
+      <button class="chip" type="button" data-view="weekend">Weekend</button>
+      <button class="chip" type="button" data-view="near">Near me</button>
+      <button class="chip" type="button" data-view="saved">Saved ★</button>
+      <button class="chip" type="button" data-view="past">Past</button>
+    </div>
+    <div class="more">
+      <div class="field">
+        <label for="club">Club</label>
+        <select id="club"><option value="">All clubs</option></select>
+      </div>
+      <div class="field">
+        <label for="place">Near</label>
+        <div class="place">
+          <input type="text" id="place" placeholder="Place or postcode" autocomplete="off">
+          <button type="button" id="locate" title="Use my location" aria-label="Use my location">📍</button>
+        </div>
+        <div class="hint" id="placeHint"></div>
+      </div>
+      <div class="field">
+        <label for="radius">Radius</label>
+        <select id="radius">
+          <option value="">Anywhere</option>
+          <option value="10">10 km</option>
+          <option value="25">25 km</option>
+          <option value="50">50 km</option>
+          <option value="100">100 km</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary"><span id="summary">Loading events…</span><button type="button" id="clear" hidden>Clear filters</button></div>
+  <div id="results"></div>
+
+  <section class="card" id="subscribe">
+    <h2>Subscribe to a calendar</h2>
+    <p>Puts the events into your phone's calendar and keeps them up to date by itself.</p>
+    <div class="feeds" id="feeds"></div>
+  </section>
+
+  <section class="card" id="install">
+    <h2>Install on your phone</h2>
+    <p>Works like an app: an icon on your home screen, opens instantly, and it even shows the last events you saw when you're offline. Nothing to download from an app store.</p>
+    <div id="installBody"></div>
+    <h2 style="margin-top:18px;font-size:.95rem">Share with others</h2>
+    <p>Anyone with the link can use it right away in their browser, no installation needed.</p>
+    <div class="linkbox"><input type="text" id="link" readonly><button type="button" id="copy">Copy</button></div>
+  </section>
+
+  <footer id="footer"></footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const PREFS_KEY = "rac.prefs", SAVED_KEY = "rac.saved";
+const state = { data: null, clubs: {}, view: "all", center: null, centerLabel: "", saved: new Set(), prefs: {} };
+
+// --- tiny helpers. Text only, never innerHTML: event text comes from Polaris.
+function el(tag, attrs = {}, ...children) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v; else if (k === "style") n.style.cssText = v; else n.setAttribute(k, v);
+  }
+  for (const c of children) if (c != null && c !== false) n.append(c);
+  return n;
+}
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+let toastTimer;
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2200); }
+function hue(id) { let h = 0; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 360; return h; }
+function km(a, b) {
+  const rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
+  return 12742 * Math.asin(Math.sqrt(h));
+}
+async function geocode(text) {
+  const url = "https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&sr=4326&limit=1&searchText=" + encodeURIComponent(text);
+  const r = (await (await fetch(url)).json()).results?.[0];
+  return r ? { coords: [r.attrs.lat, r.attrs.lon], label: r.attrs.label.replace(/<[^>]+>/g, "") } : null;
+}
+
+// --- location
+async function setPlace(text) {
+  $("placeHint").textContent = "";
+  state.center = null;
+  if (text.trim()) {
+    try {
+      const hit = await geocode(text);
+      if (hit) { state.center = hit.coords; state.centerLabel = hit.label; $("placeHint").textContent = "📍 " + hit.label; }
+      else $("placeHint").textContent = "Place not found";
+    } catch { $("placeHint").textContent = "Couldn't look up the place (offline?)"; }
+  }
+  if (state.center && !$("radius").value) $("radius").value = "25";
+  render();
+}
+function locateMe() {
+  if (!navigator.geolocation) { toast("Location isn't available here"); return; }
+  $("placeHint").textContent = "Locating…";
+  navigator.geolocation.getCurrentPosition(pos => {
+    state.center = [pos.coords.latitude, pos.coords.longitude];
+    state.centerLabel = "you";
+    $("place").value = "";
+    $("placeHint").textContent = "📍 Your location";
+    if (!$("radius").value) $("radius").value = "25";
+    render();
+  }, () => { $("placeHint").textContent = "Location not available"; if (state.view === "near") setView("all"); });
+}
+
+// --- views
+function setView(v) {
+  state.view = v;
+  for (const b of $("chips").children) b.setAttribute("aria-pressed", String(b.dataset.view === v));
+  if (v === "near" && !state.center) locateMe(); else render();
+}
+function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
+function weekendRange(now) {
+  const sat = startOfDay(now); sat.setDate(sat.getDate() + ((6 - sat.getDay()) % 7));
+  if (now.getDay() === 0) sat.setDate(sat.getDate() - 7); // it's Sunday: this weekend started yesterday
+  const end = new Date(sat); end.setDate(end.getDate() + 2);
+  return [sat, end];
+}
+
+// --- rendering
+const fmtDay = new Intl.DateTimeFormat("en-GB", { day: "numeric" });
+const fmtMon = new Intl.DateTimeFormat("en-GB", { month: "short" });
+const fmtMonth = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" });
+const fmtWhen = new Intl.DateTimeFormat("en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit" });
+const fmtWeekday = new Intl.DateTimeFormat("en-GB", { weekday: "long" });
+const starSvg = () => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z"); s.append(p); return s; };
+
+function card(e, dist) {
+  const start = new Date(e.start), h = hue(e.clubs[0]);
+  const when = e.allday ? fmtWeekday.format(start) + " · all day" : fmtWhen.format(start);
+  const where = [e.location, dist != null ? Math.round(dist) + " km" : null].filter(Boolean).join(" · ");
+  const star = el("button", { class: "star", type: "button", "aria-pressed": String(state.saved.has(e.id)), "aria-label": "Save event" }, starSvg());
+  star.addEventListener("click", () => {
+    state.saved.has(e.id) ? state.saved.delete(e.id) : state.saved.add(e.id);
+    store.set(SAVED_KEY, [...state.saved]);
+    star.setAttribute("aria-pressed", String(state.saved.has(e.id)));
+    toast(state.saved.has(e.id) ? "Saved ★" : "Removed from saved");
+    if (state.view === "saved") render();
+  });
+  return el("article", { class: "event" + (e.cancelled ? " cancelled" : ""), style: `--hue:${h}` },
+    el("div", { class: "date" }, el("b", {}, fmtDay.format(start)), el("span", {}, fmtMon.format(start))),
+    el("div", {},
+      el("h4", {}, e.cancelled ? el("span", { class: "badge" }, "Cancelled") : null,
+        el("a", { href: e.url, target: "_blank", rel: "noopener" }, e.title)),
+      el("div", { class: "meta" }, when),
+      where ? el("div", { class: "meta" }, where) : null,
+      el("div", {}, ...e.clubs.map(c => el("span", { class: "club", style: `--hue:${hue(c)}` }, state.clubs[c]?.name || c)))),
+    star,
+    el("details", {},
+      el("summary", {}, "Details"),
+      e.description ? el("p", {}, e.description) : el("p", { class: "meta" }, "No description."),
+      el("div", { class: "links" },
+        el("a", { class: "primary", href: e.url, target: "_blank", rel: "noopener" }, "Register on Polaris"),
+        el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, "Add to calendar"))));
+}
+
+function section(title, events, withDist) {
+  const frag = document.createDocumentFragment();
+  if (title) frag.append(el("h2", {}, title));
+  let month = "";
+  for (const { e, dist } of events) {
+    const m = fmtMonth.format(new Date(e.start));
+    if (m !== month) { frag.append(el("h3", {}, m)); month = m; }
+    frag.append(card(e, withDist ? dist : null));
+  }
+  return frag;
+}
+
+function render() {
+  if (!state.data) return;
+  const q = $("q").value.trim().toLowerCase(), club = $("club").value;
+  const radius = Number($("radius").value) || null;
+  const now = new Date(), in7 = new Date(now.getTime() + 7 * 864e5), [wkStart, wkEnd] = weekendRange(now);
+  const useCenter = state.center && (radius || state.view === "near");
+  const rad = radius || 25;
+  let noLocation = 0;
+
+  const matches = [];
+  for (const e of state.data.events) {
+    const start = new Date(e.start), end = new Date(e.end), past = end < now;
+    if (state.view === "past" ? !past : past) continue;
+    if (state.view === "week" && start > in7) continue;
+    if (state.view === "weekend" && (start < wkStart || start >= wkEnd)) continue;
+    if (state.view === "saved" && !state.saved.has(e.id)) continue;
+    if (club && !e.clubs.includes(club)) continue;
+    if (q) {
+      const hay = [e.title, e.description, e.location, ...e.clubs.map(c => state.clubs[c]?.name || c)].join(" ").toLowerCase();
+      if (!q.split(/\s+/).every(w => hay.includes(w))) continue;
+    }
+    let dist = null;
+    if (state.center && e.coords) dist = km(state.center, e.coords);
+    if (useCenter) {
+      if (!e.coords) { noLocation++; continue; }
+      if (dist > rad) continue;
+    }
+    matches.push({ e, dist });
+  }
+  if (state.view === "past") matches.reverse();
+
+  const n = matches.length, label = { all: "upcoming", week: "in the next 7 days", weekend: "this weekend", near: "near you", saved: "saved", past: "past" }[state.view];
+  const parts = [`${n} event${n === 1 ? "" : "s"} ${label}`];
+  if (useCenter) parts.push(`within ${rad} km of ${state.centerLabel}`);
+  if (noLocation) parts.push(`${noLocation} without a known location hidden`);
+  $("summary").textContent = parts.join(" · ");
+  $("clear").hidden = !(q || club || $("place").value || radius || state.view !== "all");
+
+  const out = $("results");
+  out.replaceChildren();
+  if (!n) {
+    const msg = state.view === "saved" ? "Nothing saved yet. Tap the star on an event to keep it here." : "No events match.";
+    const btn = el("button", { type: "button" }, "Show all upcoming");
+    btn.addEventListener("click", clearFilters);
+    out.append(el("div", { class: "empty" }, msg, el("br"), btn));
+  }
+  out.append(section(null, matches, !!state.center));
+  savePrefs();
+}
+
+// --- preferences: URL (shareable) wins over what you used last time
+function savePrefs() {
+  const p = new URLSearchParams();
+  if ($("q").value) p.set("q", $("q").value);
+  if ($("club").value) p.set("club", $("club").value);
+  if ($("place").value) p.set("place", $("place").value);
+  if ($("radius").value) p.set("r", $("radius").value);
+  if (state.view !== "all") p.set("view", state.view);
+  history.replaceState(null, "", p.toString() ? "?" + p : location.pathname);
+  store.set(PREFS_KEY, { club: $("club").value, place: $("place").value, r: $("radius").value, view: state.view === "near" ? "all" : state.view });
+}
+function clearFilters() {
+  $("q").value = ""; $("club").value = ""; $("place").value = ""; $("radius").value = ""; $("placeHint").textContent = "";
+  state.center = null;
+  setView("all");
+}
+
+// --- subscribe + install
+function feedRow(name, file, count) {
+  const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:");
+  return el("div", { class: "feed" },
+    el("div", {}, name, count != null ? el("span", { class: "meta" }, ` · ${count} upcoming`) : null),
+    el("div", { class: "l" },
+      el("a", { href: webcal }, "Apple / Outlook"),
+      el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, "Google"),
+      el("a", { href: https }, ".ics")));
+}
+
+let installPrompt = null;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; renderInstall(); });
+window.addEventListener("appinstalled", () => { installPrompt = null; toast("Installed 🎉"); renderInstall(); });
+function renderInstall() {
+  const body = $("installBody");
+  body.replaceChildren();
+  if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) {
+    body.append(el("p", { class: "meta" }, "✓ You're using the installed app."));
+    return;
+  }
+  if (installPrompt) {
+    const b = el("button", { class: "install-btn", type: "button" }, "Install app");
+    b.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; });
+    body.append(b);
+    return;
+  }
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const guides = {
+    ios: ["Open this page in Safari (other browsers can't install on iPhone).", "Tap the Share button (the square with an arrow, at the bottom).", "Scroll down and tap \"Add to Home Screen\", then \"Add\"."],
+    android: ["Open this page in Chrome.", "Tap the ⋮ menu in the top right.", "Tap \"Add to Home screen\" or \"Install app\", then confirm."],
+    desktop: ["Open this page in Chrome or Edge.", "Click the install icon at the right end of the address bar (a screen with an arrow).", "Click \"Install\". Or simply bookmark the page."],
+  };
+  const tabs = el("div", { class: "tabs", role: "tablist" }), steps = el("ol", { class: "steps" });
+  const show = key => {
+    for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key));
+    steps.replaceChildren(...guides[key].map(s => el("li", {}, s)));
+  };
+  for (const [key, name] of [["ios", "iPhone / iPad"], ["android", "Android"], ["desktop", "Computer"]]) {
+    const b = el("button", { type: "button", role: "tab", "data-key": key }, name);
+    b.addEventListener("click", () => show(key));
+    tabs.append(b);
+  }
+  body.append(tabs, steps);
+  show(ios ? "ios" : /Android/.test(ua) ? "android" : "desktop");
+}
+
+async function share() {
+  const url = new URL(location.href); url.hash = "";
+  const data = { title: "Rotaract Events", text: "All Rotaract events in Switzerland & Liechtenstein", url: url.href };
+  if (navigator.share) { try { await navigator.share(data); } catch {} }
+  else { await navigator.clipboard.writeText(url.href); toast("Link copied"); }
+}
+
+// --- boot
+async function loadData() {
+  const r = await fetch("events.json", { cache: "no-cache" });
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+async function init() {
+  $("link").value = location.origin + location.pathname;
+  $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast("Link copied"); });
+  $("share").addEventListener("click", share);
+  renderInstall();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
+  try { state.data = await loadData(); }
+  catch { $("summary").textContent = "Couldn't load events. Are you online?"; return; }
+  state.saved = new Set(store.get(SAVED_KEY, []));
+  state.prefs = store.get(PREFS_KEY, {});
+
+  const now = new Date(), upcomingBy = {};
+  for (const e of state.data.events) if (new Date(e.end) >= now) for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1;
+  for (const c of state.data.clubs) { state.clubs[c.id] = c; $("club").append(el("option", { value: c.id }, c.name)); }
+  $("feeds").append(feedRow("All clubs", "all.ics", null),
+    ...[...state.data.clubs].sort((a, b) => a.name.localeCompare(b.name)).map(c => feedRow(c.name, c.id + ".ics", upcomingBy[c.id] || 0)));
+  $("footer").textContent = `Updated ${new Date(state.data.generated).toLocaleString("en-GB")} · Members-only events aren't shown · Registration happens on Polaris`;
+
+  const p = new URLSearchParams(location.search), shared = [...p.keys()].length > 0, src = shared ? Object.fromEntries(p) : state.prefs;
+  $("q").value = src.q || "";
+  $("club").value = src.club || "";
+  $("radius").value = src.r || "";
+  $("place").value = src.place || "";
+
+  let timer;
+  $("q").addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(render, 150); });
+  for (const id of ["club", "radius"]) $(id).addEventListener("change", render);
+  $("place").addEventListener("change", () => setPlace($("place").value));
+  $("place").addEventListener("keydown", ev => { if (ev.key === "Enter") $("place").blur(); });
+  $("locate").addEventListener("click", locateMe);
+  $("clear").addEventListener("click", clearFilters);
+  for (const b of $("chips").children) b.addEventListener("click", () => setView(b.dataset.view));
+
+  if ($("place").value) await setPlace($("place").value);
+  setView(src.view || "all");
+}
+init();
+</script>
+</body>
+</html>

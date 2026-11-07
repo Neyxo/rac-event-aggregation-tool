@@ -1,0 +1,482 @@
+{
+ "206138": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206138@rotary.ch",
+   "SUMMARY:BBT",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206138",
+   "DTSTART;TZID=Europe/Zurich:20260127T200000",
+   "DTEND;TZID=Europe/Zurich:20260127T220000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206139": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206139@rotary.ch",
+   "SUMMARY:BBT",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206139",
+   "DTSTART;TZID=Europe/Zurich:20260224T200000",
+   "DTEND;TZID=Europe/Zurich:20260224T220000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206140": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206140@rotary.ch",
+   "SUMMARY:BBT",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206140",
+   "DTSTART;TZID=Europe/Zurich:20260324T200000",
+   "DTEND;TZID=Europe/Zurich:20260324T220000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206141": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206141@rotary.ch",
+   "SUMMARY:BBT",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206141",
+   "DTSTART;TZID=Europe/Zurich:20260428T200000",
+   "DTEND;TZID=Europe/Zurich:20260428T220000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206142": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206142@rotary.ch",
+   "SUMMARY:BBT",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206142",
+   "DTSTART;TZID=Europe/Zurich:20260728T200000",
+   "DTEND;TZID=Europe/Zurich:20260728T220000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206143": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206143@rotary.ch",
+   "SUMMARY:Rhein Clean-Up & Grill \"Tag der guten Tat\"",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206143",
+   "DTSTART;TZID=Europe/Zurich:20260530T110000",
+   "DTEND;TZID=Europe/Zurich:20260530T180000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206147": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206147@rotary.ch",
+   "SUMMARY:Spielabend",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206147",
+   "DTSTART;TZID=Europe/Zurich:20260220T190000",
+   "DTEND;TZID=Europe/Zurich:20260220T220000",
+   "LOCATION:Manabar",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206148": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206148@rotary.ch",
+   "SUMMARY:Whyschiff Basel 2026",
+   "DESCRIPTION:Referenten/innen: ",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206148",
+   "DTSTART;TZID=Europe/Zurich:20260320T170000",
+   "DTEND;TZID=Europe/Zurich:20260320T200000",
+   "LOCATION:MS Rhystärn\\, Schifflände 4051 Basel",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206289": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206289@rotary.ch",
+   "SUMMARY:Regelmeeting Januar",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206289",
+   "DTSTART;TZID=Europe/Zurich:20260113T193000",
+   "DTEND;TZID=Europe/Zurich:20260113T203000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206290": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206290@rotary.ch",
+   "SUMMARY:Regelmeeting Februar",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206290",
+   "DTSTART;TZID=Europe/Zurich:20260210T193000",
+   "DTEND;TZID=Europe/Zurich:20260210T203000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206291": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206291@rotary.ch",
+   "SUMMARY:Regelmeeting März",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206291",
+   "DTSTART;TZID=Europe/Zurich:20260310T193000",
+   "DTEND;TZID=Europe/Zurich:20260310T203000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206292": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206292@rotary.ch",
+   "SUMMARY:Regelmeeting April mit Gastvortrag \"Supra Leadership in Zeiten von AI\"",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206292",
+   "DTSTART;TZID=Europe/Zurich:20260414T193000",
+   "DTEND;TZID=Europe/Zurich:20260414T203000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206293": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206293@rotary.ch",
+   "SUMMARY:Regelmeeting Mai mit Gastvortrag zum Thema \"Inklusion und Barrierenfreiheit\"",
+   "DESCRIPTION:Webseite: http://www.blindekuh.ch",
+   "URL:https://rotaract-basel.ch/de/agenda/show/206293",
+   "DTSTART;TZID=Europe/Zurich:20260512T193000",
+   "DTEND;TZID=Europe/Zurich:20260512T203000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208306": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208306@rotary.ch",
+   "SUMMARY:Geschenkübergabe Holbeinhof",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/208306",
+   "DTSTART;TZID=Europe/Zurich:20260118T140000",
+   "DTEND;TZID=Europe/Zurich:20260118T160000",
+   "LOCATION:Bewegungs- und Pflegezentrum Holbeinhof\\, Leimenstrasse 67\\, 4051 Basel",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210608": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210608@rotary.ch",
+   "SUMMARY:Service Club Treffen Liestal",
+   "DESCRIPTION:Webseite: https://www.siebe-dupf.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/210608",
+   "DTSTART;TZID=Europe/Zurich:20260903T180000",
+   "DTEND;TZID=Europe/Zurich:20260903T200000",
+   "LOCATION:Siebe Dupf Kellerei AG Kasernenstrasse 25 4410 Liestal",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210609": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210609@rotary.ch",
+   "SUMMARY:Welt Polio Tag in Liestal",
+   "DESCRIPTION:Webseite: https://rcliestal.ch/en/agenda/show/218947",
+   "URL:https://rotaract-basel.ch/de/agenda/show/210609",
+   "DTSTART;TZID=Europe/Zurich:20261024T090000",
+   "DTEND;TZID=Europe/Zurich:20261024T130000",
+   "LOCATION:Kasernenstrasse 22\\, 4410 Liestal",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212137": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212137@rotary.ch",
+   "SUMMARY:Workshop Rotaract Club Basel Next Steps",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/212137",
+   "DTSTART;TZID=Europe/Zurich:20260419T110000",
+   "DTEND;TZID=Europe/Zurich:20260419T150000",
+   "LOCATION:Logans Office",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212323": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212323@rotary.ch",
+   "SUMMARY:Sozialevent mit RAC Baden \"Kauf eins mehr\"",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/212323",
+   "DTSTART;TZID=Europe/Zurich:20260425T083000",
+   "DTEND;TZID=Europe/Zurich:20260425T163000",
+   "LOCATION:Baden / Wettingen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212554": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212554@rotary.ch",
+   "SUMMARY:Generalversammlung",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/212554",
+   "DTSTART;TZID=Europe/Zurich:20260613T100000",
+   "DTEND;TZID=Europe/Zurich:20260613T140000",
+   "LOCATION:St. Jakobsstrasse 17",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "215252": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215252@rotary.ch",
+   "SUMMARY:Heuen mit Verein natur3",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/215252",
+   "DTSTART;TZID=Europe/Zurich:20260708T180000",
+   "DTEND;TZID=Europe/Zurich:20260708T200000",
+   "LOCATION:Parkplatz Tannwald\\, Leymen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "215253": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215253@rotary.ch",
+   "SUMMARY:Hands on Landskronberg",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/215253",
+   "DTSTART;TZID=Europe/Zurich:20261121T130000",
+   "DTEND;TZID=Europe/Zurich:20261121T210000",
+   "LOCATION:tbd",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218530": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218530@rotary.ch",
+   "SUMMARY:Regelmeeting August",
+   "DESCRIPTION:Webseite: https://maps.app.goo.gl/FR2KQPhKLHJwXxtRA",
+   "URL:https://rotaract-basel.ch/de/agenda/show/218530",
+   "DTSTART;TZID=Europe/Zurich:20260811T193000",
+   "DTEND;TZID=Europe/Zurich:20260811T210000",
+   "LOCATION:KUNI & GUNDE - Café\\, Bistro & Bar\\, Schneidergasse 2\\, 4051 Basel",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219866": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219866@rotary.ch",
+   "SUMMARY:Bowling Day - open to interested parties",
+   "DESCRIPTION:Webseite: https://shop.vandermerwe.ch/",
+   "URL:https://rcbaselinternational.ch/de/agenda/show/219866",
+   "DTSTART;TZID=Europe/Zurich:20261020T190000",
+   "DTEND;TZID=Europe/Zurich:20261020T200000",
+   "LOCATION:Van der Merwe Center (Allschwil)",
+   "CATEGORIES:Rotary"
+  ]
+ },
+ "219914": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219914@rotary.ch",
+   "SUMMARY:Regelmeeting September",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/219914",
+   "DTSTART;TZID=Europe/Zurich:20260908T193000",
+   "DTEND;TZID=Europe/Zurich:20260908T210000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Switzerland",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219915": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219915@rotary.ch",
+   "SUMMARY:Regelmeeting Oktober",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/219915",
+   "DTSTART;TZID=Europe/Zurich:20261013T193000",
+   "DTEND;TZID=Europe/Zurich:20261013T210000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Switzerland",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219916": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219916@rotary.ch",
+   "SUMMARY:Regelmeeting November",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/219916",
+   "DTSTART;TZID=Europe/Zurich:20261110T193000",
+   "DTEND;TZID=Europe/Zurich:20261110T210000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Switzerland",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221485": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221485@rotary.ch",
+   "SUMMARY:Regelmeeting Dezember",
+   "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/221485",
+   "DTSTART;TZID=Europe/Zurich:20261208T193000",
+   "DTEND;TZID=Europe/Zurich:20261208T210000",
+   "LOCATION:Heubergkeller\\, Heuberg 26\\, 4051 Basel\\, Switzerland",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221487": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221487@rotary.ch",
+   "SUMMARY:Bowling Day mit Rotary Club Basel International",
+   "DESCRIPTION:Webseite: https://rcbaselinternational.ch/en/agenda/show/219866",
+   "URL:https://rotaract-basel.ch/de/agenda/show/221487",
+   "DTSTART;TZID=Europe/Zurich:20261020T190000",
+   "DTEND;TZID=Europe/Zurich:20261020T200000",
+   "LOCATION:Van der Merwe Center (Allschwil)\\, Gewerbestrasse 30\\, 4123 Allschwil",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221488": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221488@rotary.ch",
+   "SUMMARY:Filmpremiere: «Health & Dignity for Women in Uganda»",
+   "DESCRIPTION:",
+   "URL:https://rotaract-basel.ch/de/agenda/show/221488",
+   "DTSTART;TZID=Europe/Zurich:20261124T180000",
+   "DTEND;TZID=Europe/Zurich:20261124T193000",
+   "LOCATION:Stadtkino Basel\\, Klostergasse 5\\, 4051 Basel",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221489": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221489@rotary.ch",
+   "SUMMARY:Basler Herbstmesse",
+   "DESCRIPTION:Webseite: https://www.herbstmesse.ch/",
+   "URL:https://rotaract-basel.ch/de/agenda/show/221489",
+   "DTSTART;TZID=Europe/Zurich:20261103T193000",
+   "DTEND;TZID=Europe/Zurich:20261103T210000",
+   "LOCATION:Barfüserplatz\\, Steinenberg 14\\, 4051 Basel",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

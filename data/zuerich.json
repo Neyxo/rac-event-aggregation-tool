@@ -1,0 +1,786 @@
+{
+ "204738": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-204738@rotary.ch",
+   "SUMMARY:a.o Generalversammlung",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/204738",
+   "DTSTART;TZID=Europe/Zurich:20260113T190000",
+   "DTEND;TZID=Europe/Zurich:20260113T230000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "204760": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-204760@rotary.ch",
+   "SUMMARY:Winter Ski Weekend Flims",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/204760",
+   "DTSTART;TZID=Europe/Zurich:20260313T160000",
+   "DTEND;TZID=Europe/Zurich:20260315T110000",
+   "LOCATION:Hapimag Resort Flims",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "205808": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-205808@rotary.ch",
+   "SUMMARY:Sozialprojekt: KEMA Kauf-Eins-Mehr-Aktion\\, Rotary Action Day",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/205808",
+   "DTSTART;TZID=Europe/Zurich:20260509T090000",
+   "LOCATION:Migros City Zürich\\, Löwenstrasse\\, 8001 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260509T110000"
+  ]
+ },
+ "206713": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206713@rotary.ch",
+   "SUMMARY:Andrea Weber - Governor Distrikt 2000",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Andrea Weber ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/206713",
+   "DTSTART;TZID=Europe/Zurich:20260127T190000",
+   "DTEND;TZID=Europe/Zurich:20260127T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206716": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206716@rotary.ch",
+   "SUMMARY:Lesia Tüchthuisen - Besteuerung: Ein empirischer Fall",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Lesia Tüchthuisen ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/206716",
+   "DTSTART;TZID=Europe/Zurich:20260210T190000",
+   "DTEND;TZID=Europe/Zurich:20260210T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206717": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206717@rotary.ch",
+   "SUMMARY:Rot. Severin Dressen - Aufgaben eines modernen Zoos",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Severin Dressen ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/206717",
+   "DTSTART;TZID=Europe/Zurich:20260224T190000",
+   "DTEND;TZID=Europe/Zurich:20260224T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206720": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206720@rotary.ch",
+   "SUMMARY:Saran Keita - Vorstellung Verein KIRA",
+   "DESCRIPTION:Webseite: https://www.restaurant-chiffon.ch\\nReferenten/innen: Saran Keita ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/206720",
+   "DTSTART;TZID=Europe/Zurich:20260310T190000",
+   "DTEND;TZID=Europe/Zurich:20260310T220000",
+   "LOCATION:Restaurant Chiffon\\, Hirschengraben 36\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "206728": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-206728@rotary.ch",
+   "SUMMARY:Rot. Ivano Somaini - Cyber Sicherheit",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Ivano Somaini ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/206728",
+   "DTSTART;TZID=Europe/Zurich:20260616T190000",
+   "DTEND;TZID=Europe/Zurich:20260616T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "207047": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-207047@rotary.ch",
+   "SUMMARY:Sozialprojekt: Tierschutz",
+   "DESCRIPTION:Webseite: https://www.zuerchertierschutz.ch/de/\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/207047",
+   "DTSTART;TZID=Europe/Zurich:20260418T090000",
+   "DTEND;TZID=Europe/Zurich:20260418T130000",
+   "LOCATION:Tierschutz Zürich\\, Zürichbergstrasse 263\\, 8044 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208180": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208180@rotary.ch",
+   "SUMMARY:Informal Stamm @ Cha Cha Cha",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208180",
+   "DTSTART;TZID=Europe/Zurich:20260120T190000",
+   "DTEND;TZID=Europe/Zurich:20260120T220000",
+   "LOCATION:Schmidgasse 6\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208387": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208387@rotary.ch",
+   "SUMMARY:Sozialprojekt: Geteilte Freunde: Ein Nachmittag bei IWAZ",
+   "DESCRIPTION:Webseite: https://iwaz.ch/\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208387",
+   "DTSTART;TZID=Europe/Zurich:20260307T141500",
+   "DTEND;TZID=Europe/Zurich:20260307T164500",
+   "LOCATION:IWAZ Wetzikon\\, Neugrundstrasse 4\\, 8620 Wetzikon",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208423": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208423@rotary.ch",
+   "SUMMARY:Informal Stamm @ Dolder Eisbahn",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208423",
+   "DTSTART;TZID=Europe/Zurich:20260217T190000",
+   "DTEND;TZID=Europe/Zurich:20260217T220000",
+   "LOCATION:Adlisbergstrasse 36 8044 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208813": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208813@rotary.ch",
+   "SUMMARY:Marianne Hopsch - Vorstellung Verein ROBIJ",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208813",
+   "DTSTART;TZID=Europe/Zurich:20260324T190000",
+   "DTEND;TZID=Europe/Zurich:20260324T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208814": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208814@rotary.ch",
+   "SUMMARY:Führung Eidgenössische Materialprüfungs- und Forschungsanstalt (Empa)",
+   "DESCRIPTION:Referenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208814",
+   "DTSTART;TZID=Europe/Zurich:20260421T180000",
+   "DTEND;TZID=Europe/Zurich:20260421T193000",
+   "LOCATION:Ueberlandstrasse 129\\, 8600 Dübendorf",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208815": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208815@rotary.ch",
+   "SUMMARY:Rot. Philipp Kutter",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208815",
+   "DTSTART;TZID=Europe/Zurich:20260505T190000",
+   "DTEND;TZID=Europe/Zurich:20260505T230000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208816": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208816@rotary.ch",
+   "SUMMARY:Rot. Michael Thali - Rechtsmedizin",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208816",
+   "DTSTART;TZID=Europe/Zurich:20260519T190000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260519T210000"
+  ]
+ },
+ "208817": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208817@rotary.ch",
+   "SUMMARY:Besuch bei der Hunziker AG\\, Thalwil",
+   "DESCRIPTION:Webseite: https://www.hunziker-thalwil.ch/\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208817",
+   "DTSTART;TZID=Europe/Zurich:20260602T180000",
+   "DTEND;TZID=Europe/Zurich:20260602T230000",
+   "LOCATION:Tischenloostrasse 75\\, 8800 Thalwil",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208875": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208875@rotary.ch",
+   "SUMMARY:O. Generalversammlung",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/208875",
+   "DTSTART;TZID=Europe/Zurich:20260630T190000",
+   "DTEND;TZID=Europe/Zurich:20260630T220000",
+   "LOCATION:Haus zum Rüden",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "209262": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-209262@rotary.ch",
+   "SUMMARY:Informal Stamm @ BarMünster",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/209262",
+   "DTSTART;TZID=Europe/Zurich:20260203T190000",
+   "DTEND;TZID=Europe/Zurich:20260203T220000",
+   "LOCATION:Münstergasse 30\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210175": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210175@rotary.ch",
+   "SUMMARY:Informal Stamm @ Franzos",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/210175",
+   "DTSTART;TZID=Europe/Zurich:20260303T190000",
+   "LOCATION:Limmatquai 138\\, 8001 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260303T210000"
+  ]
+ },
+ "210225": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210225@rotary.ch",
+   "SUMMARY:Karaoke @ Miss Miu",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/210225",
+   "DTSTART;TZID=Europe/Zurich:20260410T190000",
+   "LOCATION:Badenerstrasse\\,97 8004 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260410T210000"
+  ]
+ },
+ "210226": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210226@rotary.ch",
+   "SUMMARY:Informal Stamm @ Nelson's Pub",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/210226",
+   "DTSTART;TZID=Europe/Zurich:20260331T190000",
+   "LOCATION:Beatengasse 11\\, 8001 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260331T210000"
+  ]
+ },
+ "210237": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210237@rotary.ch",
+   "SUMMARY:Informal Stamm @ Kir Royal",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/210237",
+   "DTSTART;TZID=Europe/Zurich:20260317T190000",
+   "LOCATION:Langstrasse 62\\, 8004 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260317T210000"
+  ]
+ },
+ "211726": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-211726@rotary.ch",
+   "SUMMARY:Selbstpräsentationen und Plaudermeeting",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/211726",
+   "DTSTART;TZID=Europe/Zurich:20260414T190000",
+   "DTEND;TZID=Europe/Zurich:20260414T230000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212063": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212063@rotary.ch",
+   "SUMMARY:Kids Camp 2026",
+   "DESCRIPTION:Webseite: https://swiss.rotaract-kidscamp.de/\\nReferenten/innen: Unser Ziel: ein Lager voller Spass\\, Spiel und Lachen für Kinder im Alter von 6 bis 11 Jahren zu organisieren.Wir möchten Kindern eine unvergessliche Zeit in den Schweizer Alpen ermöglichen\\, die sich sonst keine Ferien leisten könnten. Es handelt sich bei diesem Sozialprojekt um eines der bedeutendsten Projekten von Rotaract Schweiz\\, an dem Du Dich beteiligen kannst und einen sinnvollen Beitrag machen kannst!Um den Erfolg des letzten Jahres zu wiederholen\\, suchen wir genau Dich!Wir benötigen Freiwillige für folgende Aufgaben (keine Vorkenntnisse erforderlich):•Zeltbetreuer/in\\n•Begleitperson / Aktivitätsbetreuer/in\\n•Küchenteam\\n•Sanitätsteam\\n•Fotograf/in\\n•Infrastruktur (Auf- und Abbau)\\n•Springer/Läufer\\nAnmelden könnt Ihr Euch direkt über den QR-Code oder den folgenden Link: https://eveeno.com/167507208\\nBitte meldet Euch möglichst bald an\\, damit wir einen besseren Überblick haben.\\n Wichtige Information: In der Schweiz hat man bis 30 Jahre Anspruch auf eine Woche unbezahlten Urlaub für Jugendarbeit (Art. 329e OR).\\nBei Fragen könnt Ihr Euch jederzeit an Catharina Peyer\\, RAC Zürich\\, wenden: catharina.peyer@urlaubskinder.com",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/212063",
+   "DTSTART;TZID=Europe/Zurich:20260718T090000",
+   "DTEND;TZID=Europe/Zurich:20260725T170000",
+   "LOCATION:Saanen\\, Ferienhaus Eggli",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212237": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212237@rotary.ch",
+   "SUMMARY:Informal Stamm @ Amboss Rampe",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/212237",
+   "DTSTART;TZID=Europe/Zurich:20260428T190000",
+   "LOCATION:Zollstrasse 80\\, 8005 Zürich",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260428T210000"
+  ]
+ },
+ "212238": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212238@rotary.ch",
+   "SUMMARY:Informal Stamm @ Kraftwerk",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/212238",
+   "DTSTART;TZID=Europe/Zurich:20260512T183000",
+   "DTEND;TZID=Europe/Zurich:20260512T223000",
+   "LOCATION:Selnaustrasse 25​\\, 8001 Zurich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "213373": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213373@rotary.ch",
+   "SUMMARY:Informal Stamm @ Raygrodski",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/213373",
+   "DTSTART;TZID=Europe/Zurich:20260526T190000",
+   "DTEND;TZID=Europe/Zurich:20260526T220000",
+   "LOCATION:Sihlfeldstrasse 49\\, 8003 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "213374": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213374@rotary.ch",
+   "SUMMARY:Informal Stamm @ Rimini",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/213374",
+   "DTSTART;TZID=Europe/Zurich:20260609T190000",
+   "DTEND;TZID=Europe/Zurich:20260609T220000",
+   "LOCATION:Badweg 10\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "213375": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213375@rotary.ch",
+   "SUMMARY:Informal Stamm @ Seebad Utoquai",
+   "DESCRIPTION:",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/213375",
+   "DTSTART;TZID=Europe/Zurich:20260623T180000",
+   "DTEND;TZID=Europe/Zurich:20260623T220000",
+   "LOCATION:Utoquai 50\\, 8008 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "213473": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213473@rotary.ch",
+   "SUMMARY:Sozialprojekt: Tierschutz",
+   "DESCRIPTION:Webseite: https://www.zuerchertierschutz.ch/de/\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/213473",
+   "DTSTART;TZID=Europe/Zurich:20261017T090000",
+   "DTEND;TZID=Europe/Zurich:20261017T130000",
+   "LOCATION:Tierschutz Zürich\\, Zürichbergstrasse 263\\, 8044 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219077": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219077@rotary.ch",
+   "SUMMARY:Informal: Samigo",
+   "DESCRIPTION:Webseite: https://www.samigo.ch\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219077",
+   "DTSTART;TZID=Europe/Zurich:20260915T190000",
+   "DTEND;TZID=Europe/Zurich:20260915T220000",
+   "LOCATION:Mythenquai 59\\, 8002 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219081": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219081@rotary.ch",
+   "SUMMARY:Informal: Bohemia - Bar & Grill",
+   "DESCRIPTION:Webseite: https://www.bohemia.ch/zuerich/",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219081",
+   "DTSTART;TZID=Europe/Zurich:20260929T190000",
+   "DTEND;TZID=Europe/Zurich:20260929T220000",
+   "LOCATION:Klosbachstrasse 2 (Kreuzplatz) 8032 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219082": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219082@rotary.ch",
+   "SUMMARY:Informal: Minigolf beim Dolder",
+   "DESCRIPTION:Webseite: https://doldereisundbad.ch/minigolf/",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219082",
+   "DTSTART;TZID=Europe/Zurich:20260901T180000",
+   "DTEND;TZID=Europe/Zurich:20260901T200000",
+   "LOCATION:Dolder Eis & Bad AG Adlisbergstrasse 36 CH – 8044 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219083": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219083@rotary.ch",
+   "SUMMARY:Informal: Kerzenziehen am Hechtplatz",
+   "DESCRIPTION:Webseite: https://www.zuercherkerzenziehen.ch",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219083",
+   "DTSTART;TZID=Europe/Zurich:20261124T180000",
+   "DTEND;TZID=Europe/Zurich:20261124T200000",
+   "LOCATION:Hechtplatz\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219084": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219084@rotary.ch",
+   "SUMMARY:Informal: Weihnachtsmarkt am Bellevue",
+   "DESCRIPTION:Webseite: https://www.wienachtsdorf.ch",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219084",
+   "DTSTART;TZID=Europe/Zurich:20261215T190000",
+   "DTEND;TZID=Europe/Zurich:20261215T220000",
+   "LOCATION:Treppe Opernhaus Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219090": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219090@rotary.ch",
+   "SUMMARY:Informal Nelson`s Pub",
+   "DESCRIPTION:Webseite: https://nelsonpubzurich.ch",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219090",
+   "DTSTART;TZID=Europe/Zurich:20261013T190000",
+   "DTEND;TZID=Europe/Zurich:20261013T220000",
+   "LOCATION:Beatengasse 11\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219091": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219091@rotary.ch",
+   "SUMMARY:Informal: Konzert in der Tonhalle Zürich",
+   "DESCRIPTION:Webseite: https://tonhalle-orchester.org/konzerte/kalender/paavo-jaervi-mit-mahler-2055210/tz/",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219091",
+   "DTSTART;TZID=Europe/Zurich:20261111T180000",
+   "DTEND;TZID=Europe/Zurich:20261111T213000",
+   "LOCATION:Tonhalle Zürich\\, Claridenstrasse 7\\, 8002 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219101": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219101@rotary.ch",
+   "SUMMARY:Informal: Lasertag - Laser-Arena Zürich",
+   "DESCRIPTION:Webseite: https://laser-arena.ch/de",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219101",
+   "DTSTART;TZID=Europe/Zurich:20261029T200000",
+   "DTEND;TZID=Europe/Zurich:20261029T220000",
+   "LOCATION:Brandschenkestrasse 178\\, 8002 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219188": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219188@rotary.ch",
+   "SUMMARY:Wie man das Alphabet zeichnet",
+   "DESCRIPTION:Referenten/innen: Melanie Hofmann & Céline Odermatt",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219188",
+   "DTSTART;TZID=Europe/Zurich:20260908T190000",
+   "DTEND;TZID=Europe/Zurich:20260908T220000",
+   "LOCATION:Chiffon\\, Hirschengraben 36\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219190": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219190@rotary.ch",
+   "SUMMARY:Chips kommen aus Taiwan. Oder aus Sargans.",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Beat De Coi",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219190",
+   "DTSTART;TZID=Europe/Zurich:20260922T190000",
+   "DTEND;TZID=Europe/Zurich:20260922T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219193": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219193@rotary.ch",
+   "SUMMARY:Goldgrube Abfall",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Marie Perrin",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219193",
+   "DTSTART;TZID=Europe/Zurich:20261020T190000",
+   "DTEND;TZID=Europe/Zurich:20261020T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219196": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219196@rotary.ch",
+   "SUMMARY:Wenn GPS zur Waffe wird",
+   "DESCRIPTION:Webseite: https://www.haus-zum-rueden.ch\\nReferenten/innen: Benedikt Soja",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219196",
+   "DTSTART;TZID=Europe/Zurich:20261117T190000",
+   "DTEND;TZID=Europe/Zurich:20261117T220000",
+   "LOCATION:Haus zum Rüden\\, Limmatquai 42\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219197": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219197@rotary.ch",
+   "SUMMARY:Hinter die Kulissen der NZZ",
+   "DESCRIPTION:Referenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219197",
+   "DTSTART;TZID=Europe/Zurich:20261201T173000",
+   "DTEND;TZID=Europe/Zurich:20261201T183000",
+   "LOCATION:Falkenstrasse 11\\, 8008 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219199": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219199@rotary.ch",
+   "SUMMARY:Investieren ist einfach\\, oder doch nicht? Besuch bei der UBS",
+   "DESCRIPTION:Referenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219199",
+   "DTSTART;TZID=Europe/Zurich:20261006T190000",
+   "DTEND;TZID=Europe/Zurich:20261006T220000",
+   "LOCATION:UBS Konferenzsaal Grünenhof\\, Nüschelerstrasse 9\\, 8001 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219200": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219200@rotary.ch",
+   "SUMMARY:Weihnachtsessen im Fischer's Fritz",
+   "DESCRIPTION:Referenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219200",
+   "DTSTART;TZID=Europe/Zurich:20261208T190000",
+   "DTEND;TZID=Europe/Zurich:20261208T230000",
+   "LOCATION:Seestrasse 557\\, 8038 Zürich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "219421": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219421@rotary.ch",
+   "SUMMARY:Mit der Kamera in der Ukraine",
+   "DESCRIPTION:Referenten/innen: Dominic Nahr",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/219421",
+   "DTSTART;TZID=Europe/Zurich:20261103T190000",
+   "DTEND;TZID=Europe/Zurich:20261103T220000",
+   "LOCATION:Weisser Wind\\, Oberdorfstrasse 20\\, 8001 Zurich",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "220279": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220279@rotary.ch",
+   "SUMMARY:Sozialprojekt: Geteilte Freunde: Ein Mittag bei IWAZ",
+   "DESCRIPTION:Webseite: https://iwaz.ch/\\nReferenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/220279",
+   "DTSTART;TZID=Europe/Zurich:20261107T103000",
+   "DTEND;TZID=Europe/Zurich:20261107T133000",
+   "LOCATION:IWAZ Wetzikon\\, Neugrundstrasse 4\\, 8620 Wetzikon",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "220281": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220281@rotary.ch",
+   "SUMMARY:Sozialprojekt: Adventkränze binden",
+   "DESCRIPTION:Referenten/innen: ",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/220281",
+   "DTSTART;TZID=Europe/Zurich:20261121T080000",
+   "DTEND;TZID=Europe/Zurich:20261121T180000",
+   "LOCATION:Neuweg 12\\, 8125 Zollikerberg",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

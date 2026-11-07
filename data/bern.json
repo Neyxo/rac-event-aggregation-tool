@@ -1,0 +1,242 @@
+{
+ "190711": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-190711@rotary.ch",
+   "SUMMARY:Exkursion nach Berlin",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/190711",
+   "DTSTART;TZID=Europe/Zurich:20260703T180000",
+   "DTEND;TZID=Europe/Zurich:20260705T120000",
+   "LOCATION:Berlin",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "202043": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-202043@rotary.ch",
+   "SUMMARY:Save the date: IDC/PM (PM/IDK) 2026",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/202043",
+   "DTSTART;TZID=Europe/Zurich:20260411T093000",
+   "DTEND;TZID=Europe/Zurich:20260411T170000",
+   "LOCATION:Kongresszentrum Kreuz\\, Bern",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "202811": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-202811@rotary.ch",
+   "SUMMARY:Winter-GV (1. Generalversammlung)",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/202811",
+   "DTSTART;TZID=Europe/Zurich:20260115T183000",
+   "DTEND;TZID=Europe/Zurich:20260115T200000",
+   "LOCATION:Universität Bern\\, Raum A-124 in der UniS",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "204136": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-204136@rotary.ch",
+   "SUMMARY:Werksführung Emmi Ostermundingen",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/204136",
+   "DTSTART;TZID=Europe/Zurich:20260827T160000",
+   "DTEND;TZID=Europe/Zurich:20260827T173000",
+   "LOCATION:Milchstrasse 9\\, Ostermundigen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "207245": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-207245@rotary.ch",
+   "SUMMARY:Exklusiver Stammtisch im Februar mit Schach",
+   "DESCRIPTION:Webseite: https://www.casinobern.ch/",
+   "URL:https://bern.rotaract.ch/de/agenda/show/207245",
+   "DTSTART;TZID=Europe/Zurich:20260210T190000",
+   "DTEND;TZID=Europe/Zurich:20260210T210000",
+   "LOCATION:Casino Bern",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208749": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208749@rotary.ch",
+   "SUMMARY:Stammtisch März \"Jazz Apéro\"",
+   "DESCRIPTION:Webseite: https://www.casinobern.ch/",
+   "URL:https://bern.rotaract.ch/de/agenda/show/208749",
+   "DTSTART;TZID=Europe/Zurich:20260312T180000",
+   "DTEND;TZID=Europe/Zurich:20260312T210000",
+   "LOCATION:Casino Bern",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210487": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210487@rotary.ch",
+   "SUMMARY:Stammtisch Mai",
+   "DESCRIPTION:Webseite: https://www.casinobern.ch/",
+   "URL:https://bern.rotaract.ch/de/agenda/show/210487",
+   "DTSTART;TZID=Europe/Zurich:20260506T183000",
+   "DTEND;TZID=Europe/Zurich:20260506T204500",
+   "LOCATION:Casino Bern\\, Salon d’Or",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210488": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210488@rotary.ch",
+   "SUMMARY:Sommer Generalversammlung",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/210488",
+   "DTSTART;TZID=Europe/Zurich:20260610T183000",
+   "DTEND;TZID=Europe/Zurich:20260610T200000",
+   "LOCATION:Uni Bern\\, UniS\\, Raum A 027",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "214825": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-214825@rotary.ch",
+   "SUMMARY:Zwischen Pâtisserie und Piste",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/214825",
+   "DTSTART;TZID=Europe/Zurich:20261010T131500",
+   "DTEND;TZID=Europe/Zurich:20261010T160000",
+   "LOCATION:Terminal Flughafen Bern\\, 3123 Belp",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "214827": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-214827@rotary.ch",
+   "SUMMARY:19. Berner Leaderanlass",
+   "DESCRIPTION:Webseite: https://www.leaderanlass.ch/de",
+   "URL:https://bern.rotaract.ch/de/agenda/show/214827",
+   "DTSTART;TZID=Europe/Zurich:20260903T173000",
+   "DTEND;TZID=Europe/Zurich:20260903T194500",
+   "LOCATION:Champions Lounge BSC YB (Stadion Wankdorf)",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218300": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218300@rotary.ch",
+   "SUMMARY:Blutspendenaktion Bern-HB Welle7",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/218300",
+   "DTSTART;TZID=Europe/Zurich:20260729T170000",
+   "DTEND;TZID=Europe/Zurich:20260729T190000",
+   "LOCATION:Bern-HB | Welle7\\, Eventraum 3. Etage (Deck 3)\\, Schanzenstrasse 5\\, 3008 Bern",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218304": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218304@rotary.ch",
+   "SUMMARY:Stammtisch im Casino Bern",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/218304",
+   "DTSTART;TZID=Europe/Zurich:20260812T183000",
+   "DTEND;TZID=Europe/Zurich:20260812T210000",
+   "LOCATION:Casino Bern\\, Casinoplatz 1\\, 3011 Bern\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218306": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218306@rotary.ch",
+   "SUMMARY:Stammtisch im Casino Bern",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/218306",
+   "DTSTART;TZID=Europe/Zurich:20260924T183000",
+   "DTEND;TZID=Europe/Zurich:20260924T210000",
+   "LOCATION:Casino Bern\\, Casinoplatz 1\\, 3011 Bern\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218307": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218307@rotary.ch",
+   "SUMMARY:Bowling-Abend",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/218307",
+   "DTSTART;TZID=Europe/Zurich:20261118T180000",
+   "DTEND;TZID=Europe/Zurich:20261118T210000",
+   "LOCATION:Bern",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "221763": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221763@rotary.ch",
+   "SUMMARY:Lottonachmittag für ROKJ: Damit kein Kind im Abseits steht",
+   "DESCRIPTION:",
+   "URL:https://bern.rotaract.ch/de/agenda/show/221763",
+   "DTSTART;TZID=Europe/Zurich:20270130T120000",
+   "DTEND;TZID=Europe/Zurich:20270130T170000",
+   "LOCATION:Zofingerhaus\\, Alpeneggstrasse 8\\, 3012 Bern",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

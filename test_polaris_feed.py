@@ -2,7 +2,7 @@
 import copy
 import datetime as dt
 
-from polaris_feed import build_calendar, clean_vevent, sync, unfold
+from polaris_feed import build_calendar, clean_vevent, ics_text, locate, site_data, sync, unfold
 
 # Shape of a real Polaris per-event .ics: folded lines, random UID, DTSTAMP,
 # duplicate DTSTART, DTEND == DTSTART.
@@ -72,6 +72,11 @@ def tracking(i):
 sync(h, ["a", "b", "c", "d"], tracking, NOW, "T4")
 assert "past" not in calls and h["past"]["status"] == "active"
 
+# Past event still listed (current-year listing): not re-fetched either.
+calls.clear()
+sync(h, ["past", "a", "b", "c", "d"], tracking, NOW, "T4b")
+assert "past" not in calls and calls == ["a", "b", "c", "d"]
+
 # Upcoming event drops off the listing but still exists (listing glitch): kept active.
 sync(h, ["a", "c", "d"], polaris.get, NOW, "T5")
 assert h["b"]["status"] == "active" and h["b"]["sequence"] == 0
@@ -113,6 +118,27 @@ assert "SUMMARY:Abgesagt: Event" in events and events.count("STATUS:CANCELLED") 
 assert cal.count("BEGIN:VEVENT") == 5, "past + a + b + d + cancelled c"
 assert cal.index("polaris-past@") < cal.index("polaris-a@") < cal.index("polaris-d@"), "sorted by start"
 assert "SEQUENCE:1" in events and "DTSTAMP:T3" in events
+
+# --- site data
+assert ics_text(["LOCATION:Inseliquai\\, 6005 Luzern", "DESCRIPTION:a\\nb\\; c"], "LOCATION") == "Inseliquai, 6005 Luzern"
+assert ics_text(["DESCRIPTION:a\\nb\\; c"], "DESCRIPTION") == "a\nb; c"
+assert ics_text([], "LOCATION") == ""
+
+# Location fallback: full text, then comma parts from the end, then club city. Pre-filled cache = no network.
+cache = {"Rudolfs Weihnachtsmarkt, Inseliquai, 6005 Luzern": None, "6005 Luzern": [47.05, 8.31], "Nowhere": None, "Luzern": [47.0, 8.0]}
+assert locate("Rudolfs Weihnachtsmarkt, Inseliquai, 6005 Luzern", "Bern", cache) == [47.05, 8.31]
+assert locate("Nowhere", "Luzern", cache) == [47.0, 8.0]
+assert locate("", "Luzern", cache) == [47.0, 8.0]
+
+joint = {"status": "active", "vevent": event("j", "20261201T190000", "Joint"), "sequence": 0, "modified": "T"}
+histories = {"luzern": {**h, "j": joint}, "bern": {"j": joint}}
+clubs = [{"id": "luzern", "name": "L", "base_url": "u", "city": "Luzern"}, {"id": "bern", "name": "B", "base_url": "u", "city": "Luzern"}]
+site = site_data(clubs, histories, NOW, cache)
+ids = [e["id"] for e in site["events"]]
+assert ids.count("j") == 1 and next(e for e in site["events"] if e["id"] == "j")["clubs"] == ["luzern", "bern"]
+assert "old-cancelled" not in ids and "c" in ids, "same visibility rule as the feed"
+assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
+assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"
 
 long = {"x": {"status": "active", "vevent": event("x", "20261210T190000", "ä" * 100), "sequence": 0, "modified": "T"}}
 cal = build_calendar({"name": "Test", "lang": "de"}, long, NOW)

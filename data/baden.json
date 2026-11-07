@@ -1,0 +1,66 @@
+{
+ "208364": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208364@rotary.ch",
+   "SUMMARY:Kauf eins mehr Aktion",
+   "DESCRIPTION:",
+   "URL:https://baden.rotaract.ch/de/agenda/show/208364",
+   "DTSTART;TZID=Europe/Zurich:20260425T083000",
+   "DTEND;TZID=Europe/Zurich:20260425T163000",
+   "LOCATION:Migros Wettingen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "208369": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208369@rotary.ch",
+   "SUMMARY:Clean-up Day 7.0 Baden",
+   "DESCRIPTION:",
+   "URL:https://baden.rotaract.ch/de/agenda/show/208369",
+   "DTSTART;TZID=Europe/Zurich:20260530T093000",
+   "DTEND;TZID=Europe/Zurich:20260530T130000",
+   "LOCATION:Limmatpromenade\\, Baden",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217227": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217227@rotary.ch",
+   "SUMMARY:RAC Baden Stamm August",
+   "DESCRIPTION:",
+   "URL:https://baden.rotaract.ch/de/agenda/show/217227",
+   "DTSTART;TZID=Europe/Zurich:20260804T190000",
+   "DTEND;TZID=Europe/Zurich:20260804T220000",
+   "LOCATION:Romero und anschliessend Rose Baden",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218212": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218212@rotary.ch",
+   "SUMMARY:Kauf eins mehr Aktion \"Period Poverty\"",
+   "DESCRIPTION:",
+   "URL:https://baden.rotaract.ch/de/agenda/show/218212",
+   "DTSTART;TZID=Europe/Zurich:20261114T090000",
+   "DTEND;TZID=Europe/Zurich:20261114T160000",
+   "LOCATION:Migros Landstrasse Wettingen",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

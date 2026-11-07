@@ -1,6 +1,119 @@
 # One entry per club. `id` becomes the feed file name: public/<id>.ics
+# Source: club menu on https://rotaract.ch/de/organisation/ (2026-11).
+#   lang     = Polaris URL language, also used for the "cancelled" label
+#   city     = fallback location for the radius search when an event has none
+#   backfill = on the club's first run, import every past year Polaris offers
+#              (otherwise history starts with the current year)
+
 [[clubs]]
 id = "luzern"
-name = "Rotaract Club Luzern"
+name = "Rotaract Luzern"
 base_url = "https://rotaract-luzern.ch"
 lang = "de"
+city = "Luzern"
+backfill = true
+
+[[clubs]]
+id = "sempachersee"
+name = "Rotaract Sempachersee"
+base_url = "https://rotaract-sempachersee.ch"
+lang = "de"
+city = "Sursee"
+
+[[clubs]]
+id = "bern"
+name = "Rotaract Bern"
+base_url = "https://bern.rotaract.ch"
+lang = "de"
+city = "Bern"
+
+[[clubs]]
+id = "basel"
+name = "Rotaract Basel"
+base_url = "https://rotaract-basel.ch"
+lang = "de"
+city = "Basel"
+
+[[clubs]]
+id = "baden"
+name = "Rotaract Baden"
+base_url = "https://baden.rotaract.ch"
+lang = "de"
+city = "Baden"
+
+[[clubs]]
+id = "solothurn"
+name = "Rotaract Solothurn"
+base_url = "https://rotaract-solothurn.ch"
+lang = "de"
+city = "Solothurn"
+
+[[clubs]]
+id = "zuerich"
+name = "Rotaract Zürich"
+base_url = "https://rotaract-zuerich.ch"
+lang = "de"
+city = "Zürich"
+
+[[clubs]]
+id = "zurich-international"
+name = "Rotaract Zurich International"
+base_url = "https://zurich-international.rotaract.ch"
+lang = "en"
+city = "Zürich"
+
+[[clubs]]
+id = "winterthur"
+name = "Rotaract Winterthur"
+base_url = "https://winterthur.rotaract.ch"
+lang = "de"
+city = "Winterthur"
+
+[[clubs]]
+id = "stgallen"
+name = "Rotaract St. Gallen"
+base_url = "https://rotaract-stgallen.ch"
+lang = "de"
+city = "St. Gallen"
+
+[[clubs]]
+id = "chur-herrschaft"
+name = "Rotaract Chur-Herrschaft"
+base_url = "https://chur-herrschaft.rotaract.ch"
+lang = "de"
+city = "Chur"
+
+[[clubs]]
+id = "liechtenstein"
+name = "Rotaract Liechtenstein"
+base_url = "https://rotaract.li"
+lang = "de"
+city = "Vaduz"
+
+[[clubs]]
+id = "fribourg"
+name = "Rotaract Fribourg"
+base_url = "https://fribourg.rotaract.ch"
+lang = "fr"
+city = "Fribourg"
+
+[[clubs]]
+id = "geneve-international"
+name = "Rotaract Genève International"
+base_url = "https://geneve-international.rotaract.ch"
+lang = "fr"
+city = "Genève"
+
+[[clubs]]
+id = "ticino"
+name = "Rotaract Ticino"
+base_url = "https://rotaract-ticino.ch"
+lang = "it"
+city = "Lugano"
+
+[[clubs]]
+id = "schweiz"
+name = "Rotaract Schweiz/Liechtenstein (national)"
+base_url = "https://rotaract.ch"
+lang = "de"
+city = "Bern"

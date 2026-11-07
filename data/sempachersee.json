@@ -1,0 +1,34 @@
+{
+ "219888": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219888@rotary.ch",
+   "SUMMARY:Anlass mit RAC Luzern - Besichtigung: Holzingenieur-Büro von Pirmin Jung",
+   "DESCRIPTION:Webseite: https://rotaract-luzern.ch/de/agenda/show/219875",
+   "URL:https://rotaract-sempachersee.ch/de/agenda/show/219888",
+   "DTSTART;TZID=Europe/Zurich:20261016T180000",
+   "DTEND;TZID=Europe/Zurich:20261016T200000",
+   "LOCATION:Haus des Holzes\\, Centralstrasse 34\\, 6210 Sursee",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "222792": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222792@rotary.ch",
+   "SUMMARY:Rudolfs Weihnachtsmarkt in Luzern",
+   "DESCRIPTION:",
+   "URL:https://rotaract-sempachersee.ch/de/agenda/show/222792",
+   "DTSTART;TZID=Europe/Zurich:20261127T180000",
+   "DTEND;TZID=Europe/Zurich:20261127T220000",
+   "LOCATION:Luzern",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}

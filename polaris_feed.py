@@ -12,10 +12,12 @@ Usage: python3 polaris_feed.py [clubs.toml] [out_dir] [data_dir]
 import datetime as dt
 import json
 import re
+import shutil
 import sys
 import time
 import tomllib
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -157,10 +159,13 @@ def sync(history, listed, fetch, now, stamp):
         return rec["status"] == "active" and prop(rec["vevent"], "DTEND") >= now
 
     # Upcoming events we know but Polaris no longer lists: check each one directly.
-    # Past events aren't re-checked: history is fixed once an event is over.
+    # Past events aren't re-checked or re-fetched: history is fixed once an event is over.
     missing = [i for i, rec in history.items() if i not in listed and upcoming(rec)]
+    known_past = {i for i, rec in history.items() if prop(rec["vevent"], "DTEND") < now}
     fresh, errors = {}, []
     for i in dict.fromkeys([*listed, *missing]):
+        if i in known_past:
+            continue
         try:
             fresh[i] = fetch(i)
         except Exception as e:
@@ -198,15 +203,85 @@ def build_calendar(club, history, now):
     ]
     for rec in sorted(history.values(), key=lambda r: prop(r["vevent"], "DTSTART")):
         ev = rec["vevent"]
+        if not visible(rec, now):
+            continue  # a cancelled event has no place in the history once its date is over
         if rec["status"] == "cancelled":
-            if prop(ev, "DTEND") < now:
-                continue  # a cancelled event has no place in the history once its date is over
             label = CANCELLED.get(club["lang"], "Cancelled")
             ev = [f"SUMMARY:{label}: {l[8:]}" if l.startswith("SUMMARY:") else l for l in ev] + ["STATUS:CANCELLED"]
         meta = [f"DTSTAMP:{rec['modified']}", f"LAST-MODIFIED:{rec['modified']}", f"SEQUENCE:{rec['sequence']}"]
         lines += ["BEGIN:VEVENT", *ev, *meta, "END:VEVENT"]
     lines.append("END:VCALENDAR")
     return "\r\n".join(fold(l) for l in lines) + "\r\n"
+
+
+def geocode(query, cache):
+    """[lat, lon] of a Swiss/Liechtenstein place via swisstopo, or None. Cached, incl. misses."""
+    if query not in cache:
+        url = "https://api3.geo.admin.ch/rest/services/api/SearchServer?" + urllib.parse.urlencode(
+            {"searchText": query, "type": "locations", "sr": 4326, "limit": 1})
+        try:
+            results = json.loads(get(url))["results"]
+        except urllib.error.HTTPError as e:
+            if e.code >= 500:
+                raise
+            results = []  # swisstopo rejects some queries (long, "&", "|") with 400: treat as not found
+        cache[query] = [round(results[0]["attrs"]["lat"], 5), round(results[0]["attrs"]["lon"], 5)] if results else None
+    return cache[query]
+
+
+def locate(location, city, cache):
+    """Try the full location, then its comma-separated parts (usually "6005 Luzern" is last), then the club's city."""
+    parts = [p.strip() for p in location.split(",")]
+    for query in dict.fromkeys([location, *reversed(parts), city]):
+        if query:
+            try:
+                if coords := geocode(query, cache):
+                    return coords
+            except Exception:
+                return None  # geocoder unreachable: try again next run (misses aren't cached)
+    return None
+
+
+def ics_text(ev, name):
+    value = next((l.split(":", 1)[1] for l in ev if re.match(name + "[;:]", l)), "")
+    return re.sub(r"\\(.)", lambda m: "\n" if m.group(1) in "nN" else m.group(1), value)
+
+
+def visible(rec, now):
+    """Feed/site rule: active events always, cancelled ones only until their date is over."""
+    return rec["status"] == "active" or prop(rec["vevent"], "DTEND") >= now
+
+
+def site_data(clubs, histories, now, cache):
+    """events.json for the search site: every visible event, merged across clubs by Polaris id."""
+    events = {}
+    for club in clubs:
+        for i, rec in histories[club["id"]].items():
+            if not visible(rec, now):
+                continue
+            if i in events:  # joint event listed by several clubs
+                events[i]["clubs"].append(club["id"])
+                continue
+            ev = rec["vevent"]
+            location = ics_text(ev, "LOCATION")
+            events[i] = {
+                "id": i,
+                "clubs": [club["id"]],
+                "title": ics_text(ev, "SUMMARY"),
+                "start": prop(ev, "DTSTART").isoformat(timespec="minutes"),
+                "end": prop(ev, "DTEND").isoformat(timespec="minutes"),
+                "allday": "T" not in ics_text(ev, "DTSTART"),
+                "location": location,
+                "coords": locate(location, club.get("city", ""), cache),
+                "url": ics_text(ev, "URL"),
+                "description": ics_text(ev, "DESCRIPTION")[:1500],
+                "cancelled": rec["status"] == "cancelled",
+            }
+    return {
+        "generated": now.isoformat(timespec="minutes"),
+        "clubs": [{"id": c["id"], "name": c["name"], "url": c["base_url"]} for c in clubs],
+        "events": sorted(events.values(), key=lambda e: e["start"]),
+    }
 
 
 def main():
@@ -216,12 +291,13 @@ def main():
     data.mkdir(exist_ok=True)
     now = dt.datetime.now(TZ).replace(tzinfo=None)
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
-    failures = []
-    for club in tomllib.loads(config.read_text())["clubs"]:
+    clubs = tomllib.loads(config.read_text())["clubs"]
+    failures, histories = [], {}
+    for club in clubs:
         path = data / f"{club['id']}.json"
         history = json.loads(path.read_text()) if path.exists() else {}
         try:
-            listed = event_ids(club, backfill=not history)
+            listed = event_ids(club, backfill=not history and club.get("backfill", False))
             errors = sync(history, listed, lambda i: fetch_event(club, i), now, stamp)
             path.write_text(json.dumps(history, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
             failures += [f"{club['id']} {e}" for e in errors]
@@ -229,9 +305,23 @@ def main():
             # Keep the last good history; the feed below is built from it.
             failures.append(f"{club['id']}: {e}")
             history = json.loads(path.read_text()) if path.exists() else {}
+        histories[club["id"]] = history
         (out / f"{club['id']}.ics").write_text(build_calendar(club, history, now), newline="")
         cancelled = sum(r["status"] == "cancelled" for r in history.values())
         print(f"{club['id']}: {len(history)} events in history ({cancelled} cancelled)")
+
+    # Swiss-wide: one combined feed + the search site. Polaris ids are global, so merging dedupes joint events.
+    merged = {i: rec for club in clubs for i, rec in histories[club["id"]].items()}
+    everyone = {"name": "Rotaract Schweiz & Liechtenstein – alle Clubs", "lang": "de"}
+    (out / "all.ics").write_text(build_calendar(everyone, merged, now), newline="")
+    cache_path = data / "geocode.json"
+    cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
+    site = site_data(clubs, histories, now, cache)
+    cache_path.write_text(json.dumps(cache, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+    (out / "events.json").write_text(json.dumps(site, ensure_ascii=False, separators=(",", ":")))
+    shutil.copytree(Path(__file__).with_name("site"), out, dirs_exist_ok=True)
+    print(f"site: {len(site['events'])} events, {sum(e['coords'] is None for e in site['events'])} without location")
+
     for f in failures:
         print(f"::error::{f}")
     sys.exit(1 if failures else 0)

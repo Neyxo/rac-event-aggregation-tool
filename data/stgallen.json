@@ -1,0 +1,338 @@
+{
+ "208467": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-208467@rotary.ch",
+   "SUMMARY:Gallus Stamm",
+   "DESCRIPTION:Webseite: https://oya-bar.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/208467",
+   "DTSTART;TZID=Europe/Zurich:20260305T190000",
+   "DTEND;TZID=Europe/Zurich:20260305T220000",
+   "LOCATION:ØYA Bar Kafé Klub\\, Schwertgasse 27\\, 9000 St. Gallen\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210978": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210978@rotary.ch",
+   "SUMMARY:Spieleabend im Pflegeheim St. Otmar",
+   "DESCRIPTION:Webseite: https://www.otmarsg.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/210978",
+   "DTSTART;TZID=Europe/Zurich:20260319T180000",
+   "DTEND;TZID=Europe/Zurich:20260319T200000",
+   "LOCATION:im Pflegeheim St. Otmar\\, St. Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "210979": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210979@rotary.ch",
+   "SUMMARY:Degu-Abend bei Martel",
+   "DESCRIPTION:Webseite: https://www.martel.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/210979",
+   "DTSTART;TZID=Europe/Zurich:20260423T183000",
+   "DTEND;TZID=Europe/Zurich:20260423T203000",
+   "LOCATION:Martel am Bahnhof St.Gallen\\; Poststrasse 11\\, CH-9001 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "212354": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212354@rotary.ch",
+   "SUMMARY:Gallus Stamm",
+   "DESCRIPTION:Webseite: https://oya-bar.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/212354",
+   "DTSTART;TZID=Europe/Zurich:20260430T190000",
+   "LOCATION:ØYA Bar Kafé Klub\\, Schwertgasse 27\\, 9000 St. Gallen\\, Schweiz",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260430T210000"
+  ]
+ },
+ "212726": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212726@rotary.ch",
+   "SUMMARY:Gespräch mit Stöckli-CEO Marc Gläser: «Die Erfolgsfaktoren von Stöckli»",
+   "DESCRIPTION:Webseite: https://www.hsg-square.ch/de/\\nReferenten/innen: Daniel Knus\\, Rotarier und Geschäftsführer HSG Alumni ",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/212726",
+   "DTSTART;TZID=Europe/Zurich:20260520T180000",
+   "LOCATION:Square (HSG)",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20260520T200000"
+  ]
+ },
+ "213182": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213182@rotary.ch",
+   "SUMMARY:MEET & GREET Rotaract St.Gallen",
+   "DESCRIPTION:",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/213182",
+   "DTSTART;TZID=Europe/Zurich:20260917T183000",
+   "DTEND;TZID=Europe/Zurich:20260917T230000",
+   "LOCATION:Unterstrasse 6\\, 9000 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217709": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217709@rotary.ch",
+   "SUMMARY:Gallus Stamm - Fun",
+   "DESCRIPTION:Webseite: https://oya-bar.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217709",
+   "DTSTART;TZID=Europe/Zurich:20261001T190000",
+   "LOCATION:ØYA Bar Kafé Klub\\, Schwertgasse 27\\, 9000 St. Gallen\\, Schweiz",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20261001T210000"
+  ]
+ },
+ "217710": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217710@rotary.ch",
+   "SUMMARY:OLMA Stamm mit Abendessen",
+   "DESCRIPTION:Webseite: https://olmaplaza.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217710",
+   "DTSTART;TZID=Europe/Zurich:20261016T184500",
+   "DTEND;TZID=Europe/Zurich:20261016T210000",
+   "LOCATION:Neben dem OLMA-Haupteingang. Sonnenstrasse 27\\, 9000 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217712": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217712@rotary.ch",
+   "SUMMARY:Sozialanlass - Spieleabend im Pflegeheim St. Otmar",
+   "DESCRIPTION:Webseite: https://www.otmarsg.ch",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217712",
+   "DTSTART;TZID=Europe/Zurich:20261022T180000",
+   "DTEND;TZID=Europe/Zurich:20261022T200000",
+   "LOCATION:im Pflegeheim St. Otmar\\, Schönauweg 5\\, 9000 St. Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217714": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217714@rotary.ch",
+   "SUMMARY:Activity Stamm - Bowlingabend",
+   "DESCRIPTION:Webseite: https://saentispark-freizeit.ch/sport-spiel/bowling/",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217714",
+   "DTSTART;TZID=Europe/Zurich:20261119T190000",
+   "DTEND;TZID=Europe/Zurich:20261119T210000",
+   "LOCATION:Freizeitzentrum Säntispark\\, Wiesenbachstrasse 9\\, 9030 Abtwil",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217726": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217726@rotary.ch",
+   "SUMMARY:Weihnachtsanlass",
+   "DESCRIPTION:Webseite: https://balthasar8.ch/",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217726",
+   "DTSTART;TZID=Europe/Zurich:20261203T190000",
+   "DTEND;TZID=Europe/Zurich:20261203T220000",
+   "LOCATION:Balthasar 8\\, Webergasse 8\\, 9000 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217731": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217731@rotary.ch",
+   "SUMMARY:Gallus Stamm - Glühweinplausch",
+   "DESCRIPTION:Webseite: https://www.blumenmarktbar.ch/#/de/home",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217731",
+   "DTSTART;TZID=Europe/Zurich:20261217T190000",
+   "DTEND;TZID=Europe/Zurich:20261217T210000",
+   "LOCATION:Blumenmarkt\\, Marktplatz 25\\, 9000 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "217732": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217732@rotary.ch",
+   "SUMMARY:Hands-On Anlass mit den St.Galler RC Clubs| Wildpark Peter & Paul",
+   "DESCRIPTION:Referenten/innen: Hands-On gemeinsam mit den St.Galler Rotary Clubs",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/217732",
+   "DTSTART;TZID=Europe/Zurich:20261107T080000",
+   "DTEND;TZID=Europe/Zurich:20261107T123000",
+   "LOCATION:Wildpark Peter & Paul\\, Wildpark-Haus an der Kirchlistrasse 98\\, 9010 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218891": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218891@rotary.ch",
+   "SUMMARY:Vortrag mit Cyrill Stadler - \"Mr. Summerdays\"",
+   "DESCRIPTION:",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218891",
+   "DTSTART;TZID=Europe/Zurich:20270225T190000",
+   "DTEND;TZID=Europe/Zurich:20270225T210000",
+   "LOCATION:St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218892": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218892@rotary.ch",
+   "SUMMARY:Sozialanlass (tbc)",
+   "DESCRIPTION:",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218892",
+   "DTSTART;TZID=Europe/Zurich:20270311T190000",
+   "DTEND;TZID=Europe/Zurich:20270311T213000",
+   "LOCATION:St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218893": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218893@rotary.ch",
+   "SUMMARY:Besuch bei Raffael Sprenger - das älteste Geigenbauatelier der Schweiz",
+   "DESCRIPTION:Webseite: https://geigen.ch/",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218893",
+   "DTSTART;TZID=Europe/Zurich:20270401T183000",
+   "DTEND;TZID=Europe/Zurich:20270401T203000",
+   "LOCATION:Sprenger AG Geigenbau\\, Neugasse 53\\, 9000 St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218894": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218894@rotary.ch",
+   "SUMMARY:Activity Stamm - Spaziergang zum Restaurant Waldegg mit Abendessen",
+   "DESCRIPTION:Webseite: https://www.waldegg.ch/home",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218894",
+   "DTSTART;TZID=Europe/Zurich:20270429T180000",
+   "LOCATION:Erlebnis Waldegg\\, Teufen AR\\, 9053",
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20270429T200000"
+  ]
+ },
+ "218896": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218896@rotary.ch",
+   "SUMMARY:Gallus Stamm",
+   "DESCRIPTION:Webseite: https://balthasar8.ch/",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218896",
+   "DTSTART;TZID=Europe/Zurich:20270408T190000",
+   "DTEND;TZID=Europe/Zurich:20270408T213000",
+   "LOCATION:Balthasar 8\\, Webergasse 8\\, 9000 St. Gallen\\, Schweiz",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218906": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218906@rotary.ch",
+   "SUMMARY:Vortrag mit Florin Parfuss  - PRO Triathlete und mentale Stärke",
+   "DESCRIPTION:",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218906",
+   "DTSTART;TZID=Europe/Zurich:20270513T190000",
+   "DTEND;TZID=Europe/Zurich:20270513T210000",
+   "LOCATION:St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218907": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218907@rotary.ch",
+   "SUMMARY:Generalversammlung RAC St.Gallen",
+   "DESCRIPTION:",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218907",
+   "DTSTART;TZID=Europe/Zurich:20270527T180000",
+   "DTEND;TZID=Europe/Zurich:20270527T220000",
+   "LOCATION:St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "218908": {
+  "first_seen": "20261107T103915Z",
+  "modified": "20261107T103915Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218908@rotary.ch",
+   "SUMMARY:Sommerparty (tbc)",
+   "DESCRIPTION:",
+   "URL:https://rotaract-stgallen.ch/de/agenda/show/218908",
+   "DTSTART;TZID=Europe/Zurich:20270708T180000",
+   "DTEND;TZID=Europe/Zurich:20270708T220000",
+   "LOCATION:St.Gallen",
+   "CATEGORIES:Rotaract"
+  ]
+ }
+}
