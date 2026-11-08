@@ -309,3 +309,39 @@ Object.assign(I18N.it, {
   sp_dist: "16 club, tre distretti", sp_dist_t: "Da Ginevra a Coira. Una conferenza all'anno, tutti insieme.",
   sp_world: "E il mondo", sp_world_t: "10'000 club in 180 paesi. Un club all'estero ti accoglie come a casa.",
 });
+
+// navigation, calendar page, settings page, explore mode
+Object.assign(I18N.en, {
+  calendar: "Calendar", all_clubs_short: "All", mine_short: "My clubs", today_events: "Today", no_events_day: "Nothing on this day.", close: "Close",
+  set_clubs_h: "Clubs", set_app_h: "App", set_more_h: "More", subscribe_link: "Subscribe to calendars", saved_settings: "Saved",
+  explore_title: "New here?", explore_lead: "Rotaract is for people aged 18 to 30. Pick an event, come along, no membership needed.", tip_of_day: "Tip of the day", explore_near: "Events near you", explore_all: "What is Rotaract?",
+  tips: ["Guests are welcome at almost every event. Register on Polaris and just come.", "A \"Stamm\" is the relaxed regular get-together. It's the easiest first visit.", "Every club mixes learning, helping and celebrating a bit differently. Try two.", "You don't need to know anyone. Say you're new; someone will take you along.", "The yearly conference brings all 16 clubs together for a weekend.", "Members pay a yearly fee of a few hundred francs; guests usually nothing.", "Rotaract is part of Rotary: at 30 the Rotary club next door is the natural next step.", "Hands-on projects are the fastest way to see what a club is about."],
+  subpage_link: "Rotary & the world",
+});
+Object.assign(I18N.de, {
+  calendar: "Kalender", all_clubs_short: "Alle", mine_short: "Meine Clubs", today_events: "Heute", no_events_day: "Nichts an diesem Tag.", close: "Schliessen",
+  set_clubs_h: "Clubs", set_app_h: "App", set_more_h: "Mehr", subscribe_link: "Kalender abonnieren", saved_settings: "Gespeichert",
+  explore_title: "Neu hier?", explore_lead: "Rotaract ist für Leute zwischen 18 und 30. Such dir einen Anlass aus und komm vorbei, ohne Mitgliedschaft.", tip_of_day: "Tipp des Tages", explore_near: "Anlässe in deiner Nähe", explore_all: "Was ist Rotaract?",
+  tips: ["Gäste sind an fast jedem Anlass willkommen. Auf Polaris anmelden und einfach kommen.", "Der «Stamm» ist das lockere regelmässige Treffen. Der einfachste erste Besuch.", "Jeder Club mischt Lernen, Helfen und Feiern etwas anders. Probier zwei aus.", "Du musst niemanden kennen. Sag, dass du neu bist; jemand nimmt dich mit.", "Die jährliche Konferenz bringt alle 16 Clubs ein Wochenende lang zusammen.", "Mitglieder zahlen einen Jahresbeitrag von ein paar hundert Franken; Gäste meist nichts.", "Rotaract gehört zu Rotary: mit 30 ist der Rotary Club nebenan der natürliche nächste Schritt.", "Hands-on-Projekte zeigen am schnellsten, worum es einem Club geht."],
+  subpage_link: "Rotary & die Welt",
+});
+Object.assign(I18N.fr, {
+  calendar: "Calendrier", all_clubs_short: "Tous", mine_short: "Mes clubs", today_events: "Aujourd'hui", no_events_day: "Rien ce jour-là.", close: "Fermer",
+  set_clubs_h: "Clubs", set_app_h: "App", set_more_h: "Plus", subscribe_link: "S'abonner aux calendriers", saved_settings: "Enregistré",
+  explore_title: "Nouveau ici ?", explore_lead: "Rotaract s'adresse aux 18–30 ans. Choisissez un événement et venez, sans adhésion.", tip_of_day: "Conseil du jour", explore_near: "Événements près de vous", explore_all: "Qu'est-ce que Rotaract ?",
+  tips: ["Les invités sont les bienvenus à presque tous les événements. Inscrivez-vous sur Polaris et venez.", "Le « stamm » est la rencontre régulière et décontractée. La première visite la plus simple.", "Chaque club mélange apprendre, aider et fêter à sa façon. Essayez-en deux.", "Pas besoin de connaître quelqu'un. Dites que vous êtes nouveau ; on vous prendra avec.", "La conférence annuelle réunit les 16 clubs pendant un week-end.", "Les membres paient une cotisation annuelle de quelques centaines de francs ; les invités généralement rien.", "Rotaract fait partie du Rotary : à 30 ans, le Rotary club d'à côté est la suite naturelle.", "Les projets concrets montrent le plus vite ce qu'est un club."],
+  subpage_link: "Rotary & le monde",
+});
+Object.assign(I18N.it, {
+  calendar: "Calendario", all_clubs_short: "Tutti", mine_short: "I miei club", today_events: "Oggi", no_events_day: "Niente in questo giorno.", close: "Chiudi",
+  set_clubs_h: "Club", set_app_h: "App", set_more_h: "Altro", subscribe_link: "Abbonati ai calendari", saved_settings: "Salvato",
+  explore_title: "Nuovo qui?", explore_lead: "Rotaract è per chi ha tra 18 e 30 anni. Scegli un evento e vieni, senza iscrizione.", tip_of_day: "Consiglio del giorno", explore_near: "Eventi vicino a te", explore_all: "Cos'è Rotaract?",
+  tips: ["Gli ospiti sono benvenuti quasi a ogni evento. Iscriviti su Polaris e vieni.", "Lo «stamm» è l'incontro regolare informale. La prima visita più semplice.", "Ogni club combina imparare, aiutare e festeggiare a modo suo. Provane due.", "Non serve conoscere nessuno. Di' che sei nuovo; qualcuno ti porterà con sé.", "La conferenza annuale riunisce tutti i 16 club per un weekend.", "I soci pagano una quota annuale di qualche centinaio di franchi; gli ospiti di solito nulla.", "Rotaract fa parte del Rotary: a 30 anni il Rotary club accanto è il passo successivo naturale.", "I progetti pratici mostrano più in fretta di cosa si occupa un club."],
+  subpage_link: "Rotary e il mondo",
+});
+
+// welcome: member or not
+Object.assign(I18N.en, { ob_member_q: "Are you a Rotaract member?", ob_member: "Yes, I'm a member", ob_guest: "Not (yet)", ob_guest_title: "Welcome!", ob_guest_text: "Rotaract is for people aged 18 to 30: learn, help, celebrate. You can come to almost any event as a guest. Follow a club near you to see its events first, or just explore.", ob_follow: "Clubs near you", pick_main: "Choose main club", pick_also: "Choose clubs to also show", all_feed_short: "All Rotaract events CH & LI" });
+Object.assign(I18N.de, { ob_member_q: "Bist du Rotaract-Mitglied?", ob_member: "Ja, Mitglied", ob_guest: "(Noch) nicht", ob_guest_title: "Willkommen!", ob_guest_text: "Rotaract ist für Leute zwischen 18 und 30: lernen, helfen, feiern. An fast jeden Anlass kannst du als Gast kommen. Folge einem Club in deiner Nähe, um seine Anlässe zuerst zu sehen, oder schau dich einfach um.", ob_follow: "Clubs in deiner Nähe", pick_main: "Hauptclub wählen", pick_also: "Weitere Clubs wählen", all_feed_short: "Alle Rotaract-Anlässe CH & LI" });
+Object.assign(I18N.fr, { ob_member_q: "Êtes-vous membre de Rotaract ?", ob_member: "Oui, membre", ob_guest: "Pas (encore)", ob_guest_title: "Bienvenue !", ob_guest_text: "Rotaract s'adresse aux 18–30 ans : apprendre, aider, fêter. Vous pouvez venir à presque tous les événements en invité. Suivez un club près de chez vous pour voir ses événements en premier, ou explorez simplement.", ob_follow: "Clubs près de vous", pick_main: "Choisir le club principal", pick_also: "Choisir d'autres clubs", all_feed_short: "Tous les événements Rotaract CH & LI" });
+Object.assign(I18N.it, { ob_member_q: "Sei socio Rotaract?", ob_member: "Sì, socio", ob_guest: "Non (ancora)", ob_guest_title: "Benvenuto!", ob_guest_text: "Rotaract è per chi ha tra 18 e 30 anni: imparare, aiutare, festeggiare. A quasi ogni evento puoi venire come ospite. Segui un club vicino a te per vedere prima i suoi eventi, oppure esplora.", ob_follow: "Club vicino a te", pick_main: "Scegli il club principale", pick_also: "Scegli altri club", all_feed_short: "Tutti gli eventi Rotaract CH & LI" });

@@ -18,54 +18,32 @@
 <script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
 <script src="i18n.js"></script>
 <script src="common.js" defer></script>
+<script src="app.js" defer></script>
 </head>
-<body data-page="home">
-<a class="skip" href="#results" data-t="skip_to"></a>
-<header>
-  <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events">Events</span></a>
-    <nav class="actions" id="actions"><a class="icon-btn" href="discover.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg><span data-t="discover"></span></a><a class="icon-btn" href="about.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span data-t="about"></span></a><button class="icon-btn" id="share" type="button" data-t-label="share"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg><span data-t="share"></span></button><button class="icon-btn" id="settingsBtn" type="button" data-t-label="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span data-t="settings"></span></button></nav>
-  </div>
-</header>
-<div class="credits"><div class="wrap"><span data-t="credits"></span> · <a href="subscribe.html" data-t="subscribe">Subscribe</a> · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener">GitHub</a></div></div>
+<body data-page="home" class="">
+<a class="skip" href="#main" data-t="skip_to"></a>
+<header id="top"></header>
 <div class="banner" id="stale" role="status" hidden></div>
-
-<main class="wrap">
-  <div class="home" id="home" hidden></div>
-  <div class="filters">
-    <div class="top">
-      <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" data-t-ph="search_mine_ph" data-t-label="search" autocomplete="off"></div>
-      <a class="fbtn" href="discover.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg><span data-t="discover"></span></a>
-    </div>
-    <div class="row" id="views" role="group" data-t-label="filters">
-      <button class="chip" type="button" data-view="all" data-t="v_all"></button>
-      <button class="chip" type="button" data-view="week" data-t="v_week"></button>
-      <button class="chip" type="button" data-view="weekend" data-t="v_weekend"></button>
-      
-      <button class="chip" type="button" data-view="saved" data-t="v_saved"></button>
-      <button class="chip" type="button" data-view="past" data-t="v_past"></button>
-    </div>
-    
+<main class="wrap" id="main">
+  <div class="home" id="home"></div>
+  <h3 id="listTitle" class="list-title" data-t="v_all"></h3>
+  <div class="row" id="views" role="group" data-t-label="filters">
+    <button class="chip" type="button" data-view="all" data-t="v_all"></button>
+    <button class="chip" type="button" data-view="week" data-t="v_week"></button>
+    <button class="chip" type="button" data-view="weekend" data-t="v_weekend"></button>
+    <button class="chip" type="button" data-view="saved" data-t="v_saved"></button>
+    <button class="chip" type="button" data-view="past" data-t="v_past"></button>
   </div>
-  <div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span>
-    <div class="r"><button type="button" class="clear" id="clear" hidden data-t="clear"></button>
-      <div class="seg" role="group" data-t-label="layout"><button type="button" data-mode="list" aria-pressed="true" data-t="list"></button><button type="button" data-mode="month" aria-pressed="false" data-t="month"></button></div></div></div>
+  <div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span><button type="button" class="clear" id="clear" hidden data-t="clear"></button></div>
   <div id="results" aria-busy="true">
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
   </div>
-
-  <section class="card">
-    <h2 data-t="sub_title"></h2>
-    <p data-t="sub_text"></p>
-    <div class="links"><a class="primary" href="subscribe.html" data-t="sub_cta"></a><a href="discover.html" data-t="discover_cta"></a></div>
-  </section>
-  <footer id="footer"></footer>
+  <div id="foot"></div>
 </main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <dialog class="ob" id="ob" aria-labelledby="obTitle"><div class="ob-in" id="obBody"></div></dialog>
-<dialog class="ob" id="settingsDlg" aria-labelledby="setTitle"><div class="ob-in" id="setBody"></div></dialog>
 <div class="toast" id="toast" role="status"></div>
-<script src="app.js" defer></script>
 </body>
 </html>

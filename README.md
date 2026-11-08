@@ -6,7 +6,8 @@ Collects the public events of every Rotaract club in Switzerland & Liechtenstein
 
 **https://neyxo.github.io/rac-event-aggregation-tool/**
 
-- Two pages: **Home** (`index.html`) shows your main club and the clubs you also follow, with quick views (Upcoming, This week, Weekend, Saved, Past) and a search within them; **Discover** (`discover.html`) is all of Rotaract with every filter (search, district, clubs, place/radius, Near me) and the list or month layout. Searching or filtering never changes your settings.
+- Navigation: one top bar (logo, info, settings) and bottom tabs **Home · Discover · Calendar** on every page. **Home** (`index.html`) shows your main club and the clubs you also follow with quick views; without a club it switches to explore mode (intro, tip of the day, find your club, nearby events). **Discover** (`discover.html`) is all of Rotaract with every filter. **Calendar** (`calendar.html`) is a full-screen month; tapping a day opens a sheet with that day's events. **Settings** (`settings.html`) holds main club, also-show clubs (picked in popups), language, appearance, install, share and links.
+- First visit: the welcome asks whether you are a member; members pick clubs → subscribe → install, others get a short intro, nearby clubs to follow, install.
 - Tapping an event opens its page (`event.html?id=…`: picture, details, register, add to calendar, share, more events of that club); tapping a club chip opens the club page.
 - Each event shows its picture, full description and registration info from Polaris (the picture is only linked, not copied).
 - Light theme by default, dark via the toggle. Each club has its canton's coat of arms (the city's for city clubs) and a matching colour, set in `clubs.toml` (`logo`, `color`, `short`, `district`). The crests in `site/crests/` come from Wikimedia Commons; Swiss and Liechtenstein official coats of arms are public domain.

@@ -1,4 +1,4 @@
-// Shared by every page: DOM helpers, storage, club colours/crests, settings, the location guess, and the "your club / find your club" block.
+// Shared by every page: DOM helpers, storage, club colours/crests, settings, the navigation chrome, the event card, the location guess and the call to action.
 const $ = id => document.getElementById(id);
 function el(tag, attrs = {}, ...children) {
   const n = document.createElement(tag);
@@ -15,7 +15,7 @@ const store = {
 };
 let toastTimer;
 function toast(msg, action) {
-  const tt = $("toast"); if (!tt) return;
+  let tt = $("toast"); if (!tt) { tt = el("div", { class: "toast", id: "toast", role: "status" }); document.body.append(tt); }
   tt.replaceChildren(msg);
   if (action) { const b = el("button", { type: "button" }, action.label); b.addEventListener("click", action.fn); tt.append(b); }
   tt.classList.add("show"); clearTimeout(toastTimer);
@@ -23,19 +23,29 @@ function toast(msg, action) {
 }
 const fold = s => (s || "").normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 function onColor(hex) { const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255); return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.5 ? "#1f1c26" : "#fff"; }
-function km(a, b) {
-  const rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]);
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2;
-  return 12742 * Math.asin(Math.sqrt(h));
-}
-async function geocode(text) {
-  const url = "https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&sr=4326&limit=1&searchText=" + encodeURIComponent(text);
-  const r = (await (await fetch(url)).json()).results?.[0];
-  return r ? { coords: [r.attrs.lat, r.attrs.lon], label: r.attrs.label.replace(/<[^>]+>/g, "") } : null;
-}
+function km(a, b) { const rad = x => x * Math.PI / 180, dLat = rad(b[0] - a[0]), dLon = rad(b[1] - a[1]); const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLon / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); }
+async function geocode(text) { const url = "https://api3.geo.admin.ch/rest/services/api/SearchServer?type=locations&sr=4326&limit=1&searchText=" + encodeURIComponent(text); const r = (await (await fetch(url)).json()).results?.[0]; return r ? { coords: [r.attrs.lat, r.attrs.lon], label: r.attrs.label.replace(/<[^>]+>/g, "") } : null; }
 const startOfDay = d => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 function setTheme(next) { store.set("rac.theme", next); document.documentElement.dataset.theme = next; }
+const ICON = {
+  home: "M3 11 12 3l9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z", discover: "M21 21l-4.3-4.3M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z", calendar: "M8 2v3M16 2v3M3 9h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",
+  info: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01", settings: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
+  back: "M15 18l-6-6 6-6", share: "M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13", star: "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z",
+};
+function icon(name, cls = "") { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true"); if (cls) s.setAttribute("class", cls); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", ICON[name]); s.append(p); return s; }
+
+// --- navigation chrome, identical on every page: top bar (logo · info · settings) and bottom tabs (home · discover · calendar)
+function chrome(active, { back = false, extra = null } = {}) {
+  const top = $("top");
+  const left = back ? (() => { const a = el("a", { class: "icon-btn back", href: "./", "aria-label": t("back") }, icon("back")); a.addEventListener("click", ev => { if (history.length > 1) { ev.preventDefault(); history.back(); } }); return a; })() : null;
+  top.replaceChildren(el("div", { class: "wrap bar" },
+    el("div", { class: "lft" }, left, el("a", { class: "brand", href: "./", "aria-label": "Rotaract Events" }, el("img", { src: "rotaract.svg", alt: "Rotaract" }))),
+    el("div", { class: "rgt" }, extra, el("a", { class: "icon-btn" + (active === "about" ? " on" : ""), href: "about.html", "aria-label": t("about"), title: t("about") }, icon("info")), el("a", { class: "icon-btn" + (active === "settings" ? " on" : ""), href: "settings.html", "aria-label": t("settings"), title: t("settings") }, icon("settings")))));
+  const tabs = $("tabs");
+  if (tabs) tabs.replaceChildren(...[["home", "./"], ["discover", "discover.html"], ["calendar", "calendar.html"]].map(([k, href]) => el("a", { class: "tab" + (active === k ? " on" : ""), href, "aria-current": active === k ? "page" : null }, icon(k), el("span", {}, t(k)))));
+}
+function footer() { return el("footer", {}, t("made_by") + " · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source"))); }
 
 // --- data + clubs
 const D = { data: null, clubs: {}, settings: { home: "", also: [] }, saved: new Set() };
@@ -58,44 +68,32 @@ function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading
 function clubChip(id, extra = "") { const c = club(id); return el("a", { class: "tag " + extra, href: "club.html?id=" + id, style: clubStyle(id), "aria-label": c.name }, clubMark(c), c.short); }
 function clubLabel(id) { const c = club(id); return c.name + (c.district ? ` (D${c.district})` : ""); }
 const fmt = {
-  day: new Intl.DateTimeFormat(LOCALE, { day: "numeric" }), mon: new Intl.DateTimeFormat(LOCALE, { month: "short" }),
-  month: new Intl.DateTimeFormat(LOCALE, { month: "long", year: "numeric" }), wd: new Intl.DateTimeFormat(LOCALE, { weekday: "short" }),
-  wdl: new Intl.DateTimeFormat(LOCALE, { weekday: "long" }), time: new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" }),
-  full: new Intl.DateTimeFormat(LOCALE, { weekday: "long", day: "numeric", month: "long", year: "numeric" }),
-  stamp: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+  day: new Intl.DateTimeFormat(LOCALE, { day: "numeric" }), mon: new Intl.DateTimeFormat(LOCALE, { month: "short" }), month: new Intl.DateTimeFormat(LOCALE, { month: "long", year: "numeric" }),
+  wd: new Intl.DateTimeFormat(LOCALE, { weekday: "short" }), wdl: new Intl.DateTimeFormat(LOCALE, { weekday: "long" }), time: new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" }),
+  full: new Intl.DateTimeFormat(LOCALE, { weekday: "long", day: "numeric", month: "long", year: "numeric" }), stamp: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+  dm: new Intl.DateTimeFormat(LOCALE, { weekday: "short", day: "numeric", month: "short" }),
 };
 function whenShort(e) { const s = new Date(e.start), en = new Date(e.end); return e.allday ? fmt.wdl.format(s) + " · " + t("all_day") : `${fmt.wd.format(s)} ${fmt.time.format(s)}` + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""); }
 function placeShort(e) { return (e.location || "").split(",")[0]; }
 function isPast(e) { return new Date(e.end) < new Date(); }
+function datePane(e) { const s = new Date(e.start); return el("div", { class: "date glass", "aria-hidden": "true" }, el("b", {}, fmt.day.format(s)), el("span", {}, fmt.mon.format(s))); }
 
-// --- the event card (final design): frosted date pane over the club crest, one meta line, picture, star. The card opens the event page.
-const starSvg = () => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true"); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z"); s.append(p); return s; };
+// --- the event card: colour wash, crest under a frosted date pane (fading out to the right), one meta line, picture, star. The card opens the event page.
 function starButton(e, onChange) {
-  const b = el("button", { class: "star", type: "button", "aria-pressed": String(D.saved.has(e.id)), "aria-label": t("save") + ": " + e.title }, starSvg());
-  b.addEventListener("click", ev => {
-    ev.preventDefault(); ev.stopPropagation();
-    D.saved.has(e.id) ? D.saved.delete(e.id) : D.saved.add(e.id);
-    store.set("rac.saved", [...D.saved]);
-    b.setAttribute("aria-pressed", String(D.saved.has(e.id)));
-    toast(D.saved.has(e.id) ? t("saved") : t("unsaved"));
-    onChange?.();
-  });
+  const b = el("button", { class: "star", type: "button", "aria-pressed": String(D.saved.has(e.id)), "aria-label": t("save") + ": " + e.title }, icon("star"));
+  b.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); D.saved.has(e.id) ? D.saved.delete(e.id) : D.saved.add(e.id); store.set("rac.saved", [...D.saved]); b.setAttribute("aria-pressed", String(D.saved.has(e.id))); toast(D.saved.has(e.id) ? t("saved") : t("unsaved")); onChange?.(); });
   return b;
 }
 function eventCard(e, i = 0, onChange) {
-  const s = new Date(e.start), lead = club(e.clubs[0]);
-  const a = el("a", { class: "event" + (e.cancelled ? " cancelled" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
+  const lead = club(e.clubs[0]);
+  return el("a", { class: "event" + (e.cancelled ? " cancelled" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
     lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true", loading: "lazy" }) : null,
-    el("div", { class: "date", "aria-hidden": "true" }, el("b", {}, fmt.day.format(s)), el("span", {}, fmt.mon.format(s))),
-    el("div", { class: "body" },
-      el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title),
-      el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")),
-      el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))),
+    datePane(e),
+    el("div", { class: "body" }, el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))),
     el("div", { class: "side" }, e.image ? el("img", { class: "thumb", src: e.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null, starButton(e, onChange)));
-  return a;
 }
 
-// --- location guess for first visits and the "find your club" block: approximate position of the connection, no permission prompt, nothing stored
+// --- location guess: approximate position of the connection, no permission prompt, nothing stored
 async function guessPosition() {
   try {
     const ctl = new AbortController(); setTimeout(() => ctl.abort(), 3500);
@@ -106,13 +104,42 @@ async function guessPosition() {
   } catch {}
   return null;
 }
-function nearestClubs(here, n = 3, maxKm = 1e9) {
-  return D.data.clubs.filter(c => c.coords && c.district).map(c => ({ c, d: km(here, c.coords) })).filter(x => x.d <= maxKm).sort((a, b) => a.d - b.d).slice(0, n);
+function nearestClubs(here, n = 3, maxKm = 1e9) { return D.data.clubs.filter(c => c.coords && c.district).map(c => ({ c, d: km(here, c.coords) })).filter(x => x.d <= maxKm).sort((a, b) => a.d - b.d).slice(0, n); }
+async function guessClubs() { const here = await guessPosition(); if (here) { const near = nearestClubs(here, 2, 35); if (near.length) return near.map(x => x.c.id); } return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || []; }
+
+// --- club tiles (settings, onboarding): crest + name, single (radio) or multi
+function clubTiles(selected, onPick, { single = false, exclude = [] } = {}) {
+  const grid = el("div", { class: "tiles", role: single ? "radiogroup" : "group" });
+  if (single) { const none = el("button", { class: "tile none", type: "button", role: "radio", "aria-checked": String(!selected) }, el("b", {}, t("none"))); none.addEventListener("click", () => onPick("")); grid.append(none); }
+  for (const c of D.data.clubs) {
+    if (exclude.includes(c.id)) continue;
+    const on = single ? selected === c.id : selected.has(c.id);
+    const b = el("button", { class: "tile", type: "button", style: clubStyle(c.id), role: single ? "radio" : "checkbox", "aria-checked": String(on) }, clubMark(c), el("b", {}, c.short), el("span", {}, c.district ? "D" + c.district : t("national")));
+    b.addEventListener("click", () => onPick(c.id));
+    grid.append(b);
+  }
+  return grid;
 }
-async function guessClubs() {
-  const here = await guessPosition();
-  if (here) { const near = nearestClubs(here, 2, 35); if (near.length) return near.map(x => x.c.id); }
-  return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || [];
+
+// --- chip picker (flows, popups): wraps, no inner scrolling
+function clubChips(selected, onPick, { single = false, exclude = [], only = null } = {}) {
+  const box = el("div", { class: "chips" });
+  if (single) { const none = el("button", { class: "chip", type: "button", "aria-pressed": String(!selected) }, t("none")); none.addEventListener("click", () => onPick("")); box.append(none); }
+  for (const c of D.data.clubs) {
+    if (exclude.includes(c.id) || (only && !only.includes(c.id))) continue;
+    const on = single ? selected === c.id : selected.has(c.id);
+    const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(on), "aria-label": c.name }, clubMark(c), c.short);
+    b.addEventListener("click", () => onPick(c.id)); box.append(b);
+  }
+  return box;
+}
+// a small popup with a title, some content and Done
+function popup(title, build) {
+  const dlg = el("dialog", { class: "ob" }), body = el("div", { class: "ob-in" });
+  const draw = () => { body.replaceChildren(el("h2", { tabindex: "-1" }, title), build(draw), (() => { const n = el("div", { class: "nav" }, el("span"), el("button", { class: "btn", type: "button" }, t("done"))); n.lastChild.addEventListener("click", () => dlg.close()); return n; })()); };
+  dlg.append(body); document.body.append(dlg); draw(); dlg.showModal(); body.firstChild.focus();
+  dlg.addEventListener("close", () => dlg.remove());
+  return dlg;
 }
 
 // --- call to action: "your club" with the next event when set, "find your club" otherwise
@@ -120,10 +147,8 @@ function ctaBlock() {
   const home = D.settings.home && D.clubs[D.settings.home];
   if (home) {
     const e = D.data.events.find(e => e.clubs.includes(home.id) && !isPast(e));
-    const box = el("div", { class: "cta", style: clubStyle(home.id) }, el("div", { class: "k" }, t("your_club")),
-      el("div", { class: "rc" }, clubMark(home), el("div", {}, el("b", {}, home.name), el("span", {}, e ? `${fmt.wd.format(new Date(e.start))} ${fmt.day.format(new Date(e.start))}. ${fmt.mon.format(new Date(e.start))} · ${e.title}` : t("cp_none"))),
-        el("a", { class: "go", href: e ? "event.html?id=" + e.id : "club.html?id=" + home.id }, t("go"))));
-    return box;
+    return el("div", { class: "cta glass", style: clubStyle(home.id) }, el("div", { class: "k" }, t("your_club")),
+      el("div", { class: "rc" }, clubMark(home), el("div", {}, el("b", {}, home.name), el("span", {}, e ? `${fmt.dm.format(new Date(e.start))} · ${e.title}` : t("cp_none"))), el("a", { class: "go", href: e ? "event.html?id=" + e.id : "club.html?id=" + home.id }, t("go"))));
   }
   const input = el("input", { class: "in", type: "text", placeholder: t("ab_find_ph"), "aria-label": t("ab_find_ph"), autocomplete: "off" });
   const go = el("button", { class: "go", type: "button" }, t("ab_find_btn")), near = el("div", { class: "near" }), hint = el("div", { class: "hint" });
@@ -131,10 +156,18 @@ function ctaBlock() {
   const find = async () => { const q = input.value.trim(); if (!q) return; hint.textContent = t("locating"); try { const hit = await geocode(q); if (!hit) { hint.textContent = t("place_nf"); return; } hint.textContent = "📍 " + hit.label; show(hit.coords); } catch { hint.textContent = t("place_err"); } };
   go.addEventListener("click", find); input.addEventListener("keydown", ev => { if (ev.key === "Enter") find(); });
   guessPosition().then(here => { if (here && !near.children.length) show(here); });
-  return el("div", { class: "cta new" }, el("div", { class: "k" }, t("ab_find_title")), el("div", { class: "find" }, input, go), hint, near);
+  return el("div", { class: "cta glass new" }, el("div", { class: "k" }, t("ab_find_title")), el("div", { class: "find" }, input, go), hint, near);
 }
 
-// --- service worker: register, and offer a refresh when a newer app shell was fetched in the background
+// --- sticky summary for event and club pages: appears once the hero has scrolled away
+function stickyHead(node, watch) {
+  node.classList.add("sticky-head");
+  const io = new IntersectionObserver(([en]) => node.classList.toggle("show", !en.isIntersecting), { rootMargin: "-64px 0px 0px 0px" });
+  io.observe(watch);
+  return node;
+}
+
+// --- service worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
   navigator.serviceWorker.addEventListener("message", ev => { if (ev.data?.type === "updated") toast(t("new_version"), { label: t("refresh"), fn: () => location.reload() }); });

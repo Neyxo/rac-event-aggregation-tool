@@ -2,7 +2,13 @@
   "name": "Rotaract Events Switzerland & Liechtenstein",
   "short_name": "Rotaract",
   "description": "All public Rotaract events in Switzerland and Liechtenstein.",
+  "id": "rotaract-events-ch",
   "start_url": "./",
+  "categories": ["social", "lifestyle"],
+  "screenshots": [
+    { "src": "screenshot-narrow.png", "sizes": "390x844", "type": "image/png", "form_factor": "narrow", "label": "Your clubs' events" },
+    { "src": "screenshot-wide.png", "sizes": "1280x720", "type": "image/png", "form_factor": "wide", "label": "Discover all events" }
+  ],
   "scope": "./",
   "display": "standalone",
   "background_color": "#f5f4f7",

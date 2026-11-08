@@ -15,14 +15,9 @@
 <script src="common.js" defer></script>
 </head>
 <body data-page="about">
-<header>
-  <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
-    <nav class="actions" id="actions"><button class="icon-btn" id="share" type="button" data-t="ab_share"></button><a class="icon-btn" href="./" data-t="home"></a></nav>
-  </div>
-</header>
-<main class="wrap about">
-  <!-- the morph: three stacked words; the active one opens with picture and line while the others shrink out of the way -->
+<header id="top"></header>
+<main class="wrap about" id="main">
+  <!-- the morph: closed at first (three stacked words); scrolling opens Learn, then Help, then Celebrate -->
   <div class="track" id="track">
     <div class="stage" id="stage">
       <div class="prog" id="prog" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -34,35 +29,40 @@
     <h2 data-t="ab_people"></h2>
     <p class="lead" data-t="ab_people_t"></p>
     <div id="cta"></div>
-    <a class="more" href="about-more.html"><b data-t="ab_more"></b><span data-t="ab_more_sub"></span></a>
+    <a class="more glass" href="about-more.html"><b data-t="ab_more"></b><span data-t="ab_more_sub"></span></a>
     <h3 data-t="faq"></h3>
     <div class="qa" id="qa"></div>
+    <div id="foot"></div>
   </section>
-  <footer><span data-t="made_by"></span> · <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener" data-t="source"></a></footer>
 </main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <div class="toast" id="toast" role="status"></div>
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
   applyI18n();
-  $("actions").prepend(langSelect());
+  const share = el("button", { class: "icon-btn", type: "button", "aria-label": t("ab_share"), title: t("ab_share") }, icon("share"));
+  share.addEventListener("click", async () => { const data = { title: t("ab_title"), text: t("ab_lead"), url: location.href.split("?")[0] }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(data.url); toast(t("copied")); } });
+  chrome("about", { extra: el("span", { class: "x" }, el("a", { class: "icon-btn txt", href: "about-more.html" }, t("subpage_link")), share) });
   const PIL = [["learn", "#0067c8"], ["help", "#009739"], ["party", "#d41367"]];
   for (let i = 1; i <= 5; i++) $("qa").append(el("details", { name: "qa" }, el("summary", {}, t("ab_q" + i)), el("p", {}, t("ab_a" + i))));
-  $("share").addEventListener("click", async () => { const data = { title: t("ab_title"), text: t("ab_lead"), url: location.href.split("?")[0] }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(data.url); toast(t("copied")); } });
   await loadData();
   $("cta").append(ctaBlock());
+  $("foot").append(footer());
   const pics = D.data.events.filter(e => e.image).slice(-9).map(e => e.image);
   const words = $("words");
-  PIL.forEach(([k, col], i) => {
-    const w = el("div", { class: "w", style: `--p:${col}` },
-      el("div", { class: "word" }, t("ab_" + k) + "."),
-      el("div", { class: "open" }, el("div", {}, el("div", { class: "pic" }, el("img", { src: pics[i * 2 + 1] || pics[i], alt: "", loading: "lazy", referrerpolicy: "no-referrer" })), el("p", {}, t("ab_" + k + "_t")))));
-    words.append(w);
-  });
-  let cur = -1;
-  const set = i => { if (i === cur) return; cur = i; [...words.children].forEach((w, k) => w.classList.toggle("on", k === i)); [...$("prog").children].forEach((d, k) => d.classList.toggle("on", k === i)); $("stage").style.setProperty("--p", PIL[i][1]); };
-  const onScroll = () => { const tr = $("track"), r = tr.getBoundingClientRect(), range = tr.offsetHeight - innerHeight; const p = range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 1; set(Math.min(2, Math.floor(p * 3))); };
+  PIL.forEach(([k, col], i) => words.append(el("div", { class: "w", style: `--p:${col}` }, el("div", { class: "word" }, t("ab_" + k) + "."),
+    el("div", { class: "open" }, el("div", {}, el("div", { class: "pic" }, el("img", { src: pics[i * 2 + 1] || pics[i], alt: "", loading: "lazy", referrerpolicy: "no-referrer" })), el("p", {}, t("ab_" + k + "_t")))))));
+  // phase -1 = closed, 0..2 = that word open. Scroll range split into four parts with a little hysteresis so it never flickers at a boundary.
+  let cur = -2;
+  const set = i => { if (i === cur) return; cur = i; [...words.children].forEach((w, k) => w.classList.toggle("on", k === i)); words.classList.toggle("closed", i < 0); [...$("prog").children].forEach((d, k) => d.classList.toggle("on", k === i)); $("stage").style.setProperty("--p", i < 0 ? "#d41367" : PIL[i][1]); };
+  const onScroll = () => {
+    const tr = $("track"), r = tr.getBoundingClientRect(), range = tr.offsetHeight - innerHeight;
+    const p = range > 0 ? Math.min(1, Math.max(0, -r.top / range)) : 1;
+    const raw = p * 4 - 1, next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > cur ? -0.08 : 0.08))));
+    set(next);
+  };
   addEventListener("scroll", onScroll, { passive: true }); addEventListener("resize", onScroll); onScroll();
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) [...words.children].forEach(w => w.classList.add("on"));
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) { words.classList.remove("closed"); [...words.children].forEach(w => w.classList.add("on")); }
 });
 </script>
 </body>

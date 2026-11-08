@@ -13,39 +13,36 @@
 <script src="common.js" defer></script>
 </head>
 <body data-page="club">
-<header>
-  <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
-    <nav class="actions" id="actions"><a class="icon-btn" href="./" data-t="home"></a><a class="icon-btn" href="discover.html" data-t="discover"></a></nav>
-  </div>
-</header>
+<header id="top"></header>
+<div id="sticky"></div>
 <main class="wrap clubpage" id="main"></main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <div class="toast" id="toast" role="status"></div>
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
-  applyI18n();
+  applyI18n(); chrome(null, { back: true });
   await loadData();
   const id = new URLSearchParams(location.search).get("id"), c = D.clubs[id], main = $("main");
   if (!c) { main.append(el("h1", {}, t("clubs")), ...D.data.clubs.map(x => el("p", {}, el("a", { href: "club.html?id=" + x.id }, x.name)))); return; }
   document.title = c.name + " · Rotaract Events";
   const upcoming = D.data.events.filter(e => e.clubs.includes(c.id) && !isPast(e)), next = upcoming[0];
   const https = new URL(c.id + ".ics", location.href).href, webcal = https.replace(/^https?:/, "webcal:");
-  const btns = el("div", { class: "btns" }, el("a", { class: "btn p", href: webcal }, t("cp_sub")), el("a", { class: "btn", href: c.url, target: "_blank", rel: "noopener" }, t("cp_site")), el("a", { class: "btn", href: "discover.html?clubs=" + c.id }, t("cp_all")));
-  // photo strip: configured pictures first, otherwise pictures of the club's past events
+  const btns = el("div", { class: "btns" }, el("a", { class: "btn p", href: webcal }, t("cp_sub")), el("a", { class: "btn glass", href: c.url, target: "_blank", rel: "noopener" }, t("cp_site")), el("a", { class: "btn glass", href: "discover.html?clubs=" + c.id }, t("cp_all")));
   const photos = (c.photos && c.photos.length ? c.photos : D.data.events.filter(e => e.clubs.includes(c.id) && e.image && isPast(e)).slice(-6).map(e => e.image));
   const days = next ? Math.max(1, Math.round((new Date(next.start) - Date.now()) / 864e5)) : 0;
   main.style.cssText = clubStyle(c.id);
-  main.replaceChildren(
-    el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
-      el("h1", {}, c.name), el("div", { class: "sub" }, [c.district ? t("d" + c.district) : t("national"), c.city, upcoming.length ? t("n_upcoming", { n: upcoming.length }).replace(/^ · /, "") : null].filter(Boolean).join(" · ")), btns),
-    next ? el("a", { class: "nx", href: "event.html?id=" + next.id },
+  const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
+    el("h1", {}, c.name), el("div", { class: "sub" }, [c.district ? t("d" + c.district) : t("national"), c.city].filter(Boolean).join(" · ")), btns);
+  main.replaceChildren(hero,
+    next ? el("a", { class: "nx glass", href: "event.html?id=" + next.id },
       el("div", {}, el("div", { class: "k" }, t("next_event")), el("div", { class: "cd" }, t("in_days", { n: days })), el("h4", {}, next.title), el("div", { class: "m" }, whenShort(next) + (next.location ? " · " + placeShort(next) : "")), el("span", { class: "ring" }, t("details") + " →")),
       next.image ? el("img", { src: next.image, alt: "", referrerpolicy: "no-referrer" }) : null) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),
     photos.length ? el("h3", {}, t("photos")) : null,
     photos.length ? el("div", { class: "strip" }, ...photos.map(src => el("img", { src, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }))) : null,
     upcoming.length > 1 ? el("h3", {}, t("more_events")) : null,
     ...upcoming.slice(1, 8).map((e, i) => eventCard(e, i)),
-    el("footer", {}, t("made_by")));
+    footer());
+  $("sticky").replaceChildren(stickyHead(el("div", { class: "glass", style: clubStyle(c.id) }, el("div", { class: "wrap in" }, c.logo ? el("img", { src: c.logo, alt: "" }) : null, el("b", {}, c.name), el("span", {}, c.district ? "D" + c.district : ""), el("a", { class: "go", href: webcal }, t("subscribe")))), hero));
 });
 </script>
 </body>
