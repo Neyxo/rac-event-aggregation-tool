@@ -2,7 +2,7 @@
 import copy
 import datetime as dt
 
-from polaris_feed import build_calendar, clean_vevent, deadline, ics_text, locate, parse_detail, share_page, site_data, sync, unfold
+from polaris_feed import build_calendar, clean_vevent, deadline, ics_text, locate, parse_detail, parse_news, share_page, site_data, sync, unfold
 
 # Shape of a real Polaris per-event .ics: folded lines, random UID, DTSTAMP,
 # duplicate DTSTART, DTEND == DTSTART.
@@ -77,6 +77,13 @@ calls.clear()
 sync(h, ["past", "a", "b", "c", "d"], tracking, NOW, "T4b")
 assert "past" not in calls and calls == ["a", "b", "c", "d"]
 
+# Ended within the last month: still refreshed, even when no longer listed. Older: frozen.
+polaris["recent"] = event("recent", "20261030T190000")
+sync(h, ["recent", "a", "b", "c", "d"], polaris.get, NOW, "T4c")
+calls.clear()
+sync(h, ["a", "b", "c", "d"], tracking, NOW, "T4d")
+assert "recent" in calls and "past" not in calls, calls
+
 # Upcoming event drops off the listing but still exists (listing glitch): kept active.
 sync(h, ["a", "c", "d"], polaris.get, NOW, "T5")
 assert h["b"]["status"] == "active" and h["b"]["sequence"] == 0
@@ -112,10 +119,12 @@ assert h == before
 polaris["c"] = None
 sync(h, ["a", "b", "d"], polaris.get, NOW, "T10")
 h["old-cancelled"] = {**h["past"], "status": "cancelled"}
+h["ancient"] = {**h["past"], "vevent": event("ancient", "20240101T190000")}
 cal = build_calendar({"name": "Test", "lang": "de"}, h, NOW)
 events = unfold(cal)
 assert "SUMMARY:Abgesagt: Event" in events and events.count("STATUS:CANCELLED") == 1, "only the upcoming cancelled one"
-assert cal.count("BEGIN:VEVENT") == 5, "past + a + b + d + cancelled c"
+assert cal.count("BEGIN:VEVENT") == 6, "past + recent + a + b + d + cancelled c"
+assert "polaris-ancient@" not in cal, "older than 24 months: kept in data, not published"
 assert cal.index("polaris-past@") < cal.index("polaris-a@") < cal.index("polaris-d@"), "sorted by start"
 assert "SEQUENCE:1" in events and "DTSTAMP:T3" in events
 
@@ -158,7 +167,7 @@ assert j["image"] == "https://x.ch/a.png" and j["description"] == "Full text" an
 assert next(e for e in site["events"] if e["id"] == "a")["image"] == "", "no detail yet -> empty, not missing"
 assert site["clubs"][0]["color"] == "#d41367" and site["clubs"][0]["short"] == "L" and site["clubs"][0]["district"] == "", "defaults"
 assert site["clubs"][0]["coords"] == [47.0, 8.0], "club city geocoded for the onboarding guess"
-assert "old-cancelled" not in ids and "c" in ids, "same visibility rule as the feed"
+assert "old-cancelled" not in ids and "ancient" not in ids and "c" in ids, "same visibility rule as the feed"
 assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
 assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"
 
@@ -173,4 +182,15 @@ cal = build_calendar({"name": "Test", "lang": "de"}, long, NOW)
 assert all(len(l.encode()) <= 75 for l in cal.split("\r\n")), "line longer than 75 octets"
 assert unfold(cal).count("SUMMARY:" + "ä" * 100) == 1, "folding must round-trip"
 assert cal.endswith("END:VCALENDAR\r\n")
+
+# club news list page (shape of a real Polaris page): link, title, date, picture; relative links get the club's base
+page = ('<ul class="overview"> <li> <a class="r-transfer-link" href="https://rotaract-luzern.ch/de/content/news/show/29657"> '
+        '<img src="https://x/a.jpg?v=1" alt="" title=""> <h2>Austausch &amp; Reise</h2> <small>Samstag, 1. August 2026</small> '
+        '<p class="ct-media-description"> Text </p> </a> </li><li><a class="r-transfer-link" href="/de/content/news/show/1"><h2>Programm</h2>'
+        '<small>Donnerstag, 29. August 2024</small></a></li><li><a class="r-transfer-link" href="/x">no title</a></li></ul>')
+news = parse_news(page, "https://rotaract-luzern.ch")
+assert news[0] == {"url": "https://rotaract-luzern.ch/de/content/news/show/29657", "title": "Austausch & Reise", "date": "2026-08-01", "image": "https://x/a.jpg?v=1"}
+assert news[1] == {"url": "https://rotaract-luzern.ch/de/content/news/show/1", "title": "Programm", "date": "2024-08-29", "image": ""}
+assert len(news) == 2, "items without a title are skipped"
+assert site_data(clubs, histories, NOW, cache, {clubs[0]["id"]: news})["clubs"][0]["news"] == news
 print("ok")
