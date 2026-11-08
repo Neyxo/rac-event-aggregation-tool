@@ -108,6 +108,31 @@ def html_text(fragment):
     return re.sub(r"\n\n+", "\n\n", t).strip()
 
 
+MONTHS = {m: i for i, names in enumerate([
+    "januar january janvier gennaio", "februar february février febbraio", "märz march mars marzo", "april avril aprile",
+    "mai may maggio", "juni june juin giugno", "juli july juillet luglio", "august août agosto",
+    "september septembre settembre", "oktober october octobre ottobre", "november novembre", "dezember december décembre dicembre",
+], 1) for m in names.split()}
+
+
+def deadline(text):
+    """ISO date-time of the registration deadline in a Polaris registration text (de/fr/it/en), or ''."""
+    low = text.lower().replace("\u202f", " ")
+    month = next((MONTHS[w] for w in re.findall(r"[a-zäéû]+", low) if w in MONTHS), None)
+    year = re.search(r"\b(20\d\d)\b", low)
+    day = re.search(r"\b(\d{1,2})\b\.?\s+(?=[a-zäéû]+\s+20\d\d)", low) or re.search(r"[a-z]+\s+(\d{1,2}),\s+20\d\d", low)
+    if not (month and year and day):
+        return ""
+    hour, minute = 23, 59
+    tm = re.search(r"(\d{1,2}):(\d{2})\s*(am|pm)?", low)
+    if tm:
+        hour, minute = int(tm.group(1)) % 12 + (12 if tm.group(3) == "pm" else 0) if tm.group(3) else int(tm.group(1)), int(tm.group(2))
+    try:
+        return dt.datetime(int(year.group(1)), month, int(day.group(1)), hour, minute).isoformat(timespec="minutes")
+    except ValueError:
+        return ""
+
+
 def parse_detail(page):
     """Image, full description and registration info from a Polaris event page."""
     image = re.search(r'property="og:image"\s+content="([^"]+)"', page)
@@ -304,6 +329,7 @@ def site_data(clubs, histories, now, cache):
                 "description": (detail.get("description") or ics_text(ev, "DESCRIPTION"))[:4000],
                 "image": detail.get("image", ""),
                 "registration": detail.get("registration", ""),
+                "deadline": deadline(detail.get("registration", "")),
                 "cancelled": rec["status"] == "cancelled",
             }
     return {

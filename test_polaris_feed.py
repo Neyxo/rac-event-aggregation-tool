@@ -2,7 +2,7 @@
 import copy
 import datetime as dt
 
-from polaris_feed import build_calendar, clean_vevent, ics_text, locate, parse_detail, share_page, site_data, sync, unfold
+from polaris_feed import build_calendar, clean_vevent, deadline, ics_text, locate, parse_detail, share_page, site_data, sync, unfold
 
 # Shape of a real Polaris per-event .ics: folded lines, random UID, DTSTAMP,
 # duplicate DTSTART, DTEND == DTSTART.
@@ -128,6 +128,12 @@ assert d["image"] == "https://x.ch/media/cache/a.png?v=1", d
 assert d["description"] == "Erster Absatz & mehr.\n\nZweiter\nZeile", repr(d["description"])
 assert d["registration"] == "Anmeldung bis: Freitag\n\nMax: 20", repr(d["registration"])
 assert parse_detail("<html></html>") == {"image": "", "description": "", "registration": ""}
+assert deadline("Anmeldung bis: Freitag, 13. November 2026 um 23:55\n\nMax 20") == "2026-11-13T23:55"
+assert deadline("Date limite d'inscription: lundi 9 novembre 2026 à 19:00") == "2026-11-09T19:00"
+assert deadline("Chiusura delle iscrizioni: mercoledì 14 aprile 2027 alle ore 23:55") == "2027-04-14T23:55"
+assert deadline("Registration until: Friday, December 11, 2026 at 9:00\u202fAM") == "2026-12-11T09:00"
+assert deadline("Registration until: Friday, December 11, 2026 at 1:30 PM") == "2026-12-11T13:30"
+assert deadline("Die Anmeldefrist ist abgelaufen") == ""
 
 # --- site data
 assert ics_text(["LOCATION:Inseliquai\\, 6005 Luzern", "DESCRIPTION:a\\nb\\; c"], "LOCATION") == "Inseliquai, 6005 Luzern"

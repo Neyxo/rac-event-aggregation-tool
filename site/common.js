@@ -84,9 +84,16 @@ function starButton(e, onChange) {
   b.addEventListener("click", ev => { ev.preventDefault(); ev.stopPropagation(); D.saved.has(e.id) ? D.saved.delete(e.id) : D.saved.add(e.id); store.set("rac.saved", [...D.saved]); b.setAttribute("aria-pressed", String(D.saved.has(e.id))); toast(D.saved.has(e.id) ? t("saved") : t("unsaved")); onChange?.(); });
   return b;
 }
+// The "next up" pane used on the club page and the home page.
+function nextUp(e, label = t("next_event")) {
+  const days = Math.max(0, Math.round((startOfDay(e.start) - startOfDay(new Date())) / 864e5));
+  return el("a", { class: "nx glass", href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) },
+    el("div", {}, el("div", { class: "k" }, label), el("div", { class: "cd" }, days === 0 ? t("today") : days === 1 ? t("tomorrow") : t("in_days", { n: days })), el("h4", {}, e.title), el("div", { class: "m" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("span", { class: "ring" }, t("details") + " →")),
+    e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null);
+}
 function eventCard(e, i = 0, onChange) {
   const lead = club(e.clubs[0]);
-  return el("a", { class: "event" + (e.cancelled ? " cancelled" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
+  return el("a", { class: "event" + (e.cancelled ? " cancelled" : "") + (D.newIds?.has(e.id) ? " new" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
     lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true", loading: "lazy" }) : null,
     datePane(e),
     el("div", { class: "body" }, el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))),

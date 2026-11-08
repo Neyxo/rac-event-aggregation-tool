@@ -34,9 +34,7 @@ addEventListener("DOMContentLoaded", async () => {
   const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
     el("h1", {}, c.name), el("div", { class: "sub" }, [c.district ? t("d" + c.district) : t("national"), c.city].filter(Boolean).join(" · ")), btns);
   main.replaceChildren(hero,
-    next ? el("a", { class: "nx glass", href: "event.html?id=" + next.id },
-      el("div", {}, el("div", { class: "k" }, t("next_event")), el("div", { class: "cd" }, t("in_days", { n: days })), el("h4", {}, next.title), el("div", { class: "m" }, whenShort(next) + (next.location ? " · " + placeShort(next) : "")), el("span", { class: "ring" }, t("details") + " →")),
-      next.image ? el("img", { src: next.image, alt: "", referrerpolicy: "no-referrer" }) : null) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),
+    next ? nextUp(next) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),
     photos.length ? el("h3", {}, t("photos")) : null,
     photos.length ? el("div", { class: "strip" }, ...photos.map(src => el("img", { src, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }))) : null,
     upcoming.length > 1 ? el("h3", {}, t("more_events")) : null,
