@@ -9,6 +9,7 @@
 #   logo     = crest shown in the app: the canton's coat of arms, or the city's for city clubs
 #              (site/crests/, from Wikimedia Commons; Swiss/LI official coats of arms are public domain)
 #   photos   = optional list of picture URLs for the strip on the club page (otherwise: pictures of past events)
+#   instagram, linkedin = optional profile links, shown as buttons on the club page
 #   district = Rotary district: 1980 central/north-west, 1990 west, 2000 east; empty = national
 
 [[clubs]]
@@ -22,6 +23,13 @@ base_url = "https://rotaract-luzern.ch"
 lang = "de"
 city = "Luzern"
 backfill = true
+instagram = "https://www.instagram.com/racluzern/"
+photos = [
+  "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/6a7b4874c4473.jpg",
+  "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/63c908dbe9663.jpg",
+  "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/63c907b40cfe7.jpg",
+  "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/62b7fe5303371.jpg",
+]
 
 [[clubs]]
 id = "sempachersee"
