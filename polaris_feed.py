@@ -2,10 +2,12 @@
 
 Every run syncs Polaris into a per-club history file (data/<id>.json) and builds
 the feed from that history:
-- past events are kept for good (Polaris drops them from the "upcoming" list),
+- only the last month and the future are refreshed; older events are frozen
+  and kept for good (Polaris drops them from the "upcoming" list),
 - changed events (e.g. moved) are updated and get a higher SEQUENCE,
-- an upcoming event that disappears is re-checked on its own; only if Polaris
-  says it's gone (404 / login page) is it marked cancelled.
+- an event that disappears is re-checked on its own; only if Polaris says
+  it's gone (404 / login page) is it marked cancelled,
+- feeds and site carry the last 24 months plus the future; data/ keeps everything.
 
 Usage: python3 polaris_feed.py [clubs.toml] [out_dir] [data_dir]
 """
@@ -30,6 +32,8 @@ TZ = ZoneInfo("Europe/Zurich")
 # Refuse a sync that would cancel more than this share of upcoming events at once:
 # that's far more likely a Polaris problem than a wave of real cancellations.
 MAX_CANCEL_RATIO = 0.5
+REFRESH_PAST = dt.timedelta(days=30)  # events that ended earlier are frozen: never re-fetched or re-checked
+PUBLISH_PAST = dt.timedelta(days=730)  # feeds and site go back this far; data/ keeps the full history
 CANCELLED = {"de": "Abgesagt", "fr": "Annulé", "it": "Annullato"}
 
 # Polaris ships a VTIMEZONE without DST rules, so we write a correct one ourselves.
@@ -150,6 +154,25 @@ def fetch_detail(club, event_id):
     return parse_detail(get(f"{club['base_url']}/{club['lang']}/agenda/show/{event_id}"))
 
 
+def parse_news(page, base_url):
+    """Title, date, picture and link of each article on a Polaris news list page. Only the link is kept, never the text."""
+    items = []
+    for m in re.finditer(r'<a class="r-transfer-link"\s+href="([^"]+)">(.*?)</a>', page, re.S):
+        href, block = html.unescape(m.group(1)), m.group(2)
+        title = re.search(r"<h2>(.*?)</h2>", block, re.S)
+        if not title:
+            continue
+        img, small = re.search(r'<img src="([^"]+)"', block), re.search(r"<small>(.*?)</small>", block, re.S)
+        items.append({"url": href if href.startswith("http") else base_url + href, "title": html_text(title.group(1)),
+                      "date": deadline(html_text(small.group(1)))[:10] if small else "", "image": html.unescape(img.group(1)) if img else ""})
+    return items[:6]
+
+
+def fetch_news(club):
+    time.sleep(0.5)
+    return parse_news(get(f"{club['base_url']}/{club['lang']}/content/news"), club["base_url"])
+
+
 def unfold(ics):
     return re.sub(r"\r?\n[ \t]", "", ics).splitlines()
 
@@ -206,13 +229,15 @@ def sync(history, listed, fetch, now, stamp):
     listed: ids Polaris lists right now. fetch(id) -> VEVENT lines | None (gone), raises if unsure.
     Returns a list of per-event errors (those events are left as they were).
     """
-    def upcoming(rec):
-        return rec["status"] == "active" and prop(rec["vevent"], "DTEND") >= now
+    frozen = now - REFRESH_PAST
 
-    # Upcoming events we know but Polaris no longer lists: check each one directly.
-    # Past events aren't re-checked or re-fetched: history is fixed once an event is over.
-    missing = [i for i, rec in history.items() if i not in listed and upcoming(rec)]
-    known_past = {i for i, rec in history.items() if prop(rec["vevent"], "DTEND") < now}
+    def live(rec):  # in the refresh window: the future and the last month
+        return rec["status"] == "active" and prop(rec["vevent"], "DTEND") >= frozen
+
+    # Live events we know but Polaris no longer lists: check each one directly.
+    # Older events aren't re-checked or re-fetched: history is fixed a month after an event.
+    missing = [i for i, rec in history.items() if i not in listed and live(rec)]
+    known_past = {i for i, rec in history.items() if prop(rec["vevent"], "DTEND") < frozen}
     fresh, errors = {}, []
     for i in dict.fromkeys([*listed, *missing]):
         if i in known_past:
@@ -223,9 +248,9 @@ def sync(history, listed, fetch, now, stamp):
             errors.append(f"{i}: {e}")
 
     gone = [i for i, ev in fresh.items() if ev is None and i in history and history[i]["status"] == "active"]
-    n_upcoming = sum(map(upcoming, history.values()))
-    if n_upcoming >= 4 and len(gone) > MAX_CANCEL_RATIO * n_upcoming:
-        raise RuntimeError(f"{len(gone)} of {n_upcoming} upcoming events would be cancelled at once; refusing, check Polaris")
+    n_live = sum(map(live, history.values()))
+    if n_live >= 4 and len(gone) > MAX_CANCEL_RATIO * n_live:
+        raise RuntimeError(f"{len(gone)} of {n_live} live events would be cancelled at once; refusing, check Polaris")
 
     for i, ev in fresh.items():
         rec = history.get(i)
@@ -299,11 +324,12 @@ def ics_text(ev, name):
 
 
 def visible(rec, now):
-    """Feed/site rule: active events always, cancelled ones only until their date is over."""
-    return rec["status"] == "active" or prop(rec["vevent"], "DTEND") >= now
+    """Feed/site rule: the last 24 months and the future; cancelled events only until their date is over."""
+    end = prop(rec["vevent"], "DTEND")
+    return end >= now - PUBLISH_PAST and (rec["status"] == "active" or end >= now)
 
 
-def site_data(clubs, histories, now, cache):
+def site_data(clubs, histories, now, cache, news=None):
     """events.json for the search site: every visible event, merged across clubs by Polaris id."""
     events = {}
     for club in clubs:
@@ -336,7 +362,8 @@ def site_data(clubs, histories, now, cache):
         "generated": now.isoformat(timespec="minutes"),
         "clubs": [{"id": c["id"], "name": c["name"], "short": c.get("short", c["name"]), "url": c["base_url"],
                    "color": c.get("color", "#d41367"), "logo": c.get("logo", ""), "district": c.get("district", ""),
-                   "coords": locate("", c.get("city", ""), cache), "photos": c.get("photos", [])} for c in clubs],
+                   "coords": locate("", c.get("city", ""), cache), "photos": c.get("photos", []), "news": (news or {}).get(c["id"], []),
+                   "links": {k: c[k] for k in ("instagram", "linkedin") if c.get(k)}} for c in clubs],
         "events": sorted(events.values(), key=lambda e: e["start"]),
     }
 
@@ -378,6 +405,8 @@ def main():
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
     clubs = tomllib.loads(config.read_text())["clubs"]
     failures, histories = [], {}
+    news_path = data / "news.json"
+    news = json.loads(news_path.read_text()) if news_path.exists() else {}
     for club in clubs:
         path = data / f"{club['id']}.json"
         history = json.loads(path.read_text()) if path.exists() else {}
@@ -398,6 +427,10 @@ def main():
             failures.append(f"{club['id']}: {e}")
             history = json.loads(path.read_text()) if path.exists() else {}
         histories[club["id"]] = history
+        try:
+            news[club["id"]] = fetch_news(club)
+        except Exception as e:
+            print(f"{club['id']} news: {e} (keeping the last list)")  # teasers only, not worth failing the run
         (out / f"{club['id']}.ics").write_text(build_calendar(club, history, now), newline="")
         cancelled = sum(r["status"] == "cancelled" for r in history.values())
         print(f"{club['id']}: {len(history)} events in history ({cancelled} cancelled)")
@@ -408,14 +441,15 @@ def main():
     (out / "all.ics").write_text(build_calendar(everyone, merged, now), newline="")
     cache_path = data / "geocode.json"
     cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
-    site = site_data(clubs, histories, now, cache)
+    news_path.write_text(json.dumps(news, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+    site = site_data(clubs, histories, now, cache, news)
     cache_path.write_text(json.dumps(cache, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
     (out / "events.json").write_text(json.dumps(site, ensure_ascii=False, separators=(",", ":")))
     shutil.copytree(Path(__file__).with_name("site"), out, dirs_exist_ok=True)
-    names = {c["id"]: c["name"] for c in clubs}
+    by_id = {c["id"]: c for c in clubs}
     (out / "e").mkdir(exist_ok=True)
     for e in site["events"]:
-        (out / "e" / f"{e['id']}.html").write_text(share_page(e, " & ".join(names.get(c, c) for c in e["clubs"])))
+        (out / "e" / f"{e['id']}.html").write_text(share_page(e, " & ".join(by_id[c]["name"] if c in by_id else c for c in e["clubs"])))
     write_status(out, site, histories, failures, stamp)
     print(f"site: {len(site['events'])} events, {sum(e['coords'] is None for e in site['events'])} without location")
 
