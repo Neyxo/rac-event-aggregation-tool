@@ -79,3 +79,7 @@ The workflow `.github/workflows/feeds.yml` runs every 6 hours, and also on every
 ## Design lab
 
 The side-by-side design variants used to pick the current look live on the local `design-lab` branch (`lab/`), served with `python3 -m http.server 8766` from the repo root at `/lab/events.html` etc. It is not pushed.
+
+## Home
+
+For members the home page is a personal overview: greeting and week line, the next event of your clubs (same pane as the club page), what changed since the last visit (NEU badges in the list), registration deadlines within three weeks (parsed into `deadline` in events.json), saved events. Background is a wash of your clubs' colours; panes are frosted. Without a club the page stays in explore mode.

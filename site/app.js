@@ -19,12 +19,34 @@ function renderHome() {
     $("listTitle").textContent = t("explore_near");
     return;
   }
-  const lead = club(D.settings.home || mine[0]);
-  box.replaceChildren(el("div", { class: "home-in", style: clubStyle(lead.id) },
-    lead.logo ? el("img", { class: "crest", src: lead.logo, alt: "" }) : null,
-    el("div", { class: "ht" }, el("div", { class: "meta" }, t("home_banner")), el("h2", {}, el("a", { href: "club.html?id=" + lead.id }, lead.name)),
-      mine.length > 1 ? el("div", { class: "also" }, ...mine.slice(1).map(id => { const c = club(id); return el("a", { class: "mini glass", href: "club.html?id=" + id, title: c.name, style: clubStyle(id) }, clubMark(c), c.short); })) : null),
-    el("a", { class: "ghost glass", href: "settings.html" }, t("change"))));
+  // personal overview: greeting, the next event, what changed, deadlines and saved events; the list below skips the next event
+  const mineEv = D.data.events.filter(e => e.clubs.some(c => mine.includes(c)) && !isPast(e)), next = mineEv[0];
+  const today = startOfDay(new Date()), dayN = d => Math.round((startOfDay(d) - today) / 864e5);
+  const cols = [D.settings.home || mine[0], ...mine.filter(id => id !== (D.settings.home || mine[0]))];
+  document.body.classList.add("home-mine");
+  cols.slice(0, 3).forEach((id, i) => document.body.style.setProperty("--c" + (i + 1), club(id).color));
+  for (let i = cols.length; i < 3; i++) document.body.style.setProperty("--c" + (i + 1), i === 1 ? "#d41367" : "#0067c8");
+  // what changed since the last visit: ids and start times seen one visit ago (visits closer than an hour count as one)
+  const seen = store.get("rac.seen", null), cur = Object.fromEntries(mineEv.map(e => [e.id, e.start])), prev = seen && Date.now() - seen.at > 36e5 ? (store.set("rac.seenPrev", seen.map), seen.map) : store.get("rac.seenPrev", null);
+  if (!seen || Date.now() - seen.at > 36e5) store.set("rac.seen", { at: Date.now(), map: cur });
+  D.newIds = new Set(prev ? Object.keys(cur).filter(id => !(id in prev)) : []);
+  const moved = prev ? Object.keys(cur).filter(id => id in prev && prev[id] !== cur[id]).length : 0;
+  const deadlines = mineEv.filter(e => e.deadline && dayN(e.deadline) >= 0 && dayN(e.deadline) <= 21).sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 3);
+  const saved = mineEv.filter(e => D.saved.has(e.id)).slice(0, 3);
+  const h = new Date().getHours(), week = mineEv.filter(e => dayN(e.start) < 7).length;
+  const row = (e, label, soon) => el("a", { class: "r" + (soon ? " soon" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) }, el("i"), el("span", {}, e.title), el("b", {}, label));
+  const dLabel = n => n === 0 ? t("today") : n === 1 ? t("tomorrow") : t("d_short", { n });
+  S.skip = next?.id;
+  box.replaceChildren(
+    el("div", { class: "hello" }, el("h1", {}, (h < 11 ? t("greet_morning") : h < 18 ? t("greet_day") : t("greet_evening")) + " 👋"),
+      el("p", { class: "sub" }, [week === 0 ? t("wk_none") : week === 1 ? t("wk_one") : t("wk_events", { n: week }), deadlines.length === 1 ? t("wk_reg_one") : t("wk_reg", { n: deadlines.length })].join(" · ")),
+      el("div", { class: "chips" }, ...cols.map(id => { const c = club(id); return el("a", { class: "mini glass" + (id === cols[0] ? " main" : ""), href: "club.html?id=" + id, style: clubStyle(id) }, clubMark(c), c.short); }))),
+    next ? nextUp(next, t("next_event") + " · " + club(next.clubs[0]).short) : null,
+    D.newIds.size || moved ? el("a", { class: "news glass", href: "#results" }, el("b", {}, t("news_new", { n: D.newIds.size })), el("span", {}, " " + t("news_rest") + (moved ? " · " + t("news_moved", { n: moved }) : "")), icon("back")) : null,
+    el("div", { class: "panes" },
+      el("div", { class: "pane glass" }, el("div", { class: "k" }, t("deadline_h")), ...(deadlines.length ? deadlines.map(e => { const n = dayN(e.deadline); return row(e, dLabel(n), n <= 2); }) : [el("p", { class: "m" }, t("none_open"))])),
+      el("div", { class: "pane glass" }, el("div", { class: "k" }, icon("star"), t("saved_h")), ...(saved.length ? saved.map(e => row(e, dLabel(dayN(e.start)))) : [el("p", { class: "m" }, t("none_open"))]))));
+  $("listTitle").textContent = t("home_soon");
 }
 
 // --- filters (discover)
@@ -69,6 +91,7 @@ function render() {
     if (S.view === "weekend" && (start < wkStart || start >= wkEnd)) continue;
     if (S.view === "saved" && !D.saved.has(e.id)) continue;
     if (!baseMatches(e)) continue;
+    if (S.view === "all" && e.id === S.skip) continue;
     if (!withinRadius(e)) { if (!e.coords) noLocation++; continue; }
     matches.push(e);
   }
