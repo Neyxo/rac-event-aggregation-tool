@@ -15,12 +15,7 @@
 <script src="common.js" defer></script>
 </head>
 <body data-page="about-more" class="frosted">
-<header>
-  <div class="wrap bar">
-    <a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span data-t="events"></span></a>
-    <nav class="actions" id="actions"><a class="icon-btn" href="about.html" data-t="ab_back"></a></nav>
-  </div>
-</header>
+<header id="top"></header>
 <main class="wrap more">
   <h1 data-t="ab_more"></h1>
   <!-- each section: a full-bleed visual with a frosted pane carrying one line -->
@@ -28,14 +23,15 @@
   <section class="vis map"><div class="bg" id="swiss"></div><div class="pane"><b data-t="sp_dist"></b><span data-t="sp_dist_t"></span><div class="leg" id="leg"></div></div></section>
   <section class="vis map"><div class="bg" id="world"></div><div class="pane"><b data-t="sp_world"></b><span data-t="sp_world_t"></span></div></section>
   <div id="cta"></div>
-  <footer><span data-t="made_by"></span></footer>
+  <div id="foot"></div>
 </main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <div class="toast" id="toast" role="status"></div>
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
-  applyI18n();
+  applyI18n(); chrome("about", { extra: el("a", { class: "icon-btn txt", href: "about.html" }, t("ab_back")) });
   await loadData();
-  $("cta").append(ctaBlock());
+  $("cta").append(ctaBlock()); $("foot").append(footer());
   const pics = D.data.events.filter(e => e.image).slice(-9).map(e => e.image);
   document.querySelector("#rotary .bg").src = pics[2] || pics[0] || "";
   const dc = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };

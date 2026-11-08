@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Settings · Rotaract Events</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
+</head>
+<body data-page="settings">
+<header id="top"></header>
+<main class="wrap settings" id="main">
+  <h1 data-t="settings"></h1>
+  <p class="lead" data-t="set_hint"></p>
+  <section class="glass"><h2 data-t="set_clubs_h"></h2>
+    <div class="setrow"><span data-t="main_club"></span><div class="cur" id="homeCur"></div><button class="linkbtn" type="button" id="homeBtn" data-t="change"></button></div>
+    <div class="setrow"><span data-t="also_show"></span><div class="cur" id="alsoCur"></div><button class="linkbtn" type="button" id="alsoBtn" data-t="change"></button></div>
+  </section>
+  <section class="glass"><h2 data-t="set_app_h"></h2>
+    <div class="setrow"><span data-t="language"></span><span id="langBox"></span></div>
+    <div class="setrow"><span data-t="appearance"></span><div class="seg" id="themeSeg"><button type="button" data-k="light" data-t="theme_light"></button><button type="button" data-k="dark" data-t="theme_dark"></button></div></div>
+    <div class="setrow col" id="install"><span data-t="inst_title"></span><div id="installBody"></div></div>
+    <div class="setrow col"><span data-t="share_title"></span><div class="linkbox"><input type="text" id="link" readonly><button type="button" id="copy" data-t="copy"></button></div></div>
+  </section>
+  <section class="glass"><h2 data-t="set_more_h"></h2>
+    <div class="links"><a href="subscribe.html" data-t="subscribe_link"></a><a href="about.html" data-t="about"></a><a href="about-more.html" data-t="subpage_link"></a><a href="#" id="rerun" data-t="rerun"></a></div>
+  </section>
+  <div id="foot"></div>
+</main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+addEventListener("DOMContentLoaded", async () => {
+  applyI18n(); chrome("settings");
+  await loadData();
+  const draw = () => {
+    const s = D.settings;
+    $("homeCur").replaceChildren(s.home ? clubChip(s.home) : el("span", { class: "meta" }, t("none")));
+    $("alsoCur").replaceChildren(...(s.also.length ? s.also.map(id => clubChip(id)) : [el("span", { class: "meta" }, t("none"))]));
+    for (const b of $("themeSeg").children) b.setAttribute("aria-pressed", String(document.documentElement.dataset.theme === b.dataset.k));
+  };
+  draw();
+  $("homeBtn").addEventListener("click", () => popup(t("pick_main"), redraw => clubChips(D.settings.home, id => { D.settings.home = id; D.settings.also = D.settings.also.filter(x => x !== id); saveSettings(); draw(); redraw(); }, { single: true })));
+  $("alsoBtn").addEventListener("click", () => popup(t("pick_also"), redraw => clubChips(new Set(D.settings.also), id => { const a = D.settings.also; D.settings.also = a.includes(id) ? a.filter(x => x !== id) : [...a, id]; saveSettings(); draw(); redraw(); }, { exclude: [D.settings.home] })));
+  $("langBox").append(langSelect());
+  for (const b of $("themeSeg").children) b.addEventListener("click", () => { setTheme(b.dataset.k); draw(); });
+  $("link").value = location.origin + location.pathname.replace(/[^/]*$/, "");
+  $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast(t("copied")); });
+  $("rerun").addEventListener("click", ev => { ev.preventDefault(); localStorage.removeItem("rac.onboarded"); location.href = "./"; });
+  // install block
+  let prompt = null; addEventListener("beforeinstallprompt", e => { e.preventDefault(); prompt = e; inst(); });
+  const inst = () => {
+    const body = $("installBody"); body.replaceChildren();
+    if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) { body.append(el("p", { class: "meta" }, t("inst_done"))); return; }
+    if (prompt) { const b = el("button", { class: "install-btn", type: "button" }, t("inst_btn")); b.addEventListener("click", async () => { prompt.prompt(); await prompt.userChoice; }); body.append(b); return; }
+    const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const tabs = el("div", { class: "tabs", role: "tablist" }), steps = el("ol", { class: "steps" });
+    const show = key => { for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key)); steps.replaceChildren(...t("g_" + key).map(s => el("li", {}, s))); };
+    for (const key of ["ios", "android", "desktop"]) { const b = el("button", { type: "button", role: "tab", "data-key": key }, t(key)); b.addEventListener("click", () => show(key)); tabs.append(b); }
+    show(ios ? "ios" : /Android/.test(ua) ? "android" : "desktop"); body.append(tabs, steps);
+  };
+  inst();
+  $("foot").append(footer());
+});
+</script>
+</body>
+</html>
