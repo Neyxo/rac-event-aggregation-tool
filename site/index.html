@@ -26,15 +26,11 @@
 <div class="banner" id="stale" role="status" hidden></div>
 <main class="wrap" id="main">
   <div class="home" id="home"></div>
-  <h3 id="listTitle" class="list-title" data-t="v_all"></h3>
-  <div class="row" id="views" role="group" data-t-label="filters">
-    <button class="chip" type="button" data-view="all" data-t="v_all"></button>
-    <button class="chip" type="button" data-view="week" data-t="v_week"></button>
-    <button class="chip" type="button" data-view="weekend" data-t="v_weekend"></button>
-    <button class="chip" type="button" data-view="saved" data-t="v_saved"></button>
-    <button class="chip" type="button" data-view="past" data-t="v_past"></button>
+  <div class="list-head"><h3 id="listTitle" data-t="v_all"></h3><div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span><button type="button" class="clear" id="clear" hidden data-t="clear"></button></div></div>
+  <div class="seg views glass" id="views" role="group" data-t-label="filters">
+    <button type="button" data-view="all" data-t="v_all"></button>
+    <button type="button" data-view="saved" data-t="v_saved"></button>
   </div>
-  <div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span><button type="button" class="clear" id="clear" hidden data-t="clear"></button></div>
   <div id="results" aria-busy="true">
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>

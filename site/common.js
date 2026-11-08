@@ -9,6 +9,8 @@ function el(tag, attrs = {}, ...children) {
   for (const c of children) if (c != null && c !== false) n.append(c);
   return n;
 }
+// replaceChildren() would print null as the text "null"; this drops null/false like el() does.
+const fill = (n, ...children) => n.replaceChildren(...children.filter(c => c != null && c !== false));
 const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
@@ -31,17 +33,26 @@ function setTheme(next) { store.set("rac.theme", next); document.documentElement
 const ICON = {
   home: "M3 11 12 3l9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z", discover: "M21 21l-4.3-4.3M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z", calendar: "M8 2v3M16 2v3M3 9h18M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z",
   info: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8h.01", settings: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z",
-  back: "M15 18l-6-6 6-6", share: "M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13", star: "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z",
+  instagram: "M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM17.5 6.5h.01", linkedin: "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+  // the Rotary family page
+  wheel: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM12 3v6M12 15v6M3 12h6M15 12h6", users: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8",
+  book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z", plane: "M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z",
+  flag: "M4 22V4M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1", rings: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z",
+  sun: "M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4", moon: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z",
+  heart: "M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z", pin: "M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0zM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  globe: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18", ext: "M14 3h7v7M21 3l-9 9M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5", back: "M15 18l-6-6 6-6", share: "M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13", star: "m12 3 2.8 5.9 6.4.8-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4L2.8 9.7l6.4-.8z",
 };
 function icon(name, cls = "") { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true"); if (cls) s.setAttribute("class", cls); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", ICON[name]); s.append(p); return s; }
 
 // --- navigation chrome, identical on every page: top bar (logo · info · settings) and bottom tabs (home · discover · calendar)
+function hbtn(name, href, label, on = false) { return el("a", { class: "hbtn" + (on ? " on" : ""), href, "aria-label": label, title: label }, icon(name), label === null ? null : el("span", {}, label)); }
 function chrome(active, { back = false, extra = null } = {}) {
   const top = $("top");
-  const left = back ? (() => { const a = el("a", { class: "icon-btn back", href: "./", "aria-label": t("back") }, icon("back")); a.addEventListener("click", ev => { if (history.length > 1) { ev.preventDefault(); history.back(); } }); return a; })() : null;
+  const left = back ? (() => { const a = hbtn("back", "./", null); a.setAttribute("aria-label", t("back")); a.addEventListener("click", ev => { if (history.length > 1) { ev.preventDefault(); history.back(); } }); return a; })() : null;
   top.replaceChildren(el("div", { class: "wrap bar" },
     el("div", { class: "lft" }, left, el("a", { class: "brand", href: "./", "aria-label": "Rotaract Events" }, el("img", { src: "rotaract.svg", alt: "Rotaract" }))),
-    el("div", { class: "rgt" }, extra, el("a", { class: "icon-btn" + (active === "about" ? " on" : ""), href: "about.html", "aria-label": t("about"), title: t("about") }, icon("info")), el("a", { class: "icon-btn" + (active === "settings" ? " on" : ""), href: "settings.html", "aria-label": t("settings"), title: t("settings") }, icon("settings")))));
+    el("div", { class: "rgt" }, extra, hbtn("info", "about.html", t("info"), active === "about"), hbtn("settings", "settings.html", t("settings"), active === "settings"))));
+  document.documentElement.style.setProperty("--stick", top.offsetHeight + "px");  // sticky section headings start under the top bar
   const tabs = $("tabs");
   if (tabs) tabs.replaceChildren(...[["home", "./"], ["discover", "discover.html"], ["calendar", "calendar.html"]].map(([k, href]) => el("a", { class: "tab" + (active === k ? " on" : ""), href, "aria-current": active === k ? "page" : null }, icon(k), el("span", {}, t(k)))));
 }
@@ -50,7 +61,16 @@ function footer() { return el("footer", {}, t("made_by") + " · ", el("a", { hre
 // --- data + clubs
 const D = { data: null, clubs: {}, settings: { home: "", also: [] }, saved: new Set() };
 async function loadData() {
-  D.data = await (await fetch("events.json", { cache: "no-cache" })).json();
+  try {
+    const r = await fetch("events.json", { cache: "no-cache" });
+    if (!r.ok) throw new Error(r.status);
+    D.data = await r.json();
+  } catch (e) {
+    // Offline on a first visit, or the site is broken: say so instead of a skeleton forever. Callers stop here.
+    const retry = el("button", { type: "button" }, t("refresh")); retry.addEventListener("click", () => location.reload());
+    document.querySelector("main")?.replaceChildren(el("div", { class: "empty" }, t("offline"), el("br"), retry));
+    throw e;
+  }
   for (const c of D.data.clubs) D.clubs[c.id] = c;
   D.saved = new Set(store.get("rac.saved", []));
   const old = store.get("rac.prefs", null);
@@ -66,12 +86,13 @@ function club(id) { return D.clubs[id] || { id, name: id, short: id, color: "#d4
 function clubStyle(id) { const c = club(id).color || "#d41367"; return `--c:${c};--on-c:${onColor(c)}`; }
 function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading: "lazy" }) : el("span", { class: "dot" }); }
 function clubChip(id, extra = "") { const c = club(id); return el("a", { class: "tag " + extra, href: "club.html?id=" + id, style: clubStyle(id), "aria-label": c.name }, clubMark(c), c.short); }
+const nClubs = () => D.data.clubs.filter(c => c.district).length;
 function clubLabel(id) { const c = club(id); return c.name + (c.district ? ` (D${c.district})` : ""); }
 const fmt = {
   day: new Intl.DateTimeFormat(LOCALE, { day: "numeric" }), mon: new Intl.DateTimeFormat(LOCALE, { month: "short" }), month: new Intl.DateTimeFormat(LOCALE, { month: "long", year: "numeric" }),
   wd: new Intl.DateTimeFormat(LOCALE, { weekday: "short" }), wdl: new Intl.DateTimeFormat(LOCALE, { weekday: "long" }), time: new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" }),
   full: new Intl.DateTimeFormat(LOCALE, { weekday: "long", day: "numeric", month: "long", year: "numeric" }), stamp: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
-  dm: new Intl.DateTimeFormat(LOCALE, { weekday: "short", day: "numeric", month: "short" }),
+  dm: new Intl.DateTimeFormat(LOCALE, { weekday: "short", day: "numeric", month: "short" }), date: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", year: "numeric" }),
 };
 function whenShort(e) { const s = new Date(e.start), en = new Date(e.end); return e.allday ? fmt.wdl.format(s) + " · " + t("all_day") : `${fmt.wd.format(s)} ${fmt.time.format(s)}` + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""); }
 function placeShort(e) { return (e.location || "").split(",")[0]; }
@@ -97,7 +118,7 @@ function eventCard(e, i = 0, onChange) {
     lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true", loading: "lazy" }) : null,
     datePane(e),
     el("div", { class: "body" }, el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))),
-    el("div", { class: "side" }, e.image ? el("img", { class: "thumb", src: e.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null, starButton(e, onChange)));
+    el("div", { class: "side" }, starButton(e, onChange), e.image ? el("img", { class: "thumb", src: e.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null));
 }
 
 // --- location guess: approximate position of the connection, no permission prompt, nothing stored
@@ -166,16 +187,41 @@ function ctaBlock() {
   return el("div", { class: "cta glass new" }, el("div", { class: "k" }, t("ab_find_title")), el("div", { class: "find" }, input, go), hint, near);
 }
 
-// --- sticky summary for event and club pages: appears once the hero has scrolled away
-function stickyHead(node, watch) {
-  node.classList.add("sticky-head");
-  const io = new IntersectionObserver(([en]) => node.classList.toggle("show", !en.isIntersecting), { rootMargin: "-64px 0px 0px 0px" });
-  io.observe(watch);
-  return node;
+// --- the hero (event head, club hero) sticks under the top bar and compacts as you scroll. The CSS reads --p, 0 → 1 over the first 80px of sticking (short, so it is rarely caught halfway).
+function morphHead(node) {
+  const sent = el("i", { class: "sent", "aria-hidden": "true" }); node.before(sent); node.classList.add("morph");
+  const top = $("top").offsetHeight; node.style.top = top + "px";
+  const tick = () => {
+    const p = Math.min(1, Math.max(0, (top - sent.getBoundingClientRect().top) / 80)); node.style.setProperty("--p", p.toFixed(3)); node.classList.toggle("on", p > .5);
+    // section headings stick right under the compact hero while it is there, under the top bar once it has scrolled off
+    document.documentElement.style.setProperty("--stick", Math.round(Math.max(top, Math.min(node.getBoundingClientRect().bottom, top + node.offsetHeight))) + "px");
+  };
+  addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick); tick();
 }
 
-// --- service worker
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
-  navigator.serviceWorker.addEventListener("message", ev => { if (ev.data?.type === "updated") toast(t("new_version"), { label: t("refresh"), fn: () => location.reload() }); });
+// --- month and section headings: frosted only while they are stuck under the bar or the compact hero
+function stickyHeads() {
+  const s = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--stick")) || 63;
+  for (const h of document.querySelectorAll("#results > h3, .clubpage > h3, .evpage > h3")) h.classList.toggle("stuck", h.getBoundingClientRect().top <= s + 1);
 }
+addEventListener("scroll", stickyHeads, { passive: true });
+
+// --- pictures for Learn / Help / Celebrate: site/img/<k>.jpg when present, otherwise an event picture whose title fits (people doing things, not a poster)
+const PILLAR_RE = {
+  learn: /vortrag|talk|referat|besuch|visit|workshop|firm|company|entreprise|azienda|exkursion|führung/i,
+  help: /hands.?on|projekt|project|projet|progetto|charity|spende|clean|sammel|freiwillig|volunt|bénévol|volontar|helfen/i,
+  party: /stamm|party|fest|ap[ée]ro|weihnacht|christmas|noël|natale|dinner|grill|ball|gala|sommer|summer|été|estate/i,
+};
+function pillarPic(k) {
+  const withPic = D.data.events.filter(e => e.image), fallback = (withPic.filter(e => PILLAR_RE[k].test(e.title)).at(-1) || withPic.at(-1))?.image;
+  const im = el("img", { src: "img/" + k + ".jpg", alt: "", loading: "lazy" });
+  im.addEventListener("error", () => { if (fallback && im.src !== fallback) { im.referrerPolicy = "no-referrer"; im.src = fallback; } });
+  return im;
+}
+
+// --- news teasers: picture with the title on it, linking to the article on the club's site (only the link is stored)
+function newsCard(n) { return el("a", { class: "nw", href: n.url, target: "_blank", rel: "noopener" }, n.image ? el("img", { src: n.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null, el("div", { class: "t" }, el("b", {}, n.title), n.date ? el("span", {}, fmt.date.format(new Date(n.date))) : null)); }
+function newsStrip(items) { return el("div", { class: "strip teasers" }, ...items.map(newsCard)); }
+
+// --- service worker
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});

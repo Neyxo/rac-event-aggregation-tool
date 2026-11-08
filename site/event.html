@@ -14,7 +14,6 @@
 </head>
 <body data-page="event">
 <header id="top"></header>
-<div id="sticky"></div>
 <main class="wrap evpage" id="main"><div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div></main>
 <nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <div class="toast" id="toast" role="status"></div>
@@ -30,11 +29,15 @@ addEventListener("DOMContentLoaded", async () => {
   share.addEventListener("click", async () => { const url = new URL(`e/${e.id}.html`, location.href).href; const data = { title: e.title, text: `${e.title} · ${fmt.full.format(s)}${e.location ? " · " + e.location : ""}`, url }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(url); toast(t("copied")); } });
   const hero = el("div", { class: "hero" }, e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null);
   main.style.cssText = clubStyle(lead.id);
+  // the club's colour wash behind a frosted card, the crest under the date pane: like the cards and the club page
+  document.body.classList.add("wash");
+  [lead, club(e.clubs[1] || lead.id), lead].forEach((c, i) => document.body.style.setProperty("--c" + (i + 1), c.color));
   main.replaceChildren(
-    el("article", { class: "evdetail" },
+    el("article", { class: "evdetail glass" },
       e.image ? hero : null,
-      el("div", { class: "head" }, datePane(e), el("div", {}, el("h1", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))), starButton(e)),
-      el("div", { class: "links" }, el("a", { class: "primary", href: e.url, target: "_blank", rel: "noopener" }, t("register")), el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, t("add_cal")), share),
+      el("div", { class: "head" }, lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true" }) : null, datePane(e), el("div", {}, el("h1", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))), starButton(e),
+        el("a", { class: "go", href: e.url, target: "_blank", rel: "noopener", title: t("register") }, icon("ext"), el("span", {}, t("register")))),
+      el("div", { class: "links" }, el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, icon("calendar"), t("add_cal")), share),
       el("p", { class: "desc" }, e.description || t("no_desc")),
       el("dl", { class: "kv" },
         el("dt", {}, t("when")), el("dd", {}, fmt.full.format(s) + (e.allday ? "" : ", " + fmt.time.format(s) + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""))),
@@ -44,9 +47,12 @@ addEventListener("DOMContentLoaded", async () => {
     el("h3", {}, t("more_events")),
     ...D.data.events.filter(x => x.id !== e.id && !isPast(x) && x.clubs.some(c => e.clubs.includes(c))).slice(0, 3).map((x, i) => eventCard(x, i)),
     footer());
-  // sticky summary once the title has scrolled away
-  const head = main.querySelector(".head");
-  $("sticky").replaceChildren(stickyHead(el("div", { class: "glass", style: clubStyle(lead.id) }, el("div", { class: "wrap in" }, el("b", {}, e.title), el("span", {}, fmt.dm.format(s) + (e.allday ? "" : " · " + fmt.time.format(s)) + " · " + lead.short), el("a", { class: "go", href: e.url, target: "_blank", rel: "noopener" }, t("register")))), head));
+  // The head is a 64px sticky box whose content overflows onto the card at rest and compacts into the box as you scroll; its height never
+  // changes, so nothing below jumps. The register button is part of it: a pill in the action row at rest, the icon at the right once stuck.
+  const head = main.querySelector(".head"), links = main.querySelector(".links"), go = head.querySelector(".go");
+  morphHead(head);
+  const cb = Math.round(Math.max(...[...head.children].filter(n => !/\b(go|wm)\b/.test(n.className)).map(n => n.getBoundingClientRect().bottom)) - head.getBoundingClientRect().top);
+  head.style.setProperty("--bt", cb + 12 + "px"); links.style.marginTop = cb - 64 + "px"; links.prepend(el("span", { class: "ph", style: `width:${go.offsetWidth}px;height:${go.offsetHeight}px` }));
 });
 </script>
 </body>

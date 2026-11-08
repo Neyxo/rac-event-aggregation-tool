@@ -12,9 +12,10 @@ function renderHome() {
   const mine = myClubs();
   if (!mine.length) {
     const tips = t("tips"), tip = tips[Math.floor(Date.now() / 864e5) % tips.length];
+    const start = el("button", { class: "primary", type: "button" }, t("ob_start")); start.addEventListener("click", onboarding);
     box.replaceChildren(
-      el("div", { class: "explore glass" }, el("div", { class: "k" }, t("explore_title")), el("p", {}, t("explore_lead")), el("div", { class: "links" }, el("a", { class: "primary", href: "about.html" }, t("explore_all")), el("a", { href: "settings.html" }, t("choose_clubs")))),
-      el("div", { class: "tip glass" }, el("div", { class: "k" }, t("tip_of_day")), el("p", {}, tip)),
+      el("div", { class: "explore glass" }, el("div", { class: "k" }, t("explore_title")), el("p", {}, t("explore_lead")), el("div", { class: "links" }, start, el("a", { href: "about.html" }, t("explore_all")))),
+      el("div", { class: "tip glass" }, el("div", { class: "k" }, t("tip_of_day")), el("p", {}, tip.replace("{n}", nClubs()))),
       ctaBlock());
     $("listTitle").textContent = t("explore_near");
     return;
@@ -23,7 +24,7 @@ function renderHome() {
   const mineEv = D.data.events.filter(e => e.clubs.some(c => mine.includes(c)) && !isPast(e)), next = mineEv[0];
   const today = startOfDay(new Date()), dayN = d => Math.round((startOfDay(d) - today) / 864e5);
   const cols = [D.settings.home || mine[0], ...mine.filter(id => id !== (D.settings.home || mine[0]))];
-  document.body.classList.add("home-mine");
+  document.body.classList.add("wash");
   cols.slice(0, 3).forEach((id, i) => document.body.style.setProperty("--c" + (i + 1), club(id).color));
   for (let i = cols.length; i < 3; i++) document.body.style.setProperty("--c" + (i + 1), i === 1 ? "#d41367" : "#0067c8");
   // what changed since the last visit: ids and start times seen one visit ago (visits closer than an hour count as one)
@@ -37,15 +38,17 @@ function renderHome() {
   const row = (e, label, soon) => el("a", { class: "r" + (soon ? " soon" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) }, el("i"), el("span", {}, e.title), el("b", {}, label));
   const dLabel = n => n === 0 ? t("today") : n === 1 ? t("tomorrow") : t("d_short", { n });
   S.skip = next?.id;
-  box.replaceChildren(
+  const news = mine.flatMap(id => club(id).news || []).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
+  fill(box,
     el("div", { class: "hello" }, el("h1", {}, (h < 11 ? t("greet_morning") : h < 18 ? t("greet_day") : t("greet_evening")) + " 👋"),
-      el("p", { class: "sub" }, [week === 0 ? t("wk_none") : week === 1 ? t("wk_one") : t("wk_events", { n: week }), deadlines.length === 1 ? t("wk_reg_one") : t("wk_reg", { n: deadlines.length })].join(" · ")),
+      el("p", { class: "sub" }, week === 0 ? t("wk_none") : week === 1 ? t("wk_one") : t("wk_events", { n: week })),
       el("div", { class: "chips" }, ...cols.map(id => { const c = club(id); return el("a", { class: "mini glass" + (id === cols[0] ? " main" : ""), href: "club.html?id=" + id, style: clubStyle(id) }, clubMark(c), c.short); }))),
     next ? nextUp(next, t("next_event") + " · " + club(next.clubs[0]).short) : null,
     D.newIds.size || moved ? el("a", { class: "news glass", href: "#results" }, el("b", {}, t("news_new", { n: D.newIds.size })), el("span", {}, " " + t("news_rest") + (moved ? " · " + t("news_moved", { n: moved }) : "")), icon("back")) : null,
     el("div", { class: "panes" },
       el("div", { class: "pane glass" }, el("div", { class: "k" }, t("deadline_h")), ...(deadlines.length ? deadlines.map(e => { const n = dayN(e.deadline); return row(e, dLabel(n), n <= 2); }) : [el("p", { class: "m" }, t("none_open"))])),
-      el("div", { class: "pane glass" }, el("div", { class: "k" }, icon("star"), t("saved_h")), ...(saved.length ? saved.map(e => row(e, dLabel(dayN(e.start)))) : [el("p", { class: "m" }, t("none_open"))]))));
+      el("div", { class: "pane glass" }, el("div", { class: "k" }, icon("star"), t("saved_h")), ...(saved.length ? saved.map(e => row(e, dLabel(dayN(e.start)))) : [el("p", { class: "m" }, t("none_open"))]))),
+    news.length ? el("div", { class: "newsrow" }, el("div", { class: "k" }, t("news")), newsStrip(news)) : null);
   $("listTitle").textContent = t("home_soon");
 }
 
@@ -61,12 +64,15 @@ function renderClubChips() {
   for (const [d, name] of Object.entries(DISTRICTS)) { const b = el("button", { class: "chip district", type: "button", "aria-pressed": String(S.distSel.has(d)), title: name }, name); b.addEventListener("click", () => toggleIn(S.distSel, d)); drow.append(b); }
   row.replaceChildren(el("span", { class: "rowlabel" }, t("clubs")));
   const all = el("button", { class: "chip", type: "button", "aria-pressed": String(S.clubSel.size === 0) }, t("all")); all.addEventListener("click", () => { S.clubSel.clear(); renderClubChips(); render(); }); row.append(all);
-  for (const c of D.data.clubs) { if (S.distSel.size && !S.distSel.has(c.district)) continue; const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(S.clubSel.has(c.id)), "aria-label": c.name }, clubMark(c), c.short); b.addEventListener("click", () => toggleIn(S.clubSel, c.id)); row.append(b); }
+  for (const id of S.clubSel) { const c = club(id); const b = el("button", { class: "chip club", type: "button", style: clubStyle(id), "aria-pressed": "true", "aria-label": c.name }, clubMark(c), c.short); b.addEventListener("click", () => toggleIn(S.clubSel, id)); row.append(b); }
+  const pick = el("button", { class: "chip", type: "button" }, t("change"));
+  pick.addEventListener("click", () => popup(t("clubs"), redraw => clubChips(S.clubSel, id => { toggleIn(S.clubSel, id); redraw(); }, { only: S.distSel.size ? D.data.clubs.filter(c => S.distSel.has(c.district)).map(c => c.id) : null })));
+  row.append(pick);
   const n = S.distSel.size + (S.clubSel.size ? 1 : 0) + ($("place")?.value ? 1 : 0) + ($("radius")?.value ? 1 : 0);
   if ($("fcount")) { $("fcount").textContent = n; $("fcount").hidden = !n; }
 }
 function togglePanel(open) { const p = $("panel"); if (!p) return; const o = open ?? p.hidden; p.hidden = !o; $("fbtn").setAttribute("aria-expanded", String(o)); }
-function setView(v) { S.view = v; for (const b of $("views").querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.view === v)); if (v === "near" && !S.center) locateMe(); else render(); }
+function setView(v) { S.view = v; for (const b of $("views").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.view === v)); if (v === "near" && !S.center) locateMe(); else render(); }
 function weekendRange(now) { const sat = startOfDay(now); sat.setDate(sat.getDate() + ((6 - sat.getDay()) % 7)); if (now.getDay() === 0) sat.setDate(sat.getDate() - 7); const end = new Date(sat); end.setDate(end.getDate() + 2); return [sat, end]; }
 function baseMatches(e) {
   const mine = scopeClubs(); if (mine && mine.length && !e.clubs.some(c => mine.includes(c))) return false;
@@ -97,7 +103,7 @@ function render() {
   }
   if (S.view === "past") matches.reverse();
   const shown = explore && S.view === "all" ? matches.slice(0, 12) : matches;
-  const parts = [t("s_" + S.view, { n: nEvents(matches.length) })];
+  const parts = [nEvents(matches.length)];  // the title and the pressed view already say which events
   const radius = Number($("radius")?.value) || (S.view === "near" ? 25 : null);
   if (S.center && radius) parts.push(t("within", { r: radius, place: S.centerLabel }));
   if (noLocation) parts.push(t("no_location", { n: noLocation }));
@@ -111,6 +117,7 @@ function render() {
   if ($("q")?.value) p.set("q", $("q").value); if (S.distSel.size) p.set("d", [...S.distSel].join(",")); if (S.clubSel.size) p.set("clubs", [...S.clubSel].join(","));
   if ($("place")?.value) p.set("place", $("place").value); if ($("radius")?.value) p.set("r", $("radius").value); if (S.view !== "all") p.set("view", S.view);
   history.replaceState(null, "", p.toString() ? "?" + p : location.pathname);
+  stickyHeads();
 }
 function clearFilters() { if ($("q")) $("q").value = ""; if ($("place")) $("place").value = ""; if ($("radius")) $("radius").value = ""; hint(""); S.center = null; S.clubSel.clear(); S.distSel.clear(); renderClubChips(); setView("all"); }
 
@@ -119,20 +126,21 @@ let installPrompt = null;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
 async function onboarding() {
   const dlg = $("ob"), body = $("obBody"), guessP = guessClubs();
-  const s = { home: "", also: [] };
+  const s = { home: D.settings.home, also: [...D.settings.also] };
   let member = null, step = 0, guess = [];
-  const steps = () => member === false ? 3 : 4;
+  const steps = () => member === false ? 6 : 4;
   const finish = () => { D.settings = s; saveSettings(); store.set("rac.onboarded", true); dlg.close(); renderHome(); render(); if (myClubs().length) toast(t("ob_showing", { clubs: myClubs().map(id => club(id).short).join(", ") })); };
   const feedRow = (c, file) => { const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:"); return el("div", { class: "feed" }, el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.name), el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, t("google")), el("a", { href: https }, ".ics"))); };
   const nav = (nextLabel, skip) => el("div", { class: "nav" }, skip ? el("button", { class: "skip", type: "button" }, skip) : el("span"), el("button", { class: "btn", type: "button" }, nextLabel));
   const installStep = () => { let how; if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, t("ob_installed")); else if (installPrompt) { how = el("button", { class: "install-btn", type: "button" }, t("inst_btn")); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); } else how = el("p", { class: "meta" }, t("inst_text"), " ", el("a", { href: "settings.html#install" }, t("settings"))); return how; };
   const draw = () => {
+    dlg.classList.toggle("full", member === false);
     body.replaceChildren(el("div", { class: "bar2", "aria-hidden": "true" }, ...Array.from({ length: steps() }, (_, i) => el("i", { class: i <= step ? "on" : "" }))));
     const h2 = el("h2", { id: "obTitle", tabindex: "-1" });
     if (step === 0) {
       h2.textContent = t("ob_welcome");
       const yes = el("button", { class: "btn big", type: "button" }, t("ob_member")), no = el("button", { class: "btn big alt", type: "button" }, t("ob_guest"));
-      yes.addEventListener("click", async () => { member = true; guess = await guessP; s.home = guess[0] || ""; s.also = guess.slice(1); step = 1; draw(); });
+      yes.addEventListener("click", async () => { member = true; guess = await guessP; if (!s.home) { s.home = guess[0] || ""; s.also = guess.slice(1); } step = 1; draw(); });
       no.addEventListener("click", async () => { member = false; guess = await guessP; step = 1; draw(); });
       body.append(h2, el("p", {}, t("ob_member_q")), el("div", { class: "choice" }, yes, no));
     } else if (member && step === 1) {
@@ -144,11 +152,18 @@ async function onboarding() {
       const n = nav(t("next"), t("not_now")); n.lastChild.addEventListener("click", () => { step = 3; draw(); }); n.firstChild.addEventListener("click", () => { step = 3; draw(); });
       h2.textContent = t("ob_sub");
       body.append(h2, el("p", {}, t("ob_sub_text")), el("div", { class: "feeds stack" }, ...ids.map(id => feedRow(club(id), id + ".ics")), ids.length ? el("p", { class: "meta", style: "margin:4px 0 0" }, t("ob_or")) : null, feedRow({ name: t("all_feed_short") }, "all.ics"), el("p", { class: "meta", style: "margin:6px 0 0" }, t("ob_help"), el("a", { href: "subscribe.html", target: "_blank" }, t("ob_help_link")))), n);
-    } else if (!member && step === 1) {
-      const n = nav(t("next"), t("skip")); n.lastChild.addEventListener("click", () => { step = 2; draw(); }); n.firstChild.addEventListener("click", finish);
-      h2.textContent = t("ob_guest_title");
+    } else if (!member && step <= 3) {
+      // three full-screen slides: who we are, what we do, how to start. Skip jumps to the clubs.
+      const [k, col] = [["who", "#0067c8"], ["what", "#009739"], ["how", "#d41367"]][step - 1];
+      const n = nav(t("next"), t("skip")); n.lastChild.addEventListener("click", () => { step++; draw(); }); n.firstChild.addEventListener("click", () => { step = 4; draw(); });
+      h2.textContent = t("ob_" + k);
+      body.append(el("div", { class: "slide", style: `--p:${col}` }, pillarPic(["learn", "help", "party"][step - 1]), h2,
+        k === "what" ? el("div", { class: "pill" }, ...[["learn", "#0067c8"], ["help", "#009739"], ["party", "#d41367"]].map(([w, c]) => el("p", { style: `--p:${c}` }, el("b", {}, t("ab_" + w) + "."), " " + t("ab_" + w + "_t")))) : el("p", {}, t(k === "who" ? "ab_lead" : "ob_how_t"))), n);
+    } else if (!member && step === 4) {
+      const n = nav(t("next"), t("skip")); n.lastChild.addEventListener("click", () => { step = 5; draw(); }); n.firstChild.addEventListener("click", finish);
+      h2.textContent = t("ob_follow");
       const near = guess.length ? guess : D.data.clubs.filter(c => c.district).slice(0, 4).map(c => c.id);
-      body.append(h2, el("p", {}, t("ob_guest_text")), el("h3", {}, t("ob_follow")), clubChips(new Set(s.also), id => { s.also = s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id]; draw(); }, { only: near }), el("div", { class: "links", style: "margin-top:10px" }, el("a", { href: "about.html" }, t("explore_all"))), n);
+      body.append(h2, el("p", {}, t("ob_guest_text")), clubChips(new Set(s.also), id => { s.also = s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id]; draw(); }, { only: near }), n);
     } else {
       const n = nav(t("done"), null); n.lastChild.addEventListener("click", finish);
       h2.textContent = t("ob_inst");
@@ -162,13 +177,15 @@ async function onboarding() {
 // --- boot
 async function init() {
   chrome(PAGE);
-  try { await loadData(); } catch { $("summary").textContent = t("offline"); $("results").replaceChildren(); return; }
+  try { await loadData(); } catch { return; }
   const generated = new Date(D.data.generated);
   if (Date.now() - generated > 30 * 3600e3) { $("stale").textContent = t("stale", { t: fmt.stamp.format(generated) }); $("stale").hidden = false; }
   $("foot").replaceChildren(el("div", { class: "meta" }, t("updated", { t: fmt.stamp.format(generated) }) + " · " + t("members_only")), footer());
   const p = new URLSearchParams(location.search);
   if (p.get("event")) { location.replace("event.html?id=" + encodeURIComponent(p.get("event"))); return; }
-  const shared = [...p.keys()].some(k => k !== "lang");
+  // A shared link with filters is about all of Rotaract, not "my clubs": Discover has the UI for it.
+  if (PAGE === "home" && ["q", "clubs", "d", "place", "r"].some(k => p.has(k))) { location.replace("discover.html" + location.search); return; }
+  const shared = [...p.keys()].some(k => k !== "lang" && k !== "welcome");
   if ($("q")) $("q").value = p.get("q") || "";
   if ($("radius")) $("radius").value = p.get("r") || "";
   if ($("place")) $("place").value = p.get("place") || "";
@@ -182,11 +199,12 @@ async function init() {
   $("place")?.addEventListener("keydown", ev => { if (ev.key === "Enter") $("place").blur(); });
   $("locate")?.addEventListener("click", locateMe);
   $("clear").addEventListener("click", clearFilters);
-  for (const b of $("views").querySelectorAll(".chip")) b.addEventListener("click", () => setView(b.dataset.view));
+  for (const b of $("views").querySelectorAll("button")) b.addEventListener("click", () => setView(b.dataset.view));
   if ($("place")?.value) await setPlace($("place").value);
   S.view = p.get("view") || "all";
-  for (const b of $("views").querySelectorAll(".chip")) b.setAttribute("aria-pressed", String(b.dataset.view === S.view));
+  for (const b of $("views").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.view === S.view));
   if (S.view === "near" && !S.center) locateMe(); else render();
-  if (PAGE === "home" && !shared && !store.get("rac.onboarded", false)) onboarding();
+  const installed = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (PAGE === "home" && (p.has("welcome") || (installed && !shared && !store.get("rac.onboarded", false)))) onboarding();
 }
 init();

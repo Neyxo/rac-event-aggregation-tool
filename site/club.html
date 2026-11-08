@@ -14,7 +14,6 @@
 </head>
 <body data-page="club">
 <header id="top"></header>
-<div id="sticky"></div>
 <main class="wrap clubpage" id="main"></main>
 <nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <div class="toast" id="toast" role="status"></div>
@@ -27,20 +26,38 @@ addEventListener("DOMContentLoaded", async () => {
   document.title = c.name + " · Rotaract Events";
   const upcoming = D.data.events.filter(e => e.clubs.includes(c.id) && !isPast(e)), next = upcoming[0];
   const https = new URL(c.id + ".ics", location.href).href, webcal = https.replace(/^https?:/, "webcal:");
-  const btns = el("div", { class: "btns" }, el("a", { class: "btn p", href: webcal }, t("cp_sub")), el("a", { class: "btn glass", href: c.url, target: "_blank", rel: "noopener" }, t("cp_site")), el("a", { class: "btn glass", href: "discover.html?clubs=" + c.id }, t("cp_all")));
+  // subscribe, then website and socials as round icon buttons on the same line
+  const ic = (name, href, label) => el("a", { class: "btn glass ic", href, target: "_blank", rel: "noopener", "aria-label": label, title: label }, icon(name));
+  const btns = el("div", { class: "btns" }, ic("globe", c.url, t("cp_site")),
+    ...Object.entries(c.links || {}).map(([k, href]) => ic(k, href, k[0].toUpperCase() + k.slice(1))));
   const photos = (c.photos && c.photos.length ? c.photos : D.data.events.filter(e => e.clubs.includes(c.id) && e.image && isPast(e)).slice(-6).map(e => e.image));
   const days = next ? Math.max(1, Math.round((new Date(next.start) - Date.now()) / 864e5)) : 0;
   main.style.cssText = clubStyle(c.id);
-  const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
-    el("h1", {}, c.name), el("div", { class: "sub" }, [c.district ? t("d" + c.district) : t("national"), c.city].filter(Boolean).join(" · ")), btns);
-  main.replaceChildren(hero,
+  document.body.classList.add("wash");  // the club's colour wash behind frosted panes, like Home
+  for (let i = 1; i <= 3; i++) document.body.style.setProperty("--c" + i, c.color);
+  // two parts: a sticky header whose box is always 64px (its crest and name draw big over the block at rest and compact as you scroll),
+  // and the colour block with the buttons, which simply scrolls away. No height ever changes while sticking, so nothing bounces.
+  const head = el("div", { class: "cstick" }, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
+    el("h1", {}, c.name), el("div", { class: "sub" }, [c.district ? t("d" + c.district) : t("national"), c.city].filter(Boolean).join(" · ")),
+    el("a", { class: "go", href: webcal, title: t("cp_sub") }, icon("calendar"), el("span", {}, t("subscribe"))));
+  const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, btns);
+  fill(main, head, hero,
     next ? nextUp(next) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),
+    c.news?.length ? el("h3", {}, t("news")) : null,
+    c.news?.length ? newsStrip(c.news) : null,
     photos.length ? el("h3", {}, t("photos")) : null,
-    photos.length ? el("div", { class: "strip" }, ...photos.map(src => el("img", { src, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }))) : null,
+    photos.length ? el("div", { class: "strip pics" }, ...photos.map(src => el("img", { src, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }))) : null,
     upcoming.length > 1 ? el("h3", {}, t("more_events")) : null,
     ...upcoming.slice(1, 8).map((e, i) => eventCard(e, i)),
+    el("div", { class: "links", style: "justify-content:center" }, el("a", { href: "discover.html?clubs=" + c.id }, icon("discover"), t("cp_all"))),
     footer());
-  $("sticky").replaceChildren(stickyHead(el("div", { class: "glass", style: clubStyle(c.id) }, el("div", { class: "wrap in" }, c.logo ? el("img", { src: c.logo, alt: "" }) : null, el("b", {}, c.name), el("span", {}, c.district ? "D" + c.district : ""), el("a", { class: "go", href: webcal }, t("subscribe")))), hero));
+  // geometry at rest: the subscribe pill sits below the name (inside the sticky box, overflowing), the icon buttons in the block line up next to it
+  morphHead(head);
+  const bt = Math.round(head.querySelector(".sub").getBoundingClientRect().bottom - head.getBoundingClientRect().top + 12);
+  head.style.setProperty("--bt", bt + "px"); hero.style.paddingTop = bt + "px"; const go = head.querySelector(".go"); btns.prepend(el("span", { class: "ph", style: `width:${go.offsetWidth}px;height:${go.offsetHeight}px` }));
+  // the colour block drifts up a touch faster than the page: a subtle parallax that shows off the frosting
+  const drift = () => { hero.style.transform = `translateY(${-(scrollY * .12).toFixed(1)}px)`; };
+  addEventListener("scroll", drift, { passive: true }); drift();
 });
 </script>
 </body>
