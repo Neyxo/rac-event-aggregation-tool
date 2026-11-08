@@ -30,13 +30,11 @@
       <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" data-t-ph="search_ph" data-t-label="search" autocomplete="off"></div>
       <button class="fbtn" id="fbtn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg><span data-t="filters">Filters</span><span class="n" id="fcount" hidden></span></button>
     </div>
-    <div class="row" id="views" role="group" data-t-label="filters">
-      <button class="chip" type="button" data-view="all" data-t="v_all"></button>
-      <button class="chip" type="button" data-view="week" data-t="v_week"></button>
-      <button class="chip" type="button" data-view="weekend" data-t="v_weekend"></button>
-      <button class="chip" type="button" data-view="near" data-t="v_near"></button>
-      <button class="chip" type="button" data-view="saved" data-t="v_saved"></button>
-      <button class="chip" type="button" data-view="past" data-t="v_past"></button>
+    <div class="seg views glass" id="views" role="group" data-t-label="filters">
+      <button type="button" data-view="all" data-t="v_all"></button>
+      <button type="button" data-view="near" data-t="v_near"></button>
+      <button type="button" data-view="saved" data-t="v_saved"></button>
+      <button type="button" data-view="past" data-t="v_past"></button>
     </div>
     <div class="panel glass" id="panel" hidden>
       <div class="row" id="districts" role="group" data-t-label="district"></div>
@@ -49,7 +47,7 @@
       </div>
     </div>
   </div>
-  <div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span><button type="button" class="clear" id="clear" hidden data-t="clear"></button></div>
+  <div class="list-head"><h3 data-t="events"></h3><div class="summary"><span id="summary" aria-live="polite" data-t="loading"></span><button type="button" class="clear" id="clear" hidden data-t="clear"></button></div></div>
   <div id="results" aria-busy="true">
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>
     <div class="skel" aria-hidden="true"><div class="b d"></div><div><div class="b t"></div><div class="b m"></div><div class="b m s"></div></div></div>

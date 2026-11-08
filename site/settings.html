@@ -27,8 +27,9 @@
     <div class="setrow col" id="install"><span data-t="inst_title"></span><div id="installBody"></div></div>
     <div class="setrow col"><span data-t="share_title"></span><div class="linkbox"><input type="text" id="link" readonly><button type="button" id="copy" data-t="copy"></button></div></div>
   </section>
-  <section class="glass"><h2 data-t="set_more_h"></h2>
-    <div class="links"><a href="subscribe.html" data-t="subscribe_link"></a><a href="about.html" data-t="about"></a><a href="about-more.html" data-t="subpage_link"></a><a href="#" id="rerun" data-t="rerun"></a></div>
+  <section class="glass"><h2 data-t="set_help_h"></h2>
+    <a class="setrow link" href="subscribe.html"><span data-t="subscribe_link"></span></a>
+    <a class="setrow link" href="./?welcome"><span data-t="rerun"></span></a>
   </section>
   <div id="foot"></div>
 </main>
@@ -37,6 +38,7 @@
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
   applyI18n(); chrome("settings");
+  for (const b of $("themeSeg").children) b.prepend(icon(b.dataset.k === "light" ? "sun" : "moon"));
   await loadData();
   const draw = () => {
     const s = D.settings;
@@ -51,7 +53,7 @@ addEventListener("DOMContentLoaded", async () => {
   for (const b of $("themeSeg").children) b.addEventListener("click", () => { setTheme(b.dataset.k); draw(); });
   $("link").value = location.origin + location.pathname.replace(/[^/]*$/, "");
   $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast(t("copied")); });
-  $("rerun").addEventListener("click", ev => { ev.preventDefault(); localStorage.removeItem("rac.onboarded"); location.href = "./"; });
+  for (const a of document.querySelectorAll(".setrow.link")) a.append(icon("back", "chev"));
   // install block
   let prompt = null; addEventListener("beforeinstallprompt", e => { e.preventDefault(); prompt = e; inst(); });
   const inst = () => {

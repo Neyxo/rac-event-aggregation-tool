@@ -30,6 +30,7 @@
     <p class="lead" data-t="ab_people_t"></p>
     <div id="cta"></div>
     <a class="more glass" href="about-more.html"><b data-t="ab_more"></b><span data-t="ab_more_sub"></span></a>
+    <a class="more glass" href="family.html"><b data-t="fam_h"></b><span data-t="fam_sub"></span></a>
     <h3 data-t="faq"></h3>
     <div class="qa" id="qa"></div>
     <div id="foot"></div>
@@ -40,18 +41,18 @@
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
   applyI18n();
-  const share = el("button", { class: "icon-btn", type: "button", "aria-label": t("ab_share"), title: t("ab_share") }, icon("share"));
+  const share = el("button", { class: "hbtn", type: "button", title: t("ab_share") }, icon("share"), el("span", {}, t("share")));
   share.addEventListener("click", async () => { const data = { title: t("ab_title"), text: t("ab_lead"), url: location.href.split("?")[0] }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(data.url); toast(t("copied")); } });
-  chrome("about", { extra: el("span", { class: "x" }, el("a", { class: "icon-btn txt", href: "about-more.html" }, t("subpage_link")), share) });
+  chrome("about", { extra: share });
   const PIL = [["learn", "#0067c8"], ["help", "#009739"], ["party", "#d41367"]];
   for (let i = 1; i <= 5; i++) $("qa").append(el("details", { name: "qa" }, el("summary", {}, t("ab_q" + i)), el("p", {}, t("ab_a" + i))));
   await loadData();
+  document.querySelector("[data-t=ab_people_t]").textContent = t("ab_people_t", { n: nClubs() });
   $("cta").append(ctaBlock());
   $("foot").append(footer());
-  const pics = D.data.events.filter(e => e.image).slice(-9).map(e => e.image);
   const words = $("words");
   PIL.forEach(([k, col], i) => words.append(el("div", { class: "w", style: `--p:${col}` }, el("div", { class: "word" }, t("ab_" + k) + "."),
-    el("div", { class: "open" }, el("div", {}, el("div", { class: "pic" }, el("img", { src: pics[i * 2 + 1] || pics[i], alt: "", loading: "lazy", referrerpolicy: "no-referrer" })), el("p", {}, t("ab_" + k + "_t")))))));
+    el("div", { class: "open" }, el("div", {}, el("div", { class: "pic" }, pillarPic(k)), el("p", {}, t("ab_" + k + "_t")))))));
   // phase -1 = closed, 0..2 = that word open. Scroll range split into four parts with a little hysteresis so it never flickers at a boundary.
   let cur = -2;
   const set = i => { if (i === cur) return; cur = i; [...words.children].forEach((w, k) => w.classList.toggle("on", k === i)); words.classList.toggle("closed", i < 0); [...$("prog").children].forEach((d, k) => d.classList.toggle("on", k === i)); $("stage").style.setProperty("--p", i < 0 ? "#d41367" : PIL[i][1]); };

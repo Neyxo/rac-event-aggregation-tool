@@ -9,7 +9,7 @@ en: {
   radius: "Radius", any_distance: "Any distance", clear: "Clear", layout: "Layout", list: "List", month: "Month", loading: "Loading events…",
   d1980: "D1980 · Central & North-West", d1990: "D1990 · West", d2000: "D2000 · East",
   one_event: "1 event", n_events: "{n} events",
-  s_all: "{n} upcoming", s_week: "{n} in the next 7 days", s_weekend: "{n} this weekend", s_near: "{n} near you", s_saved: "{n} saved", s_past: "{n} past", s_month: "{n} in {m}",
+  s_month: "{n} in {m}",
   within: "within {r} km of {place}", no_location: "{n} without a known location hidden",
   you: "you", your_location: "📍 Your location", place_nf: "Place not found", place_err: "Couldn't look up the place (offline?)", locating: "Locating…", loc_na: "Location not available", loc_none: "Location isn't available here",
   empty_saved: "Nothing saved yet. Tap the star on an event to keep it here.", empty: "No events match.", show_all: "Show all upcoming",
@@ -30,7 +30,7 @@ en: {
   ob_sub: "Subscribe to the calendar?", ob_sub_text: "Events then appear in your phone's calendar and stay up to date by themselves.", ob_or: "Or everything at once:", all_feed: "All Rotaract events in CH & LI (every club)", ob_help: "Step-by-step help: ", ob_help_link: "subscribe page",
   ob_inst: "Install as an app?", ob_inst_text: "An icon on your home screen, opens instantly, works offline. You can also do this later via \"Install\".", ob_installed: "✓ Already installed.", ob_showing: "Showing {clubs}", credit_short: "Made by Jean-Michel Carrel · Rotaract Club Luzern",
   apple: "Apple / Outlook", google: "Google", n_upcoming: " · {n} upcoming",
-  stale: "The events haven't been updated since {t} and may be out of date.", offline: "Couldn't load events. Are you online?", new_version: "New version available", refresh: "Refresh",
+  stale: "The events haven't been updated since {t} and may be out of date.", offline: "Couldn't load events. Are you online?", refresh: "Refresh",
   // subscribe page
   back: "‹ Back to events", sp_intro: "A subscription puts the events into the calendar app you already use and keeps them up to date by itself: new events appear, moved ones move, cancelled ones are marked. Nothing to install. Members-only events are not included; registration still happens on Polaris.",
   sp_ios: "iPhone / iPad (Apple Calendar)", sp_ios_s: ["Tap Apple / Outlook next to a calendar below.", "Confirm \"Subscribe\" in the dialog that opens.", "Done. It updates by itself (Settings › Calendar › Accounts lets you change how often)."],
@@ -51,7 +51,7 @@ de: {
   radius: "Umkreis", any_distance: "Beliebige Distanz", clear: "Zurücksetzen", layout: "Ansicht", list: "Liste", month: "Monat", loading: "Anlässe werden geladen…",
   d1980: "D1980 · Zentral- & Nordwestschweiz", d1990: "D1990 · Westschweiz", d2000: "D2000 · Ostschweiz",
   one_event: "1 Anlass", n_events: "{n} Anlässe",
-  s_all: "{n} demnächst", s_week: "{n} in den nächsten 7 Tagen", s_weekend: "{n} dieses Wochenende", s_near: "{n} in deiner Nähe", s_saved: "{n} gemerkt", s_past: "{n} vergangene", s_month: "{n} im {m}",
+  s_month: "{n} im {m}",
   within: "im Umkreis von {r} km um {place}", no_location: "{n} ohne bekannten Ort ausgeblendet",
   you: "dir", your_location: "📍 Dein Standort", place_nf: "Ort nicht gefunden", place_err: "Ort konnte nicht gesucht werden (offline?)", locating: "Standort wird ermittelt…", loc_na: "Standort nicht verfügbar", loc_none: "Standort ist hier nicht verfügbar",
   empty_saved: "Noch nichts gemerkt. Tippe auf den Stern bei einem Anlass.", empty: "Keine passenden Anlässe.", show_all: "Alle kommenden anzeigen",
@@ -72,7 +72,7 @@ de: {
   ob_sub: "Kalender abonnieren?", ob_sub_text: "Die Anlässe erscheinen dann im Kalender deines Handys und bleiben von selbst aktuell.", ob_or: "Oder alles auf einmal:", all_feed: "Alle Rotaract-Anlässe CH & LI (alle Clubs)", ob_help: "Schritt-für-Schritt-Anleitung: ", ob_help_link: "Abo-Seite",
   ob_inst: "Als App installieren?", ob_inst_text: "Ein Icon auf dem Homescreen, öffnet sofort, funktioniert offline. Geht auch später über «Installieren».", ob_installed: "✓ Bereits installiert.", ob_showing: "Zeige {clubs}", credit_short: "Von Jean-Michel Carrel · Rotaract Club Luzern",
   apple: "Apple / Outlook", google: "Google", n_upcoming: " · {n} kommende",
-  stale: "Die Anlässe wurden seit {t} nicht aktualisiert und sind möglicherweise veraltet.", offline: "Anlässe konnten nicht geladen werden. Bist du online?", new_version: "Neue Version verfügbar", refresh: "Neu laden",
+  stale: "Die Anlässe wurden seit {t} nicht aktualisiert und sind möglicherweise veraltet.", offline: "Anlässe konnten nicht geladen werden. Bist du online?", refresh: "Neu laden",
   back: "‹ Zurück zu den Anlässen", sp_intro: "Ein Abo bringt die Anlässe in die Kalender-App, die du schon nutzt, und hält sie von selbst aktuell: neue Anlässe erscheinen, verschobene wandern mit, abgesagte werden markiert. Nichts zu installieren. Anlässe nur für Mitglieder sind nicht enthalten; die Anmeldung läuft weiterhin über Polaris.",
   sp_ios: "iPhone / iPad (Apple Kalender)", sp_ios_s: ["Bei einem Kalender unten auf Apple / Outlook tippen.", "Im Dialog «Abonnieren» bestätigen.", "Fertig. Aktualisiert sich von selbst (unter Einstellungen › Kalender › Accounts lässt sich das Intervall ändern)."],
   sp_google: "Google Kalender", sp_google_s: ["Bei einem Kalender unten auf Google tippen. Auf dem Handy öffnet sich die Google-Kalender-Website; falls nötig anmelden.", "«Kalender hinzufügen» bestätigen.", "In der Google-Kalender-App die Einstellungen öffnen und den neuen Kalender einschalten. Google aktualisiert abonnierte Kalender alle paar Stunden bis zu einem Tag."],
@@ -91,7 +91,7 @@ fr: {
   radius: "Rayon", any_distance: "Toute distance", clear: "Effacer", layout: "Affichage", list: "Liste", month: "Mois", loading: "Chargement des événements…",
   d1980: "D1980 · Centre & Nord-Ouest", d1990: "D1990 · Romandie", d2000: "D2000 · Est",
   one_event: "1 événement", n_events: "{n} événements",
-  s_all: "{n} à venir", s_week: "{n} dans les 7 prochains jours", s_weekend: "{n} ce week-end", s_near: "{n} près de vous", s_saved: "{n} enregistrés", s_past: "{n} passés", s_month: "{n} en {m}",
+  s_month: "{n} en {m}",
   within: "à moins de {r} km de {place}", no_location: "{n} sans lieu connu masqués",
   you: "vous", your_location: "📍 Votre position", place_nf: "Lieu introuvable", place_err: "Recherche du lieu impossible (hors ligne ?)", locating: "Localisation…", loc_na: "Position indisponible", loc_none: "La position n'est pas disponible ici",
   empty_saved: "Rien d'enregistré. Touchez l'étoile d'un événement pour le garder ici.", empty: "Aucun événement ne correspond.", show_all: "Afficher tout ce qui vient",
@@ -112,7 +112,7 @@ fr: {
   ob_sub: "S'abonner au calendrier ?", ob_sub_text: "Les événements apparaissent alors dans le calendrier de votre téléphone et restent à jour tout seuls.", ob_or: "Ou tout d'un coup :", all_feed: "Tous les événements Rotaract CH & LI (tous les clubs)", ob_help: "Aide pas à pas : ", ob_help_link: "page d'abonnement",
   ob_inst: "Installer comme app ?", ob_inst_text: "Une icône sur l'écran d'accueil, s'ouvre instantanément, fonctionne hors ligne. Possible aussi plus tard via « Installer ».", ob_installed: "✓ Déjà installée.", ob_showing: "Affichage : {clubs}", credit_short: "Par Jean-Michel Carrel · Rotaract Club Luzern",
   apple: "Apple / Outlook", google: "Google", n_upcoming: " · {n} à venir",
-  stale: "Les événements n'ont pas été mis à jour depuis {t} et peuvent être obsolètes.", offline: "Impossible de charger les événements. Êtes-vous en ligne ?", new_version: "Nouvelle version disponible", refresh: "Recharger",
+  stale: "Les événements n'ont pas été mis à jour depuis {t} et peuvent être obsolètes.", offline: "Impossible de charger les événements. Êtes-vous en ligne ?", refresh: "Recharger",
   back: "‹ Retour aux événements", sp_intro: "Un abonnement place les événements dans l'app de calendrier que vous utilisez déjà et les garde à jour tout seul : les nouveaux apparaissent, les déplacés bougent, les annulés sont marqués. Rien à installer. Les événements réservés aux membres ne sont pas inclus ; l'inscription se fait toujours sur Polaris.",
   sp_ios: "iPhone / iPad (Calendrier Apple)", sp_ios_s: ["Touchez Apple / Outlook à côté d'un calendrier ci-dessous.", "Confirmez « S'abonner » dans la fenêtre qui s'ouvre.", "C'est fait. Il se met à jour tout seul (Réglages › Calendrier › Comptes permet de changer la fréquence)."],
   sp_google: "Google Agenda", sp_google_s: ["Touchez Google à côté d'un calendrier ci-dessous. Sur téléphone, le site Google Agenda s'ouvre ; connectez-vous si demandé.", "Confirmez « Ajouter l'agenda ».", "Dans l'app Google Agenda, ouvrez les paramètres et activez le nouvel agenda. Google actualise les agendas abonnés toutes les quelques heures, jusqu'à un jour."],
@@ -131,7 +131,7 @@ it: {
   radius: "Raggio", any_distance: "Qualsiasi distanza", clear: "Azzera", layout: "Vista", list: "Lista", month: "Mese", loading: "Caricamento eventi…",
   d1980: "D1980 · Centro & Nord-Ovest", d1990: "D1990 · Ovest", d2000: "D2000 · Est",
   one_event: "1 evento", n_events: "{n} eventi",
-  s_all: "{n} in arrivo", s_week: "{n} nei prossimi 7 giorni", s_weekend: "{n} questo weekend", s_near: "{n} vicino a te", s_saved: "{n} salvati", s_past: "{n} passati", s_month: "{n} a {m}",
+  s_month: "{n} a {m}",
   within: "entro {r} km da {place}", no_location: "{n} senza luogo noto nascosti",
   you: "te", your_location: "📍 La tua posizione", place_nf: "Luogo non trovato", place_err: "Impossibile cercare il luogo (offline?)", locating: "Localizzazione…", loc_na: "Posizione non disponibile", loc_none: "La posizione non è disponibile qui",
   empty_saved: "Nulla di salvato. Tocca la stella di un evento per tenerlo qui.", empty: "Nessun evento corrisponde.", show_all: "Mostra tutti i prossimi",
@@ -152,7 +152,7 @@ it: {
   ob_sub: "Abbonarti al calendario?", ob_sub_text: "Gli eventi compaiono poi nel calendario del tuo telefono e restano aggiornati da soli.", ob_or: "Oppure tutto insieme:", all_feed: "Tutti gli eventi Rotaract CH & LI (tutti i club)", ob_help: "Guida passo per passo: ", ob_help_link: "pagina abbonamenti",
   ob_inst: "Installare come app?", ob_inst_text: "Un'icona nella schermata iniziale, si apre subito, funziona offline. Puoi farlo anche dopo da «Installa».", ob_installed: "✓ Già installata.", ob_showing: "Mostro {clubs}", credit_short: "Di Jean-Michel Carrel · Rotaract Club Luzern",
   apple: "Apple / Outlook", google: "Google", n_upcoming: " · {n} in arrivo",
-  stale: "Gli eventi non vengono aggiornati da {t} e potrebbero non essere attuali.", offline: "Impossibile caricare gli eventi. Sei online?", new_version: "Nuova versione disponibile", refresh: "Ricarica",
+  stale: "Gli eventi non vengono aggiornati da {t} e potrebbero non essere attuali.", offline: "Impossibile caricare gli eventi. Sei online?", refresh: "Ricarica",
   back: "‹ Torna agli eventi", sp_intro: "Un abbonamento mette gli eventi nell'app calendario che già usi e li tiene aggiornati da solo: i nuovi compaiono, quelli spostati si spostano, quelli annullati vengono segnati. Niente da installare. Gli eventi riservati ai soci non sono inclusi; l'iscrizione avviene sempre su Polaris.",
   sp_ios: "iPhone / iPad (Calendario Apple)", sp_ios_s: ["Tocca Apple / Outlook accanto a un calendario qui sotto.", "Conferma «Iscriviti» nella finestra che si apre.", "Fatto. Si aggiorna da solo (in Impostazioni › Calendario › Account puoi cambiare la frequenza)."],
   sp_google: "Google Calendar", sp_google_s: ["Tocca Google accanto a un calendario qui sotto. Sul telefono si apre il sito di Google Calendar; accedi se richiesto.", "Conferma «Aggiungi calendario».", "Nell'app Google Calendar apri le impostazioni e attiva il nuovo calendario. Google aggiorna i calendari abbonati ogni qualche ora, fino a un giorno."],
@@ -199,9 +199,9 @@ function langSelect() {
 
 // settings, scope, about page
 Object.assign(I18N.en, {
-  settings: "Settings", my_clubs: "My clubs", everything: "Everything", main_club: "Main club", also_show: "Also show", none: "None",
+  info: "About", settings: "Settings", my_clubs: "My clubs", everything: "Everything", main_club: "Main club", also_show: "Also show", none: "None",
   set_hint: "Your main club and the clubs you also follow make up the \"My clubs\" view. Searching and filtering never changes this.",
-  theme_light: "Light", theme_dark: "Dark", about: "What is Rotaract?", change: "Change", home_banner: "Your clubs", no_home: "No main club chosen yet",
+  theme_light: "Light", theme_dark: "Dark", change: "Change", home_banner: "Your clubs", no_home: "No main club chosen yet",
   ob_main: "Your main club", ob_also: "Also interested in",
   ab_title: "What is Rotaract?", ab_lead: "Rotaract is the Rotary community for young adults (roughly 18 to 30): local clubs that organise service projects, talks, company visits and plenty of social events, and that belong to a worldwide network.",
   ab_f_clubs: "clubs in Switzerland & Liechtenstein", ab_f_events: "public events in the last 12 months", ab_f_upcoming: "upcoming events", ab_f_world: "clubs worldwide",
@@ -214,9 +214,9 @@ Object.assign(I18N.en, {
   ab_share: "Share this page", ab_events_cta: "See all events",
 });
 Object.assign(I18N.de, {
-  settings: "Einstellungen", my_clubs: "Meine Clubs", everything: "Alles", main_club: "Hauptclub", also_show: "Auch anzeigen", none: "Keiner",
+  info: "Über uns", settings: "Einstellungen", my_clubs: "Meine Clubs", everything: "Alles", main_club: "Hauptclub", also_show: "Auch anzeigen", none: "Keiner",
   set_hint: "Dein Hauptclub und die Clubs, denen du auch folgst, bilden die Ansicht «Meine Clubs». Suchen und Filtern ändert das nie.",
-  theme_light: "Hell", theme_dark: "Dunkel", about: "Was ist Rotaract?", change: "Ändern", home_banner: "Deine Clubs", no_home: "Noch kein Hauptclub gewählt",
+  theme_light: "Hell", theme_dark: "Dunkel", change: "Ändern", home_banner: "Deine Clubs", no_home: "Noch kein Hauptclub gewählt",
   ob_main: "Dein Hauptclub", ob_also: "Auch interessiert an",
   ab_title: "Was ist Rotaract?", ab_lead: "Rotaract ist die Rotary-Community für junge Erwachsene (etwa 18 bis 30): lokale Clubs, die Sozialprojekte, Vorträge, Firmenbesuche und viele gesellige Anlässe organisieren und zu einem weltweiten Netzwerk gehören.",
   ab_f_clubs: "Clubs in der Schweiz & Liechtenstein", ab_f_events: "öffentliche Anlässe in den letzten 12 Monaten", ab_f_upcoming: "kommende Anlässe", ab_f_world: "Clubs weltweit",
@@ -229,9 +229,9 @@ Object.assign(I18N.de, {
   ab_share: "Diese Seite teilen", ab_events_cta: "Alle Anlässe ansehen",
 });
 Object.assign(I18N.fr, {
-  settings: "Réglages", my_clubs: "Mes clubs", everything: "Tout", main_club: "Club principal", also_show: "Afficher aussi", none: "Aucun",
+  info: "À propos", settings: "Réglages", my_clubs: "Mes clubs", everything: "Tout", main_club: "Club principal", also_show: "Afficher aussi", none: "Aucun",
   set_hint: "Votre club principal et les clubs que vous suivez forment la vue « Mes clubs ». Chercher et filtrer ne change jamais cela.",
-  theme_light: "Clair", theme_dark: "Sombre", about: "Qu'est-ce que Rotaract ?", change: "Modifier", home_banner: "Vos clubs", no_home: "Aucun club principal choisi",
+  theme_light: "Clair", theme_dark: "Sombre", change: "Modifier", home_banner: "Vos clubs", no_home: "Aucun club principal choisi",
   ob_main: "Votre club principal", ob_also: "Aussi intéressé par",
   ab_title: "Qu'est-ce que Rotaract ?", ab_lead: "Rotaract est la communauté Rotary des jeunes adultes (environ 18 à 30 ans) : des clubs locaux qui organisent des projets sociaux, des conférences, des visites d'entreprises et beaucoup d'événements conviviaux, au sein d'un réseau mondial.",
   ab_f_clubs: "clubs en Suisse & au Liechtenstein", ab_f_events: "événements publics ces 12 derniers mois", ab_f_upcoming: "événements à venir", ab_f_world: "clubs dans le monde",
@@ -244,9 +244,9 @@ Object.assign(I18N.fr, {
   ab_share: "Partager cette page", ab_events_cta: "Voir tous les événements",
 });
 Object.assign(I18N.it, {
-  settings: "Impostazioni", my_clubs: "I miei club", everything: "Tutto", main_club: "Club principale", also_show: "Mostra anche", none: "Nessuno",
+  info: "Chi siamo", settings: "Impostazioni", my_clubs: "I miei club", everything: "Tutto", main_club: "Club principale", also_show: "Mostra anche", none: "Nessuno",
   set_hint: "Il tuo club principale e i club che segui formano la vista «I miei club». Cercare e filtrare non la cambia mai.",
-  theme_light: "Chiaro", theme_dark: "Scuro", about: "Cos'è Rotaract?", change: "Modifica", home_banner: "I tuoi club", no_home: "Nessun club principale scelto",
+  theme_light: "Chiaro", theme_dark: "Scuro", change: "Modifica", home_banner: "I tuoi club", no_home: "Nessun club principale scelto",
   ob_main: "Il tuo club principale", ob_also: "Interessato anche a",
   ab_title: "Cos'è Rotaract?", ab_lead: "Rotaract è la comunità Rotary dei giovani adulti (circa 18–30 anni): club locali che organizzano progetti sociali, conferenze, visite aziendali e tanti eventi conviviali, parte di una rete mondiale.",
   ab_f_clubs: "club in Svizzera e Liechtenstein", ab_f_events: "eventi pubblici negli ultimi 12 mesi", ab_f_upcoming: "eventi in arrivo", ab_f_world: "club nel mondo",
@@ -267,11 +267,11 @@ Object.assign(I18N.en, {
   next_event: "Next event", in_days: "in {n} days", more_events: "More events", photos: "Pictures", details: "Details", your_club: "Your club", go: "Go →", faq: "Questions", scroll: "scroll",
   ab_learn: "Learn", ab_help: "Help", ab_party: "Celebrate",
   ab_learn_t: "Talks and company visits with people you'd never meet otherwise.", ab_help_t: "Projects you can still see in the evening.", ab_party_t: "Stamm, trips, the conference. Friends in every city.",
-  ab_people: "Young people, 18 to 30.", ab_people_t: "16 clubs between Geneva and Chur. Come to an event; the rest follows.",
-  ab_find_title: "No club yet? Find yours", ab_more: "Rotary, districts & the world", ab_more_sub: "In pictures, one minute →", ab_back: "‹ Learn. Help. Celebrate.",
+  ab_people: "Young people, 18 to 30.", ab_people_t: "{n} clubs between Geneva and Chur. Come to an event; the rest follows.",
+  ab_find_title: "No club yet? Find yours", ab_more: "Rotary, districts & the world", ab_more_sub: "In pictures, one minute →",
   sp_rotary: "Rotaract is part of Rotary", sp_rotary_t: "Since 1968. Every club has a Rotary club as its sponsor; at 30 it's the natural next step.",
-  sp_dist: "16 clubs, three districts", sp_dist_t: "From Geneva to Chur. One conference a year, all together.",
-  sp_world: "And the world", sp_world_t: "10,000 clubs in 180 countries. A club abroad takes you in like at home.",
+  sp_dist: "{n} clubs, three districts", sp_dist_t: "A district is Rotary's region, led by a governor for a year. From Geneva to Chur, one conference a year, all together.",
+  sp_world: "And the world", sp_world_t: "10,000 clubs in 180 countries. Travelling? Write to the local club and you're invited.",
 });
 Object.assign(I18N.de, {
   home: "Start", discover: "Entdecken", discover_title: "Ganz Rotaract entdecken", discover_cta: "Alles entdecken", search_mine_ph: "In deinen Clubs suchen…",
@@ -279,11 +279,11 @@ Object.assign(I18N.de, {
   next_event: "Nächster Anlass", in_days: "in {n} Tagen", more_events: "Weitere Anlässe", photos: "Bilder", details: "Details", your_club: "Dein Club", go: "Los →", faq: "Fragen", scroll: "scrollen",
   ab_learn: "Lernen", ab_help: "Helfen", ab_party: "Feiern",
   ab_learn_t: "Vorträge und Firmenbesuche mit Leuten, die man sonst nie trifft.", ab_help_t: "Projekte, die man am Abend noch sieht.", ab_party_t: "Stamm, Reisen, Konferenz. Freunde in jeder Stadt.",
-  ab_people: "Junge Leute, 18 bis 30.", ab_people_t: "16 Clubs zwischen Genf und Chur. Komm an einen Anlass, der Rest ergibt sich.",
-  ab_find_title: "Noch keinen Club? Finde deinen", ab_more: "Rotary, Distrikte & die Welt", ab_more_sub: "In Bildern, eine Minute →", ab_back: "‹ Lernen. Helfen. Feiern.",
+  ab_people: "Junge Leute, 18 bis 30.", ab_people_t: "{n} Clubs zwischen Genf und Chur. Komm an einen Anlass, der Rest ergibt sich.",
+  ab_find_title: "Noch keinen Club? Finde deinen", ab_more: "Rotary, Distrikte & die Welt", ab_more_sub: "In Bildern, eine Minute →",
   sp_rotary: "Rotaract gehört zu Rotary", sp_rotary_t: "Seit 1968. Jeder Club hat einen Rotary Club als Paten; mit 30 ist das der natürliche nächste Schritt.",
-  sp_dist: "16 Clubs, drei Distrikte", sp_dist_t: "Von Genf bis Chur. Eine Konferenz pro Jahr, alle zusammen.",
-  sp_world: "Und die Welt", sp_world_t: "10'000 Clubs in 180 Ländern. Ein Club im Ausland nimmt dich auf wie zu Hause.",
+  sp_dist: "{n} Clubs, drei Distrikte", sp_dist_t: "Ein Distrikt ist die Rotary-Region, ein Jahr lang von einem Governor geführt. Von Genf bis Chur, eine Konferenz pro Jahr, alle zusammen.",
+  sp_world: "Und die Welt", sp_world_t: "10'000 Clubs in 180 Ländern. Auf Reisen? Schreib dem Club vor Ort, und du bist eingeladen.",
 });
 Object.assign(I18N.fr, {
   home: "Accueil", discover: "Découvrir", discover_title: "Découvrir tout Rotaract", discover_cta: "Tout découvrir", search_mine_ph: "Chercher dans vos clubs…",
@@ -291,11 +291,11 @@ Object.assign(I18N.fr, {
   next_event: "Prochain événement", in_days: "dans {n} jours", more_events: "Autres événements", photos: "Photos", details: "Détails", your_club: "Votre club", go: "Y aller →", faq: "Questions", scroll: "défiler",
   ab_learn: "Apprendre", ab_help: "Aider", ab_party: "Fêter",
   ab_learn_t: "Conférences et visites d'entreprises avec des gens qu'on ne croiserait jamais.", ab_help_t: "Des projets qu'on voit encore le soir même.", ab_party_t: "Stamm, voyages, la conférence. Des amis dans chaque ville.",
-  ab_people: "Des jeunes de 18 à 30 ans.", ab_people_t: "16 clubs entre Genève et Coire. Venez à un événement, le reste suit.",
-  ab_find_title: "Pas encore de club ? Trouvez le vôtre", ab_more: "Rotary, districts & le monde", ab_more_sub: "En images, une minute →", ab_back: "‹ Apprendre. Aider. Fêter.",
+  ab_people: "Des jeunes de 18 à 30 ans.", ab_people_t: "{n} clubs entre Genève et Coire. Venez à un événement, le reste suit.",
+  ab_find_title: "Pas encore de club ? Trouvez le vôtre", ab_more: "Rotary, districts & le monde", ab_more_sub: "En images, une minute →",
   sp_rotary: "Rotaract fait partie du Rotary", sp_rotary_t: "Depuis 1968. Chaque club a un Rotary club pour parrain ; à 30 ans, c'est la suite naturelle.",
-  sp_dist: "16 clubs, trois districts", sp_dist_t: "De Genève à Coire. Une conférence par an, tous ensemble.",
-  sp_world: "Et le monde", sp_world_t: "10 000 clubs dans 180 pays. Un club à l'étranger vous accueille comme chez vous.",
+  sp_dist: "{n} clubs, trois districts", sp_dist_t: "Un district est la région Rotary, dirigée un an par un gouverneur. De Genève à Coire, une conférence par an, tous ensemble.",
+  sp_world: "Et le monde", sp_world_t: "10 000 clubs dans 180 pays. En voyage ? Écrivez au club local, vous êtes invité.",
 });
 Object.assign(I18N.it, {
   home: "Home", discover: "Scopri", discover_title: "Scopri tutto Rotaract", discover_cta: "Scopri tutto", search_mine_ph: "Cerca nei tuoi club…",
@@ -303,51 +303,81 @@ Object.assign(I18N.it, {
   next_event: "Prossimo evento", in_days: "tra {n} giorni", more_events: "Altri eventi", photos: "Foto", details: "Dettagli", your_club: "Il tuo club", go: "Vai →", faq: "Domande", scroll: "scorri",
   ab_learn: "Imparare", ab_help: "Aiutare", ab_party: "Festeggiare",
   ab_learn_t: "Conferenze e visite aziendali con persone che altrimenti non incontreresti mai.", ab_help_t: "Progetti che la sera si vedono ancora.", ab_party_t: "Stamm, viaggi, la conferenza. Amici in ogni città.",
-  ab_people: "Giovani dai 18 ai 30 anni.", ab_people_t: "16 club tra Ginevra e Coira. Vieni a un evento, il resto viene da sé.",
-  ab_find_title: "Nessun club ancora? Trova il tuo", ab_more: "Rotary, distretti e il mondo", ab_more_sub: "In immagini, un minuto →", ab_back: "‹ Imparare. Aiutare. Festeggiare.",
+  ab_people: "Giovani dai 18 ai 30 anni.", ab_people_t: "{n} club tra Ginevra e Coira. Vieni a un evento, il resto viene da sé.",
+  ab_find_title: "Nessun club ancora? Trova il tuo", ab_more: "Rotary, distretti e il mondo", ab_more_sub: "In immagini, un minuto →",
   sp_rotary: "Rotaract fa parte del Rotary", sp_rotary_t: "Dal 1968. Ogni club ha un Rotary club come padrino; a 30 anni è il passo successivo naturale.",
-  sp_dist: "16 club, tre distretti", sp_dist_t: "Da Ginevra a Coira. Una conferenza all'anno, tutti insieme.",
-  sp_world: "E il mondo", sp_world_t: "10'000 club in 180 paesi. Un club all'estero ti accoglie come a casa.",
+  sp_dist: "{n} club, tre distretti", sp_dist_t: "Un distretto è la regione Rotary, guidata per un anno da un governatore. Da Ginevra a Coira, una conferenza all'anno, tutti insieme.",
+  sp_world: "E il mondo", sp_world_t: "10'000 club in 180 paesi. In viaggio? Scrivi al club locale e sei invitato.",
 });
 
 // navigation, calendar page, settings page, explore mode
 Object.assign(I18N.en, {
   calendar: "Calendar", all_clubs_short: "All", mine_short: "My clubs", today_events: "Today", no_events_day: "Nothing on this day.", close: "Close",
-  set_clubs_h: "Clubs", set_app_h: "App", set_more_h: "More", subscribe_link: "Subscribe to calendars", saved_settings: "Saved",
+  set_clubs_h: "Clubs", set_app_h: "App", set_help_h: "Help", subscribe_link: "Subscribe to calendars", saved_settings: "Saved",
   explore_title: "New here?", explore_lead: "Rotaract is for people aged 18 to 30. Pick an event, come along, no membership needed.", tip_of_day: "Tip of the day", explore_near: "Events near you", explore_all: "What is Rotaract?",
-  tips: ["Guests are welcome at almost every event. Register on Polaris and just come.", "A \"Stamm\" is the relaxed regular get-together. It's the easiest first visit.", "Every club mixes learning, helping and celebrating a bit differently. Try two.", "You don't need to know anyone. Say you're new; someone will take you along.", "The yearly conference brings all 16 clubs together for a weekend.", "Members pay a yearly fee of a few hundred francs; guests usually nothing.", "Rotaract is part of Rotary: at 30 the Rotary club next door is the natural next step.", "Hands-on projects are the fastest way to see what a club is about."],
-  subpage_link: "Rotary & the world",
+  tips: ["Guests are welcome at almost every event. Register on Polaris and just come.", "A \"Stamm\" is the relaxed regular get-together. It's the easiest first visit.", "Every club mixes learning, helping and celebrating a bit differently. Try two.", "You don't need to know anyone. Say you're new; someone will take you along.", "The yearly conference brings all {n} clubs together for a weekend.", "Members pay a yearly fee of a few hundred francs; guests usually nothing.", "Rotaract is part of Rotary: at 30 the Rotary club next door is the natural next step.", "Hands-on projects are the fastest way to see what a club is about."],
 });
 Object.assign(I18N.de, {
   calendar: "Kalender", all_clubs_short: "Alle", mine_short: "Meine Clubs", today_events: "Heute", no_events_day: "Nichts an diesem Tag.", close: "Schliessen",
-  set_clubs_h: "Clubs", set_app_h: "App", set_more_h: "Mehr", subscribe_link: "Kalender abonnieren", saved_settings: "Gespeichert",
+  set_clubs_h: "Clubs", set_app_h: "App", set_help_h: "Hilfe", subscribe_link: "Kalender abonnieren", saved_settings: "Gespeichert",
   explore_title: "Neu hier?", explore_lead: "Rotaract ist für Leute zwischen 18 und 30. Such dir einen Anlass aus und komm vorbei, ohne Mitgliedschaft.", tip_of_day: "Tipp des Tages", explore_near: "Anlässe in deiner Nähe", explore_all: "Was ist Rotaract?",
-  tips: ["Gäste sind an fast jedem Anlass willkommen. Auf Polaris anmelden und einfach kommen.", "Der «Stamm» ist das lockere regelmässige Treffen. Der einfachste erste Besuch.", "Jeder Club mischt Lernen, Helfen und Feiern etwas anders. Probier zwei aus.", "Du musst niemanden kennen. Sag, dass du neu bist; jemand nimmt dich mit.", "Die jährliche Konferenz bringt alle 16 Clubs ein Wochenende lang zusammen.", "Mitglieder zahlen einen Jahresbeitrag von ein paar hundert Franken; Gäste meist nichts.", "Rotaract gehört zu Rotary: mit 30 ist der Rotary Club nebenan der natürliche nächste Schritt.", "Hands-on-Projekte zeigen am schnellsten, worum es einem Club geht."],
-  subpage_link: "Rotary & die Welt",
+  tips: ["Gäste sind an fast jedem Anlass willkommen. Auf Polaris anmelden und einfach kommen.", "Der «Stamm» ist das lockere regelmässige Treffen. Der einfachste erste Besuch.", "Jeder Club mischt Lernen, Helfen und Feiern etwas anders. Probier zwei aus.", "Du musst niemanden kennen. Sag, dass du neu bist; jemand nimmt dich mit.", "Die jährliche Konferenz bringt alle {n} Clubs ein Wochenende lang zusammen.", "Mitglieder zahlen einen Jahresbeitrag von ein paar hundert Franken; Gäste meist nichts.", "Rotaract gehört zu Rotary: mit 30 ist der Rotary Club nebenan der natürliche nächste Schritt.", "Hands-on-Projekte zeigen am schnellsten, worum es einem Club geht."],
 });
 Object.assign(I18N.fr, {
   calendar: "Calendrier", all_clubs_short: "Tous", mine_short: "Mes clubs", today_events: "Aujourd'hui", no_events_day: "Rien ce jour-là.", close: "Fermer",
-  set_clubs_h: "Clubs", set_app_h: "App", set_more_h: "Plus", subscribe_link: "S'abonner aux calendriers", saved_settings: "Enregistré",
+  set_clubs_h: "Clubs", set_app_h: "App", set_help_h: "Aide", subscribe_link: "S'abonner aux calendriers", saved_settings: "Enregistré",
   explore_title: "Nouveau ici ?", explore_lead: "Rotaract s'adresse aux 18–30 ans. Choisissez un événement et venez, sans adhésion.", tip_of_day: "Conseil du jour", explore_near: "Événements près de vous", explore_all: "Qu'est-ce que Rotaract ?",
-  tips: ["Les invités sont les bienvenus à presque tous les événements. Inscrivez-vous sur Polaris et venez.", "Le « stamm » est la rencontre régulière et décontractée. La première visite la plus simple.", "Chaque club mélange apprendre, aider et fêter à sa façon. Essayez-en deux.", "Pas besoin de connaître quelqu'un. Dites que vous êtes nouveau ; on vous prendra avec.", "La conférence annuelle réunit les 16 clubs pendant un week-end.", "Les membres paient une cotisation annuelle de quelques centaines de francs ; les invités généralement rien.", "Rotaract fait partie du Rotary : à 30 ans, le Rotary club d'à côté est la suite naturelle.", "Les projets concrets montrent le plus vite ce qu'est un club."],
-  subpage_link: "Rotary & le monde",
+  tips: ["Les invités sont les bienvenus à presque tous les événements. Inscrivez-vous sur Polaris et venez.", "Le « stamm » est la rencontre régulière et décontractée. La première visite la plus simple.", "Chaque club mélange apprendre, aider et fêter à sa façon. Essayez-en deux.", "Pas besoin de connaître quelqu'un. Dites que vous êtes nouveau ; on vous prendra avec.", "La conférence annuelle réunit les {n} clubs pendant un week-end.", "Les membres paient une cotisation annuelle de quelques centaines de francs ; les invités généralement rien.", "Rotaract fait partie du Rotary : à 30 ans, le Rotary club d'à côté est la suite naturelle.", "Les projets concrets montrent le plus vite ce qu'est un club."],
 });
 Object.assign(I18N.it, {
   calendar: "Calendario", all_clubs_short: "Tutti", mine_short: "I miei club", today_events: "Oggi", no_events_day: "Niente in questo giorno.", close: "Chiudi",
-  set_clubs_h: "Club", set_app_h: "App", set_more_h: "Altro", subscribe_link: "Abbonati ai calendari", saved_settings: "Salvato",
+  set_clubs_h: "Club", set_app_h: "App", set_help_h: "Aiuto", subscribe_link: "Abbonati ai calendari", saved_settings: "Salvato",
   explore_title: "Nuovo qui?", explore_lead: "Rotaract è per chi ha tra 18 e 30 anni. Scegli un evento e vieni, senza iscrizione.", tip_of_day: "Consiglio del giorno", explore_near: "Eventi vicino a te", explore_all: "Cos'è Rotaract?",
-  tips: ["Gli ospiti sono benvenuti quasi a ogni evento. Iscriviti su Polaris e vieni.", "Lo «stamm» è l'incontro regolare informale. La prima visita più semplice.", "Ogni club combina imparare, aiutare e festeggiare a modo suo. Provane due.", "Non serve conoscere nessuno. Di' che sei nuovo; qualcuno ti porterà con sé.", "La conferenza annuale riunisce tutti i 16 club per un weekend.", "I soci pagano una quota annuale di qualche centinaio di franchi; gli ospiti di solito nulla.", "Rotaract fa parte del Rotary: a 30 anni il Rotary club accanto è il passo successivo naturale.", "I progetti pratici mostrano più in fretta di cosa si occupa un club."],
-  subpage_link: "Rotary e il mondo",
+  tips: ["Gli ospiti sono benvenuti quasi a ogni evento. Iscriviti su Polaris e vieni.", "Lo «stamm» è l'incontro regolare informale. La prima visita più semplice.", "Ogni club combina imparare, aiutare e festeggiare a modo suo. Provane due.", "Non serve conoscere nessuno. Di' che sei nuovo; qualcuno ti porterà con sé.", "La conferenza annuale riunisce tutti i {n} club per un weekend.", "I soci pagano una quota annuale di qualche centinaio di franchi; gli ospiti di solito nulla.", "Rotaract fa parte del Rotary: a 30 anni il Rotary club accanto è il passo successivo naturale.", "I progetti pratici mostrano più in fretta di cosa si occupa un club."],
 });
 
 // welcome: member or not
-Object.assign(I18N.en, { ob_member_q: "Are you a Rotaract member?", ob_member: "Yes, I'm a member", ob_guest: "Not (yet)", ob_guest_title: "Welcome!", ob_guest_text: "Rotaract is for people aged 18 to 30: learn, help, celebrate. You can come to almost any event as a guest. Follow a club near you to see its events first, or just explore.", ob_follow: "Clubs near you", pick_main: "Choose main club", pick_also: "Choose clubs to also show", all_feed_short: "All Rotaract events CH & LI" });
-Object.assign(I18N.de, { ob_member_q: "Bist du Rotaract-Mitglied?", ob_member: "Ja, Mitglied", ob_guest: "(Noch) nicht", ob_guest_title: "Willkommen!", ob_guest_text: "Rotaract ist für Leute zwischen 18 und 30: lernen, helfen, feiern. An fast jeden Anlass kannst du als Gast kommen. Folge einem Club in deiner Nähe, um seine Anlässe zuerst zu sehen, oder schau dich einfach um.", ob_follow: "Clubs in deiner Nähe", pick_main: "Hauptclub wählen", pick_also: "Weitere Clubs wählen", all_feed_short: "Alle Rotaract-Anlässe CH & LI" });
-Object.assign(I18N.fr, { ob_member_q: "Êtes-vous membre de Rotaract ?", ob_member: "Oui, membre", ob_guest: "Pas (encore)", ob_guest_title: "Bienvenue !", ob_guest_text: "Rotaract s'adresse aux 18–30 ans : apprendre, aider, fêter. Vous pouvez venir à presque tous les événements en invité. Suivez un club près de chez vous pour voir ses événements en premier, ou explorez simplement.", ob_follow: "Clubs près de vous", pick_main: "Choisir le club principal", pick_also: "Choisir d'autres clubs", all_feed_short: "Tous les événements Rotaract CH & LI" });
-Object.assign(I18N.it, { ob_member_q: "Sei socio Rotaract?", ob_member: "Sì, socio", ob_guest: "Non (ancora)", ob_guest_title: "Benvenuto!", ob_guest_text: "Rotaract è per chi ha tra 18 e 30 anni: imparare, aiutare, festeggiare. A quasi ogni evento puoi venire come ospite. Segui un club vicino a te per vedere prima i suoi eventi, oppure esplora.", ob_follow: "Club vicino a te", pick_main: "Scegli il club principale", pick_also: "Scegli altri club", all_feed_short: "Tutti gli eventi Rotaract CH & LI" });
+Object.assign(I18N.en, { ob_member_q: "Are you a Rotaract member?", ob_member: "Yes, I'm a member", ob_guest: "Not (yet)", ob_guest_text: "Follow a club to see its events first. You can change this any time in the settings.", ob_follow: "Clubs near you", pick_main: "Choose main club", pick_also: "Choose clubs to also show", all_feed_short: "All Rotaract events CH & LI" });
+Object.assign(I18N.de, { ob_member_q: "Bist du Rotaract-Mitglied?", ob_member: "Ja, Mitglied", ob_guest: "(Noch) nicht", ob_guest_text: "Folge einem Club, um seine Anlässe zuerst zu sehen. Das kannst du jederzeit in den Einstellungen ändern.", ob_follow: "Clubs in deiner Nähe", pick_main: "Hauptclub wählen", pick_also: "Weitere Clubs wählen", all_feed_short: "Alle Rotaract-Anlässe CH & LI" });
+Object.assign(I18N.fr, { ob_member_q: "Êtes-vous membre de Rotaract ?", ob_member: "Oui, membre", ob_guest: "Pas (encore)", ob_guest_text: "Suivez un club pour voir ses événements en premier. Vous pourrez changer cela à tout moment dans les réglages.", ob_follow: "Clubs près de vous", pick_main: "Choisir le club principal", pick_also: "Choisir d'autres clubs", all_feed_short: "Tous les événements Rotaract CH & LI" });
+Object.assign(I18N.it, { ob_member_q: "Sei socio Rotaract?", ob_member: "Sì, socio", ob_guest: "Non (ancora)", ob_guest_text: "Segui un club per vedere prima i suoi eventi. Puoi cambiarlo in qualsiasi momento nelle impostazioni.", ob_follow: "Club vicino a te", pick_main: "Scegli il club principale", pick_also: "Scegli altri club", all_feed_short: "Tutti gli eventi Rotaract CH & LI" });
 
 // home: personal overview
-Object.assign(I18N.en, { greet_morning: "Good morning", greet_day: "Hello", greet_evening: "Good evening", wk_none: "Nothing this week", wk_events: "{n} events this week", wk_one: "1 event this week", wk_reg: "{n} registrations open", wk_reg_one: "1 registration open", deadline_h: "Registration deadline", saved_h: "Saved", none_open: "Nothing open.", news_new: "{n} new", news_rest: "since your last visit", news_moved: "{n} moved", home_soon: "Coming up", today: "Today", tomorrow: "Tomorrow", d_short: "{n} d." });
-Object.assign(I18N.de, { greet_morning: "Guten Morgen", greet_day: "Hallo", greet_evening: "Guten Abend", wk_none: "Nichts diese Woche", wk_events: "{n} Anlässe diese Woche", wk_one: "1 Anlass diese Woche", wk_reg: "{n} Anmeldungen offen", wk_reg_one: "1 Anmeldung offen", deadline_h: "Anmeldeschluss", saved_h: "Gemerkt", none_open: "Nichts offen.", news_new: "{n} neue", news_rest: "seit deinem letzten Besuch", news_moved: "{n} verschoben", home_soon: "Demnächst", today: "Heute", tomorrow: "Morgen", d_short: "{n} T." });
-Object.assign(I18N.fr, { greet_morning: "Bonjour", greet_day: "Salut", greet_evening: "Bonsoir", wk_none: "Rien cette semaine", wk_events: "{n} événements cette semaine", wk_one: "1 événement cette semaine", wk_reg: "{n} inscriptions ouvertes", wk_reg_one: "1 inscription ouverte", deadline_h: "Délai d'inscription", saved_h: "Enregistrés", none_open: "Rien d'ouvert.", news_new: "{n} nouveaux", news_rest: "depuis votre dernière visite", news_moved: "{n} déplacés", home_soon: "Prochainement", today: "Aujourd'hui", tomorrow: "Demain", d_short: "{n} j." });
-Object.assign(I18N.it, { greet_morning: "Buongiorno", greet_day: "Ciao", greet_evening: "Buonasera", wk_none: "Niente questa settimana", wk_events: "{n} eventi questa settimana", wk_one: "1 evento questa settimana", wk_reg: "{n} iscrizioni aperte", wk_reg_one: "1 iscrizione aperta", deadline_h: "Termine iscrizione", saved_h: "Salvati", none_open: "Niente di aperto.", news_new: "{n} nuovi", news_rest: "dalla tua ultima visita", news_moved: "{n} spostati", home_soon: "Prossimamente", today: "Oggi", tomorrow: "Domani", d_short: "{n} g." });
+Object.assign(I18N.en, { greet_morning: "Good morning", greet_day: "Hello", greet_evening: "Good evening", wk_none: "Nothing this week", wk_events: "{n} events this week", wk_one: "1 event this week", deadline_h: "Registration deadline", saved_h: "Saved", none_open: "Nothing open.", news_new: "{n} new", news_rest: "since your last visit", news_moved: "{n} moved", home_soon: "Coming up", today: "Today", tomorrow: "Tomorrow", d_short: "{n} d." });
+Object.assign(I18N.de, { greet_morning: "Guten Morgen", greet_day: "Hallo", greet_evening: "Guten Abend", wk_none: "Nichts diese Woche", wk_events: "{n} Anlässe diese Woche", wk_one: "1 Anlass diese Woche", deadline_h: "Anmeldeschluss", saved_h: "Gemerkt", none_open: "Nichts offen.", news_new: "{n} neue", news_rest: "seit deinem letzten Besuch", news_moved: "{n} verschoben", home_soon: "Demnächst", today: "Heute", tomorrow: "Morgen", d_short: "{n} T." });
+Object.assign(I18N.fr, { greet_morning: "Bonjour", greet_day: "Salut", greet_evening: "Bonsoir", wk_none: "Rien cette semaine", wk_events: "{n} événements cette semaine", wk_one: "1 événement cette semaine", deadline_h: "Délai d'inscription", saved_h: "Enregistrés", none_open: "Rien d'ouvert.", news_new: "{n} nouveaux", news_rest: "depuis votre dernière visite", news_moved: "{n} déplacés", home_soon: "Prochainement", today: "Aujourd'hui", tomorrow: "Demain", d_short: "{n} j." });
+Object.assign(I18N.it, { greet_morning: "Buongiorno", greet_day: "Ciao", greet_evening: "Buonasera", wk_none: "Niente questa settimana", wk_events: "{n} eventi questa settimana", wk_one: "1 evento questa settimana", deadline_h: "Termine iscrizione", saved_h: "Salvati", none_open: "Niente di aperto.", news_new: "{n} nuovi", news_rest: "dalla tua ultima visita", news_moved: "{n} spostati", home_soon: "Prossimamente", today: "Oggi", tomorrow: "Domani", d_short: "{n} g." });
+
+// welcome intro for people who aren't members yet, the Rotary family page, club news
+Object.assign(I18N.en, {
+  ob_start: "Get started", ob_who: "Who we are", ob_what: "What we do", ob_how: "How to start",
+  ob_how_t: "Pick an event, register on Polaris (the clubs' website) and come along as a guest. No membership needed, and you don't have to know anyone: say you're new and someone will take you along.",
+  fam_h: "The Rotary family", fam_lead: "Who is who, in one line each.", fam_sub: "Rotary, Rotaract, Interact & co. in one line each →", fam_clubs: "The clubs", news: "News",
+  fam: [["Rotary", "The parent organisation since 1905. Clubs of professionals, worldwide."], ["Rotaract", "Rotary for 18 to 30. That's us."], ["Interact", "Clubs at schools, 12 to 18."],
+    ["Youth Exchange & Rotex", "A school year abroad. Rotex are its alumni."], ["RYLA", "Leadership camps for young people."], ["Inner Wheel", "Women's service clubs, close to Rotary."],
+    ["Rotary Foundation", "Rotary's charity: grants, scholarships, ending polio."], ["Districts", "The clubs of a region, one governor. CH & LI have three."]],
+});
+Object.assign(I18N.de, {
+  ob_start: "Los geht's", ob_who: "Wer wir sind", ob_what: "Was wir tun", ob_how: "So fängst du an",
+  ob_how_t: "Such dir einen Anlass aus, melde dich auf Polaris (der Website der Clubs) an und komm als Gast vorbei. Keine Mitgliedschaft nötig, und du musst niemanden kennen: sag, dass du neu bist, und jemand nimmt dich mit.",
+  fam_h: "Die Rotary-Familie", fam_lead: "Wer ist wer, in je einer Zeile.", fam_sub: "Rotary, Rotaract, Interact & Co. in je einer Zeile →", fam_clubs: "Die Clubs", news: "News",
+  fam: [["Rotary", "Die Dachorganisation seit 1905. Clubs von Berufstätigen, weltweit."], ["Rotaract", "Rotary für 18 bis 30. Das sind wir."], ["Interact", "Clubs an Schulen, 12 bis 18."],
+    ["Jugendaustausch & Rotex", "Ein Schuljahr im Ausland. Rotex sind die Ehemaligen."], ["RYLA", "Leadership-Camps für junge Leute."], ["Inner Wheel", "Frauen-Serviceclubs, nahe bei Rotary."],
+    ["Rotary Foundation", "Das Hilfswerk von Rotary: Grants, Stipendien, Polio beenden."], ["Distrikte", "Die Clubs einer Region, ein Governor. CH & LI haben drei."]],
+});
+Object.assign(I18N.fr, {
+  ob_start: "C'est parti", ob_who: "Qui nous sommes", ob_what: "Ce que nous faisons", ob_how: "Comment commencer",
+  ob_how_t: "Choisissez un événement, inscrivez-vous sur Polaris (le site des clubs) et venez en invité. Pas besoin d'être membre ni de connaître quelqu'un : dites que vous êtes nouveau et on vous prendra avec.",
+  fam_h: "La famille Rotary", fam_lead: "Qui est qui, en une ligne chacun.", fam_sub: "Rotary, Rotaract, Interact & co. en une ligne chacun →", fam_clubs: "Les clubs", news: "Actualités",
+  fam: [["Rotary", "L'organisation faîtière depuis 1905. Des clubs de professionnels, dans le monde entier."], ["Rotaract", "Le Rotary des 18 à 30 ans. C'est nous."], ["Interact", "Des clubs dans les écoles, 12 à 18 ans."],
+    ["Échange de jeunes & Rotex", "Une année scolaire à l'étranger. Les Rotex en sont les anciens."], ["RYLA", "Des camps de leadership pour les jeunes."], ["Inner Wheel", "Des clubs de service féminins, proches du Rotary."],
+    ["Fondation Rotary", "L'œuvre caritative du Rotary : subventions, bourses, fin de la polio."], ["Districts", "Les clubs d'une région, un gouverneur. CH & LI en ont trois."]],
+});
+Object.assign(I18N.it, {
+  ob_start: "Iniziamo", ob_who: "Chi siamo", ob_what: "Cosa facciamo", ob_how: "Come iniziare",
+  ob_how_t: "Scegli un evento, iscriviti su Polaris (il sito dei club) e vieni come ospite. Non serve essere soci né conoscere qualcuno: di' che sei nuovo e qualcuno ti porterà con sé.",
+  fam_h: "La famiglia Rotary", fam_lead: "Chi è chi, in una riga ciascuno.", fam_sub: "Rotary, Rotaract, Interact & co. in una riga ciascuno →", fam_clubs: "I club", news: "Notizie",
+  fam: [["Rotary", "L'organizzazione madre dal 1905. Club di professionisti, in tutto il mondo."], ["Rotaract", "Il Rotary dai 18 ai 30. Siamo noi."], ["Interact", "Club nelle scuole, 12–18 anni."],
+    ["Scambio giovani & Rotex", "Un anno scolastico all'estero. I Rotex sono gli ex."], ["RYLA", "Campi di leadership per giovani."], ["Inner Wheel", "Club di servizio femminili, vicini al Rotary."],
+    ["Fondazione Rotary", "L'ente benefico del Rotary: sovvenzioni, borse di studio, fine della polio."], ["Distretti", "I club di una regione, un governatore. CH e LI ne hanno tre."]],
+});
