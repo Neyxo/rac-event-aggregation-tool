@@ -526,17 +526,17 @@
  },
  "219916": {
   "detail": {
-   "description": "Wir kommen zusammen, um aktuelle Themen zu besprechen, Ideen auszutauschen und die nächsten Schritte im Club gemeinsam zu gestalten.",
+   "description": "Zu unserem regulären Meeting dürfen wir diesmal unseren Governor begrüssen, der unseren Club besucht und den Abend mit uns verbringt. Wir nutzen die Gelegenheit, ihm unseren Club vorzustellen, aktuelle Themen zu besprechen, Ideen auszutauschen und gemeinsam die nächsten Schritte zu planen.",
    "image": "https://rotaract-basel.ch/media/cache/rotary_website_content_grid_images/rc/VUSB3IsE/8707314028.png?v=1.5.16",
    "registration": "Anmeldung bis: Dienstag, 10. November 2026 um 19:30\n\nMaximale Anzahl Teilnehmer: 1000"
   },
   "first_seen": "20261107T103915Z",
-  "modified": "20261107T103915Z",
-  "sequence": 0,
+  "modified": "20261109T222924Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-219916@rotary.ch",
-   "SUMMARY:Regelmeeting November",
+   "SUMMARY:Regelmeeting November mit Governorbesuch",
    "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
    "URL:https://rotaract-basel.ch/de/agenda/show/219916",
    "DTSTART;TZID=Europe/Zurich:20261110T193000",
