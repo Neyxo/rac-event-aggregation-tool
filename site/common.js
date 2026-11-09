@@ -53,10 +53,14 @@ function chrome(active, { back = false, extra = null } = {}) {
     el("div", { class: "lft" }, left, el("a", { class: "brand", href: "./", "aria-label": "Rotaract Events" }, el("img", { src: "rotaract.svg", alt: "Rotaract" }))),
     el("div", { class: "rgt" }, extra, hbtn("info", "about.html", t("info"), active === "about"), hbtn("settings", "settings.html", t("settings"), active === "settings"))));
   document.documentElement.style.setProperty("--stick", top.offsetHeight + "px");  // sticky section headings start under the top bar
+  if (!frostBar) { frostBar = el("div", { id: "frost", "aria-hidden": "true" }); document.body.prepend(frostBar); }
   const tabs = $("tabs");
   if (tabs) tabs.replaceChildren(...[["home", "./"], ["discover", "discover.html"], ["calendar", "calendar.html"]].map(([k, href]) => el("a", { class: "tab" + (active === k ? " on" : ""), href, "aria-current": active === k ? "page" : null }, icon(k), el("span", {}, t(k)))));
 }
 function footer() { return el("footer", {}, t("made_by") + " · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source"))); }
+
+// --- the colour wash behind a page: fixed radial blobs in up to three colours, frosted panes sit on it
+function wash(...colors) { document.body.classList.add("wash"); colors.slice(0, 3).forEach((c, i) => document.body.style.setProperty("--c" + (i + 1), c)); }
 
 // --- data + clubs
 const D = { data: null, clubs: {}, settings: { home: "", also: [] }, saved: new Set() };
@@ -191,20 +195,48 @@ function ctaBlock() {
 function morphHead(node) {
   const sent = el("i", { class: "sent", "aria-hidden": "true" }); node.before(sent); node.classList.add("morph");
   const top = $("top").offsetHeight; node.style.top = top + "px";
+  // Not scroll-bound: once the head has stuck for 24px it goes to compact on its own (CSS transition on --m); below 8px it comes back.
+  let on = false;
   const tick = () => {
-    const p = Math.min(1, Math.max(0, (top - sent.getBoundingClientRect().top) / 80)); node.style.setProperty("--p", p.toFixed(3)); node.classList.toggle("on", p > .5);
+    const d = top - sent.getBoundingClientRect().top;
+    if ((d > 24 && !on) || (d < 8 && on)) { on = d > 24; node.style.setProperty("--m", on ? "1" : "0"); node.classList.toggle("on", on); }
     // section headings stick right under the compact hero while it is there, under the top bar once it has scrolled off
     document.documentElement.style.setProperty("--stick", Math.round(Math.max(top, Math.min(node.getBoundingClientRect().bottom, top + node.offsetHeight))) + "px");
   };
   addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick); tick();
 }
 
-// --- month and section headings: frosted only while they are stuck under the bar or the compact hero
+// --- sticky headings in two levels. Level 1 (.sh.lv1: the list title, "The clubs") sticks under the bar or the compact hero (--stick);
+// level 2 (.sh: months, sections) sticks right under the stuck level-1 heading (--stick2). The next heading pushes a stuck one out instead of
+// piling onto it (a level-1 heading only yields to the next level-1); --ty is that push, kept apart from the measured box so the measurement
+// doesn't feed back on itself. The frost is one bar behind the whole stack (#frost) that only ever changes height, so a hand-over between
+// headings never touches it; headings carry no frost of their own. The bar is itself sticky, a zero-height element at the top of the body, so
+// it moves with the page in the rubber-band at the end (a fixed one would stay behind). Off, it is a 1px strip hidden under the top bar:
+// the blur layer then exists all the time instead of being created mid-scroll, which is what made it pop in late on a fast flick.
+let frostBar;
 function stickyHeads() {
-  const s = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--stick")) || 63;
-  for (const h of document.querySelectorAll("#results > h3, .clubpage > h3, .evpage > h3")) h.classList.toggle("stuck", h.getBoundingClientRect().top <= s + 1);
+  const root = document.documentElement, s = parseFloat(getComputedStyle(root).getPropertyValue("--stick")) || 63;
+  const hs = [...document.querySelectorAll(".sh")], lv1 = hs.filter(h => h.classList.contains("lv1"));
+  const box = h => { const r = h.getBoundingClientRect(), ty = parseFloat(h.style.getPropertyValue("--ty")) || 0; return { top: r.top - ty, bottom: r.bottom - ty }; };
+  const at = (b, pos) => b.top <= pos + 1 && b.bottom > pos;  // at its stick line, and not scrolled off with its container
+  const cur = lv1.filter(h => at(box(h), s)).at(-1), curH = cur ? cur.getBoundingClientRect().height : 0, s2 = s + curH;
+  root.style.setProperty("--stick2", s2.toFixed(2) + "px");
+  let capH = 0;
+  hs.forEach((h, i) => {
+    const b = box(h), one = h.classList.contains("lv1"), next = one ? lv1[lv1.indexOf(h) + 1] : hs[i + 1], nt = next?.getBoundingClientRect().top;
+    // a section heading that precedes the stuck title belongs to the section before it: pushed out, never part of this stack
+    const stuck = at(b, one ? s : s2) && (one || !cur || i > hs.indexOf(cur)); h.classList.toggle("stuck", stuck);
+    if (stuck && !one) capH = Math.max(capH, b.bottom - b.top);
+    h.style.setProperty("--ty", (nt != null && nt < b.bottom ? Math.round(nt - b.bottom) : 0) + "px");
+  });
+  if (!frostBar) { frostBar = el("div", { id: "frost", "aria-hidden": "true" }); document.body.prepend(frostBar); }
+  const depth = curH + capH, prev = +frostBar.dataset.depth || 0;
+  // growing is quick (.12s), so a fast scroll barely outruns it; shrinking takes its time
+  frostBar.classList.toggle("now", depth > prev); frostBar.dataset.depth = depth;
+  frostBar.style.setProperty("--fh", (depth + 1).toFixed(2) + "px");
 }
-addEventListener("scroll", stickyHeads, { passive: true });
+let headsRaf = 0;
+addEventListener("scroll", () => { if (!headsRaf) headsRaf = requestAnimationFrame(() => { headsRaf = 0; stickyHeads(); }); }, { passive: true });
 
 // --- pictures for Learn / Help / Celebrate: site/img/<k>.jpg when present, otherwise an event picture whose title fits (people doing things, not a poster)
 const PILLAR_RE = {

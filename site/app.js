@@ -9,6 +9,7 @@ function scopeClubs() { return PAGE === "home" ? myClubs() : null; }
 // --- home banner, or explore mode for people without a club
 function renderHome() {
   const box = $("home"); if (!box) return;
+  document.querySelectorAll(".hn").forEach(n => n.remove());
   const mine = myClubs();
   if (!mine.length) {
     const tips = t("tips"), tip = tips[Math.floor(Date.now() / 864e5) % tips.length];
@@ -24,9 +25,7 @@ function renderHome() {
   const mineEv = D.data.events.filter(e => e.clubs.some(c => mine.includes(c)) && !isPast(e)), next = mineEv[0];
   const today = startOfDay(new Date()), dayN = d => Math.round((startOfDay(d) - today) / 864e5);
   const cols = [D.settings.home || mine[0], ...mine.filter(id => id !== (D.settings.home || mine[0]))];
-  document.body.classList.add("wash");
-  cols.slice(0, 3).forEach((id, i) => document.body.style.setProperty("--c" + (i + 1), club(id).color));
-  for (let i = cols.length; i < 3; i++) document.body.style.setProperty("--c" + (i + 1), i === 1 ? "#d41367" : "#0067c8");
+  wash(...cols.slice(0, 3).map(id => club(id).color), "#d41367", "#0067c8");
   // what changed since the last visit: ids and start times seen one visit ago (visits closer than an hour count as one)
   const seen = store.get("rac.seen", null), cur = Object.fromEntries(mineEv.map(e => [e.id, e.start])), prev = seen && Date.now() - seen.at > 36e5 ? (store.set("rac.seenPrev", seen.map), seen.map) : store.get("rac.seenPrev", null);
   if (!seen || Date.now() - seen.at > 36e5) store.set("rac.seen", { at: Date.now(), map: cur });
@@ -47,8 +46,9 @@ function renderHome() {
     D.newIds.size || moved ? el("a", { class: "news glass", href: "#results" }, el("b", {}, t("news_new", { n: D.newIds.size })), el("span", {}, " " + t("news_rest") + (moved ? " · " + t("news_moved", { n: moved }) : "")), icon("back")) : null,
     el("div", { class: "panes" },
       el("div", { class: "pane glass" }, el("div", { class: "k" }, t("deadline_h")), ...(deadlines.length ? deadlines.map(e => { const n = dayN(e.deadline); return row(e, dLabel(n), n <= 2); }) : [el("p", { class: "m" }, t("none_open"))])),
-      el("div", { class: "pane glass" }, el("div", { class: "k" }, icon("star"), t("saved_h")), ...(saved.length ? saved.map(e => row(e, dLabel(dayN(e.start)))) : [el("p", { class: "m" }, t("none_open"))]))),
-    news.length ? el("div", { class: "newsrow" }, el("div", { class: "k" }, t("news")), newsStrip(news)) : null);
+      el("div", { class: "pane glass" }, el("div", { class: "k" }, icon("star"), t("saved_h")), ...(saved.length ? saved.map(e => row(e, dLabel(dayN(e.start)))) : [el("p", { class: "m" }, t("none_open"))]))));
+  // heading and strip sit in the main flow next to the list title (not inside #home or a wrapper): the heading then stays stuck until the title pushes it
+  if (news.length) box.after(el("h3", { class: "sh hn" }, t("news")), Object.assign(newsStrip(news), { className: "strip teasers hn" }));
   $("listTitle").textContent = t("home_soon");
 }
 
@@ -110,7 +110,7 @@ function render() {
   $("summary").textContent = parts.join(" · ");
   if (!matches.length) { const btn = el("button", { type: "button" }, t("show_all")); btn.addEventListener("click", clearFilters); out.append(el("div", { class: "empty" }, S.view === "saved" ? t("empty_saved") : t("empty"), el("br"), btn)); }
   let month = "", i = 0;
-  for (const e of shown) { const m = fmt.month.format(new Date(e.start)); if (m !== month) { out.append(el("h3", {}, m)); month = m; } out.append(eventCard(e, i++, () => { if (S.view === "saved") render(); })); }
+  for (const e of shown) { const m = fmt.month.format(new Date(e.start)); if (m !== month) { out.append(el("h3", { class: "sh" }, m)); month = m; } out.append(eventCard(e, i++, () => { if (S.view === "saved") render(); })); }
   if (shown.length < matches.length) out.append(el("div", { class: "links", style: "justify-content:center" }, el("a", { href: "discover.html" }, t("discover_cta"))));
   $("clear").hidden = !($("q")?.value || S.clubSel.size || S.distSel.size || $("place")?.value || $("radius")?.value || S.view !== "all");
   const p = new URLSearchParams();
