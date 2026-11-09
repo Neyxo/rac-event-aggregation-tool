@@ -6369,8 +6369,8 @@
    "registration": ""
   },
   "first_seen": "20261107T101430Z",
-  "modified": "20261107T101430Z",
-  "sequence": 0,
+  "modified": "20261109T182412Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-216447@rotary.ch",
@@ -6378,7 +6378,7 @@
    "DESCRIPTION:",
    "URL:https://rotaract-luzern.ch/de/agenda/show/216447",
    "DTSTART;TZID=Europe/Zurich:20270529T080000",
-   "LOCATION:Hasliberg",
+   "LOCATION:Tba",
    "CATEGORIES:Rotaract",
    "DTEND;TZID=Europe/Zurich:20270529T100000"
   ]
@@ -6653,6 +6653,69 @@
    "DTSTART;TZID=Europe/Zurich:20270812T080000",
    "DTEND;TZID=Europe/Zurich:20270902T173000",
    "LOCATION:Eschenbach LU",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "223112": {
+  "detail": {
+   "description": "Liebe Rotaracterinnen und Rotaracter, liebe rotarische Familie\n\nDer Inner Wheel Club Luzern-Sursee lädt herzlich zum traditionellen Suppentag ein! Am Donnerstag, 19. November 2026, verwandelt sich das Rathaus in Sursee in einen Ort der Begegnung und Solidarität. Ob für eine gemütliche Mittagspause oder als wärmender Stopp während des stimmungsvollen „Lichterglanz“ am Abend – wir freuen uns darauf, euch eine feine, frisch zubereitete Suppe zu servieren.\n\nWarum vorbeikommen?\n\nJeder Löffel hilft: Der gesamte Erlös geht an die Stiftung Schweizer Tafel, die sich seit über 20 Jahren unermüdlich für die Linderung von Armut und gegen Foodwaste in der Schweiz einsetzt.\nRotarische Freundschaft: Geniesst mit uns eine Portion Solidarität, nutzt die Gelegenheit für gute Gespräche und stärkt das Netzwerk innerhalb unserer rotarischen Familie.\nKommt vorbei, bringt eure Freunde mit und lasst uns gemeinsam Grosses bewirken. Wir freuen uns sehr auf euren Besuch!\n\nHerzliche Grüsse,\n\nInner Wheel Clubs Luzern-Sursee  \n\nWichtig: Eine Anmeldung ist nicht notwendig ;)",
+   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/3jFqi6Dw/6af1aab60e2a4.png?v=1.5.16",
+   "registration": ""
+  },
+  "first_seen": "20261109T182412Z",
+  "modified": "20261109T182412Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223112@rotary.ch",
+   "SUMMARY:Suppenmittag Wheel-Clubs Luzern-Sursee",
+   "DESCRIPTION:",
+   "URL:https://rotaract-luzern.ch/de/agenda/show/223112",
+   "DTSTART;TZID=Europe/Zurich:20261119T120000",
+   "DTEND;TZID=Europe/Zurich:20261119T200000",
+   "LOCATION:Rathaus Sursee",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "223113": {
+  "detail": {
+   "description": "Die jährliche Regionalkonferenz zusammen mit den Rotary Clubs steht an. Bitte direkt hier anmelden.",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261109T182412Z",
+  "modified": "20261109T182412Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223113@rotary.ch",
+   "SUMMARY:Regionalkonferenz Luzern",
+   "DESCRIPTION:",
+   "URL:https://rotaract-luzern.ch/de/agenda/show/223113",
+   "DTSTART;TZID=Europe/Zurich:20270121T180000",
+   "DTEND;TZID=Europe/Zurich:20270121T210000",
+   "LOCATION:tba",
+   "CATEGORIES:Rotaract"
+  ]
+ },
+ "223114": {
+  "detail": {
+   "description": "Wir starten den Tag mit einem gemütlichen, gemeinsamen Brunch und lassen es uns gutgehen. Für den Teile-Brunch organisieren wir Kaffee, Tee und Grundgetränke. Damit das Buffet so richtig vielseitig wird, bitten wir dich, etwas Leckeres für das gemeinsame Buffet mitzubringen (z. B. Zopf, Käse, Fleisch, Früchte, Konfitüre oder ein Dessert).\n\nFrisch gestärkt widmen wir uns danach unserer diesjährigen Mini-GV. Im Anschluss erwartet uns ein spannender Blick hinter die Kulissen: Unser Mitglied Cedric Aregger wird uns persönlich durch die Firma führen und uns zeigen, wo und wie innovative Holzbauprojekte entstehen.\n\nWir freuen uns auf einen spannenden Einblick, gute Gespräche und einen gemütlichen Tag mit euch!",
+   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/gDAr69pj/6af1b749b9dc4.png?v=1.5.16",
+   "registration": "Anmeldung bis: Donnerstag, 28. Januar 2027 um 09:30\n\nMaximale Anzahl Teilnehmer: 1000"
+  },
+  "first_seen": "20261109T182412Z",
+  "modified": "20261109T182412Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223114@rotary.ch",
+   "SUMMARY:Führung Aregger Holzbau GmbH & Mini-GV",
+   "DESCRIPTION:",
+   "URL:https://rotaract-luzern.ch/de/agenda/show/223114",
+   "DTSTART;TZID=Europe/Zurich:20270130T093000",
+   "DTEND;TZID=Europe/Zurich:20270130T133000",
+   "LOCATION:Aregger Holzbau\\, Industriestrasse 46\\, 6034 Inwil",
    "CATEGORIES:Rotaract"
   ]
  }

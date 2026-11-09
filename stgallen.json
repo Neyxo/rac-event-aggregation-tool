@@ -191,19 +191,19 @@
  "217714": {
   "detail": {
    "description": "Unser Motto SPASS nehmen wir beim nächsten Activity-Stamm wörtlich: Zusammen geht es auf die Bowlingbahn! Ob Strike-Profi oder Gelegenheitswerfer, hier zählt nicht die Punktzahl, sondern die gute Stimmung. Freut euch auf einen lockeren Abend mit viel Lachen, ein paar Pins und guten Gesprächen. Wir freuen uns auf euch!\n\nThis is a publicly advertised event where photos and/or videos may be taken and subsequently published. By registering for and participating in the event, attendees agree to these conditions.\n\nIf you do not wish to appear in any photos or videos, please inform the organiser in advance.",
-   "image": "https://rotaract-stgallen.ch/de/media/cache/resolve/rotary_website_content_grid_images/rc/SUN2TBiW/6ae9dc68c4a6e.jpg?filters%5Bfocus_point_crop%5D%5Bfocus%5D%5B0%5D=0&filters%5Bfocus_point_crop%5D%5Bfocus%5D%5B1%5D=0&v=1.5.16",
-   "registration": ""
+   "image": "https://rotaract-stgallen.ch/media/cache/rotary_website_content_grid_images/rc/SUN2TBiW/6ae9dc68c4a6e.jpg?v=1.5.16",
+   "registration": "Anmeldung bis: Sonntag, 15. November 2026 um 23:55\n\nMaximale Anzahl Teilnehmer: 18"
   },
   "first_seen": "20261107T103915Z",
-  "modified": "20261107T103915Z",
-  "sequence": 0,
+  "modified": "20261109T182412Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-217714@rotary.ch",
    "SUMMARY:Activity Stamm - Bowlingabend",
    "DESCRIPTION:Webseite: https://saentispark-freizeit.ch/sport-spiel/bowling/",
    "URL:https://rotaract-stgallen.ch/de/agenda/show/217714",
-   "DTSTART;TZID=Europe/Zurich:20261119T190000",
+   "DTSTART;TZID=Europe/Zurich:20261119T184500",
    "DTEND;TZID=Europe/Zurich:20261119T210000",
    "LOCATION:Freizeitzentrum Säntispark\\, Wiesenbachstrasse 9\\, 9030 Abtwil",
    "CATEGORIES:Rotaract"
