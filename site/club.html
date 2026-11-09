@@ -33,8 +33,7 @@ addEventListener("DOMContentLoaded", async () => {
   const photos = (c.photos && c.photos.length ? c.photos : D.data.events.filter(e => e.clubs.includes(c.id) && e.image && isPast(e)).slice(-6).map(e => e.image));
   const days = next ? Math.max(1, Math.round((new Date(next.start) - Date.now()) / 864e5)) : 0;
   main.style.cssText = clubStyle(c.id);
-  document.body.classList.add("wash");  // the club's colour wash behind frosted panes, like Home
-  for (let i = 1; i <= 3; i++) document.body.style.setProperty("--c" + i, c.color);
+  wash(c.color, c.color, c.color);  // the club's colour wash behind frosted panes, like Home
   // two parts: a sticky header whose box is always 64px (its crest and name draw big over the block at rest and compact as you scroll),
   // and the colour block with the buttons, which simply scrolls away. No height ever changes while sticking, so nothing bounces.
   const head = el("div", { class: "cstick" }, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
@@ -43,11 +42,11 @@ addEventListener("DOMContentLoaded", async () => {
   const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, btns);
   fill(main, head, hero,
     next ? nextUp(next) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),
-    c.news?.length ? el("h3", {}, t("news")) : null,
+    c.news?.length ? el("h3", { class: "sh" }, t("news")) : null,
     c.news?.length ? newsStrip(c.news) : null,
-    photos.length ? el("h3", {}, t("photos")) : null,
+    photos.length ? el("h3", { class: "sh" }, t("photos")) : null,
     photos.length ? el("div", { class: "strip pics" }, ...photos.map(src => el("img", { src, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }))) : null,
-    upcoming.length > 1 ? el("h3", {}, t("more_events")) : null,
+    upcoming.length > 1 ? el("h3", { class: "sh" }, t("more_events")) : null,
     ...upcoming.slice(1, 8).map((e, i) => eventCard(e, i)),
     el("div", { class: "links", style: "justify-content:center" }, el("a", { href: "discover.html?clubs=" + c.id }, icon("discover"), t("cp_all"))),
     footer());

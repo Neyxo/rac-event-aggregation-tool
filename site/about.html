@@ -31,7 +31,7 @@
     <div id="cta"></div>
     <a class="more glass" href="about-more.html"><b data-t="ab_more"></b><span data-t="ab_more_sub"></span></a>
     <a class="more glass" href="family.html"><b data-t="fam_h"></b><span data-t="fam_sub"></span></a>
-    <h3 data-t="faq"></h3>
+    <h3 class="sh" data-t="faq"></h3>
     <div class="qa" id="qa"></div>
     <div id="foot"></div>
   </section>
@@ -40,7 +40,7 @@
 <div class="toast" id="toast" role="status"></div>
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
-  applyI18n();
+  applyI18n(); wash("#0067c8", "#009739", "#d41367");
   const share = el("button", { class: "hbtn", type: "button", title: t("ab_share") }, icon("share"), el("span", {}, t("share")));
   share.addEventListener("click", async () => { const data = { title: t("ab_title"), text: t("ab_lead"), url: location.href.split("?")[0] }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(data.url); toast(t("copied")); } });
   chrome("about", { extra: share });

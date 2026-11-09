@@ -30,7 +30,7 @@
 <div class="toast" id="toast" role="status"></div>
 <script defer>
 addEventListener("DOMContentLoaded", async () => {
-  applyI18n(); chrome("about", { back: true });
+  applyI18n(); chrome("about", { back: true }); wash("#0067c8", "#009739", "#d41367");
   await loadData();
   document.querySelector("[data-t=sp_dist]").textContent = t("sp_dist", { n: nClubs() });
   $("cta").append(ctaBlock()); $("foot").append(footer());
