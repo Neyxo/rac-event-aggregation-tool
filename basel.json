@@ -552,12 +552,12 @@
    "registration": "Anmeldung bis: Dienstag, 8. Dezember 2026 um 19:30\n\nMaximale Anzahl Teilnehmer: 1000"
   },
   "first_seen": "20261107T103915Z",
-  "modified": "20261107T103915Z",
-  "sequence": 0,
+  "modified": "20261110T195045Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-221485@rotary.ch",
-   "SUMMARY:Regelmeeting Dezember",
+   "SUMMARY:Regelmeeting Dezember / Mini-GV",
    "DESCRIPTION:Webseite: https://www.heubergkeller.ch/",
    "URL:https://rotaract-basel.ch/de/agenda/show/221485",
    "DTSTART;TZID=Europe/Zurich:20261208T193000",

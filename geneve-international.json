@@ -192,15 +192,15 @@
   "detail": {
    "description": "",
    "image": "",
-   "registration": "Date limite d'inscription: lundi 9 novembre 2026 à 19:00\n\nNombre max. de participants: 30"
+   "registration": "La date limite d'inscription est dépassée"
   },
   "first_seen": "20261107T103915Z",
-  "modified": "20261107T103915Z",
-  "sequence": 0,
+  "modified": "20261110T195045Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-222523@rotary.ch",
-   "SUMMARY:Club Meeting | “From Lab to Patient: The Fight to Develop a Cancer Treatment in Challenging Times“",
+   "SUMMARY:Club Meeting & EGA| “From Lab to Patient: The Fight to Develop a Cancer Treatment in Challenging Times“",
    "DESCRIPTION:Site internet: https://www.beau-rivage.com/fr/\\nConférencier(s): Hesham Ismail Hamed",
    "URL:https://geneve-international.rotaract.ch/fr/agenda/show/222523",
    "DTSTART;TZID=Europe/Zurich:20261111T190000",
