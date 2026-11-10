@@ -29,9 +29,8 @@
     <h2 data-t="ab_people"></h2>
     <p class="lead" data-t="ab_people_t"></p>
     <div id="cta"></div>
-    <a class="more glass" href="about-more.html"><b data-t="ab_more"></b><span data-t="ab_more_sub"></span></a>
-    <a class="more glass" href="family.html"><b data-t="fam_h"></b><span data-t="fam_sub"></span></a>
-    <a class="more glass" href="public.html"><b data-t="pub_h"></b><span data-t="pub_sub"></span></a>
+    <h3 class="sh" data-t="read_on"></h3>
+    <div id="more"></div>
     <h3 class="sh" data-t="faq"></h3>
     <div class="qa" id="qa"></div>
     <div id="foot"></div>
@@ -49,7 +48,8 @@ addEventListener("DOMContentLoaded", async () => {
   for (let i = 1; i <= 5; i++) $("qa").append(el("details", { name: "qa" }, el("summary", {}, t("ab_q" + i)), el("p", {}, t("ab_a" + i))));
   await loadData();
   document.querySelector("[data-t=ab_people_t]").textContent = t("ab_people_t", { n: nClubs() });
-  $("cta").append(ctaBlock());
+  if (!D.clubs[D.settings.home]) $("cta").append(ctaBlock());
+  $("more").append(...helpLinks("guide", "words", "world", "family"));
   $("foot").append(footer());
   const words = $("words");
   PIL.forEach(([k, col], i) => words.append(el("div", { class: "w", style: `--p:${col}` }, el("div", { class: "word" }, t("ab_" + k) + "."),

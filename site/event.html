@@ -27,22 +27,25 @@ addEventListener("DOMContentLoaded", async () => {
   const s = new Date(e.start), en = new Date(e.end), lead = club(e.clubs[0]);
   const share = el("button", { type: "button", class: "linkbtn" }, icon("share"), t("share_event"));
   share.addEventListener("click", async () => { const url = new URL(`e/${e.id}.html`, location.href).href; const data = { title: e.title, text: `${e.title} · ${fmt.full.format(s)}${e.location ? " · " + e.location : ""}`, url }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(url); toast(t("copied")); } });
-  const hero = el("div", { class: "hero" }, e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null);
+  const hero = el("div", { class: "hero" }, e.image ? el("img", { class: "blur", src: e.image, alt: "", "aria-hidden": "true", referrerpolicy: "no-referrer" }) : null, e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null);
+  const open = !e.cancelled && !isPast(e);  // otherwise the button only opens the event on Polaris
   main.style.cssText = clubStyle(lead.id);
   // the club's colour wash behind a frosted card, the crest under the date pane: like the cards and the club page
   wash(lead.color, club(e.clubs[1] || lead.id).color, lead.color);
   main.replaceChildren(
     el("article", { class: "evdetail glass" },
       e.image ? hero : null,
-      el("div", { class: "head" }, lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true" }) : null, datePane(e), el("div", {}, el("h1", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))), starButton(e),
-        el("a", { class: "go", href: e.url, target: "_blank", rel: "noopener", title: t("register") }, icon("ext"), el("span", {}, t("register")))),
-      el("div", { class: "links" }, el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, icon("calendar"), t("add_cal")), share),
-      el("p", { class: "desc" }, e.description || t("no_desc")),
+      el("div", { class: "head" }, lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true" }) : null, datePane(e), el("div", {}, el("h1", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)), e.members ? el("span", { class: "tag dl" }, t("members_only")) : null)), starButton(e),
+        el("a", { class: "go", href: e.url, target: "_blank", rel: "noopener", title: t(open ? "register" : "open_polaris") }, icon("ext"), el("span", {}, t(open ? "register" : "open_polaris")))),
+      // members-only: Polaris' calendar file needs a login, so no "add to calendar"
+      el("div", { class: "links" }, e.members ? null : el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, icon("calendar"), t("add_cal")), share),
       el("dl", { class: "kv" },
         el("dt", {}, t("when")), el("dd", {}, fmt.full.format(s) + (e.allday ? "" : ", " + fmt.time.format(s) + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""))),
-        e.location ? el("dt", {}, t("where")) : null, e.location ? el("dd", {}, e.location) : null,
-        e.registration ? el("dt", {}, t("registration")) : null, e.registration ? el("dd", {}, e.registration) : null,
-        el("dt", {}, t("club")), el("dd", {}, ...e.clubs.flatMap((c, i) => [i ? " & " : null, el("a", { href: "club.html?id=" + c }, clubLabel(c))])))),
+        e.location ? el("dt", {}, t("where")) : null, e.location ? el("dd", {}, el("a", { href: mapsUrl(e.location), target: "_blank", rel: "noopener" }, icon("pin"), e.location)) : null,
+        e.deadline && open ? el("dt", {}, t("deadline_h")) : null, e.deadline && open ? el("dd", { class: dayN(e.deadline) <= 2 ? "soon" : "" }, fmt.full.format(new Date(e.deadline)) + (dayN(e.deadline) >= 0 ? " · " + (dayN(e.deadline) === 0 ? t("today") : dayN(e.deadline) === 1 ? t("tomorrow") : t("in_days", { n: dayN(e.deadline) })) : "")) : null,
+        e.registration ? el("dt", {}, t("registration")) : null, e.registration ? el("dd", {}, e.registration) : null),
+      el("p", { class: "desc" }, e.description || t("no_desc")),
+      e.members ? el("p", { class: "desc" }, t("members_note")) : null),
     el("h3", { class: "sh" }, t("more_events")),
     ...D.data.events.filter(x => x.id !== e.id && !isPast(x) && x.clubs.some(c => e.clubs.includes(c))).slice(0, 3).map((x, i) => eventCard(x, i)),
     footer());
@@ -51,7 +54,7 @@ addEventListener("DOMContentLoaded", async () => {
   const head = main.querySelector(".head"), links = main.querySelector(".links"), go = head.querySelector(".go");
   morphHead(head);
   const cb = Math.round(Math.max(...[...head.children].filter(n => !/\b(go|wm)\b/.test(n.className)).map(n => n.getBoundingClientRect().bottom)) - head.getBoundingClientRect().top);
-  head.style.setProperty("--bt", cb + 12 + "px"); links.style.marginTop = cb - 64 + "px"; links.prepend(el("span", { class: "ph", style: `width:${go.offsetWidth}px;height:${go.offsetHeight}px` }));
+  head.style.setProperty("--bt", cb + 12 + "px"); links.style.marginTop = cb - 64 + "px"; if (go) links.prepend(el("span", { class: "ph", style: `width:${go.offsetWidth}px;height:${go.offsetHeight}px` }));
 });
 </script>
 </body>

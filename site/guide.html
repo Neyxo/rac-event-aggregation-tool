@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>New in the club · Rotaract Events</title>
+<meta name="description" content="Welcome to Rotaract: your first steps as a new member.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
+</head>
+<body data-page="guide">
+<header id="top"></header>
+<!-- welcome page for new members: a hero in the club's colour, four tappable steps, three facts. Texts: "nm" in i18n.js -->
+<main class="wrap fam" id="main">
+  <div class="hero glass" id="hero"></div>
+  <h2 class="sh lv1" id="stepsH"></h2>
+  <ol class="nsteps" id="steps"></ol>
+  <div class="facts" id="facts"></div>
+  <h2 class="sh lv1" data-t="read_on"></h2>
+  <div id="more"></div>
+  <div id="foot"></div>
+</main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+addEventListener("DOMContentLoaded", async () => {
+  applyI18n(); chrome("about", { back: true });
+  const nm = t("nm"), COL = ["#d41367", "#0067c8", "#009739"];
+  document.title = nm.h + " · Rotaract Events";
+  store.set("rac.guideSeen", true);  // Home stops pointing here once it has been opened
+  $("stepsH").textContent = nm.steps_h;
+  $("more").append(...helpLinks("words", "family", "world"));
+  $("foot").append(footer());
+  await loadData();
+  const home = D.settings.home && D.clubs[D.settings.home];
+  wash(home ? home.color : COL[0], COL[1], COL[2]);
+  if (home) $("hero").style.cssText = clubStyle(home.id);
+  fill($("hero"), home && home.logo ? el("img", { src: home.logo, alt: "" }) : el("div", { class: "wave" }, "👋"), el("h1", {}, home ? nm.hi.replace("{club}", home.name) : nm.hi0), el("p", {}, nm.lead));
+  // each step leads somewhere: the club's Polaris site, Settings, Subscribe, the club's next event
+  const next = D.data.events.find(e => !isPast(e) && !e.cancelled && (!home || e.clubs.includes(home.id)));
+  const to = [home && home.url, "settings.html", "subscribe.html", next ? "event.html?id=" + next.id : "discover.html"];
+  $("steps").append(...nm.steps.map(([title, text], i) => { const href = to[i];
+    return el("li", {}, el(href ? "a" : "div", { class: "step glass", href, target: /^http/.test(href) ? "_blank" : null, rel: /^http/.test(href) ? "noopener" : null, style: "--p:" + COL[i % 3] },
+      el("div", { class: "ic" }, String(i + 1)), el("div", { class: "tx" }, el("b", {}, title), el("span", {}, i === 3 && next ? `${fmt.dm.format(new Date(next.start))} · ${next.title}` : text)), href ? icon("back", "chev") : null)); }));
+  $("facts").append(...nm.facts.map(([v, l], i) => el("div", { class: "glass", style: "--p:" + COL[i] }, el("b", {}, v.replace("{n}", nClubs())), el("span", {}, l))));
+});
+</script>
+</body>
+</html>

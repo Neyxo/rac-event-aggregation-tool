@@ -39,7 +39,7 @@ async function init() {
   for (const b of $("scope").children) { b.setAttribute("aria-pressed", String(b.dataset.scope === C.scope)); b.addEventListener("click", () => { C.scope = b.dataset.scope; for (const x of $("scope").children) x.setAttribute("aria-pressed", String(x === b)); render(); }); }
   $("prev").addEventListener("click", () => { C.month = new Date(C.month.getFullYear(), C.month.getMonth() - 1, 1); render(); });
   $("next").addEventListener("click", () => { C.month = new Date(C.month.getFullYear(), C.month.getMonth() + 1, 1); render(); });
-  $("todayBtn").addEventListener("click", () => { const n = new Date(); C.month = new Date(n.getFullYear(), n.getMonth(), 1); render(); const evs = events().filter(e => sameDay(new Date(e.start), n)); openDay(startOfDay(n), evs); });
+  $("todayBtn").addEventListener("click", () => { const n = new Date(); C.month = new Date(n.getFullYear(), n.getMonth(), 1); render(); const evs = events().filter(e => sameDay(new Date(e.start), n)); if (evs.length) openDay(startOfDay(n), evs); });
   $("sheetClose").addEventListener("click", closeSheet);
   $("sheet").addEventListener("click", ev => { if (ev.target === $("sheet")) closeSheet(); });
   addEventListener("keydown", ev => { if (ev.key === "Escape") closeSheet(); });

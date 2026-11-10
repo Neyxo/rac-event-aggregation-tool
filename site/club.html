@@ -44,8 +44,8 @@ addEventListener("DOMContentLoaded", async () => {
   const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, btns);
   fill(main, head, hero,
     next ? nextUp(next) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),
-    c.news?.length ? el("h3", { class: "sh" }, t("news")) : null,
-    c.news?.length ? newsStrip(c.news) : null,
+    freshNews(c).length ? el("h3", { class: "sh" }, t("news")) : null,
+    freshNews(c).length ? newsStrip(freshNews(c)) : null,
     photos.length ? el("h3", { class: "sh" }, t("photos")) : null,
     photos.length ? el("div", { class: "strip pics" }, ...photos.map(src => el("img", { src, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }))) : null,
     upcoming.length > 1 ? el("h3", { class: "sh" }, t("more_events")) : null,

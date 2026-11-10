@@ -51,13 +51,28 @@ function chrome(active, { back = false, extra = null } = {}) {
   const left = back ? (() => { const a = hbtn("back", "./", null); a.setAttribute("aria-label", t("back")); a.addEventListener("click", ev => { if (history.length > 1) { ev.preventDefault(); history.back(); } }); return a; })() : null;
   top.replaceChildren(el("div", { class: "wrap bar" },
     el("div", { class: "lft" }, left, el("a", { class: "brand", href: "./", "aria-label": "Rotaract Events" }, el("img", { src: "rotaract.svg", alt: "Rotaract" }))),
-    el("div", { class: "rgt" }, extra, hbtn("info", "about.html", t("info"), active === "about"), hbtn("settings", "settings.html", t("settings"), active === "settings"))));
+    el("div", { class: "rgt" }, extra, hbtn("wheel", "about.html", "Rotaract", active === "about"), hbtn("info", "public.html", t("info"), active === "app"), hbtn("settings", "settings.html", t("settings"), active === "settings"))));
   document.documentElement.style.setProperty("--stick", top.offsetHeight + "px");  // sticky section headings start under the top bar
   if (!frostBar) { frostBar = el("div", { id: "frost", "aria-hidden": "true" }); document.body.prepend(frostBar); }
   const tabs = $("tabs");
   if (tabs) tabs.replaceChildren(...[["home", "./"], ["discover", "discover.html"], ["calendar", "calendar.html"]].map(([k, href]) => el("a", { class: "tab" + (active === k ? " on" : ""), href, "aria-current": active === k ? "page" : null }, icon(k), el("span", {}, t(k)))));
 }
-function footer() { return el("footer", {}, t("made_by") + " · ", el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source"))); }
+function qaList(items, name = "qa") { return items.map(([q, a]) => el("details", { name }, el("summary", {}, q), el("p", {}, a))); }
+Object.assign(ICON, {
+  refresh: "M21 12a9 9 0 1 1-3-6.7M21 4v5h-5", lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4", shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  belloff: "M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0M3 3l18 18", offline: "M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 3.5-2.2M19 13a10 10 0 0 0-5-2.7M12 20h.01",
+});
+// a link that looks like one: icon in the colour p, title, one line, chevron
+function moreLink(href, title, sub, ic = "info", p = "#0067c8") {
+  return el("a", { class: "more glass", href, style: "--p:" + p }, el("div", { class: "ic" }, icon(ic)), el("div", { class: "tx" }, el("b", {}, title), sub ? el("span", {}, sub) : null), icon("back", "chev"));
+}
+// the cards to the explanatory pages, by key, so every page words and draws them the same
+function helpLinks(...keys) {
+  const nm = t("nm"), all = { guide: ["guide.html", nm.h, nm.steps_h, "flag", "#d41367"], words: ["words.html", nm.words_h, nm.words_sub, "book", "#009739"], app: ["public.html", t("app_h"), t("app_lead"), "info", "#0067c8"],
+    sub: ["subscribe.html", t("sub_title"), t("ab_sub_sub"), "calendar", "#0067c8"], world: ["about-more.html", t("ab_more"), t("ab_more_sub"), "globe", "#009739"], family: ["family.html", t("fam_h"), t("fam_sub"), "wheel", "#0067c8"] };
+  return keys.map(k => moreLink(...all[k]));
+}
+function footer(source = false) { return el("footer", {}, t("made_by"), source ? " · " : null, source && el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source"))); }
 
 // --- the colour wash behind a page: fixed radial blobs in up to three colours, frosted panes sit on it
 function wash(...colors) { document.body.classList.add("wash"); colors.slice(0, 3).forEach((c, i) => document.body.style.setProperty("--c" + (i + 1), c)); }
@@ -91,13 +106,19 @@ function clubStyle(id) { const c = club(id).color || "#d41367"; return `--c:${c}
 function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading: "lazy" }) : el("span", { class: "dot" }); }
 function clubChip(id, extra = "") { const c = club(id); return el("a", { class: "tag " + extra, href: "club.html?id=" + id, style: clubStyle(id), "aria-label": c.name }, clubMark(c), c.short); }
 const nClubs = () => D.data.clubs.filter(c => c.district).length;
-function clubLabel(id) { const c = club(id); return c.name + (c.district ? ` (D${c.district})` : ""); }
 const fmt = {
   day: new Intl.DateTimeFormat(LOCALE, { day: "numeric" }), mon: new Intl.DateTimeFormat(LOCALE, { month: "short" }), month: new Intl.DateTimeFormat(LOCALE, { month: "long", year: "numeric" }),
   wd: new Intl.DateTimeFormat(LOCALE, { weekday: "short" }), wdl: new Intl.DateTimeFormat(LOCALE, { weekday: "long" }), time: new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" }),
   full: new Intl.DateTimeFormat(LOCALE, { weekday: "long", day: "numeric", month: "long", year: "numeric" }), stamp: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
-  dm: new Intl.DateTimeFormat(LOCALE, { weekday: "short", day: "numeric", month: "short" }), date: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", year: "numeric" }),
+  dm: new Intl.DateTimeFormat(LOCALE, { weekday: "short", day: "numeric", month: "short" }), dms: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short" }), date: new Intl.DateTimeFormat(LOCALE, { day: "numeric", month: "short", year: "numeric" }),
 };
+const dayN = d => Math.round((startOfDay(d) - startOfDay(new Date())) / 864e5);  // whole days from today
+// "Register by 14 Nov" while the deadline is still ahead; red in the last two days
+function deadlineTag(e) { const n = e.deadline && !e.cancelled ? dayN(e.deadline) : -1; return n < 0 ? null : el("span", { class: "tag dl" + (n <= 2 ? " soon" : "") }, t("reg_by", { d: fmt.dms.format(new Date(e.deadline)) })); }
+// Apple Maps on iOS (opens the app), Google Maps elsewhere
+const mapsUrl = place => (IOS ? "https://maps.apple.com/?q=" : "https://www.google.com/maps/search/?api=1&query=") + encodeURIComponent(place);
+// news teasers older than a year are not news
+const freshNews = c => (c.news || []).filter(n => !n.date || Date.now() - new Date(n.date) < 365 * 864e5);
 function whenShort(e) { const s = new Date(e.start), en = new Date(e.end); return e.allday ? fmt.wdl.format(s) + " · " + t("all_day") : `${fmt.wd.format(s)} ${fmt.time.format(s)}` + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""); }
 function placeShort(e) { return (e.location || "").split(",")[0]; }
 function isPast(e) { return new Date(e.end) < new Date(); }
@@ -121,23 +142,26 @@ function eventCard(e, i = 0, onChange) {
   return el("a", { class: "event" + (e.cancelled ? " cancelled" : "") + (D.newIds?.has(e.id) ? " new" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
     lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true", loading: "lazy" }) : null,
     datePane(e),
-    el("div", { class: "body" }, el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)))),
+    el("div", { class: "body" }, el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)), e.members ? el("span", { class: "tag dl" }, t("members_only")) : null, isPast(e) ? null : deadlineTag(e))),
     el("div", { class: "side" }, starButton(e, onChange), e.image ? el("img", { class: "thumb", src: e.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null));
 }
 
-// --- location guess: approximate position of the connection, no permission prompt, nothing stored
+// --- location guess: approximate position of the connection, no permission prompt. Only ever called after a tap;
+// the result is kept for this tab (sessionStorage), so going back to Home doesn't ask again.
+const here = { get() { try { return JSON.parse(sessionStorage.getItem("rac.here")); } catch { return null; } }, set(c) { try { sessionStorage.setItem("rac.here", JSON.stringify(c)); } catch {} } };
 async function guessPosition() {
+  if (here.get()) return here.get();
   try {
     const ctl = new AbortController(); setTimeout(() => ctl.abort(), 3500);
     let r = await fetch("https://get.geojs.io/v1/ip/geo.json", { signal: ctl.signal }).then(r => r.json()).catch(() => null);
     if (!r?.latitude) r = await fetch("https://ipwho.is/", { signal: ctl.signal }).then(r => r.json()).catch(() => null);
-    const here = [Number(r?.latitude), Number(r?.longitude)];
-    if (here[0] && ["CH", "LI"].includes(r.country_code)) return here;
+    const pos = [Number(r?.latitude), Number(r?.longitude)];
+    if (pos[0] && ["CH", "LI"].includes(r.country_code)) { here.set(pos); return pos; }
   } catch {}
   return null;
 }
-function nearestClubs(here, n = 3, maxKm = 1e9) { return D.data.clubs.filter(c => c.coords && c.district).map(c => ({ c, d: km(here, c.coords) })).filter(x => x.d <= maxKm).sort((a, b) => a.d - b.d).slice(0, n); }
-async function guessClubs() { const here = await guessPosition(); if (here) { const near = nearestClubs(here, 2, 35); if (near.length) return near.map(x => x.c.id); } return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || []; }
+function nearestClubs(pos, n = 3, maxKm = 1e9) { return D.data.clubs.filter(c => c.coords && c.district).map(c => ({ c, d: km(pos, c.coords) })).filter(x => x.d <= maxKm).sort((a, b) => a.d - b.d).slice(0, n); }
+async function guessClubs() { const pos = await guessPosition(); if (pos) { const near = nearestClubs(pos, 2, 35); if (near.length) return near.map(x => x.c.id); } return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || []; }
 
 // --- club tiles (settings, onboarding): crest + name, single (radio) or multi
 function clubTiles(selected, onPick, { single = false, exclude = [] } = {}) {
@@ -192,7 +216,8 @@ function googleLink(webcal) {
 }
 
 // --- call to action: "your club" with the next event when set, "find your club" otherwise
-function ctaBlock() {
+// onPlace(coords) tells the page where the visitor is once they typed a town or tapped "near me" (Home lists nearby events then).
+function ctaBlock(onPlace) {
   const home = D.settings.home && D.clubs[D.settings.home];
   if (home) {
     const e = D.data.events.find(e => e.clubs.includes(home.id) && !isPast(e));
@@ -201,10 +226,13 @@ function ctaBlock() {
   }
   const input = el("input", { class: "in", type: "text", placeholder: t("ab_find_ph"), "aria-label": t("ab_find_ph"), autocomplete: "off" });
   const go = el("button", { class: "go", type: "button" }, t("ab_find_btn")), near = el("div", { class: "near" }), hint = el("div", { class: "hint" });
-  const show = here => near.replaceChildren(...nearestClubs(here, 3).map(({ c, d }) => el("a", { class: "nc", href: "club.html?id=" + c.id, style: clubStyle(c.id) }, clubMark(c), el("span", {}, c.short, el("small", {}, Math.round(d) + " km")))));
+  const show = pos => { here.set(pos); near.replaceChildren(...nearestClubs(pos, 3).map(({ c, d }) => el("a", { class: "nc", href: "club.html?id=" + c.id, style: clubStyle(c.id) }, clubMark(c), el("span", {}, c.short, el("small", {}, Math.round(d) + " km"))))); onPlace?.(pos); };
   const find = async () => { const q = input.value.trim(); if (!q) return; hint.textContent = t("locating"); try { const hit = await geocode(q); if (!hit) { hint.textContent = t("place_nf"); return; } hint.textContent = "📍 " + hit.label; show(hit.coords); } catch { hint.textContent = t("place_err"); } };
   go.addEventListener("click", find); input.addEventListener("keydown", ev => { if (ev.key === "Enter") find(); });
-  guessPosition().then(here => { if (here && !near.children.length) show(here); });
+  // the approximate position is only looked up on this tap, never on page load
+  const me = el("button", { class: "nc", type: "button" }, "📍 " + t("near_btn"));
+  me.addEventListener("click", async () => { hint.textContent = t("locating"); const pos = await guessPosition(); hint.textContent = pos ? "" : t("loc_na"); if (pos) show(pos); });
+  if (here.get()) show(here.get()); else near.append(me);
   return el("div", { class: "cta glass new" }, el("div", { class: "k" }, t("ab_find_title")), el("div", { class: "find" }, input, go), hint, near);
 }
 
@@ -249,7 +277,7 @@ function stickyHeads() {
   if (!frostBar) { frostBar = el("div", { id: "frost", "aria-hidden": "true" }); document.body.prepend(frostBar); }
   const depth = curH + capH, prev = +frostBar.dataset.depth || 0;
   // growing is quick (.12s), so a fast scroll barely outruns it; shrinking takes its time
-  frostBar.classList.toggle("now", depth > prev); frostBar.dataset.depth = depth;
+  frostBar.classList.toggle("now", depth > prev); frostBar.classList.toggle("on", depth > 0); frostBar.dataset.depth = depth;
   frostBar.style.setProperty("--fh", (depth + 1).toFixed(2) + "px");
 }
 let headsRaf = 0;

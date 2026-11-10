@@ -31,6 +31,10 @@
     <p data-t="sp_club_text"></p>
     <div class="feeds" id="feeds"></div>
   </section>
+  <section class="card">
+    <h2 data-t="faq"></h2>
+    <div class="qa" id="qa"></div>
+  </section>
   <div id="foot"></div>
 </main>
 <nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
@@ -46,6 +50,7 @@ addEventListener("DOMContentLoaded", async () => {
       el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), googleLink(webcal), el("a", { href: https }, ".ics")));
   };
   for (const k of ["ios", "google", "android", "outlook"]) $("how").append(el("details", {}, el("summary", {}, t("sp_" + k)), el("ol", {}, ...t("sp_" + k + "_s").map(s => el("li", {}, s)))));
+  $("qa").append(...qaList(t("sub_qa")));
   await loadData();
   const now = new Date(), upcomingBy = {}; let total = 0;
   for (const e of D.data.events) if (new Date(e.end) >= now) { total++; for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1; }
