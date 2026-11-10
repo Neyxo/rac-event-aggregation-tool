@@ -1,7 +1,7 @@
 // Network first for everything on this origin, the cache only as the offline (or slow-network) fallback.
 // Every successful fetch refreshes the cache, so a new deploy shows on the next load: no versions, no "new version" prompt, no hard refresh.
 const CACHE = "rac-events";
-const SHELL = ["./", "index.html", "discover.html", "calendar.html", "event.html", "club.html", "about.html", "about-more.html", "family.html", "settings.html", "subscribe.html", "app.css", "i18n.js", "common.js", "app.js", "calendar.js", "manifest.webmanifest", "icon.svg", "rotaract.svg", "icon-192.png", "icon-512.png"];
+const SHELL = ["./", "index.html", "discover.html", "calendar.html", "event.html", "club.html", "about.html", "about-more.html", "family.html", "public.html", "settings.html", "subscribe.html", "app.css", "i18n.js", "common.js", "app.js", "calendar.js", "manifest.webmanifest", "icon.svg", "rotaract.svg", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

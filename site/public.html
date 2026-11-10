@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Only public events · Rotaract Events</title>
+<meta name="description" content="Why this app only shows public events: it can't see your Polaris login, your sign-ups or members-only events.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
+</head>
+<body data-page="public">
+<header id="top"></header>
+<main class="wrap fam" id="main">
+  <h1 data-t="pub_h"></h1>
+  <p class="lead" data-t="pub_lead"></p>
+  <h2 class="sh lv1" data-t="pub_no_h"></h2>
+  <ul id="no"></ul>
+  <h2 class="sh lv1" data-t="pub_why_h"></h2>
+  <p data-t="pub_why"></p>
+  <h2 class="sh lv1" data-t="pub_do_h"></h2>
+  <p data-t="pub_do"></p>
+  <div id="foot"></div>
+</main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+addEventListener("DOMContentLoaded", () => {
+  applyI18n(); chrome("about", { back: true }); wash("#0067c8", "#009739", "#d41367");
+  $("no").append(...t("pub_no").map(s => el("li", {}, s)));
+  $("foot").append(footer());
+});
+</script>
+</body>
+</html>

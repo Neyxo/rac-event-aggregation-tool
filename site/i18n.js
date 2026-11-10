@@ -381,3 +381,33 @@ Object.assign(I18N.it, {
     ["Scambio giovani & Rotex", "Un anno scolastico all'estero. I Rotex sono gli ex."], ["RYLA", "Campi di leadership per giovani."], ["Inner Wheel", "Club di servizio femminili, vicini al Rotary."],
     ["Fondazione Rotary", "L'ente benefico del Rotary: sovvenzioni, borse di studio, fine della polio."], ["Distretti", "I club di una regione, un governatore. CH e LI ne hanno tre."]],
 });
+
+// the "only public events" page: what the app can't see and why
+Object.assign(I18N.en, {
+  pub_h: "Only public events", pub_sub: "Why you don't see your sign-ups or private events →",
+  pub_lead: "This app reads the clubs' public pages on Polaris. It never logs in, so it only knows what anyone can see without an account.",
+  pub_no_h: "What it can't show", pub_no: ["Whether you're logged in to Polaris.", "Whether you've already signed up for an event.", "Private and members-only events."],
+  pub_why_h: "Why", pub_why: "There is no official Rotary API for events yet. One might come in 2027. Until then the only way is to scrape the public pages, and scraping means using only public, official data: nothing behind a login.",
+  pub_do_h: "What you can do", pub_do: "To register, check your sign-ups or see members-only events, log in on Polaris. \"Register on Polaris\" on every event takes you straight there.",
+});
+Object.assign(I18N.de, {
+  pub_h: "Nur öffentliche Anlässe", pub_sub: "Warum du deine Anmeldungen und private Anlässe nicht siehst →",
+  pub_lead: "Diese App liest die öffentlichen Seiten der Clubs auf Polaris. Sie meldet sich nie an und kennt deshalb nur, was alle ohne Konto sehen.",
+  pub_no_h: "Was sie nicht zeigen kann", pub_no: ["Ob du bei Polaris angemeldet bist.", "Ob du dich für einen Anlass schon angemeldet hast.", "Private Anlässe und solche nur für Mitglieder."],
+  pub_why_h: "Warum", pub_why: "Es gibt noch keine offizielle Rotary-API für Anlässe. Vielleicht kommt eine 2027. Bis dahin bleibt nur, die öffentlichen Seiten auszulesen (Scraping), und Scraping heisst: nur öffentliche, offizielle Daten, nichts hinter einem Login.",
+  pub_do_h: "Was du tun kannst", pub_do: "Zum Anmelden, für deine Anmeldungen oder Anlässe nur für Mitglieder meldest du dich auf Polaris an. «Auf Polaris anmelden» bei jedem Anlass bringt dich direkt hin.",
+});
+Object.assign(I18N.fr, {
+  pub_h: "Seulement les événements publics", pub_sub: "Pourquoi vous ne voyez ni vos inscriptions ni les événements privés →",
+  pub_lead: "Cette app lit les pages publiques des clubs sur Polaris. Elle ne se connecte jamais et ne connaît donc que ce que tout le monde voit sans compte.",
+  pub_no_h: "Ce qu'elle ne peut pas montrer", pub_no: ["Si vous êtes connecté à Polaris.", "Si vous êtes déjà inscrit à un événement.", "Les événements privés et réservés aux membres."],
+  pub_why_h: "Pourquoi", pub_why: "Il n'existe pas encore d'API officielle du Rotary pour les événements. Une pourrait arriver en 2027. D'ici là, il ne reste qu'à lire les pages publiques (scraping), et le scraping signifie : uniquement des données publiques et officielles, rien derrière une connexion.",
+  pub_do_h: "Ce que vous pouvez faire", pub_do: "Pour vous inscrire, voir vos inscriptions ou les événements réservés aux membres, connectez-vous sur Polaris. « S'inscrire sur Polaris » sur chaque événement vous y mène directement.",
+});
+Object.assign(I18N.it, {
+  pub_h: "Solo eventi pubblici", pub_sub: "Perché non vedi le tue iscrizioni né gli eventi privati →",
+  pub_lead: "Questa app legge le pagine pubbliche dei club su Polaris. Non effettua mai l'accesso, quindi conosce solo ciò che chiunque vede senza account.",
+  pub_no_h: "Cosa non può mostrare", pub_no: ["Se hai effettuato l'accesso a Polaris.", "Se ti sei già iscritto a un evento.", "Eventi privati e riservati ai soci."],
+  pub_why_h: "Perché", pub_why: "Non esiste ancora un'API ufficiale del Rotary per gli eventi. Potrebbe arrivarne una nel 2027. Fino ad allora l'unica via è leggere le pagine pubbliche (scraping), e scraping significa: solo dati pubblici e ufficiali, niente dietro un login.",
+  pub_do_h: "Cosa puoi fare", pub_do: "Per iscriverti, vedere le tue iscrizioni o gli eventi riservati ai soci, accedi su Polaris. «Iscriviti su Polaris» su ogni evento ti porta direttamente lì.",
+});

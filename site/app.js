@@ -180,7 +180,7 @@ async function init() {
   try { await loadData(); } catch { return; }
   const generated = new Date(D.data.generated);
   if (Date.now() - generated > 30 * 3600e3) { $("stale").textContent = t("stale", { t: fmt.stamp.format(generated) }); $("stale").hidden = false; }
-  $("foot").replaceChildren(el("div", { class: "meta" }, t("updated", { t: fmt.stamp.format(generated) }) + " · " + t("members_only")), footer());
+  $("foot").replaceChildren(el("div", { class: "meta" }, t("updated", { t: fmt.stamp.format(generated) }) + " · ", el("a", { href: "public.html" }, t("members_only"))), footer());
   const p = new URLSearchParams(location.search);
   if (p.get("event")) { location.replace("event.html?id=" + encodeURIComponent(p.get("event"))); return; }
   // A shared link with filters is about all of Rotaract, not "my clubs": Discover has the UI for it.
