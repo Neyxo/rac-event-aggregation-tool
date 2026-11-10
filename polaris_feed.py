@@ -35,6 +35,8 @@ MAX_CANCEL_RATIO = 0.5
 REFRESH_PAST = dt.timedelta(days=30)  # events that ended earlier are frozen: never re-fetched or re-checked
 PUBLISH_PAST = dt.timedelta(days=730)  # feeds and site go back this far; data/ keeps the full history
 CANCELLED = {"de": "Abgesagt", "fr": "Annulé", "it": "Annullato"}
+MEMBERS_ONLY = "X-MEMBERS-ONLY:TRUE"  # marks a VEVENT built from the agenda list because the event itself needs a login
+MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci"}
 
 # Polaris ships a VTIMEZONE without DST rules, so we write a correct one ourselves.
 VTIMEZONE = """BEGIN:VTIMEZONE
@@ -72,26 +74,70 @@ def get(url, attempts=3):
         time.sleep(5 * 2**n)
 
 
-def event_ids(club, backfill=False):
-    """IDs of upcoming events plus this year's past ones; with backfill, every year Polaris offers."""
+def parse_list(page):
+    """Agenda list page -> {event id: what the list shows}. The list is public even for members-only events; their own pages are not."""
+    items = {}
+    for block in page.split("<li>")[1:]:
+        link = re.search(r'href="([^"]*/agenda/show/(\d+))"', block)
+        if not link:
+            continue
+
+        def grab(pattern):
+            m = re.search(pattern, block, re.S)
+            return html_text(m.group(1)) if m else ""
+
+        image = re.search(r"list-picture\"[^>]*url\(([^)]+)\)", block)
+        items.setdefault(link.group(2), {
+            "url": html.unescape(link.group(1)), "title": grab(r"<h2>(.*?)</h2>"), "when": grab(r"<small[^>]*>(.*?)</small>"),
+            "teaser": grab(r'ct-media-description">(.*?)</p>'), "location": grab(r'fa-map-marker-alt"></i>(.*?)</span>'),
+            "registration": grab(r'fa-calendar-alt"></i>(.*?)</span>'), "image": html.unescape(image.group(1)) if image else ""})
+    return items
+
+
+def listed_events(club, backfill=False):
+    """{id: list item} of upcoming events plus this year's past ones; with backfill, every year Polaris offers."""
     url = f"{club['base_url']}/{club['lang']}/agenda?criteria%5BendsAt%5D="
     filters = ["latest", str(dt.date.today().year)]
     if backfill:
         filters += re.findall(r'<option value="(\d{4})"', get(url + "latest"))
-    ids = []
+    items = {}
     for f in dict.fromkeys(filters):
         # robots.txt disallows `limit=`, so page through instead.
-        for page in range(1, MAX_PAGES + 1):
-            html = get(f"{url}{f}&page={page}")
-            new = [i for i in dict.fromkeys(re.findall(r"/agenda/show/(\d+)", html)) if i not in ids]
+        for n in range(1, MAX_PAGES + 1):
+            page = get(f"{url}{f}&page={n}")
+            found = parse_list(page)
+            new = [i for i in dict.fromkeys(re.findall(r"/agenda/show/(\d+)", page)) if i not in items]
             if not new:
                 break
-            ids += new
-    return ids
+            items.update({i: found.get(i) for i in new})
+    return items
 
 
-def fetch_event(club, event_id):
-    """Cleaned VEVENT lines, or None if the event isn't public (any more). Raises on transient errors."""
+def stub_vevent(event_id, item):
+    """VEVENT of a members-only event, built from what the public agenda list shows. None if its date can't be read."""
+    # ponytail: day-before-month dates only (de/fr/it, the languages in clubs.toml); an English list date is skipped as before
+    low = item["when"].lower()
+    days = [dt.datetime(int(y), MONTHS[m], int(d)) for d, m, y in re.findall(r"(\d{1,2})\.?\s+([a-zäéû]+)\s+(20\d\d)", low) if m in MONTHS]
+    if not days:
+        return None
+    times = [dt.timedelta(hours=int(h), minutes=int(m)) for h, m in re.findall(r"\b(\d{1,2}):(\d{2})\b", low)]
+    if times:
+        start, end = days[0] + times[0], days[-1] + times[-1]
+        if end <= start:  # no end time on the list
+            end = start + DEFAULT_DURATION
+        when = [f"DTSTART;TZID=Europe/Zurich:{start:%Y%m%dT%H%M%S}", f"DTEND;TZID=Europe/Zurich:{end:%Y%m%dT%H%M%S}"]
+    else:
+        when = [f"DTSTART;VALUE=DATE:{days[0]:%Y%m%d}", f"DTEND;VALUE=DATE:{days[-1] + dt.timedelta(days=1):%Y%m%d}"]
+
+    def esc(text):
+        return re.sub(r"([\\;,])", r"\\\1", text).replace("\n", "\\n")
+
+    text = [f"{name}:{esc(item[key])}" for name, key in (("SUMMARY", "title"), ("DESCRIPTION", "teaser"), ("LOCATION", "location")) if item[key]]
+    return [f"UID:polaris-{event_id}@rotary.ch", *text, f"URL:{item['url']}", *when, MEMBERS_ONLY]
+
+
+def fetch_event(club, event_id, item=None):
+    """Cleaned VEVENT lines; for a members-only event the stub from its list item; None if it is gone. Raises on transient errors."""
     time.sleep(0.5)  # be gentle with Polaris
     try:
         ics = get(f"{club['base_url']}/{club['lang']}/agenda/ical/{event_id}")
@@ -99,8 +145,8 @@ def fetch_event(club, event_id):
         if e.code in (403, 404, 410):
             return None
         raise
-    if "BEGIN:VEVENT" not in ics:  # members-only / deleted events redirect to the login page
-        return None
+    if "BEGIN:VEVENT" not in ics:  # login page: members-only if the agenda still lists it, otherwise deleted
+        return stub_vevent(event_id, item) if item else None
     return clean_vevent(ics, event_id)
 
 
@@ -122,6 +168,12 @@ MONTHS = {m: i for i, names in enumerate([
 def deadline(text):
     """ISO date-time of the registration deadline in a Polaris registration text (de/fr/it/en), or ''."""
     low = text.lower().replace("\u202f", " ")
+    if num := re.search(r"\b(\d{1,2})\.(\d{1,2})\.(20\d\d)(?:\s+(\d{1,2}):(\d{2}))?", low):  # the agenda list writes 19.02.2027 13:00
+        d, mo, y, h, mi = num.groups()
+        try:
+            return dt.datetime(int(y), int(mo), int(d), int(h or 23), int(mi or 59)).isoformat(timespec="minutes")
+        except ValueError:
+            return ""
     month = next((MONTHS[w] for w in re.findall(r"[a-zäéû]+", low) if w in MONTHS), None)
     year = re.search(r"\b(20\d\d)\b", low)
     day = re.search(r"\b(\d{1,2})\b\.?\s+(?=[a-zäéû]+\s+20\d\d)", low) or re.search(r"[a-z]+\s+(\d{1,2}),\s+20\d\d", low)
@@ -257,7 +309,7 @@ def sync(history, listed, fetch, now, stamp):
         if ev is None:
             if rec and rec["status"] == "active":
                 rec.update(status="cancelled", sequence=rec["sequence"] + 1, modified=stamp)
-            continue  # never-public (members-only) events are simply ignored
+            continue  # unreadable and never stored: nothing to do
         if rec is None:
             history[i] = {"status": "active", "vevent": ev, "sequence": 0, "first_seen": stamp, "modified": stamp}
         elif rec["vevent"] != ev or rec["status"] != "active":
@@ -284,6 +336,9 @@ def build_calendar(club, history, now):
         if rec["status"] == "cancelled":
             label = CANCELLED.get(club["lang"], "Cancelled")
             ev = [f"SUMMARY:{label}: {l[8:]}" if l.startswith("SUMMARY:") else l for l in ev] + ["STATUS:CANCELLED"]
+        if MEMBERS_ONLY in ev:
+            label = MEMBERS.get(club["lang"], "members only")
+            ev = [f"{l} ({label})" if l.startswith("SUMMARY:") else l for l in ev]
         meta = [f"DTSTAMP:{rec['modified']}", f"LAST-MODIFIED:{rec['modified']}", f"SEQUENCE:{rec['sequence']}"]
         lines += ["BEGIN:VEVENT", *ev, *meta, "END:VEVENT"]
     lines.append("END:VCALENDAR")
@@ -357,6 +412,7 @@ def site_data(clubs, histories, now, cache, news=None):
                 "registration": detail.get("registration", ""),
                 "deadline": deadline(detail.get("registration", "")),
                 "cancelled": rec["status"] == "cancelled",
+                "members": MEMBERS_ONLY in ev,
             }
     return {
         "generated": now.isoformat(timespec="minutes"),
@@ -411,11 +467,24 @@ def main():
         path = data / f"{club['id']}.json"
         history = json.loads(path.read_text()) if path.exists() else {}
         try:
-            listed = event_ids(club, backfill=not history and club.get("backfill", False))
-            errors = sync(history, listed, lambda i: fetch_event(club, i), now, stamp)
+            listed = listed_events(club, backfill=not history and club.get("backfill", False))
+
+            def fetch(i):
+                ev, rec = fetch_event(club, i, listed.get(i)), history.get(i)
+                # ponytail: a members-only event that left the listings looks the same as a deleted one;
+                # keep it once it is over, cancel it while it is still upcoming
+                if ev is None and rec and MEMBERS_ONLY in rec["vevent"] and prop(rec["vevent"], "DTEND") < now:
+                    return rec["vevent"]
+                return ev
+
+            errors = sync(history, listed, fetch, now, stamp)
             # Event page (image, full text, registration): fetched once per event, again when the event changed.
             for i, rec in history.items():
                 if rec["status"] == "active" and ("detail" not in rec or rec["modified"] == stamp):
+                    if MEMBERS_ONLY in rec["vevent"]:  # its page is the login form: the list item is all there is
+                        if listed.get(i):
+                            rec["detail"] = {"image": listed[i]["image"], "description": "", "registration": listed[i]["registration"]}
+                        continue
                     try:
                         rec["detail"] = fetch_detail(club, i)
                     except Exception as e:

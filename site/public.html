@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Only public events · Rotaract Events</title>
-<meta name="description" content="Why this app only shows public events: it can't see your Polaris login, your sign-ups or members-only events.">
+<title>About this app · Rotaract Events</title>
+<meta name="description" content="What the Rotaract Events app shows and how it works: public events only, nothing leaves your device.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="app.css">
@@ -15,23 +15,40 @@
 <body data-page="public">
 <header id="top"></header>
 <main class="wrap fam" id="main">
-  <h1 data-t="pub_h"></h1>
-  <p class="lead" data-t="pub_lead"></p>
-  <h2 class="sh lv1" data-t="pub_no_h"></h2>
-  <ul id="no"></ul>
-  <h2 class="sh lv1" data-t="pub_why_h"></h2>
-  <p data-t="pub_why"></p>
-  <h2 class="sh lv1" data-t="pub_do_h"></h2>
-  <p data-t="pub_do"></p>
+  <h1 data-t="app_h"></h1>
+  <p class="lead" data-t="app_lead"></p>
+  <h2 class="sh lv1" data-t="app_know_h"></h2>
+  <div class="tiles2" id="know"></div>
+  <section class="box tint glass" style="--p:#d41367">
+    <div class="bh" id="pubH"><h2 data-t="pub_h"></h2></div>
+    <p data-t="pub_lead"></p>
+    <ul id="no"></ul>
+    <p data-t="pub_do"></p>
+  </section>
+  <section class="box tint glass" style="--p:#009739">
+    <div class="bh" id="dataH"><h2 data-t="app_data_h"></h2></div>
+    <ul class="yes" id="data"></ul>
+  </section>
+  <h2 class="sh lv1" data-t="faq"></h2>
+  <section class="box glass"><div class="qa" id="qa"></div></section>
+  <div id="more"></div>
+  <p class="fine"><b data-t="cred_h"></b> · <span data-t="cred"></span></p>
+  <p class="fine"><b data-t="wrong_h"></b> <span data-t="wrong"></span> <a href="https://github.com/Neyxo/rac-event-aggregation-tool/issues" target="_blank" rel="noopener" data-t="report"></a></p>
   <div id="foot"></div>
 </main>
 <nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
 <div class="toast" id="toast" role="status"></div>
 <script defer>
 addEventListener("DOMContentLoaded", () => {
-  applyI18n(); chrome("about", { back: true }); wash("#0067c8", "#009739", "#d41367");
-  $("no").append(...t("pub_no").map(s => el("li", {}, s)));
-  $("foot").append(footer());
+  applyI18n(); chrome("app"); wash("#0067c8", "#009739", "#d41367");
+  const COL = ["#d41367", "#0067c8", "#009739"];
+  $("more").append(...helpLinks("sub"));
+  const IC = ["refresh", "ext", "offline", "belloff"];
+  $("know").append(...t("app_know").map(([title, text], i) => el("div", { class: "ft glass", style: "--p:" + COL[i % 3] }, el("div", { class: "ic" }, icon(IC[i])), el("b", {}, title), el("span", {}, text))));
+  $("pubH").prepend(el("div", { class: "ic" }, icon("eye"))); $("dataH").prepend(el("div", { class: "ic" }, icon("shield")));
+  $("no").append(...t("pub_no").map(s => el("li", {}, s))); $("data").append(...t("app_data").map(s => el("li", {}, s)));
+  $("qa").append(...qaList([[t("pub_why_h"), t("pub_why")], ...t("app_qa")]));
+  $("foot").append(footer(true));
 });
 </script>
 </body>

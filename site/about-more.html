@@ -22,7 +22,7 @@
   <section class="vis" id="rotary"><img class="bg" alt="" referrerpolicy="no-referrer"><div class="pane"><img class="wheel" src="rotaract.svg" alt="Rotaract"><b data-t="sp_rotary"></b><span data-t="sp_rotary_t"></span></div></section>
   <section class="vis map"><div class="bg" id="swiss"></div><div class="pane"><b data-t="sp_dist"></b><span data-t="sp_dist_t"></span><div class="leg" id="leg"></div></div></section>
   <section class="vis map"><div class="bg" id="world"></div><div class="pane"><b data-t="sp_world"></b><span data-t="sp_world_t"></span></div></section>
-  <a class="more glass" href="family.html"><b data-t="fam_h"></b><span data-t="fam_sub"></span></a>
+  <div id="more"></div>
   <div id="cta"></div>
   <div id="foot"></div>
 </main>
@@ -33,9 +33,8 @@ addEventListener("DOMContentLoaded", async () => {
   applyI18n(); chrome("about", { back: true }); wash("#0067c8", "#009739", "#d41367");
   await loadData();
   document.querySelector("[data-t=sp_dist]").textContent = t("sp_dist", { n: nClubs() });
-  $("cta").append(ctaBlock()); $("foot").append(footer());
-  const pics = D.data.events.filter(e => e.image).slice(-9).map(e => e.image);
-  document.querySelector("#rotary .bg").src = pics[2] || pics[0] || "";
+  $("more").append(...helpLinks("family", "guide")); $("cta").append(ctaBlock()); $("foot").append(footer());
+  document.querySelector("#rotary .bg").replaceWith(Object.assign(pillarPic("help"), { className: "bg" }));  // a club photo, not a cropped event poster
   const dc = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
   $("leg").append(...Object.entries(dc).map(([d, c]) => el("span", { style: "color:" + c }, "D" + d)));
   const opts = { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, keyboard: false };

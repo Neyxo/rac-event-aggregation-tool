@@ -29,6 +29,7 @@
     <div class="top">
       <div class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input type="search" id="q" data-t-ph="search_ph" data-t-label="search" autocomplete="off"></div>
       <button class="fbtn" id="fbtn" type="button" aria-expanded="false" aria-controls="panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18M6 12h12M10 19h4"/></svg><span data-t="filters">Filters</span><span class="n" id="fcount" hidden></span></button>
+      <a class="fbtn" href="map.html" data-t-label="map" data-t-title="map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg></a>
     </div>
     <div class="seg views glass" id="views" role="group" data-t-label="filters">
       <button type="button" data-view="all" data-t="v_all"></button>
@@ -41,7 +42,7 @@
       <div class="row" id="clubs" role="group" data-t-label="clubs"></div>
       <div class="tools">
         <input type="text" id="place" data-t-ph="place_ph" data-t-label="place_ph" autocomplete="off">
-        <button class="chip" type="button" id="locate" data-t-title="locate" data-t-label="locate">📍</button>
+        <button class="chip" type="button" id="locate">📍 <span data-t="locate"></span></button>
         <select id="radius" data-t-label="radius"><option value="" data-t="any_distance"></option><option value="10">10 km</option><option value="25">25 km</option><option value="50">50 km</option><option value="100">100 km</option></select>
         <div class="hint" id="placeHint" hidden></div>
       </div>

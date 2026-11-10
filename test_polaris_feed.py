@@ -2,7 +2,8 @@
 import copy
 import datetime as dt
 
-from polaris_feed import build_calendar, clean_vevent, deadline, ics_text, locate, parse_detail, parse_news, share_page, site_data, sync, unfold
+from polaris_feed import (MEMBERS_ONLY, build_calendar, clean_vevent, deadline, ics_text, locate, parse_detail, parse_list, parse_news,
+                          share_page, site_data, stub_vevent, sync, unfold)
 
 # Shape of a real Polaris per-event .ics: folded lines, random UID, DTSTAMP,
 # duplicate DTSTART, DTEND == DTSTART.
@@ -193,4 +194,31 @@ assert news[0] == {"url": "https://rotaract-luzern.ch/de/content/news/show/29657
 assert news[1] == {"url": "https://rotaract-luzern.ch/de/content/news/show/1", "title": "Programm", "date": "2024-08-29", "image": ""}
 assert len(news) == 2, "items without a title are skipped"
 assert site_data(clubs, histories, NOW, cache, {clubs[0]["id"]: news})["clubs"][0]["news"] == news
+
+# --- members-only events: built from the public agenda list (shape of a real Polaris list item)
+LIST = ('<ul class="overview"> <li> <a class="r-transfer-link" href="https://rotaract-luzern.ch/de/agenda/show/218599"> '
+        '<div class="list-picture" style="background-image: url(https://x/grid/a.png); background-size: contain;"></div> <h2>\n Skitag, Melchsee-Frutt\n </h2> '
+        '<small class="mt-1"> <a href="https://rotaract-luzern.ch/de/agenda/ical/218599" target="_blank">\n   Samstag, 20. Februar 2027 08:00-17:00\n '
+        '<i class="far fa-calendar-plus"></i> </a> </small> <p class="ct-media-description">\n  Lust auf Schnee &amp; Sonne? ...\n </p> </a> '
+        '<span class="button grey"><i\n class="fa fa-calendar-alt"></i> Anmeldung bis: 19.02.2027 13:00</span> '
+        '<span class="button grey"><i class="fa fa-map-marker-alt"></i> Talstation Stöckalp; Melchsee-Frutt</span> </li>'
+        '<li><a href="/de/somewhere">not an event</a></li></ul>')
+items = parse_list(LIST)
+assert list(items) == ["218599"], items
+item = items["218599"]
+assert item["image"] == "https://x/grid/a.png" and item["teaser"] == "Lust auf Schnee & Sonne? ...", item
+stub = stub_vevent("218599", item)
+assert stub[0] == "UID:polaris-218599@rotary.ch" and MEMBERS_ONLY in stub and "SUMMARY:Skitag\\, Melchsee-Frutt" in stub, stub
+assert "DTSTART;TZID=Europe/Zurich:20270220T080000" in stub and "DTEND;TZID=Europe/Zurich:20270220T170000" in stub, stub
+assert ics_text(stub, "LOCATION") == "Talstation Stöckalp; Melchsee-Frutt" and ics_text(stub, "URL").endswith("/agenda/show/218599")
+assert deadline(item["registration"]) == "2027-02-19T13:00"
+assert "DTEND;TZID=Europe/Zurich:20261119T210000" in stub_vevent("1", {**item, "when": "Donnerstag, 19. November 2026 19:00"}), "no end time: default duration"
+allday = stub_vevent("1", {**item, "when": "samedi 20 février 2027"})
+assert "DTSTART;VALUE=DATE:20270220" in allday and "DTEND;VALUE=DATE:20270221" in allday, allday
+assert stub_vevent("1", {**item, "when": ""}) is None, "unreadable date: skipped, as before"
+mo = {"m": {"status": "active", "vevent": stub, "sequence": 0, "modified": "T"}}
+assert sync({}, ["m"], {"m": stub}.get, NOW, "T") == [], "a stub goes through the sync like any event"
+assert "SUMMARY:Skitag\\, Melchsee-Frutt (nur für Mitglieder)" in unfold(build_calendar({"name": "Test", "lang": "de"}, mo, NOW))
+flags = {e["id"]: e["members"] for e in site_data(clubs, {"luzern": {**h, **mo}, "bern": {}}, NOW, cache)["events"]}
+assert flags["m"] is True and flags["a"] is False
 print("ok")
