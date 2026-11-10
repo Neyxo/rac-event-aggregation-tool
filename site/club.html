@@ -38,7 +38,9 @@ addEventListener("DOMContentLoaded", async () => {
   // and the colour block with the buttons, which simply scrolls away. No height ever changes while sticking, so nothing bounces.
   const head = el("div", { class: "cstick" }, c.logo ? el("img", { class: "c", src: c.logo, alt: "" }) : null,
     el("h1", {}, c.name), el("div", { class: "sub" }, [c.district ? t("d" + c.district) : t("national"), c.city].filter(Boolean).join(" · ")),
-    el("a", { class: "go", href: webcal, title: t("cp_sub") }, icon("calendar"), el("span", {}, t("subscribe"))));
+    el("a", { class: "go", href: "subscribe.html", title: t("cp_sub") }, icon("calendar"), el("span", {}, t("subscribe"))));
+  // a bare webcal: link does nothing where no app handles it (Android, most Windows browsers), so offer the same choices as the subscribe page
+  head.lastChild.addEventListener("click", ev => { ev.preventDefault(); popup(t("cp_sub"), () => el("div", { class: "feeds" }, el("div", { class: "feed" }, el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), googleLink(webcal), el("a", { href: https }, ".ics"))), el("p", { class: "meta" }, el("a", { href: "subscribe.html" }, t("sub_title"))))); });
   const hero = el("div", { class: "chero" }, c.logo ? el("img", { class: "big", src: c.logo, alt: "" }) : null, btns);
   fill(main, head, hero,
     next ? nextUp(next) : el("p", { class: "meta", style: "margin-top:14px" }, t("cp_none")),

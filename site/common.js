@@ -174,6 +174,23 @@ function popup(title, build) {
   return dlg;
 }
 
+// Google's phone apps can't subscribe to a calendar, only a computer browser can. So on a phone the
+// Google link explains that and offers to send the link to a computer instead of opening a dead end.
+const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent), PHONE = IOS || /Android/.test(navigator.userAgent);
+function googleLink(webcal) {
+  const url = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal);
+  const a = el("a", { href: url, target: "_blank", rel: "noopener" }, t("google"));
+  if (PHONE) a.addEventListener("click", ev => {
+    ev.preventDefault();
+    const dlg = popup(t("sp_google"), () => {
+      const send = el("button", { class: "primary", type: "button" }, t("sp_g_send"));
+      send.addEventListener("click", async () => { if (navigator.share) { try { await navigator.share({ title: t("sp_google"), url }); } catch {} } else { await navigator.clipboard.writeText(url); dlg.close(); toast(t("copied")); } });
+      return el("div", {}, el("p", {}, t("sp_g_phone")), el("div", { class: "links" }, send), IOS ? el("p", {}, t("sp_g_ios"), " ", el("a", { href: webcal }, t("apple"))) : null);
+    });
+  });
+  return a;
+}
+
 // --- call to action: "your club" with the next event when set, "find your club" otherwise
 function ctaBlock() {
   const home = D.settings.home && D.clubs[D.settings.home];

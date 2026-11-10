@@ -43,7 +43,7 @@ addEventListener("DOMContentLoaded", async () => {
     const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:");
     return el("div", { class: "feed" },
       el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.id ? el("a", { href: "club.html?id=" + c.id, style: "color:inherit;text-decoration:none" }, c.name) : c.name, count != null ? el("span", { class: "meta" }, t("n_upcoming", { n: count })) : null),
-      el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), el("a", { href: "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), target: "_blank", rel: "noopener" }, t("google")), el("a", { href: https }, ".ics")));
+      el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), googleLink(webcal), el("a", { href: https }, ".ics")));
   };
   for (const k of ["ios", "google", "android", "outlook"]) $("how").append(el("details", {}, el("summary", {}, t("sp_" + k)), el("ol", {}, ...t("sp_" + k + "_s").map(s => el("li", {}, s)))));
   await loadData();
