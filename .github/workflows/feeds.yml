@@ -34,7 +34,7 @@ jobs:
       # The run is marked failed at the end so the problem gets noticed.
       - id: feeds
         continue-on-error: true
-        # Instagram pictures: either secret unset (empty) = layer off. See README "Instagram pictures".
+        # Instagram pictures: either secret unset (empty) = layer off. See docs/layers.md.
         env:
           INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
           INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
