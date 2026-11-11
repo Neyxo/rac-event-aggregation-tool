@@ -1,26 +1,30 @@
 // events.json fails: map and about-more replace their whole main with the offline message (no Leaflet map left).
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { cleanup, render, waitFor } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { parseHash } from "../lib/route";
+import { t } from "../i18n";
 import MapScreen from "./Map";
 import AboutMore from "./AboutMore";
 
 beforeAll(() => { vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) }))); });
 afterEach(cleanup);
 
+/** the offline note and its refresh button are all the screen shows */
+const onlyOffline = async () => {
+  await screen.findByText(t("offline"));
+  expect(screen.getByRole("main").textContent).toBe(t("offline") + t("refresh"));
+  screen.getByRole("button", { name: t("refresh") });
+};
+
 describe("load error", () => {
   it("map: main holds only the offline message", async () => {
-    const { container } = render(<MapScreen route={parseHash("#/map")} />);
-    await waitFor(() => expect(container.querySelector("main.mapwrap#main > div.empty")).not.toBeNull());
-    expect(container.querySelector("main")!.children.length).toBe(1);
-    expect(container.querySelector("main button.linkbtn")).not.toBeNull();
+    render(<MapScreen route={parseHash("#/map")} />);
+    await onlyOffline();
     expect(document.querySelector(".leaflet-container")).toBeNull();
   });
 
   it("about-more: main holds only the offline message", async () => {
-    const { container } = render(<AboutMore route={parseHash("#/about-more")} />);
-    await waitFor(() => expect(container.querySelector("main.wrap.more > div.empty")).not.toBeNull());
-    expect(container.querySelector("main")!.children.length).toBe(1);
-    expect(container.querySelector("main")!.id).toBe("");
+    render(<AboutMore route={parseHash("#/about-more")} />);
+    await onlyOffline();
   });
 });

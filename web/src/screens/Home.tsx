@@ -313,7 +313,7 @@ function Onboarding({ run, onFinish }: { run: number; onFinish: () => void }) {
   return (
     <dialog className={"ob" + (ob?.member === false ? " full" : "")} id="ob" aria-labelledby="obTitle" ref={dlg}
       onCancel={ev => { ev.preventDefault(); if (ob) finish(ob.s); }}>
-      <div className="ob-in" id="obBody">
+      <div className="ob-in">
         {ob ? <Bar n={ob.member === false ? 6 : 4} step={ob.step} /> : null}
         {ob ? <ObStep ob={ob} set={set} finish={finish} h2={h2} /> : null}
       </div>
@@ -385,7 +385,7 @@ function HomeScreen({ route }: ScreenProps) {
     <NewIds.Provider value={changes?.newIds ?? NOTHING_NEW}>
       <StaleBanner ready={ready} />
       <main className="wrap" id="main">
-        <div className="home" id="home">
+        <div className="home">
           {ready && changes ? <MemberBox cols={cols} mineEv={mineEv} changes={changes} /> : null}
           {ready && !member ? <ExploreBox onStart={() => setObRun(n => n + 1)} onPlace={pos => api.update({ center: pos }, true)} /> : null}
         </div>

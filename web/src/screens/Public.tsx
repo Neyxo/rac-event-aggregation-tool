@@ -23,7 +23,7 @@ export default function Public(_props: ScreenProps) {
   useStickyHeads();
   const qa: Pair[] = [[t("pub_why_h"), t("pub_why")], ...tx("app_qa")];
   return (
-    <main className="wrap fam" id="main">
+    <main className="wrap fam">
       <h1>{t("app_h")}</h1>
       <p className="lead">{t("app_lead")}</p>
       <h2 className="sh lv1">{t("app_know_h")}</h2>
@@ -31,18 +31,18 @@ export default function Public(_props: ScreenProps) {
         {tx("app_know").map(([title, text], i) => <Tile key={i} title={title} text={text} ic={KNOW_IC[i] ?? "info"} p={COL[i % 3]!} />)}
       </div>
       <section className="box tint glass" style={vars({ "--p": "#d41367" })}>
-        <div className="bh" id="pubH"><div className="ic"><Icon name="eye" /></div><h2>{t("pub_h")}</h2></div>
+        <div className="bh"><div className="ic"><Icon name="eye" /></div><h2>{t("pub_h")}</h2></div>
         <p>{t("pub_lead")}</p>
-        <ul id="no">{tx("pub_no").map((s, i) => <li key={i}>{s}</li>)}</ul>
+        <ul>{tx("pub_no").map((s, i) => <li key={i}>{s}</li>)}</ul>
         <p>{t("pub_do")}</p>
       </section>
       <section className="box tint glass" style={vars({ "--p": "#009739" })}>
-        <div className="bh" id="dataH"><div className="ic"><Icon name="shield" /></div><h2>{t("app_data_h")}</h2></div>
-        <ul className="yes" id="data">{tx("app_data").map((s, i) => <li key={i}>{s}</li>)}</ul>
+        <div className="bh"><div className="ic"><Icon name="shield" /></div><h2>{t("app_data_h")}</h2></div>
+        <ul className="yes">{tx("app_data").map((s, i) => <li key={i}>{s}</li>)}</ul>
       </section>
       <h2 className="sh lv1">{t("faq")}</h2>
-      <section className="box glass"><div className="qa" id="qa"><QaList items={qa} /></div></section>
-      <div id="more"><HelpLinks keys={["sub"]} /></div>
+      <section className="box glass"><div className="qa"><QaList items={qa} /></div></section>
+      <HelpLinks keys={["sub"]} />
       <p className="fine"><b>{t("cred_h")}</b>{" · "}<span>{t("cred")}</span></p>
       <p className="fine">
         <b>{t("wrong_h")}</b>{" "}<span>{t("wrong")}</span>{" "}

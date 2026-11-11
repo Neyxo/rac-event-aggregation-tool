@@ -49,7 +49,7 @@ function FeedGroup({ name, clubs, upcomingBy }: { name: string; clubs: Club[]; u
 
 export default function Subscribe(_props: ScreenProps) {
   const { ready, error, D } = useData();
-  if (error) return <main className="wrap" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap"><LoadError /></main>;
   // per club, Rotary included (its district feeds); the "everything" feed is Rotaract only, like all.ics
   const upcomingBy: Record<string, number> = {};
   let total = 0;
@@ -62,11 +62,11 @@ export default function Subscribe(_props: ScreenProps) {
   const inDistrict = (d: string) => D.data.clubs.filter(c => c.district === d && !c.source).sort((a, b) => a.name.localeCompare(b.name));
   const ofSource = (s: string) => D.data.clubs.filter(c => c.source === s);
   return (
-    <main className="wrap" id="main">
+    <main className="wrap">
       <section className="card">
         <h2>{t("sub_title")}</h2>
         <p>{t("sp_intro")}</p>
-        <div className="how" id="how">
+        <div className="how">
           {PLATFORMS.map(([h, steps]) => (
             <details key={h}>
               <summary>{t(h)}</summary>
@@ -75,17 +75,17 @@ export default function Subscribe(_props: ScreenProps) {
           ))}
         </div>
       </section>
-      <section className="card" id="all">
+      <section className="card">
         <h2>{t("sp_all")}</h2>
         <p>{t("sp_all_text")}</p>
-        <div className="feeds" id="feedAll">
+        <div className="feeds">
           {ready && <FeedRow c={{ name: t("sp_all_feed") }} file="all.ics" count={total} />}
         </div>
       </section>
       <section className="card">
         <h2>{t("sp_club")}</h2>
         <p>{t("sp_club_text")}</p>
-        <div className="feeds" id="feeds">
+        <div className="feeds">
           {ready && districts.map(([d, k]) => <FeedGroup key={d} name={t(k)} clubs={inDistrict(d)} upcomingBy={upcomingBy} />)}
           {ready && <FeedGroup name={tx("intl").h} clubs={ofSource("international")} upcomingBy={upcomingBy} />}
           {/* the Rotary layer's feeds, one per district; only there when "Show Rotary events" is on */}
@@ -94,7 +94,7 @@ export default function Subscribe(_props: ScreenProps) {
       </section>
       <section className="card">
         <h2>{t("faq")}</h2>
-        <div className="qa" id="qa"><QaList items={tx("sub_qa")} /></div>
+        <div className="qa"><QaList items={tx("sub_qa")} /></div>
       </section>
       <div id="foot">{ready && <Footer />}</div>
     </main>

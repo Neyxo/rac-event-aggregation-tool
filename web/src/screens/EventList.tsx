@@ -150,7 +150,7 @@ export function StaleBanner({ ready }: { ready: boolean }) {
   const { D } = useData();
   const generated = new Date(D.data.generated);
   const stale = ready && (Date.now() - generated.getTime() > 30 * 3600e3 || !!devFlag("Stale"));
-  return <div className="banner" id="stale" role="status" hidden={!stale}>{stale ? t("stale", { t: fmt.stamp.format(generated) }) : null}</div>;
+  return <div className="banner" role="status" hidden={!stale}>{stale ? t("stale", { t: fmt.stamp.format(generated) }) : null}</div>;
 }
 
 /** the list title, the count line and Clear; sticks under the top bar */
@@ -161,8 +161,8 @@ export function ListHead({ titleId, title, summary, clear, onClear }: {
     <div className="list-head sh lv1">
       <h3 id={titleId}>{title}</h3>
       <div className="summary">
-        <span id="summary" aria-live="polite">{summary}</span>
-        <button type="button" className="clear" id="clear" hidden={!clear} onClick={onClear}>{t("clear")}</button>
+        <span aria-live="polite">{summary}</span>
+        <button type="button" className="clear" hidden={!clear} onClick={onClear}>{t("clear")}</button>
       </div>
     </div>
   );
@@ -172,7 +172,7 @@ const VIEW_KEY: Record<View, StrKey> = { all: "v_all", near: "v_near", saved: "v
 /** the view switch; pressed: the current view, undefined before the controls are set from the URL (none pressed yet) */
 export function Views({ views, pressed, onPick }: { views: View[]; pressed?: View; onPick: (v: View) => void }) {
   return (
-    <div className="seg views glass" id="views" role="group" aria-label={t("filters")}>
+    <div className="seg views glass" role="group" aria-label={t("filters")}>
       {views.map(v => (
         <button key={v} type="button" aria-pressed={pressed ? pressed === v : undefined} onClick={() => onPick(v)}>{t(VIEW_KEY[v])}</button>
       ))}

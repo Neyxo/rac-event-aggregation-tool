@@ -30,7 +30,7 @@ function Mark({ icon, logo }: { icon: IconName; logo: string }) {
 
 function Tiles() {
   return (
-    <div className="tiles2" id="tiles">
+    <div className="tiles2">
       {tx("fam").map(([name, text], i) => (
         <div key={i} className="ft glass" style={vars({ "--p": MARKS[i]!.color })}>
           <Mark icon={MARKS[i]!.icon} logo={MARKS[i]!.logo} />
@@ -64,14 +64,15 @@ export default function Family(_props: ScreenProps) {
   const { ready, error } = useData();
   useWash("#0067c8", "#009739", "#d41367");
   useStickyHeads();
-  if (error) return <main className="wrap fam" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap fam"><LoadError /></main>;
   return (
-    <main className="wrap fam" id="main">
+    <main className="wrap fam">
       <h1>{t("fam_h")}</h1>
       <p className="lead">{t("fam_lead")}</p>
       <Tiles />
       <h2 className="sh lv1">{t("fam_clubs")}</h2>
-      <div id="dist">{ready && <Districts />}</div>
+      {/* a box of its own: the district headings stop sticking where the clubs end */}
+      <div>{ready && <Districts />}</div>
       <div id="foot">{ready && <Footer />}</div>
     </main>
   );

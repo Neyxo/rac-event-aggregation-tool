@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render } from "@testing-library/react";
+import { act, cleanup, render, screen, within } from "@testing-library/react";
+import { t } from "./i18n";
 import App from "./App";
 
 window.scrollTo = (() => {}) as typeof window.scrollTo;  // jsdom has no layout
@@ -10,18 +11,24 @@ describe("App shell", () => {
   it("renders the chrome around the screen, in body order, and sets the page per route", async () => {
     render(<App />);
     const root = document.getElementById("root") ?? document.body.firstElementChild!;
-    expect([...root.children].map(n => n.id || n.tagName.toLowerCase())).toEqual(["frost", "skip-link", "top", "stale", "main", "ob", "tabs", "toast"].map(x => x === "skip-link" ? "a" : x));
+    // body order matters to app.css (sticky #frost first, child selectors): App's chrome around whatever the screen renders
+    const kids = [...root.children].map(n => n.id || n.tagName.toLowerCase());
+    expect(kids.slice(0, 3)).toEqual(["frost", "a", "top"]);
+    expect(kids.slice(-2)).toEqual(["tabs", "toast"]);
+    expect(kids).toContain("main");
     expect(document.body.dataset.page).toBe("home");
     await go("#/calendar");
     expect(document.body.dataset.page).toBe("calendar");
     expect(document.body.classList.contains("calpage")).toBe(true);
     expect(document.title).toBe("Calendar · Rotaract Events");
-    expect(document.querySelector("#tabs a.tab.on")?.getAttribute("href")).toBe("#/calendar");
+    expect(within(screen.getByRole("navigation", { name: "Main" })).getByRole("link", { current: "page" }).getAttribute("href")).toBe("#/calendar");
+    expect(screen.getByRole("link", { name: t("skip_to") }).getAttribute("href")).toBe("#main");
+    expect(screen.queryByRole("link", { name: t("back") })).toBeNull();
     await go("#/event/123");
     expect(document.body.dataset.page).toBe("event");
     expect(document.body.classList.contains("calpage")).toBe(false);
-    expect(document.querySelector("#top .lft a.hbtn")).not.toBeNull();  // back button
-    expect(document.querySelector("a.skip")).toBeNull();
+    expect(screen.getByRole("link", { name: t("back") })).toBeTruthy();
+    expect(screen.queryByRole("link", { name: t("skip_to") })).toBeNull();
     await go("#/about-more");
     expect(document.body.className).toContain("frosted");
   });

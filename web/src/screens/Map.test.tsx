@@ -1,6 +1,6 @@
 // The map screen: markers for upcoming events with coordinates, the "past" switch, the count, the popup link.
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { parseHash } from "../lib/route";
 import { getData, loadData } from "../lib/data";
@@ -17,46 +17,42 @@ beforeAll(async () => {
 });
 afterEach(cleanup);
 
+const past = () => screen.getByRole<HTMLInputElement>("checkbox", { name: /^Past/ });
+const withCoords = () => getData().data.events.filter(e => e.coords);
+
 describe("map", () => {
-  it("draws the map box, then the past switch with the count", async () => {
+  it("draws the map, then the past switch with the count of upcoming events", async () => {
     const { container } = render(<MapScreen route={route} />);
-    const main = container.querySelector(":scope > main.mapwrap#main")!;
-    expect([...main.children].map(n => n.tagName + "#" + n.id)).toEqual(["DIV#map", "LABEL#"]);
-    expect(main.querySelector("#map")?.classList.contains("leaflet-container")).toBe(true);
-    expect(main.querySelector("label")?.className).toBe("icon-btn mapopt");
-    const label = main.querySelector("label")!;
-    expect(label.querySelector("input#past[type=checkbox]")).not.toBeNull();
-    expect(label.querySelector("input#past + span")?.textContent).toBe("Past");
-    const upcoming = getData().data.events.filter(e => e.coords && !isPast(e)).length;
-    await waitFor(() => expect(label.querySelector("#summary")?.textContent).toBe(nEvents(upcoming)));
-    expect(label.textContent).toBe(" Past · " + nEvents(upcoming));
-    expect(main.querySelectorAll(".mapdot").length).toBe(upcoming);
+    expect(container.querySelector(".leaflet-container")).not.toBeNull();
+    expect(past().checked).toBe(false);
+    const upcoming = withCoords().filter(e => !isPast(e)).length;
+    await waitFor(() => expect(past().labels![0]!.textContent).toBe(" Past · " + nEvents(upcoming)));
+    expect(container.querySelectorAll(".mapdot").length).toBe(upcoming);
   });
 
   it("past shows every event with coordinates; markers carry the club colour and the popup links to the event", async () => {
     const { container } = render(<MapScreen route={route} />);
-    const all = getData().data.events.filter(e => e.coords);
-    act(() => { fireEvent.click(container.querySelector("#past")!); });
-    await waitFor(() => expect(container.querySelector("#summary")?.textContent).toBe(nEvents(all.length)));
+    const all = withCoords();
+    act(() => { fireEvent.click(past()); });
+    await waitFor(() => expect(screen.getByText(nEvents(all.length))).toBeTruthy());
     expect(container.querySelectorAll(".mapdot").length).toBe(all.length);
     const dot = container.querySelector<HTMLElement>(".mapdot")!;
     const e = all.find(x => x.title === dot.title)!;
     expect(dot.querySelector("span")?.getAttribute("style")).toMatch(/^--c:#[0-9a-f]{6};--on-c:(#fff|#1f1c26)$/);
     act(() => { fireEvent.click(dot); });
-    const pop = container.querySelector(".leaflet-popup-content a.mappop")!;
+    const pop = screen.getByRole("link", { name: new RegExp("^" + e.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) });
     expect(pop.getAttribute("href")).toBe("#/event/" + e.id);
-    expect(pop.querySelector("b")?.textContent).toBe(e.title);
   });
 
   it("past is kept in the history entry, so back/forward restores it", async () => {
     history.replaceState({ k: 7 }, "");
     const first = render(<MapScreen route={route} />);
-    act(() => { fireEvent.click(first.container.querySelector("#past")!); });
+    act(() => { fireEvent.click(past()); });
     expect(history.state).toEqual({ k: 7, past: true });
     first.unmount();
-    const { container } = render(<MapScreen route={route} />);  // remounted on the same entry, as after "back"
-    expect(container.querySelector<HTMLInputElement>("#past")!.checked).toBe(true);
-    await waitFor(() => expect(container.querySelector("#summary")?.textContent).toBe(nEvents(getData().data.events.filter(e => e.coords).length)));
+    render(<MapScreen route={route} />);  // remounted on the same entry, as after "back"
+    expect(past().checked).toBe(true);
+    await waitFor(() => expect(screen.getByText(nEvents(withCoords().length))).toBeTruthy());
     history.replaceState(null, "");
   });
 });

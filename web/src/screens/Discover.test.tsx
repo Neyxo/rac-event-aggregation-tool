@@ -1,6 +1,6 @@
 // Discover: the filters from and to the URL, the panel, chips and picker, search, views, Clear, on the fixture data (today: 11 Nov 2026).
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { initData, loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
@@ -33,21 +33,27 @@ const show = async (hash = "#/discover") => {
   await act(async () => {});
   return r;
 };
-const $ = <T extends Element = HTMLElement>(sel: string) => document.querySelector<T>(sel)!;
-const ids = () => [...document.querySelectorAll("#results a.event")].map(a => a.id.slice(3));
+// the event cards, as the ids their links open
+const ids = () => screen.queryAllByRole("link").map(a => a.getAttribute("href")!).filter(h => h.startsWith("#/event/")).map(h => h.slice(8));
+const btn = (name: string | RegExp) => screen.getByRole("button", { name });
+const filters = () => btn(/^Filters/);
+const view = (name: string) => within(screen.getByRole("group", { name: "Filters" })).getByRole("button", { name });
+const pressed = (group: string) => within(screen.getByRole("group", { name: group })).getAllByRole("button").map(b => b.getAttribute("aria-pressed"));
+const search = () => screen.getByRole<HTMLInputElement>("searchbox", { name: "Search" });
 
 describe("Discover", () => {
   it("every upcoming event, by month; the panel closed, nothing to clear", async () => {
     await show();
     expect(ids()).toEqual(["219091", "222796", "eu2069", "eu2067"]);
-    expect([...document.querySelectorAll("#results h3.sh")].map(h => h.textContent)).toEqual(["November 2026", "January 2027"]);
-    expect($("#summary").textContent).toBe("4 events");
-    expect($("#clear").hidden).toBe(true);
-    expect($("#panel").hidden).toBe(true);
-    expect($("#fcount").hidden).toBe(true);
-    expect($("#fcount").textContent).toBe("0");
-    expect([...document.querySelectorAll("#views button")].map(b => b.getAttribute("aria-pressed"))).toEqual(["true", "false", "false", "false"]);
-    expect($("#foot .meta a").getAttribute("href")).toBe("#/public");
+    expect(screen.getAllByRole("heading", { level: 3 }).map(h => h.textContent)).toEqual(["Events", "November 2026", "January 2027"]);
+    expect(screen.getByText("4 events")).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
+    expect(filters().getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByRole("group", { name: "District" })).toBeNull();
+    expect(filters()).toHaveProperty("textContent", "Filters0");
+    expect(filters().querySelector(".n")).toHaveProperty("hidden", true);
+    expect(pressed("Filters")).toEqual(["true", "false", "false", "false"]);
+    expect(screen.getByRole("link", { name: /Polaris/ }).getAttribute("href")).toBe("#/public");
   });
 
   it("a new navigation (the Discover tab) starts over from its URL; rewriting the query does not", async () => {
@@ -55,53 +61,55 @@ describe("Discover", () => {
     const W = () => <Discover route={useRoute()} />;
     render(<W />);
     await act(async () => {});
-    fireEvent.click($("#fbtn"));
+    fireEvent.click(filters());
     expect(ids()).toEqual(["219091"]);
     await act(async () => { history.pushState(null, "", "#/discover"); window.dispatchEvent(new HashChangeEvent("hashchange")); });
     expect(ids()).toEqual(["219091", "222796", "eu2069", "eu2067"]);
-    expect($<HTMLInputElement>("#q").value).toBe("");
-    expect($("#panel").hidden).toBe(true);
+    expect(search().value).toBe("");
+    expect(filters().getAttribute("aria-expanded")).toBe("false");
     expect(location.hash).toBe("#/discover");
   });
 
   it("filters from a shared link; unknown clubs are dropped", async () => {
     await show("#/discover?q=konzert&d=2000&clubs=zuerich,nope");
-    expect($<HTMLInputElement>("#q").value).toBe("konzert");
+    expect(search().value).toBe("konzert");
     expect(ids()).toEqual(["219091"]);
-    expect($("#fcount").textContent).toBe("2");
-    expect($("#clear").hidden).toBe(false);
-    expect([...document.querySelectorAll("#districts button")].map(b => b.getAttribute("aria-pressed"))).toEqual(["false", "false", "false", "true"]);
-    expect([...document.querySelectorAll("#clubs .chip.club")].map(b => b.getAttribute("aria-label"))).toEqual(["Rotaract Zürich"]);
+    expect(filters().textContent).toBe("Filters2");
+    expect(btn("Clear")).toBeTruthy();
+    fireEvent.click(filters());
+    expect(pressed("District")).toEqual(["false", "false", "false", "true"]);
+    // the chosen club's chip, pressed; "All" is not
+    expect(within(screen.getByRole("group", { name: "Clubs" })).getAllByRole("button", { pressed: true }).map(b => b.getAttribute("aria-label"))).toEqual(["Rotaract Zürich"]);
     expect(location.hash).toBe("#/discover?q=konzert&d=2000&clubs=zuerich");
   });
 
   it("the panel, a district, the club picker, and Clear; the URL follows", async () => {
     await show();
-    fireEvent.click($("#fbtn"));
-    expect($("#panel").hidden).toBe(false);
-    expect($("#fbtn").getAttribute("aria-expanded")).toBe("true");
-    fireEvent.click(document.querySelectorAll("#districts button")[3]!);  // D2000
+    fireEvent.click(filters());
+    expect(filters().getAttribute("aria-expanded")).toBe("true");
+    fireEvent.click(within(screen.getByRole("group", { name: "District" })).getByRole("button", { name: /^D2000/ }));
     expect(ids()).toEqual(["219091", "222796"]);
     expect(location.hash).toBe("#/discover?d=2000");
-    fireEvent.click([...document.querySelectorAll("#clubs button")].at(-1)!);
-    const pop = $("dialog[open]");
+    fireEvent.click(btn("Choose clubs"));
+    const pop = within(screen.getByRole("dialog"));
+    const chips = () => pop.getAllByRole("button").filter(b => b.textContent !== "Done");
     // only the clubs of the chosen district
-    expect([...pop.querySelectorAll(".chips button")].map(b => b.textContent)).toEqual(["Zürich", "ZH Intl"]);
-    fireEvent.click(pop.querySelectorAll(".chips button")[1]!);
-    expect(pop.querySelector(".chips button[aria-pressed=true]")?.textContent).toBe("ZH Intl");
+    expect(chips().map(b => b.textContent)).toEqual(["Zürich", "ZH Intl"]);
+    fireEvent.click(chips()[1]!);
+    expect(chips().filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent)).toEqual(["ZH Intl"]);
     expect(ids()).toEqual(["222796"]);
-    expect($("#fcount").textContent).toBe("2");
-    fireEvent.click(pop.querySelector(".nav .btn")!);
-    expect(document.querySelector("dialog[open]")).toBeNull();
-    fireEvent.click($("#clear"));
+    expect(filters().textContent).toBe("Filters2");
+    fireEvent.click(pop.getByRole("button", { name: "Done" }));
+    expect(screen.queryByRole("dialog")).toBeNull();
+    fireEvent.click(btn("Clear"));
     expect(ids()).toHaveLength(4);
     expect(location.hash).toBe("#/discover");
-    expect($("#fcount").hidden).toBe(true);
+    expect(filters().querySelector(".n")).toHaveProperty("hidden", true);
   });
 
   it("search waits for a pause in typing", async () => {
     await show();
-    fireEvent.change($("#q"), { target: { value: "rem" } });
+    fireEvent.change(search(), { target: { value: "rem" } });
     expect(ids()).toHaveLength(4);
     await act(async () => { await new Promise(r => setTimeout(r, 200)); });
     expect(ids()).toEqual(["eu2069", "eu2067"]);
@@ -111,15 +119,17 @@ describe("Discover", () => {
   it("place and radius: geocoded, 25 km by default, events without a place hidden", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ json: async () => ({ results: [{ attrs: { lat: 47.37, lon: 8.54, label: "<b>Zürich</b>" } }] }) })));
     await show();
-    const place = $<HTMLInputElement>("#place");
+    fireEvent.click(filters());
+    const place = screen.getByRole("textbox", { name: "Near a place or postcode" });
+    const radius = () => screen.getByRole<HTMLSelectElement>("combobox", { name: "Radius" });
     fireEvent.input(place, { target: { value: "Zürich" } });
     await act(async () => { place.dispatchEvent(new Event("change")); });
-    expect($("#placeHint").textContent).toBe("📍 Zürich");
-    expect($<HTMLSelectElement>("#radius").value).toBe("25");
+    expect(screen.getByText("📍 Zürich")).toBeTruthy();
+    expect(radius().value).toBe("25");
     expect(ids()).toEqual(["219091", "222796"]);
-    expect($("#summary").textContent).toBe("2 events · within 25 km of Zürich · 2 without a known location hidden");
+    expect(screen.getByText("2 events · within 25 km of Zürich · 2 without a known location hidden")).toBeTruthy();
     expect(location.hash).toBe("#/discover?place=Z%C3%BCrich&r=25");
-    fireEvent.change($("#radius"), { target: { value: "" } });
+    fireEvent.change(radius(), { target: { value: "" } });
     expect(ids()).toHaveLength(4);
   });
 
@@ -127,13 +137,15 @@ describe("Discover", () => {
     const getCurrentPosition = vi.fn((ok: PositionCallback) => ok({ coords: { latitude: 47.05, longitude: 8.3 } } as GeolocationPosition));
     vi.stubGlobal("navigator", { ...navigator, geolocation: { getCurrentPosition } });
     await show();
-    fireEvent.click($("#views button:nth-child(2)"));
+    fireEvent.click(view("Near me"));
     expect(getCurrentPosition).toHaveBeenCalled();
-    expect($("#placeHint").textContent).toBe("📍 Your location");
-    expect($("#summary").textContent).toContain("within 25 km of you");
-    fireEvent.click($("#views button:nth-child(3)"));
-    expect($("#results .empty").textContent).toContain("Nothing saved yet.");
-    fireEvent.click($("#views button:nth-child(4)"));
+    fireEvent.click(filters());
+    expect(screen.getByText("📍 Your location")).toBeTruthy();
+    expect(screen.getByText(/within 25 km of you/)).toBeTruthy();
+    fireEvent.click(view("Saved ★"));
+    expect(screen.getByText(/Nothing saved yet\./)).toBeTruthy();
+    expect(btn("Show all upcoming")).toBeTruthy();
+    fireEvent.click(view("Past"));
     expect(ids()).toEqual(["179502", "179501"]);  // Luzern's, most recent first
     expect(location.hash).toBe("#/discover?r=25&view=past");
   });

@@ -113,11 +113,11 @@ export default function Club({ route }: ScreenProps) {
   useEventListener("scroll", drift);
   useLayoutEffect(drift, [c]);
 
-  if (error) return <main className="wrap clubpage" id="main"><LoadError /></main>;
-  if (!ready) return <main className="wrap clubpage" id="main" />;
+  if (error) return <main className="wrap clubpage"><LoadError /></main>;
+  if (!ready) return <main className="wrap clubpage" />;
   if (!c) {
     return (
-      <main className="wrap clubpage" id="main">
+      <main className="wrap clubpage">
         <h1>{t("clubs")}</h1>
         {D.data.clubs.map(x => <p key={x.id}><a href={href("club", x.id)}>{x.name}</a></p>)}
       </main>
@@ -132,7 +132,7 @@ export default function Club({ route }: ScreenProps) {
   const projects = c.projects || [];
   const subLine = [c.district ? t(DISTRICT[c.district as keyof typeof DISTRICT]) : c.source ? null : t("national"), c.city].filter(Boolean).join(" · ");
   return (
-    <main className="wrap clubpage" id="main" style={clubVars(c.color)}>
+    <main className="wrap clubpage" style={clubVars(c.color)}>
       <i className="sent" aria-hidden="true" />
       {/* two parts: a sticky header whose box is always 64px (crest and name draw big over the block at rest and compact as you scroll),
           and the colour block with the buttons, which simply scrolls away. No height changes while sticking, so nothing bounces. */}

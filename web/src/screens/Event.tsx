@@ -164,14 +164,14 @@ export default function Event({ route }: ScreenProps) {
   const lead = e ? club(e.clubs[0] ?? "") : null;
   useWash(lead?.color, e && lead ? club(e.clubs[1] || lead.id).color : null, lead?.color);
   useTitle(e?.title);
-  if (error) return <main className="wrap evpage" id="main"><LoadError /></main>;
-  if (!ready) return <main className="wrap evpage" id="main"><Skel /></main>;
+  if (error) return <main className="wrap evpage"><LoadError /></main>;
+  if (!ready) return <main className="wrap evpage"><Skel /></main>;
   if (!e || !lead) {
     return (
-      <main className="wrap evpage" id="main">
+      <main className="wrap evpage">
         <div className="empty">{t("empty")}<br /><a className="linkbtn" href={href("home")}>{t("show_all")}</a></div>
       </main>
     );
   }
-  return <main className="wrap evpage" id="main" style={clubVars(lead.color)}><Detail e={e} /></main>;
+  return <main className="wrap evpage" style={clubVars(lead.color)}><Detail e={e} /></main>;
 }

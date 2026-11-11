@@ -1,6 +1,6 @@
 // The developer screen, from events.json and status.json, with the status fields (warnings, unreadable).
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { loadData } from "../lib/data";
 import { parseHash } from "../lib/route";
@@ -41,8 +41,9 @@ afterEach(() => {
   status = STATUS;
 });
 
-const $ = (s: string) => document.querySelector(s);
-const texts = (s: string) => [...document.querySelectorAll(s)].map(n => n.textContent);
+const texts = (els: HTMLElement[]) => els.map(n => n.textContent);
+/** a section by its heading: the sections have no accessible name of their own */
+const section = (name: string) => within(screen.getByRole("heading", { level: 2, name }).closest("section")!);
 async function show() {
   const r = render(<><Dev route={parseHash("#/dev")} /><Toast /></>);
   await act(async () => { await new Promise(res => setTimeout(res, 0)); });
@@ -52,55 +53,62 @@ async function show() {
 describe("developer screen", () => {
   it("draws the sections in order with build state, counts and links", async () => {
     await show();
-    expect(texts("main.wrap.settings.dev > section.glass > h2")).toEqual(["Last build", "Preview on this device", "This device", "Content checks", "Clubs and layers"]);
-    expect($("#build .devstate")?.className).toBe("devstate warn");  // built 01:58, now 10:00: 8 h
-    expect($("#build .devstate")?.textContent).toBe("Built 11 Nov, 01:58, 8 h ago · local build");
-    expect($("#build .devok")?.textContent).toBe("✓ No failures in the last run");
-    expect(texts("#build .devfacts span")).toEqual(["upcoming", "in the app", "international", "Rotary layer", "members only", "cancelled"]);
-    expect(texts("#build .links a")).toEqual(["All runs", "status.json", "events.json", "Map"]);
-    expect($("#build .links a")?.getAttribute("target")).toBe("_blank");
-    expect($("#build .links a:last-child")?.getAttribute("href")).toBe("#/map");
-    expect($("#foot footer a")).not.toBeNull();
+    expect(texts(screen.getAllByRole("heading", { level: 2 }))).toEqual(["Last build", "Preview on this device", "This device", "Content checks", "Clubs and layers"]);
+    const build = section("Last build");
+    const state = build.getByText("Built 11 Nov, 01:58, 8 h ago · local build");
+    expect(state.className).toBe("devstate warn");  // built 01:58, now 10:00: 8 h; the class colours the dot
+    build.getByText("✓ No failures in the last run");
+    for (const label of ["upcoming", "in the app", "international", "Rotary layer", "members only", "cancelled"]) build.getByText(label);
+    expect(build.queryByRole("link", { name: "This run's log" })).toBeNull();
+    expect(build.getByRole("link", { name: "All runs" }).getAttribute("target")).toBe("_blank");
+    expect(build.getByRole("link", { name: "status.json" }).getAttribute("href")).toBe("status.json");
+    expect(build.getByRole("link", { name: "events.json" }).getAttribute("href")).toBe("events.json");
+    expect(build.getByRole("link", { name: "Map" }).getAttribute("href")).toBe("#/map");
+    expect(screen.getByRole("link", { name: "Source & data on GitHub" })).toBeTruthy();
   });
 
   it("shows failures, warnings, commit and run link from status.json", async () => {
     status = { ...STATUS, failures: ["bern: 500"], warnings: ["luzern: 2 agenda list item(s) without a readable date"], commit: "abc1234", run: "https://github.com/x/runs/1" };
     await show();
-    expect($("#build pre.devfail")?.textContent).toBe("bern: 500");
-    expect(texts("#build p.devstate.warn")).toContain("luzern: 2 agenda list item(s) without a readable date");
-    expect($("#build .devstate")?.textContent).toContain("· commit abc1234");
-    expect($("#build .links a")?.textContent).toBe("This run's log");
-    expect($("#build .links a")?.getAttribute("href")).toBe("https://github.com/x/runs/1");
+    const build = section("Last build");
+    build.getByText("bern: 500");
+    expect(build.queryByText(/No failures/)).toBeNull();
+    expect(build.getByText("luzern: 2 agenda list item(s) without a readable date").className).toBe("devstate warn");
+    build.getByText(/· commit abc1234$/);
+    expect(build.getByRole("link", { name: "This run's log" }).getAttribute("href")).toBe("https://github.com/x/runs/1");
   });
 
   it("falls back when status.json can't be loaded", async () => {
     status = null;
     await show();
-    expect($("#build pre.devfail")?.textContent).toBe("status.json could not be loaded");
-    expect(texts("#clubs .devclub span")[0]).toMatch(/upcoming · \? in history$/);
+    section("Last build").getByText("status.json could not be loaded");
+    expect(section("Clubs and layers").getAllByText(/upcoming · \? in history$/).length).toBeGreaterThan(0);
   });
 
   it("club rows: history, cancelled, missing details and unreadable dates, Rotary districts included", async () => {
     status = { ...STATUS, unreadable: { luzern: 3 } };
     await show();
-    const row = document.querySelector("#clubs .devclub") as HTMLElement;
-    expect(row.querySelector("a.chip.club")?.getAttribute("href")).toBe("#/club/luzern");
-    expect(row.querySelector("span")?.textContent).toMatch(/^\d+ upcoming · 322 in history · 2 cancelled · 1 without details · 3 with no readable date$/);
-    expect(row.querySelector("a:last-child")?.getAttribute("href")).toBe("luzern.ics");
-    expect(texts("#clubs .devclub .chip").some(s => s?.startsWith("Rotary"))).toBe(true);
+    const clubs = section("Clubs and layers");
+    const chip = clubs.getAllByRole("link").find(a => a.getAttribute("href") === "#/club/luzern")!;
+    const row = within(chip.parentElement!);
+    row.getByText(/^\d+ upcoming · 322 in history · 2 cancelled · 1 without details · 3 with no readable date$/);
+    expect(row.getByRole("link", { name: ".ics" }).getAttribute("href")).toBe("luzern.ics");
+    expect(clubs.getAllByRole("link").some(a => a.getAttribute("href")?.startsWith("#/club/") && a.getAttribute("aria-label")?.startsWith("Rotary"))).toBe(true);
   });
 
   it("preview switches store their key; the date gets a Real date button", async () => {
     localStorage.setItem("rac.devGuest", "true");
     localStorage.setItem("rac.devDate", JSON.stringify("2026-12-20"));
     await show();
-    const segs = document.querySelectorAll("#preview .seg");
-    expect([...segs[0]!.children].map(b => b.getAttribute("aria-pressed"))).toEqual(["false", "true"]);
-    expect([...segs[1]!.children].map(b => b.getAttribute("aria-pressed"))).toEqual(["true", "false"]);
-    expect(($("#preview input[type=date]") as HTMLInputElement).value).toBe("2026-12-20");
-    fireEvent.click(segs[2]!.children[1]!);
+    const preview = section("Preview on this device");
+    const row = (label: string) => within(preview.getByText(label).parentElement!);
+    expect(row("See the app as a guest").getByRole("button", { name: "On" }).getAttribute("aria-pressed")).toBe("true");
+    expect(row("See the app as a guest").getByRole("button", { name: "Off" }).getAttribute("aria-pressed")).toBe("false");
+    expect(row("Mark three events as new").getByRole("button", { name: "Off" }).getAttribute("aria-pressed")).toBe("true");
+    expect((preview.getByLabelText("Pretend date") as HTMLInputElement).value).toBe("2026-12-20");
+    fireEvent.click(row("Show the old-data banner").getByRole("button", { name: "On" }));
     expect(localStorage.getItem("rac.devStale")).toBe("true");
-    fireEvent.click([...document.querySelectorAll("#preview .tools button")].find(b => b.textContent === "Real date")!);
+    fireEvent.click(preview.getByRole("button", { name: "Real date" }));
     expect(localStorage.getItem("rac.devDate")).toBe('""');
   });
 
@@ -109,26 +117,27 @@ describe("developer screen", () => {
     localStorage.setItem("rac.dev", "true");
     localStorage.setItem("rac.guideSeen", "true");
     await show();
-    expect(texts(".devkey code")).toEqual(["rac.dev", "rac.guideSeen", "rac.lang"]);
-    expect($("#device h3")?.textContent).toBe("Stored on this device (3)");
-    fireEvent.click([...document.querySelectorAll("#preview button")].find(b => b.textContent === "Show the New-in-the-club card again")!);
+    const device = section("This device");
+    device.getByRole("heading", { name: "Stored on this device (3)" });
+    expect(texts(device.getAllByText(/^rac\./, { selector: "code" }))).toEqual(["rac.dev", "rac.guideSeen", "rac.lang"]);
+    fireEvent.click(section("Preview on this device").getByRole("button", { name: "Show the New-in-the-club card again" }));
     expect(localStorage.getItem("rac.guideSeen")).toBeNull();
-    expect($("#toast")?.textContent).toBe("Done: it is back on Home");
+    expect(screen.getByRole("status").textContent).toBe("Done: it is back on Home");
     vi.stubGlobal("confirm", () => true);
-    const langRow = [...document.querySelectorAll(".devkey")].find(r => r.textContent?.startsWith("rac.lang"))!;
-    fireEvent.click(langRow.querySelectorAll("button")[1]!);
+    fireEvent.click(within(device.getByText("rac.lang").parentElement!).getByRole("button", { name: "Delete" }));
     expect(localStorage.getItem("rac.lang")).toBeNull();
     localStorage.setItem("rac.saved", "[]");
-    await act(async () => { fireEvent.click([...document.querySelectorAll("#device button")].find(b => b.textContent === "Clear all app data")!); });
+    await act(async () => { fireEvent.click(device.getByRole("button", { name: "Clear all app data" })); });
     expect(localStorage.getItem("rac.dev")).toBe("true");
   });
 
   it("content checks fold their lists or say none", async () => {
     await show();
-    for (const n of document.querySelectorAll("#checks > details summary")) expect(n.textContent).toMatch(/\(\d+\)$/);
-    for (const n of document.querySelectorAll("#checks > p.devok")) expect(n.textContent).toMatch(/^✓ .*: none$/);
-    expect(document.querySelectorAll("#checks > *")).toHaveLength(6);
-    const link = $("#checks .devlist a[href^='#/event/']");
+    const checks = section("Content checks");
+    const titles = ["Upcoming events without a place", "Upcoming events with a place the map can't find", "Upcoming events without a picture",
+      "Upcoming events without a description", "Clubs with no upcoming event", "Texts missing in a language"];
+    for (const t of titles) expect(checks.getByText(new RegExp(`^(✓ )?${t}`)).textContent).toMatch(/ \(\d+\)$|: none$/);
+    const link = checks.queryAllByRole("link").find(a => a.getAttribute("href")?.startsWith("#/event/"));
     if (link) expect(link.textContent).toMatch(/ · .+ · /);
   });
 });

@@ -14,7 +14,7 @@ interface InstallPrompt extends Event { prompt(): Promise<void>; userChoice: Pro
 type OS = "ios" | "android" | "desktop";
 
 /** an Off / On segmented control (Rotary layer, developer mode) */
-function OnOff({ id, on, onPick }: { id: string; on: boolean; onPick: (on: boolean) => void }) {
+function OnOff({ id, on, onPick }: { id?: string; on: boolean; onPick: (on: boolean) => void }) {
   return (
     <div className="seg" id={id}>
       <button type="button" aria-pressed={!on} onClick={() => onPick(false)}>{t("off")}</button>
@@ -24,10 +24,10 @@ function OnOff({ id, on, onPick }: { id: string; on: boolean; onPick: (on: boole
 }
 
 /** the chosen clubs of a row, or "none" */
-function Cur({ id, ids }: { id: string; ids: string[] | null }) {
-  if (!ids) return <div className="cur" id={id} />;  // before events.json the club names are unknown
-  if (!ids.length) return <div className="cur" id={id}><span className="meta">{t("none")}</span></div>;
-  return <div className="cur" id={id}>{ids.map(c => <ClubLabel key={c} id={c} />)}</div>;
+function Cur({ ids }: { ids: string[] | null }) {
+  if (!ids) return <div className="cur" />;  // before events.json the club names are unknown
+  if (!ids.length) return <div className="cur"><span className="meta">{t("none")}</span></div>;
+  return <div className="cur">{ids.map(c => <ClubLabel key={c} id={c} />)}</div>;
 }
 
 const standalone = () => matchMedia("(display-mode: standalone)").matches || !!(navigator as { standalone?: boolean }).standalone;
@@ -64,8 +64,8 @@ function Install() {
 }
 
 /** a help row: label and chevron */
-function RowLink({ to, k, id, hidden }: { to: string; k: "subscribe_link" | "rerun" | "app_h" | "dev_page"; id?: string; hidden?: boolean }) {
-  return <a className="setrow link" id={id} hidden={hidden} href={to}><span>{t(k)}</span><Icon name="back" className="chev" /></a>;
+function RowLink({ to, k, hidden }: { to: string; k: "subscribe_link" | "rerun" | "app_h" | "dev_page"; hidden?: boolean }) {
+  return <a className="setrow link" hidden={hidden} href={to}><span>{t(k)}</span><Icon name="back" className="chev" /></a>;
 }
 
 export default function Settings(_props: ScreenProps) {
@@ -115,28 +115,28 @@ export default function Settings(_props: ScreenProps) {
   // the app's address, without index.html or the route
   const shareLink = location.origin + location.pathname.replace(/[^/]*$/, "");
   // events.json failed: the offline note in place of the screen (the club rows need the data)
-  if (error) return <main className="wrap settings" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap settings"><LoadError /></main>;
 
   return (
-    <main className="wrap settings" id="main">
+    <main className="wrap settings">
       <h1>{t("settings")}</h1>
       <p className="lead">{t("set_hint")}</p>
       <section className="glass"><h2>{t("set_clubs_h")}</h2>
-        <button className="setrow link" type="button" id="homeBtn" onClick={() => ready && setPicker("home")}>
+        <button className="setrow link" type="button" onClick={() => ready && setPicker("home")}>
           <span>{t("main_club")}</span>
-          <Cur id="homeCur" ids={ready ? (s.home ? [s.home] : []) : null} />
+          <Cur ids={ready ? (s.home ? [s.home] : []) : null} />
           <Icon name="back" className="chev" />
         </button>
-        <button className="setrow link" type="button" id="alsoBtn" onClick={() => ready && setPicker("also")}>
+        <button className="setrow link" type="button" onClick={() => ready && setPicker("also")}>
           <span>{t("also_show")}</span>
-          <Cur id="alsoCur" ids={ready ? s.also : null} />
+          <Cur ids={ready ? s.also : null} />
           <Icon name="back" className="chev" />
         </button>
         <div className="setrow"><span>{t("rotary_show")}</span><OnOff id="rotarySeg" on={rotary} onPick={setRotary} /></div>
         <p className="meta" style={{ margin: 0 }}>{t("rotary_hint")}</p>
       </section>
       <section className="glass"><h2>{t("set_app_h")}</h2>
-        <div className="setrow"><span>{t("language")}</span><span id="langBox"><LangSelect /></span></div>
+        <div className="setrow"><span>{t("language")}</span><span><LangSelect /></span></div>
         <div className="setrow"><span>{t("appearance")}</span>
           <div className="seg" id="themeSeg">
             <button type="button" aria-pressed={!dark} onClick={() => setTheme("light")}><Icon name="sun" />{t("theme_light")}</button>
@@ -145,7 +145,7 @@ export default function Settings(_props: ScreenProps) {
         </div>
         <div className="setrow col" id="install"><span>{t("inst_title")}</span><Install /></div>
         <div className="setrow col"><span>{t("share_title")}</span>
-          <div className="linkbox"><input type="text" id="link" readOnly value={shareLink} /><button type="button" id="copy" onClick={copy}>{t("copy")}</button></div>
+          <div className="linkbox"><input type="text" readOnly value={shareLink} /><button type="button" onClick={copy}>{t("copy")}</button></div>
         </div>
       </section>
       <section className="glass"><h2>{t("set_help_h")}</h2>
@@ -154,8 +154,8 @@ export default function Settings(_props: ScreenProps) {
         <RowLink to={href("public")} k="app_h" />
       </section>
       <section className="glass" id="devSec" hidden={!unlocked} ref={devSec}><h2>{t("dev_h")}</h2>
-        <div className="setrow"><span>{t("dev_mode")}</span><OnOff id="devSeg" on={dev} onPick={pickDev} /></div>
-        <RowLink to={href("dev")} k="dev_page" id="devLink" hidden={!dev} />
+        <div className="setrow"><span>{t("dev_mode")}</span><OnOff on={dev} onPick={pickDev} /></div>
+        <RowLink to={href("dev")} k="dev_page" hidden={!dev} />
       </section>
       <div id="foot"><Footer onClick={tap} /></div>
       {picker === "home" && (
