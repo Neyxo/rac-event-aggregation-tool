@@ -78,6 +78,31 @@ describe("developer screen", () => {
     expect(build.getByRole("link", { name: "This run's log" }).getAttribute("href")).toBe("https://github.com/x/runs/1");
   });
 
+  it("Instagram layer and side lists from status.json", async () => {
+    status = { ...STATUS, notes: [], instagram: { state: "off", note: "the INSTAGRAM_TOKEN or INSTAGRAM_USER_ID secret is not set", clubs: {} } };
+    await show();
+    section("Last build").getByText("Instagram layer: off, the INSTAGRAM_TOKEN or INSTAGRAM_USER_ID secret is not set.");
+    section("Last build").getByText("✓ Side lists not updated: none");
+    cleanup();
+    status = { ...STATUS, instagram: { state: "error", note: "the token is expired or invalid: renew the INSTAGRAM_TOKEN secret", clubs: {} } };
+    await show();
+    expect(section("Last build").getByText(/^Instagram layer: failed, the token is expired/).className).toBe("devstate bad");
+    cleanup();
+    status = { ...STATUS, notes: ["bern news: HTTP 500 (kept the last list)"], instagram: { state: "on", note: "", clubs: { luzern: 6, bern: "Graph error 100 (OAuthException)" } } };
+    await show();
+    expect(section("Last build").getByText(/^Instagram layer: on, 1 of 2 clubs with pictures, 1 could not be read/).className).toBe("devstate warn");
+    section("Last build").getByText("Side lists not updated (1)");
+    const clubs = section("Clubs and layers");
+    clubs.getByText(/ · 6 Instagram posts$/);
+    clubs.getByText(/ · Instagram: Graph error 100 \(OAuthException\)$/);
+  });
+
+  it("without the Instagram report (older runs) the line is guessed from the data", async () => {
+    await show();
+    section("Last build").getByText(/^Instagram layer: (on, \d+ clubs with pictures|off \(no pictures in this build\))\.$/);
+    expect(section("Last build").queryByText(/Side lists/)).toBeNull();
+  });
+
   it("falls back when status.json can't be loaded", async () => {
     status = null;
     await show();

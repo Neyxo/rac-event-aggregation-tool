@@ -336,20 +336,25 @@ def ig_download(url, path):
     return True
 
 
-def fetch_instagram(clubs, out, token, user_id, fetch=ig_get, download=ig_download):
+def fetch_instagram(clubs, out, token, user_id, fetch=ig_get, download=ig_download, report=None):
     """{club id: latest Instagram posts} for the clubs with an `instagram` link, pictures saved under out/ig/<club>/.
+    report["instagram"] gets what the developer page shows: the layer's state, why it is off, and per club a post count or the error.
 
     Off (no request at all) unless both the token and the owner's Instagram user id are set. One Business Discovery
     request per club; a club that can't be read (personal or private account, any error) is simply left out.
     Unverified against Meta's docs, so everything is read defensively: that this works without App Review for an app
     admin's token, and that caption / children / thumbnail_url all come back inside the discovery answer.
     """
+    layer = (report if report is not None else new_report())["instagram"]
     token, user_id = (token or "").strip(), (user_id or "").strip()
     if not (token and user_id):
+        layer.update(state="off", note="the INSTAGRAM_TOKEN or INSTAGRAM_USER_ID secret is not set")
         return {}
     if not user_id.isdigit():
         print("::warning::Instagram: INSTAGRAM_USER_ID must be the numeric Instagram user id; pictures are off")
+        layer.update(state="error", note="INSTAGRAM_USER_ID is not the numeric Instagram user id")
         return {}
+    layer.update(state="on", note="")
     # ponytail: Instagram's picture URLs expire, so every run downloads the pictures again into the output dir and nothing
     # is kept in data/. If the token or Meta fails, the strip falls back to photos / event pictures; cache in data/ if that hurts.
     result = {}
@@ -363,9 +368,11 @@ def fetch_instagram(clubs, out, token, user_id, fetch=ig_get, download=ig_downlo
             if err := data.get("error"):
                 if err.get("code") == 190:  # OAuthException: expired or revoked. No point asking for the other clubs.
                     print("::warning::Instagram: the token is expired or invalid. Renew the INSTAGRAM_TOKEN secret; pictures are off until then.")
+                    layer.update(state="error", note="the token is expired or invalid: renew the INSTAGRAM_TOKEN secret")
                     break
                 msg = str(err.get("message", "")).replace(token, "***")[:200]
                 print(f"{club['id']} instagram: Graph error {err.get('code')} ({err.get('type')}) {msg}")
+                layer["clubs"][club["id"]] = f"Graph error {err.get('code')} ({err.get('type')}) {msg}".strip()
                 continue
             posts = []
             for p in parse_instagram(data):
@@ -374,8 +381,11 @@ def fetch_instagram(clubs, out, token, user_id, fetch=ig_get, download=ig_downlo
                     posts.append({"url": p["url"], "image": rel, "caption": p["caption"], "date": p["date"]})
             if posts:
                 result[club["id"]] = posts
+            layer["clubs"][club["id"]] = len(posts)
         except Exception as e:
-            print(f"{club['id']} instagram: {str(e).replace(token, '***')[:200]}")  # pictures only, never worth failing the run
+            msg = str(e).replace(token, "***")[:200]
+            print(f"{club['id']} instagram: {msg}")  # pictures only, never worth failing the run
+            layer["clubs"][club["id"]] = msg or type(e).__name__
     return result
 
 
@@ -674,7 +684,7 @@ def write_status(out, site, histories, failures, stamp, report=None):
                       "without_detail": sum("detail" not in r and r["status"] == "active" for r in h.values())}
     status = {"generated": stamp, "events": len(site["events"]), "rotary_events": len(site["rotary"]["events"]), "with_image": sum(bool(e["image"]) for e in site["events"]),
               "without_location": sum(e["coords"] is None for e in site["events"]), "clubs": clubs, "failures": failures,
-              "warnings": report["warnings"], "unreadable": report["unreadable"],
+              "warnings": report["warnings"], "unreadable": report["unreadable"], "notes": report["notes"], "instagram": report["instagram"],
               # for the developer page: which commit built this and where the run's log is (empty outside GitHub Actions)
               "commit": os.environ.get("GITHUB_SHA", "")[:7],
               "run": "{GITHUB_SERVER_URL}/{GITHUB_REPOSITORY}/actions/runs/{GITHUB_RUN_ID}".format(**os.environ) if os.environ.get("GITHUB_RUN_ID") else ""}
@@ -717,8 +727,9 @@ def organiser(host, names):
 
 
 def new_report():
-    """What a run tells status.json besides failures: warnings, and per club the list items whose date can't be read."""
-    return {"warnings": [], "unreadable": {}}
+    """What a run tells status.json besides failures: warnings, per club the list items whose date can't be read, problems of
+    the side lists (news, projects) that don't fail the run, and the Instagram layer (see fetch_instagram)."""
+    return {"warnings": [], "unreadable": {}, "notes": [], "instagram": {"state": "off", "note": "not run", "clubs": {}}}
 
 
 def upcoming(history, now):
@@ -864,6 +875,7 @@ def main():
                     lists[club["id"]] = fetch_news(club, page)
             except Exception as e:
                 print(f"{club['id']} {page}: {e} (keeping the last list)")  # teasers only, not worth failing the run
+                report["notes"].append(f"{club['id']} {page}: {e} (kept the last list)")
 
     # Nothing reached data/ yet: a run that would cancel too much overall is dropped whole, every club keeps its last history.
     if brake := global_brake(before, histories, now):
@@ -884,7 +896,7 @@ def main():
     (out / "all.ics").write_text(build_calendar(everyone, merged, now), newline="")
     cache_path = data / "geocode.json"
     cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
-    instagram = fetch_instagram(clubs, out, os.environ.get("INSTAGRAM_TOKEN"), os.environ.get("INSTAGRAM_USER_ID"))
+    instagram = fetch_instagram(clubs, out, os.environ.get("INSTAGRAM_TOKEN"), os.environ.get("INSTAGRAM_USER_ID"), report=report)
     site = site_data(clubs, histories, now, cache, news, projects, instagram)
     if not brake:
         for path, value in ((news_path, news), (projects_path, projects), (names_path, names), (cache_path, cache)):
