@@ -10,7 +10,7 @@ import Calendar from "./Calendar";
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers(); localStorage.clear(); });
 const route = parseHash("#/calendar");
 const button = (name: string) => screen.getByRole("button", { name });
-const sheet = () => document.querySelector<HTMLElement>(".sheet")!;
+const sheet = () => document.querySelector<HTMLDialogElement>("dialog.sheet")!;
 
 describe("Calendar loading", () => {  // in this order: a failed load is retried, a pending one is not
   it("events.json fails: <main> holds only the offline note", async () => {
@@ -21,7 +21,7 @@ describe("Calendar loading", () => {  // in this order: a failed load is retried
     expect(within(main).getAllByRole("button").map(b => b.textContent)).toEqual([t("refresh")]);
     expect(screen.queryByRole("grid")).toBeNull();
     expect(screen.queryByRole("heading")).toBeNull();
-    expect(sheet().getAttribute("aria-hidden")).toBe("true");
+    expect(sheet().open).toBe(false);
   });
   it("month, scope and today buttons do nothing until the data is in", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
@@ -35,6 +35,6 @@ describe("Calendar loading", () => {  // in this order: a failed load is retried
     await act(async () => { answer(); });
     expect(screen.getByRole("heading", { level: 2 }).textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
     expect(button(t("mine_short")).getAttribute("aria-pressed")).toBe("true");
-    expect(sheet().classList.contains("open")).toBe(false);
+    expect(sheet().open).toBe(false);
   });
 });

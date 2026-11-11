@@ -1,12 +1,12 @@
 // Calendar: the month fills the screen, no scrolling; tapping a day slides up a frosted sheet with that day's events.
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t, tx } from "../i18n";
 import type { Event } from "../lib/types";
 import { byDay, calendarEvents, monthGrid } from "../lib/calendar";
 import { fmt, sameDay, startOfDay } from "../lib/dates";
 import { club, myClubs } from "../lib/data";
-import { clubVars, vars } from "../lib/color";
+import { clubVars, cx, vars } from "../lib/color";
 import { EventCard, LoadError, useData, useEventListener } from "../components";
 
 type Scope = "mine" | "all";
@@ -52,7 +52,7 @@ function Chip({ e }: { e: Event }) {
 }
 
 function DayCell({ d, month, now, selected, evs, onOpen }: { d: Date; month: Date; now: Date; selected: Date | null; evs: Event[]; onOpen: () => void }) {
-  const cls = "day" + (d.getMonth() !== month.getMonth() ? " other" : "") + (sameDay(d, now) ? " today" : "");
+  const cls = cx("day", d.getMonth() !== month.getMonth() && "other", sameDay(d, now) && "today");
   return (
     <button type="button" className={cls} aria-pressed={!!selected && sameDay(d, selected)} aria-label={fmt.full.format(d) + ", " + t("n_on_day", { n: evs.length })} onClick={onOpen}>
       <span className="n">{d.getDate()}</span>
@@ -87,10 +87,28 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
   );
 }
 
+// A modal <dialog>: while open, focus is inside it and the screen behind can't be reached (not by Tab either); closed, it is gone
+// (display: none). It closes in two steps so it can slide away: "open" (the slide) goes first, the dialog itself 300 ms later,
+// which also hands the focus back to the tapped day. Escape (the dialog's cancel) and a tap on the dim area close it too.
 function Sheet({ open, content, onClose }: { open: boolean; content: SheetContent | null; onClose: () => void }) {
-  const y0 = useRef<number | null>(null);
+  const dlg = useRef<HTMLDialogElement>(null), title = useRef<HTMLHeadingElement>(null), y0 = useRef<number | null>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const d = dlg.current;
+    if (!d) return;
+    if (open) {
+      if (!d.open) d.showModal?.();
+      title.current?.focus();
+      const id = requestAnimationFrame(() => setShown(true));  // a frame after showing, so the slide-in transitions
+      return () => cancelAnimationFrame(id);
+    }
+    setShown(false);
+    const id = setTimeout(() => d.close?.(), 300);  // the .sheet-in transition
+    return () => clearTimeout(id);
+  }, [open]);
   return (
-    <div className={"sheet" + (open ? " open" : "")} id="sheet" aria-hidden={!open} onClick={ev => { if (ev.target === ev.currentTarget) onClose(); }}>
+    <dialog className={cx("sheet", shown && "open")} id="sheet" aria-labelledby="sheetTitle" ref={dlg}
+      onCancel={ev => { ev.preventDefault(); onClose(); }} onClick={ev => { if (ev.target === ev.currentTarget) onClose(); }}>
       <div className="sheet-in glass">
         {/* a swipe down on the handle closes the sheet */}
         <div className="handle"
@@ -99,7 +117,7 @@ function Sheet({ open, content, onClose }: { open: boolean; content: SheetConten
           <i />
         </div>
         <div className="sheet-head">
-          <h3 id="sheetTitle">{content ? fmt.full.format(content.day) : null}</h3>
+          <h3 id="sheetTitle" tabIndex={-1} ref={title}>{content ? fmt.full.format(content.day) : null}</h3>
           <button type="button" className="linkbtn" id="sheetClose" onClick={onClose}>{t("close")}</button>
         </div>
         <div className="sheet-body" id="sheetBody">
@@ -108,7 +126,7 @@ function Sheet({ open, content, onClose }: { open: boolean; content: SheetConten
             : <p className="meta">{t("no_events_day")}</p>)}
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
 
@@ -139,7 +157,6 @@ export default function Calendar(_props: ScreenProps) {
     if (evs.length) openDay(startOfDay(n), evs);
   };
 
-  useEventListener("keydown", ev => { if (ev.key === "Escape") setDay(null); });
 
   return (
     <>

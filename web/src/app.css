@@ -224,8 +224,12 @@ h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color:
 .calwrap .day { min-height: 0; }
 .calwrap .day .ch { font-size: .6rem; }
 /* the sheet ends where the bottom tabs begin: under them its last card (or its only one) could not be reached */
-.sheet { position: fixed; inset: 0 0 var(--tabs, calc(64px + env(safe-area-inset-bottom))) 0; z-index: 7; background: rgba(20,16,30,.35); display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s; }
-.sheet.open { opacity: 1; pointer-events: auto; }
+/* a modal <dialog>: the browser's own box and backdrop are reset, the dialog itself is the dim area */
+dialog.sheet { position: fixed; inset: 0 0 var(--tabs, calc(64px + env(safe-area-inset-bottom))) 0; width: auto; height: auto; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; color: var(--text); background: rgba(20,16,30,.35); display: flex; align-items: flex-end; opacity: 0; transition: opacity .25s; }
+dialog.sheet:not([open]) { display: none; }
+dialog.sheet::backdrop { background: none; }
+.sheet.open { opacity: 1; }
+.sheet-head h3:focus { outline: none; }  /* focused on open so a screen reader starts at the day; no ring on a heading */
 .sheet-in { width: 100%; max-width: 860px; margin: 0 auto; max-height: 78vh; border-radius: 22px 22px 0 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: var(--frost-3); -webkit-backdrop-filter: var(--frost-3); display: flex; flex-direction: column; transform: translateY(24px); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
 .sheet.open .sheet-in { transform: none; }
 .sheet .handle { display: grid; place-items: center; padding: 8px 0 2px; } .sheet .handle i { width: 40px; height: 5px; border-radius: 99px; background: var(--line); }
