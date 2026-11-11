@@ -1,6 +1,7 @@
 // Installing the app: the browser's install prompt (Chrome, Edge, Android) and whether the app already runs installed.
 // The prompt fires once, early, often before the screen that offers it is shown: it is caught here, at start, for the welcome
 // steps and Settings alike (useInstallPrompt() in components/hooks re-renders when it arrives or is used up).
+import { emitter } from "./store";
 
 /** the beforeinstallprompt event; not in TypeScript's DOM types */
 export interface InstallPrompt extends Event { prompt(): Promise<void>; userChoice: Promise<{ outcome?: string }> }
@@ -8,8 +9,7 @@ export interface InstallPrompt extends Event { prompt(): Promise<void>; userChoi
 let caught: InstallPrompt | null = null;
 /** installed from this tab (the prompt accepted, or the browser says so): the tab itself still runs in the browser */
 let installed = false;
-const listeners = new Set<() => void>();
-const emit = () => listeners.forEach(f => f());
+const { subscribe, emit } = emitter();
 
 if (typeof window !== "undefined") {
   addEventListener("beforeinstallprompt", e => {
@@ -21,10 +21,7 @@ if (typeof window !== "undefined") {
 }
 
 export const getInstallPrompt = (): InstallPrompt | null => caught;
-export function subscribeInstall(f: () => void): () => void {
-  listeners.add(f);
-  return () => { listeners.delete(f); };
-}
+export const subscribeInstall = subscribe;
 
 /** shows the browser's install dialog; a prompt works once, so it is gone afterwards (whatever the answer) */
 export async function install(): Promise<void> {

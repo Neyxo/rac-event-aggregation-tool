@@ -3,13 +3,13 @@
 // Scroll: a new navigation starts at the top; back/forward returns to where that entry was left (App.tsx applies it).
 import { useMemo, useSyncExternalStore } from "react";
 import { parseHash, type Route } from "../lib/route";
+import { emitter } from "../lib/store";
 
 // depth: how many in-app navigations led to this entry (kept in history.state, so it survives a reload): 0 is where the app was opened
 interface Nav { hash: string; id: number; pop: boolean; key: number; depth: number }
 let keys = 0;
 const positions = new Map<number, number>();
-const listeners = new Set<() => void>();
-const emit = () => listeners.forEach(f => f());
+const { subscribe, emit } = emitter();
 const state = () => history.state as { k?: number; d?: number } | null;
 const stateKey = (): number | undefined => state()?.k;
 
@@ -29,7 +29,6 @@ if (typeof window !== "undefined") {
   addEventListener("scroll", () => { positions.set(nav.key, scrollY); }, { passive: true });
 }
 
-const subscribe = (f: () => void) => { listeners.add(f); return () => { listeners.delete(f); }; };
 const getNav = () => nav;
 /** the navigation state: id changes on every navigation (not on replaceQuery), pop is true for back/forward */
 export const useNav = (): Nav => useSyncExternalStore(subscribe, getNav);

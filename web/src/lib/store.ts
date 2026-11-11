@@ -23,20 +23,26 @@ export interface StoreKeys {
 }
 export type StoreKey = keyof StoreKeys;
 
-const listeners = new Set<() => void>();
+/** the listeners of a value kept outside React: subscribe (what useSyncExternalStore takes) and emit after every change */
+export function emitter(): { subscribe(f: () => void): () => void; emit(): void } {
+  const listeners = new Set<() => void>();
+  return { subscribe: f => { listeners.add(f); return () => { listeners.delete(f); }; }, emit: () => listeners.forEach(f => f()) };
+}
+
+const changes = emitter();
 export const store = {
   get<K extends StoreKey, D>(k: K, d: D): StoreKeys[K] | D {
     try { return (JSON.parse(localStorage.getItem(k) ?? "null") as StoreKeys[K] | null) ?? d; } catch { return d; }
   },
   set<K extends StoreKey>(k: K, v: StoreKeys[K]): void {
     try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage off */ }
-    listeners.forEach(f => f());
+    changes.emit();
   },
   remove(k: StoreKey): void {
     try { localStorage.removeItem(k); } catch { /* storage off */ }
-    listeners.forEach(f => f());
+    changes.emit();
   },
-  subscribe(f: () => void): () => void { listeners.add(f); return () => { listeners.delete(f); }; },
+  subscribe: changes.subscribe,
 };
 
 /** sessionStorage rac.here: the approximate position found after a tap, kept for this tab */

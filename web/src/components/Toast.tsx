@@ -2,12 +2,13 @@
 // toast() works from anywhere (event handlers, lib callers); <Toast/> is rendered once by App.
 import { useSyncExternalStore } from "react";
 import { cx } from "../lib/color";
+import { emitter } from "../lib/store";
 
 export interface ToastAction { label: string; fn: () => void }
 interface State { msg: string; action: ToastAction | null; show: boolean }
 let state: State = { msg: "", action: null, show: false }, timer: ReturnType<typeof setTimeout> | undefined;
-const listeners = new Set<() => void>();
-const set = (s: State) => { state = s; listeners.forEach(f => f()); };
+const changes = emitter();
+const set = (s: State) => { state = s; changes.emit(); };
 
 export function toast(msg: string, action?: ToastAction): void {
   set({ msg, action: action ?? null, show: true });
@@ -16,7 +17,7 @@ export function toast(msg: string, action?: ToastAction): void {
 }
 
 export function Toast() {
-  const s = useSyncExternalStore(f => { listeners.add(f); return () => { listeners.delete(f); }; }, () => state);
+  const s = useSyncExternalStore(changes.subscribe, () => state);
   return (
     <div className={cx("toast", s.show && "show")} id="toast" role="status">
       {s.msg}{s.action && <button type="button" onClick={s.action.fn}>{s.action.label}</button>}
