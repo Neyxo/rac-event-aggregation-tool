@@ -10,7 +10,7 @@ There is no login in the app, by design: a static site cannot log in to Polaris 
 
 ## International events
 
-REM, EUCO and their pre- and post-trips come from Rotaract Europe's events API. Events without a feed (such as the Rotary International Convention) are entered by hand as `[[events]]` in `clubs.toml`. They appear as "Rotaract International" (`international.ics`), show on every member's Home, and are explained on `intl.html`.
+REM, EUCO and their pre- and post-trips come from Rotaract Europe's events API. Events without a feed (such as the Rotary International Convention) are entered by hand as `[[events]]` in `clubs.toml`. They appear as "Rotaract International" (`international.ics`), show on every member's Home, and are explained on the International events screen (`#/intl`).
 
 ## Rotary events (off by default)
 
