@@ -4,17 +4,14 @@ import { useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, myClubs } from "../lib/data";
 import { clubVars } from "../lib/color";
-import { DISTRICT_IDS, hasFilters, selectEvents, type Filters } from "../lib/filters";
+import { activeCount, DISTRICT_IDS, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
 import { ClubChips, ClubMark, LoadError, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, type FilterApi } from "./EventList";
 
-/** a chip, the radius or the place changed: the list and the Filters count follow */
-const change = (api: FilterApi, patch: Partial<Filters>) => {
-  api.update(patch, true);
-  api.recount();
-};
+/** a chip, the radius or the district changed: the list follows */
+const change = (api: FilterApi, patch: Partial<Filters>) => api.update(patch, true);
 
 const toggled = (set: Set<string>, id: string): Set<string> => {
   const next = new Set(set);
@@ -71,7 +68,6 @@ function PlaceInput({ api }: { api: FilterApi }) {
   useEventListener("change", () => {
     const text = ref.current?.value ?? "";
     api.update({ place: text });
-    api.recount();
     void api.setPlace(text);
   }, ref);
   return (
@@ -83,7 +79,8 @@ function PlaceInput({ api }: { api: FilterApi }) {
 /** search, the Filters button (with the number of filters in use), the map, the views, and the panel the button opens */
 function FilterBar({ api, ready }: { api: FilterApi; ready: boolean }) {
   const [open, setOpen] = useState(false);
-  const n = api.count;
+  // the chips, place and radius count; typing a search doesn't
+  const n = activeCount(api.live);
   return (
     <div className="filters">
       <div className="top">

@@ -51,3 +51,6 @@ export async function guessClubs(clubs: Club[], lang: Lang = LANG): Promise<stri
 export const IOS = typeof navigator !== "undefined" && /iPhone|iPad|iPod/.test(navigator.userAgent);
 export const PHONE = IOS || (typeof navigator !== "undefined" && /Android/.test(navigator.userAgent));
 export const mapsUrl = (place: string, ios = IOS): string => (ios ? "https://maps.apple.com/?q=" : "https://www.google.com/maps/search/?api=1&query=") + encodeURIComponent(place);
+
+/** swisstopo's grey national map tiles (free, no key), for Leaflet: the Map screen and Rotary, districts & the world */
+export const SWISSTOPO_GREY = "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg";

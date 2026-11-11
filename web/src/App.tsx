@@ -25,8 +25,8 @@
  *   Discover writes its filters back with replaceQuery(params) instead of history.replaceState.
  * - Hooks (components/hooks): useWash(c1, c2, c3) for body.wash; useStickyHeads() in every screen with .sh headings; useMorphHead(ref, ready)
  *   for the event / club head (render <i className="sent" aria-hidden="true" /> right before it, className static incl. "morph");
- *   useTitle(text) for a title of its own; useStored(key, default) for a localStorage value that re-renders; useTopBarExtra(node) for a
- *   top-bar button (About's share). toast(msg, action?) from components/Toast; <Popup title onClose> for a popup.
+ *   useTitle(text) for a title of its own; useStored(key, default) for a localStorage value that re-renders; a top-bar button of
+ *   the screen's own is ROUTE_META's extra (About's share). toast(msg, action?) from components/Toast; <Popup title onClose> for a popup.
  * - Share buttons: shareUrl({ event: id }), shareUrl({ club: id }) or shareUrl("about") (lib/share).
  * - Settings: setTheme() (lib/store) and setRotary() (lib/data) apply at once; setLang() (i18n) reloads the page (every text is
  *   read once, at start).
@@ -34,10 +34,10 @@
  *   here, so Leaflet is only fetched there; AboutMore should import("leaflet") in an effect for the same reason).
  * - Home: takeWelcome() (lib/route) is true once when the app was opened with ?welcome.
  */
-import { lazy, Suspense, useLayoutEffect, useState, type ComponentType, type ReactNode } from "react";
+import { lazy, Suspense, useLayoutEffect, type ComponentType } from "react";
 import { t } from "./i18n";
 import type { Route, RouteName } from "./lib/route";
-import { ExtraContext, Tabs, TopBar, type Active } from "./components/Chrome";
+import { Tabs, TopBar, type Active } from "./components/Chrome";
 import { Toast } from "./components/Toast";
 import { inPageLink, scrollTarget, useNav, useRoute } from "./components/router";
 import Home from "./screens/Home";
@@ -47,16 +47,16 @@ import Event from "./screens/Event";
 import Club from "./screens/Club";
 import Settings from "./screens/Settings";
 import Subscribe from "./screens/Subscribe";
-import About from "./screens/About";
+import About, { ShareButton as AboutShare } from "./screens/About";
 import AboutMore from "./screens/AboutMore";
 import Family from "./screens/Family";
 import Public from "./screens/Public";
 import Guide from "./screens/Guide";
 import Words from "./screens/Words";
 import Intl from "./screens/Intl";
-import Dev from "./screens/Dev";
 
 const MapScreen = lazy(() => import("./screens/Map"));  // Leaflet only loads here
+const Dev = lazy(() => import("./screens/Dev"));  // only developers ever open it
 
 export interface ScreenProps { route: Route }
 interface Meta {
@@ -71,6 +71,8 @@ interface Meta {
   title: string;
   /** the "skip to events" link, on the screens that open on a long list */
   skip?: boolean;
+  /** a button of the screen's own at the start of the top bar's right side */
+  extra?: ComponentType;
 }
 const T = (s: string) => s + " · Rotaract Events";
 export const ROUTE_META: Record<RouteName, Meta> = {
@@ -82,7 +84,7 @@ export const ROUTE_META: Record<RouteName, Meta> = {
   club: { screen: Club, page: "club", active: null, back: true, title: "Rotaract Club" },
   settings: { screen: Settings, page: "settings", active: "settings", title: T("Settings") },
   subscribe: { screen: Subscribe, page: "subscribe", active: null, back: true, title: T("Subscribe") },
-  about: { screen: About, page: "about", active: "about", title: T("What is Rotaract?") },
+  about: { screen: About, page: "about", active: "about", title: T("What is Rotaract?"), extra: AboutShare },
   "about-more": { screen: AboutMore, page: "about-more", cls: "frosted", active: "about", back: true, title: T("Rotary, districts & the world") },
   family: { screen: Family, page: "family", active: "about", back: true, title: T("The Rotary family") },
   public: { screen: Public, page: "public", active: "app", title: T("About this app") },
@@ -93,8 +95,7 @@ export const ROUTE_META: Record<RouteName, Meta> = {
 };
 
 export default function App() {
-  const route = useRoute(), nav = useNav(), meta = ROUTE_META[route.name], Screen = meta.screen;
-  const [extra, setExtra] = useState<ReactNode>(null);
+  const route = useRoute(), nav = useNav(), meta = ROUTE_META[route.name], Screen = meta.screen, Extra = meta.extra;
   // body[data-page], the page classes and the default title; before the screen's own effects (useTitle) run
   useLayoutEffect(() => {
     const b = document.body;
@@ -109,15 +110,15 @@ export default function App() {
     if (y) { const id = requestAnimationFrame(() => scrollTo(0, y)); return () => cancelAnimationFrame(id); }
   }, [nav.id]);
   return (
-    <ExtraContext.Provider value={setExtra}>
+    <>
       <div id="frost" aria-hidden="true" />
       {meta.skip && <a className="skip" {...inPageLink("main")}>{t("skip_to")}</a>}
-      <TopBar active={meta.active} back={meta.back} extra={extra} />
+      <TopBar active={meta.active} back={meta.back} extra={Extra && <Extra />} />
       <Suspense fallback={null}>
         <Screen key={route.name + "/" + route.params.id} route={route} />
       </Suspense>
       <Tabs active={meta.active} />
       <Toast />
-    </ExtraContext.Provider>
+    </>
   );
 }

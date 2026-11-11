@@ -1,10 +1,11 @@
 // The navigation chrome, identical on every screen: top bar (back · logo | extra · Dev · Rotaract · info · settings) and bottom tabs
-// (home · discover · calendar). App renders both from the route table; a screen adds a button to the top bar with useTopBarExtra().
-import { createContext, useContext, useLayoutEffect, useRef, type ReactNode } from "react";
+// (home · discover · calendar). App renders both from the route table, including a screen's own top-bar button (ROUTE_META extra).
+import { useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
 import { t } from "../i18n";
 import { cx } from "../lib/color";
 import { anyDevFlag } from "../lib/dev";
 import { href } from "../lib/route";
+import { store } from "../lib/store";
 import { Icon, type IconName } from "./Icon";
 import { useStored } from "./hooks";
 import { canGoBack } from "./router";
@@ -19,7 +20,7 @@ function Hbtn({ name, to, label, on = false }: { name: IconName; to: string; lab
 export function TopBar({ active, back = false, extra = null }: { active: Active; back?: boolean; extra?: ReactNode }) {
   const ref = useRef<HTMLElement>(null);
   const dev = useStored("rac.dev", false);
-  useStored("rac.devDate", ""); useStored("rac.devGuest", false); useStored("rac.devNew", false); useStored("rac.devStale", false);  // re-render when a preview switch changes
+  const preview = useSyncExternalStore(store.subscribe, anyDevFlag);
   // sticky section headings start under the top bar
   useLayoutEffect(() => { if (ref.current) document.documentElement.style.setProperty("--stick", ref.current.offsetHeight + "px"); });
   return (
@@ -32,7 +33,7 @@ export function TopBar({ active, back = false, extra = null }: { active: Active;
         <div className="rgt">
           {extra}
           {/* developer mode (Settings, ten taps on "made by") puts the developer screen one tap away; lit while a preview switch is on */}
-          {dev ? <Hbtn name="code" to={href("dev")} label="Dev" on={active === "dev" || anyDevFlag()} /> : null}
+          {dev ? <Hbtn name="code" to={href("dev")} label="Dev" on={active === "dev" || preview} /> : null}
           <Hbtn name="wheel" to={href("about")} label="Rotaract" on={active === "about"} />
           <Hbtn name="info" to={href("public")} label={t("info")} on={active === "app"} />
           <Hbtn name="settings" to={href("settings")} label={t("settings")} on={active === "settings"} />
@@ -54,13 +55,4 @@ export function Tabs({ active }: { active: Active }) {
       ))}
     </nav>
   );
-}
-
-/** App provides the setter; screens call useTopBarExtra() */
-export const ExtraContext = createContext<(n: ReactNode) => void>(() => {});
-/** put a button at the start of the top bar's right side (About's share button) while this screen is shown.
- *  Set once on mount: give it a node whose handlers don't need fresh props (read refs or module state). */
-export function useTopBarExtra(node: ReactNode): void {
-  const set = useContext(ExtraContext);
-  useLayoutEffect(() => { set(node); return () => set(null); }, []);
 }

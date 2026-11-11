@@ -5,7 +5,7 @@ import { nEvents, t, type StrKey } from "../i18n";
 import { getData } from "../lib/data";
 import { fmt } from "../lib/dates";
 import { devFlag } from "../lib/dev";
-import { activeCount, emptyFilters, fromParams, radiusOf, toParams, type Filters, type ListResult, type View } from "../lib/filters";
+import { emptyFilters, fromParams, radiusOf, toParams, type Filters, type ListResult, type View } from "../lib/filters";
 import { geocode } from "../lib/geo";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
@@ -20,9 +20,6 @@ export interface FilterApi {
   shown: Filters | null;
   /** the controls are set from the URL (no view is pressed before: which one is not known yet) */
   inited: boolean;
-  /** the number on the Filters button, as of the last recount(): the chips, place and radius count; typing a search doesn't */
-  count: number | null;
-  recount(): void;
   /** the line under the place field */
   hint: string;
   /** the place field as typed; it only counts once committed (change event) */
@@ -48,7 +45,6 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
   const [inited, setInited] = useState(false);
   const [hint, setHint] = useState("");
   const [placeText, setPlaceText] = useState("");
-  const [count, setCount] = useState<number | null>(null);
   // the latest controls, for handlers that change several things in a row (state would still hold the old ones)
   const cur = useRef(live);
   const timer = useRef(0);
@@ -61,7 +57,6 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
   };
   // a copy, so drawing the same filters again still redraws (the Home after the welcome steps)
   const draw = () => setShown({ ...cur.current });
-  const recount = () => setCount(activeCount(cur.current));
 
   const locate = () => {
     if (!navigator.geolocation) {
@@ -115,7 +110,6 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
     setPlaceText("");
     setHint("");
     update({ q: "", place: "", r: "", center: null, d: new Set(), clubs: new Set() });
-    recount();
     setView("all");
   };
 
@@ -127,7 +121,6 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
     setLive(f);
     setPlaceText(f.place);
     setInited(true);
-    recount();
     void (async () => {
       if (f.place) await setPlace(f.place);
       if (cur.current.view === "near" && !cur.current.center) locate();
@@ -142,7 +135,7 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
     if (q.toString() !== (location.hash.split("?")[1] ?? "")) replaceQuery(q);
   }, [shown]);
 
-  return { live, shown, inited, count, recount, hint, placeText, setPlaceText, setQ, update, draw, setView, locate, setPlace, clear };
+  return { live, shown, inited, hint, placeText, setPlaceText, setQ, update, draw, setView, locate, setPlace, clear };
 }
 
 /** "Last updated ..., may be out of date": events.json is more than 30 hours old */

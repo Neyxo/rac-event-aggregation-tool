@@ -14,8 +14,6 @@ export function toast(msg: string, action?: ToastAction): void {
   clearTimeout(timer);
   if (!action) timer = setTimeout(() => set({ ...state, show: false }), 2200);
 }
-/** the same function, for components that prefer a hook */
-export const useToast = () => toast;
 
 export function Toast() {
   const s = useSyncExternalStore(f => { listeners.add(f); return () => { listeners.delete(f); }; }, () => state);

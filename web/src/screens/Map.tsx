@@ -8,12 +8,11 @@ import { nEvents, t } from "../i18n";
 import { onColor } from "../lib/color";
 import { club } from "../lib/data";
 import { fmt, isPast } from "../lib/dates";
+import { SWISSTOPO_GREY } from "../lib/geo";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
 import { LoadError, useData } from "../components";
 
-// the grey national map, so the markers carry the colour (free, no key)
-const SWISSTOPO = "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg";
 
 /** the dot: an HTML string, because Leaflet's divIcon takes markup */
 function dotHtml(e: Event): string {
@@ -49,7 +48,8 @@ export default function MapScreen(_props: ScreenProps) {
     if (error) return;
     // Switzerland & Liechtenstein, no zooming out to space
     const map = L.map(box.current!, { minZoom: 7, maxBounds: [[45, 4.5], [48.6, 12]], maxBoundsViscosity: 1 }).setView([46.9, 8.2], 8);
-    L.tileLayer(SWISSTOPO, { maxZoom: 18, attribution: "© swisstopo" }).addTo(map);
+    // the grey national map, so the markers carry the colour
+    L.tileLayer(SWISSTOPO_GREY, { maxZoom: 18, attribution: "© swisstopo" }).addTo(map);
     layer.current = L.layerGroup().addTo(map);
     return () => {
       map.remove();
