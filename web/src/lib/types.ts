@@ -83,6 +83,10 @@ export interface Status {
   warnings?: string[];
   /** per club: list items whose date could not be read */
   unreadable?: Record<string, number>;
+  /** problems of the side lists (news, projects) that did not fail the run */
+  notes?: string[];
+  /** the Instagram layer: on, off (secrets not set) or error (bad id, expired token); per club a post count or the error */
+  instagram?: { state: "on" | "off" | "error"; note: string; clubs: Record<string, number | string> };
   commit: string;
   /** link to the workflow run */
   run: string;

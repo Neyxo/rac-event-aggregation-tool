@@ -74,5 +74,11 @@
   "bern": 1
  },
  "commit": "abc1234",
- "run": "https://example.invalid/run/1"
+ "run": "https://example.invalid/run/1",
+ "notes": [],
+ "instagram": {
+  "state": "off",
+  "note": "the INSTAGRAM_TOKEN or INSTAGRAM_USER_ID secret is not set",
+  "clubs": {}
+ }
 }

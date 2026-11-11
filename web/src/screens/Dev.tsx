@@ -70,6 +70,18 @@ function Chip({ c }: { c: Club }) {
   return <a className="chip club" href={href("club", c.id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}</a>;
 }
 
+/** the Instagram line: from status.json when the run wrote it (older runs did not), else guessed from the pictures in the data */
+function Instagram({ st, insta }: { st: Stat; insta: number }) {
+  const ig = st.instagram;
+  if (!ig) return <p className="meta">{insta ? `Instagram layer: on, ${insta} clubs with pictures.` : "Instagram layer: off (no pictures in this build)."}</p>;
+  const errors = Object.entries(ig.clubs).filter(([, v]) => typeof v === "string");
+  if (ig.state === "off") return <p className="meta">{`Instagram layer: off, ${ig.note}.`}</p>;
+  if (ig.state === "error") return <p className="devstate bad"><i />{`Instagram layer: failed, ${ig.note}. No pictures in this build.`}</p>;
+  const level = errors.length ? "warn" : "ok";
+  const withPosts = Object.values(ig.clubs).filter(v => typeof v === "number" && v > 0).length;
+  return <p className={cx("devstate", level)}><i />{`Instagram layer: on, ${withPosts} of ${Object.keys(ig.clubs).length} clubs with pictures` + (errors.length ? `, ${errors.length} could not be read (see Clubs and layers)` : "")}</p>;
+}
+
 /** the workflow's cron: 17 *\/6 * * * (UTC) */
 function nextRun(): Date {
   const n = new Date();
@@ -92,6 +104,9 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
       {warnings.map((w, i) => <p key={i} className="devstate warn"><i />{w}</p>)}
+      <Instagram st={st} insta={insta} />
+      {/* news and projects that could not be fetched: the last list stays, the run stays green */}
+      {st.notes ? <Fold title="Side lists not updated" items={st.notes.map(n => <span key={n}>{n}</span>)} /> : null}
       <div className="facts devfacts">
         <Count label="upcoming" n={up.length} />
         <Count label="in the app" n={own.length} />
@@ -100,7 +115,6 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
         <Count label="members only" n={own.filter(e => e.members).length} />
         <Count label="cancelled" n={own.filter(e => e.cancelled).length} />
       </div>
-      <p className="meta">{insta ? `Instagram layer: on, ${insta} clubs with pictures.` : "Instagram layer: off (no pictures in this build)."}</p>
       <div className="links">
         {st.run ? <Link label="This run's log" to={st.run} /> : null}
         <Link label="All runs" to={ALL_RUNS} />
@@ -264,7 +278,9 @@ function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[
   const line = (c: Club) => {
     const s: Partial<Status["clubs"][string]> = st.clubs[c.id] || {};
     const unreadable = st.unreadable?.[c.id];  // agenda items whose date the feed could not read
-    return `${upBy[c.id] || 0} upcoming · ${s.events ?? "?"} in history` + (s.cancelled ? ` · ${s.cancelled} cancelled` : "") + (s.without_detail ? ` · ${s.without_detail} without details` : "") + (unreadable ? ` · ${unreadable} with no readable date` : "");
+    const ig = st.instagram?.clubs[c.id];  // only for clubs with an Instagram link, while the layer ran
+    return `${upBy[c.id] || 0} upcoming · ${s.events ?? "?"} in history` + (s.cancelled ? ` · ${s.cancelled} cancelled` : "") + (s.without_detail ? ` · ${s.without_detail} without details` : "") + (unreadable ? ` · ${unreadable} with no readable date` : "")
+      + (ig == null ? "" : typeof ig === "number" ? ` · ${ig} Instagram posts` : ` · Instagram: ${ig}`);
   };
   return <>{all.map(c => <div key={c.id} className="devclub"><Chip c={c} /><span>{line(c)}</span><a href={c.id + ".ics"}>.ics</a></div>)}</>;
 }
