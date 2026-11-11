@@ -332,9 +332,9 @@ const it: Messages = {
   wrong_h: "Qualcosa non va?",
   report: "Segnala su GitHub",
   cred: "Eventi, immagini e notizie: le pagine pubbliche dei club su Polaris. Mappe e ricerca dei luoghi: swisstopo e OpenStreetMap. Stemmi: Wikimedia Commons. Posizione approssimativa: geojs.io.",
-  wrong: "Una data, un luogo o un testo sbagliato viene corretto dal club su Polaris; l'app segue entro 6 ore. Per un problema con l'app stessa, avvisa Jean-Michel Carrel (Rotaract Club Luzern) o segnalalo su GitHub.",
+  wrong: "Una data, un luogo o un testo sbagliato viene corretto dal club su Polaris; l'app segue entro un giorno. Per un problema con l'app stessa, avvisa Jean-Michel Carrel (Rotaract Club Luzern) o segnalalo su GitHub.",
   app_qa: pairs([
-    ["Da dove vengono gli eventi?","Dall'agenda pubblica di ogni Rotaract club di Svizzera e Liechtenstein su Polaris, il sito dei club. L'app li rilegge ogni 6 ore; un evento nuovo o modificato può quindi impiegare questo tempo per comparire."],
+    ["Da dove vengono gli eventi?","Dall'agenda pubblica di ogni Rotaract club di Svizzera e Liechtenstein su Polaris, il sito dei club. L'app li rilegge ogni notte; un evento nuovo o modificato può quindi impiegare fino a un giorno per comparire."],
     ["Cosa sono «Club principale» e «Mostra anche»?","Il club principale è quello di cui sei socio o che ti interessa di più. «Mostra anche» aggiunge altri club che segui. Insieme formano la Home. Li cambi nelle Impostazioni; la ricerca e i filtri non li cambiano mai."],
     ["Cosa significano «Solo per soci», «Annullato» e «Iscrizione entro»?","Solo per soci: l'app mostra titolo, data e luogo; i dettagli e l'iscrizione sono su Polaris dopo l'accesso. Annullato: il club ha tolto l'evento; resta visibile finché la sua data non è passata. Iscrizione entro: il termine d'iscrizione fissato dal club."],
     ["Installare l'app o abbonarsi a un calendario?","Installare mette questa app nella schermata iniziale. Abbonarsi mette gli eventi nel calendario del tuo telefono, accanto agli altri appuntamenti. Le due cose sono indipendenti: una, entrambe o nessuna."],
@@ -343,7 +343,7 @@ const it: Messages = {
     ["Fino a quando risalgono gli eventi?","Due anni. Gli eventi passati sono sotto Scopri › Passati."],
   ]),
   sub_qa: pairs([
-    ["In quanto tempo arrivano le modifiche?","I calendari qui vengono aggiornati ogni 6 ore. La tua app calendario decide quando scaricarli: Apple di solito entro poche ore, Google può impiegare un giorno e non ha un pulsante di aggiornamento."],
+    ["In quanto tempo arrivano le modifiche?","I calendari qui vengono aggiornati ogni notte. La tua app calendario decide quando scaricarli: Apple di solito entro poche ore, Google può impiegare un giorno e non ha un pulsante di aggiornamento."],
     ["Abbonarsi o «Aggiungi al calendario»?","Un abbonamento porta tutti gli eventi di un club e li tiene aggiornati. «Aggiungi al calendario» su un evento copia solo quell'evento; non cambia se l'evento viene spostato."],
     ["Un club o tutti i club?","Abbonati al tuo club e aggiungi gli altri uno alla volta. Il calendario di tutti i club contiene molti eventi; tienilo come calendario separato che puoi nascondere."],
     ["E gli eventi annullati o solo per soci?","Gli eventi solo per soci riportano titolo, data e luogo e sono segnalati nel titolo; i dettagli sono su Polaris. Un evento annullato resta nel calendario, segnato come annullato, finché la sua data non è passata."],
@@ -358,7 +358,7 @@ const it: Messages = {
     "Il mese in una vista",
   ],
   app_know: pairs([
-    ["Aggiornato ogni 6 ore","È la frequenza con cui l'app legge le pagine Polaris dei club."],
+    ["Aggiornato ogni notte","È la frequenza con cui l'app legge le pagine Polaris dei club."],
     ["Iscrizione su Polaris","L'app mostra soltanto gli eventi. L'iscrizione resta su Polaris."],
     ["Funziona offline","Vedi gli eventi dell'ultima visita."],
     ["Nessuna notifica","Per i promemoria, abbonati al calendario."],
@@ -475,7 +475,7 @@ const it: Messages = {
       ["Come mi iscrivo?","Sul sito degli organizzatori: trovi il link in ogni evento qui. I posti sono limitati: iscriviti presto dopo l'apertura."],
       ["Quanto costa?","Ogni evento ha il suo prezzo, di solito un pacchetto con programma e pasti. Il viaggio è a parte. Chiedi al tuo club se sostiene i soci che partecipano."],
       ["Che lingua?","Inglese."],
-      ["Da dove vengono queste date?","Dal calendario di Rotaract Europe, controllato ogni sei ore. Altri eventi internazionali sono aggiunti a mano."],
+      ["Da dove vengono queste date?","Dal calendario di Rotaract Europe, controllato ogni notte. Altri eventi internazionali sono aggiunti a mano."],
     ]),
   },
   projects: "Progetti",

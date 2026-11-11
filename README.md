@@ -7,7 +7,7 @@ Collects the events of every Rotaract club in Switzerland & Liechtenstein from t
 ## What you get
 
 - **The app**: Home (your clubs), Discover (everything, with filters and a map), a month calendar, a page per event and per club. German, French, Italian and English, light and dark, works offline with the last loaded events.
-- **Calendar feeds**, refreshed every 6 hours:
+- **Calendar feeds**, refreshed every night:
   - one per club: `webcal://neyxo.github.io/rotaract-events/<club-id>.ics` (ids in `clubs.toml`)
   - all clubs: `webcal://neyxo.github.io/rotaract-events/all.ics`
 - **Extra layers**: international events (REM, EUCO, the Convention), and Rotary clubs' shared events, which are off until switched on in Settings.
@@ -35,7 +35,7 @@ Edit its `[[clubs]]` entry in `clubs.toml`: Polaris website, language, city, cre
 
 ## Hosting
 
-GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions), with read and write workflow permissions. `.github/workflows/feeds.yml` runs every 6 hours, on every push and by hand.
+GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions), with read and write workflow permissions. `.github/workflows/feeds.yml` runs every night, on every push and by hand. Lint, typecheck and the tests run on a push or by hand; the nightly run only builds and syncs.
 
 ## More detail
 

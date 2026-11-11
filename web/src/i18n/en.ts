@@ -335,9 +335,9 @@ const en = {
   wrong_h: "Something wrong?",
   report: "Report on GitHub",
   cred: "Events, pictures and news: the clubs' public pages on Polaris. Maps and place search: swisstopo and OpenStreetMap. Coats of arms: Wikimedia Commons. Approximate location: geojs.io.",
-  wrong: "A wrong date, place or text is fixed by the club on Polaris; the app follows within 6 hours. For a problem with the app itself, tell Jean-Michel Carrel (Rotaract Club Luzern) or report it on GitHub.",
+  wrong: "A wrong date, place or text is fixed by the club on Polaris; the app follows within a day. For a problem with the app itself, tell Jean-Michel Carrel (Rotaract Club Luzern) or report it on GitHub.",
   app_qa: pairs([
-    ["Where do the events come from?","From the public agenda of every Rotaract club in Switzerland and Liechtenstein on Polaris, the clubs' website. The app reads them again every 6 hours, so a new or changed event can take that long to appear."],
+    ["Where do the events come from?","From the public agenda of every Rotaract club in Switzerland and Liechtenstein on Polaris, the clubs' website. The app reads them again every night, so a new or changed event can take up to a day to appear."],
     ["What are “Main club” and “Also show”?","Your main club is the one you belong to or care about most. “Also show” adds other clubs you follow. Together they make up Home. You change them in Settings; searching and filtering never changes them."],
     ["What do “Members only”, “Cancelled” and “Register by” mean?","Members only: the app shows title, date and place; the details and the registration are on Polaris after you log in. Cancelled: the club removed the event; it stays visible until its date has passed. Register by: the registration deadline the club set."],
     ["Installing the app or subscribing to a calendar?","Installing puts this app on your home screen. Subscribing puts the events into your phone's own calendar, next to your other appointments. The two are independent: do one, both or neither."],
@@ -346,7 +346,7 @@ const en = {
     ["How far back do the events go?","Two years. Past events are under Discover › Past."],
   ]),
   sub_qa: pairs([
-    ["How quickly do changes arrive?","The calendars here are refreshed every 6 hours. Your calendar app decides when it fetches them: Apple usually within a few hours, Google can take a day and has no refresh button."],
+    ["How quickly do changes arrive?","The calendars here are refreshed every night. Your calendar app decides when it fetches them: Apple usually within a few hours, Google can take a day and has no refresh button."],
     ["Subscribing or “Add to calendar”?","A subscription brings in all events of a club and keeps them up to date. “Add to calendar” on an event copies that one event; it does not change if the event moves."],
     ["One club or all clubs?","Subscribe to your own club and add other clubs one by one. The calendar with all clubs holds a lot of events; keep it as a separate calendar you can hide."],
     ["What about members-only and cancelled events?","Members-only events carry title, date and place and are marked in the title; the details are on Polaris. A cancelled event stays in the calendar, marked as cancelled, until its date has passed."],
@@ -361,7 +361,7 @@ const en = {
     "The month in one view",
   ],
   app_know: pairs([
-    ["Fresh every 6 hours","That is how often the app reads the clubs' Polaris pages."],
+    ["Fresh every night","That is how often the app reads the clubs' Polaris pages."],
     ["Register on Polaris","The app only shows events. Signing up stays on Polaris."],
     ["Works offline","You see the events from your last visit."],
     ["No notifications","For reminders, subscribe to the calendar."],
@@ -478,7 +478,7 @@ const en = {
       ["How do I register?","On the organiser's website, linked from each event here. Places are limited, so register soon after registration opens."],
       ["What does it cost?","Each event sets its own price, usually a package with the programme and meals. Travel comes on top. Ask your club whether it supports members who go."],
       ["Which language?","English."],
-      ["Where do these dates come from?","From Rotaract Europe's own calendar, checked every six hours. Other international events are added by hand."],
+      ["Where do these dates come from?","From Rotaract Europe's own calendar, checked every night. Other international events are added by hand."],
     ]),
   },
   projects: "Projects",

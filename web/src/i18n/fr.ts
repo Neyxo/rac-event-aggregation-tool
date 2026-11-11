@@ -332,9 +332,9 @@ const fr: Messages = {
   wrong_h: "Quelque chose ne va pas ?",
   report: "Signaler sur GitHub",
   cred: "Événements, images et actualités : les pages publiques des clubs sur Polaris. Cartes et recherche de lieux : swisstopo et OpenStreetMap. Armoiries : Wikimedia Commons. Position approximative : geojs.io.",
-  wrong: "Une date, un lieu ou un texte erroné est corrigé par le club sur Polaris ; l'app suit dans les 6 heures. Pour un problème avec l'app elle-même, prévenez Jean-Michel Carrel (Rotaract Club Luzern) ou signalez-le sur GitHub.",
+  wrong: "Une date, un lieu ou un texte erroné est corrigé par le club sur Polaris ; l'app suit dans les 24 heures. Pour un problème avec l'app elle-même, prévenez Jean-Michel Carrel (Rotaract Club Luzern) ou signalez-le sur GitHub.",
   app_qa: pairs([
-    ["D'où viennent les événements ?","De l'agenda public de chaque club Rotaract de Suisse et du Liechtenstein sur Polaris, le site des clubs. L'app les relit toutes les 6 heures ; un événement nouveau ou modifié peut donc mettre ce temps à apparaître."],
+    ["D'où viennent les événements ?","De l'agenda public de chaque club Rotaract de Suisse et du Liechtenstein sur Polaris, le site des clubs. L'app les relit chaque nuit ; un événement nouveau ou modifié peut donc mettre jusqu'à un jour à apparaître."],
     ["Que sont « Club principal » et « Afficher aussi » ?","Votre club principal est celui dont vous êtes membre ou qui vous intéresse le plus. « Afficher aussi » ajoute d'autres clubs que vous suivez. Ensemble, ils composent l'Accueil. Vous les modifiez dans les Réglages ; la recherche et les filtres ne les changent jamais."],
     ["Que signifient « Réservé aux membres », « Annulé » et « Inscription jusqu'au » ?","Réservé aux membres : l'app montre le titre, la date et le lieu ; les détails et l'inscription sont sur Polaris après connexion. Annulé : le club a retiré l'événement ; il reste visible jusqu'à ce que sa date soit passée. Inscription jusqu'au : le délai d'inscription fixé par le club."],
     ["Installer l'app ou s'abonner à un calendrier ?","Installer place cette app sur votre écran d'accueil. S'abonner place les événements dans le calendrier de votre téléphone, à côté de vos autres rendez-vous. Les deux sont indépendants : l'un, les deux ou aucun."],
@@ -343,7 +343,7 @@ const fr: Messages = {
     ["Jusqu'où remontent les événements ?","Deux ans. Les événements passés se trouvent sous Découvrir › Passés."],
   ]),
   sub_qa: pairs([
-    ["En combien de temps les changements arrivent-ils ?","Les calendriers d'ici sont actualisés toutes les 6 heures. Votre app de calendrier décide quand elle les récupère : Apple en général en quelques heures, Google peut mettre un jour et n'a pas de bouton d'actualisation."],
+    ["En combien de temps les changements arrivent-ils ?","Les calendriers d'ici sont actualisés chaque nuit. Votre app de calendrier décide quand elle les récupère : Apple en général en quelques heures, Google peut mettre un jour et n'a pas de bouton d'actualisation."],
     ["S'abonner ou « Ajouter au calendrier » ?","Un abonnement apporte tous les événements d'un club et les tient à jour. « Ajouter au calendrier » sur un événement copie ce seul événement ; il ne change pas si l'événement est déplacé."],
     ["Un club ou tous les clubs ?","Abonnez-vous à votre propre club et ajoutez les autres un par un. Le calendrier de tous les clubs contient beaucoup d'événements ; gardez-le comme calendrier séparé que vous pouvez masquer."],
     ["Et les événements annulés ou réservés aux membres ?","Les événements réservés aux membres portent le titre, la date et le lieu et sont marqués dans le titre ; les détails sont sur Polaris. Un événement annulé reste dans le calendrier, marqué comme annulé, jusqu'à ce que sa date soit passée."],
@@ -358,7 +358,7 @@ const fr: Messages = {
     "Le mois en une vue",
   ],
   app_know: pairs([
-    ["Actualisé toutes les 6 heures","C'est le rythme auquel l'app lit les pages Polaris des clubs."],
+    ["Actualisé chaque nuit","C'est le rythme auquel l'app lit les pages Polaris des clubs."],
     ["Inscription sur Polaris","L'app ne fait que montrer les événements. L'inscription reste sur Polaris."],
     ["Fonctionne hors ligne","Vous voyez les événements de votre dernière visite."],
     ["Pas de notifications","Pour les rappels, abonnez-vous au calendrier."],
@@ -475,7 +475,7 @@ const fr: Messages = {
       ["Comment s'inscrire ?","Sur le site des organisateurs, dont le lien figure sur chaque événement ici. Les places sont limitées : inscrivez-vous peu après l'ouverture."],
       ["Combien ça coûte ?","Chaque événement fixe son prix, en général un forfait avec le programme et les repas. Le voyage s'y ajoute. Demandez à votre club s'il soutient les membres qui y vont."],
       ["Quelle langue ?","L'anglais."],
-      ["D'où viennent ces dates ?","Du calendrier de Rotaract Europe, vérifié toutes les six heures. Les autres événements internationaux sont ajoutés à la main."],
+      ["D'où viennent ces dates ?","Du calendrier de Rotaract Europe, vérifié chaque nuit. Les autres événements internationaux sont ajoutés à la main."],
     ]),
   },
   projects: "Projets",

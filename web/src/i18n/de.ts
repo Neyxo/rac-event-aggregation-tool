@@ -332,9 +332,9 @@ const de: Messages = {
   wrong_h: "Stimmt etwas nicht?",
   report: "Auf GitHub melden",
   cred: "Anlässe, Bilder und News: die öffentlichen Seiten der Clubs auf Polaris. Karten und Ortssuche: swisstopo und OpenStreetMap. Wappen: Wikimedia Commons. Ungefährer Standort: geojs.io.",
-  wrong: "Ein falsches Datum, ein falscher Ort oder Text wird vom Club auf Polaris korrigiert; die App zieht innert 6 Stunden nach. Bei einem Problem mit der App selbst: Jean-Michel Carrel (Rotaract Club Luzern) Bescheid geben oder auf GitHub melden.",
+  wrong: "Ein falsches Datum, ein falscher Ort oder Text wird vom Club auf Polaris korrigiert; die App zieht innert eines Tages nach. Bei einem Problem mit der App selbst: Jean-Michel Carrel (Rotaract Club Luzern) Bescheid geben oder auf GitHub melden.",
   app_qa: pairs([
-    ["Woher kommen die Anlässe?","Aus der öffentlichen Agenda jedes Rotaract Clubs in der Schweiz und Liechtenstein auf Polaris, der Website der Clubs. Die App liest sie alle 6 Stunden neu ein; so lange kann es dauern, bis ein neuer oder geänderter Anlass erscheint."],
+    ["Woher kommen die Anlässe?","Aus der öffentlichen Agenda jedes Rotaract Clubs in der Schweiz und Liechtenstein auf Polaris, der Website der Clubs. Die App liest sie jede Nacht neu ein; bis zu einem Tag kann es dauern, bis ein neuer oder geänderter Anlass erscheint."],
     ["Was sind «Hauptclub» und «Auch anzeigen»?","Dein Hauptclub ist der Club, in dem du Mitglied bist oder der dich am meisten interessiert. «Auch anzeigen» fügt weitere Clubs hinzu, denen du folgst. Zusammen ergeben sie den Start. Du änderst sie in den Einstellungen; Suchen und Filtern ändert sie nie."],
     ["Was bedeuten «Nur für Mitglieder», «Abgesagt» und «Anmelden bis»?","Nur für Mitglieder: Die App zeigt Titel, Datum und Ort; Details und Anmeldung findest du auf Polaris nach dem Login. Abgesagt: Der Club hat den Anlass entfernt; er bleibt sichtbar, bis sein Datum vorbei ist. Anmelden bis: die Anmeldefrist, die der Club gesetzt hat."],
     ["App installieren oder Kalender abonnieren?","Installieren legt diese App auf deinen Homescreen. Abonnieren bringt die Anlässe in den Kalender deines Handys, neben deine anderen Termine. Beides ist unabhängig: Du kannst eines, beides oder keines tun."],
@@ -343,7 +343,7 @@ const de: Messages = {
     ["Wie weit reichen die Anlässe zurück?","Zwei Jahre. Vergangene Anlässe findest du unter Entdecken › Vergangene."],
   ]),
   sub_qa: pairs([
-    ["Wie schnell kommen Änderungen an?","Die Kalender hier werden alle 6 Stunden aktualisiert. Wann deine Kalender-App sie abholt, entscheidet sie selbst: Apple meist innert weniger Stunden, Google kann einen Tag brauchen und hat keinen Aktualisieren-Knopf."],
+    ["Wie schnell kommen Änderungen an?","Die Kalender hier werden jede Nacht aktualisiert. Wann deine Kalender-App sie abholt, entscheidet sie selbst: Apple meist innert weniger Stunden, Google kann einen Tag brauchen und hat keinen Aktualisieren-Knopf."],
     ["Abonnieren oder «In Kalender»?","Ein Abo bringt alle Anlässe eines Clubs und hält sie aktuell. «In Kalender» bei einem Anlass kopiert nur diesen einen; er ändert sich nicht, wenn der Anlass verschoben wird."],
     ["Ein Club oder alle Clubs?","Abonniere deinen eigenen Club und füge weitere Clubs einzeln hinzu. Der Kalender mit allen Clubs enthält sehr viele Anlässe; führe ihn als eigenen Kalender, den du ausblenden kannst."],
     ["Was ist mit abgesagten Anlässen und solchen nur für Mitglieder?","Anlässe nur für Mitglieder enthalten Titel, Datum und Ort und sind im Titel markiert; die Details stehen auf Polaris. Ein abgesagter Anlass bleibt als abgesagt im Kalender, bis sein Datum vorbei ist."],
@@ -358,7 +358,7 @@ const de: Messages = {
     "Der Monat in einer Ansicht",
   ],
   app_know: pairs([
-    ["Alle 6 Stunden frisch","So oft liest die App die Polaris-Seiten der Clubs."],
+    ["Jede Nacht frisch","So oft liest die App die Polaris-Seiten der Clubs."],
     ["Anmelden auf Polaris","Die App zeigt die Anlässe nur. Anmelden bleibt auf Polaris."],
     ["Funktioniert offline","Du siehst die Anlässe vom letzten Besuch."],
     ["Keine Mitteilungen","Für Erinnerungen abonnierst du den Kalender."],
@@ -475,7 +475,7 @@ const de: Messages = {
       ["Wie melde ich mich an?","Auf der Website der Organisatoren, verlinkt bei jedem Anlass hier. Die Plätze sind begrenzt, melde dich also bald nach Anmeldestart an."],
       ["Was kostet es?","Jeder Anlass hat seinen eigenen Preis, meist ein Paket mit Programm und Verpflegung. Die Reise kommt dazu. Frag in deinem Club, ob er Mitglieder unterstützt, die hinfahren."],
       ["Welche Sprache?","Englisch."],
-      ["Woher kommen diese Daten?","Aus dem Kalender von Rotaract Europe, alle sechs Stunden geprüft. Weitere internationale Anlässe werden von Hand ergänzt."],
+      ["Woher kommen diese Daten?","Aus dem Kalender von Rotaract Europe, jede Nacht geprüft. Weitere internationale Anlässe werden von Hand ergänzt."],
     ]),
   },
   projects: "Projekte",
