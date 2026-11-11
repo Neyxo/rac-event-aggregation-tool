@@ -4,7 +4,8 @@ const DISTRICTS = { "1980": t("d1980"), "1990": t("d1990"), "2000": t("d2000") }
 const S = { view: "all", clubSel: new Set(), distSel: new Set(), center: null, centerLabel: "" };
 applyI18n();
 
-function scopeClubs() { return PAGE === "home" ? myClubs() : null; }
+// Home: your clubs, plus the international events (REM, EUCO, the Convention), which concern every member
+function scopeClubs() { if (PAGE !== "home") return null; const mine = myClubs(); return mine.length ? [...mine, "international"] : mine; }
 
 // --- home banner, or explore mode for people without a club
 function renderHome() {
@@ -30,14 +31,14 @@ function renderHome() {
   const deadlines = mineEv.filter(e => e.deadline && dayN(e.deadline) >= 0 && dayN(e.deadline) <= 21).sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 3);
   const saved = D.data.events.filter(e => !isPast(e) && D.saved.has(e.id)).slice(0, 3);
   const h = new Date().getHours(), week = mineEv.filter(e => dayN(e.start) < 7).length;
-  const row = (e, label, soon) => el("a", { class: "r" + (soon ? " soon" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) }, el("i"), el("span", {}, e.title), el("b", {}, label));
+  const row = (e, label, soon) => el("a", { class: "r" + (soon ? " soon" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) }, el("i"), el("span", {}, e.title), el("b", {}, label), icon("back", "chev"));
   const dLabel = n => n === 0 ? t("today") : n === 1 ? t("tomorrow") : t("d_short", { n });
   S.skip = next?.id;
   const news = mine.flatMap(id => freshNews(club(id))).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
   fill(box,
     el("div", { class: "hello" }, el("h1", {}, (h < 11 ? t("greet_morning") : h < 18 ? t("greet_day") : t("greet_evening")) + " 👋"),
       el("p", { class: "sub" }, week === 0 ? t("wk_none") : week === 1 ? t("wk_one") : t("wk_events", { n: week })),
-      el("div", { class: "chips" }, ...cols.map(id => { const c = club(id); return el("a", { class: "mini glass" + (id === cols[0] ? " main" : ""), href: "club.html?id=" + id, style: clubStyle(id) }, clubMark(c), c.short); }))),
+      el("div", { class: "chips" }, ...cols.map(id => clubChip(id, id === cols[0] ? "main" : "")))),
     next ? nextUp(next, t("next_event") + " · " + club(next.clubs[0]).short) : null,
     D.newIds.size || moved ? el("a", { class: "news glass", href: "#results" }, el("b", {}, t("news_new", { n: D.newIds.size })), el("span", {}, " " + t("news_rest") + (moved ? " · " + t("news_moved", { n: moved }) : "")), icon("back")) : null,
     el("div", { class: "panes" },
@@ -74,7 +75,7 @@ function baseMatches(e) {
   const mine = scopeClubs(); if (mine && mine.length && S.view !== "saved" && !e.clubs.some(c => mine.includes(c))) return false;
   if (S.distSel.size && !e.clubs.some(c => S.distSel.has(club(c).district))) return false;
   if (S.clubSel.size && !e.clubs.some(c => S.clubSel.has(c))) return false;
-  const q = fold($("q")?.value.trim()); if (q) { const hay = fold([e.title, e.description, e.location, ...e.clubs.map(c => club(c).name)].join(" ")); if (!q.split(/\s+/).every(w => hay.includes(w))) return false; }
+  const q = fold($("q")?.value.trim()); if (q) { const hay = fold([e.title, e.description, e.location, e.organiser, ...e.clubs.map(c => club(c).name)].join(" ")); if (!q.split(/\s+/).every(w => hay.includes(w))) return false; }
   return true;
 }
 function distanceOf(e) { return S.center && e.coords ? km(S.center, e.coords) : null; }
@@ -90,6 +91,7 @@ function render() {
     if (S.view === "past" ? !past : past) continue;
     if (S.view === "saved" && !D.saved.has(e.id)) continue;
     if (!baseMatches(e)) continue;
+    if (explore && e.layer === "rotary") continue;  // a guest's Home stays Rotaract; Discover, Calendar and Map show the layer
     if (S.view === "all" && e.id === S.skip) continue;
     if (!withinRadius(e)) { if (!e.coords) noLocation++; continue; }
     matches.push(e);
@@ -106,10 +108,10 @@ function render() {
   if (S.center && radius) parts.push(t("within", { r: radius, place: S.centerLabel }));
   if (noLocation) parts.push(t("no_location", { n: noLocation }));
   $("summary").textContent = parts.join(" · ");
-  if (!matches.length) { const btn = el("button", { type: "button" }, t("show_all")); btn.addEventListener("click", clearFilters); out.append(el("div", { class: "empty" }, S.view === "saved" ? t("empty_saved") : t("empty"), el("br"), btn)); }
+  if (!matches.length) { const btn = el("button", { class: "linkbtn", type: "button" }, t("show_all")); btn.addEventListener("click", clearFilters); out.append(el("div", { class: "empty" }, S.view === "saved" ? t("empty_saved") : t("empty"), el("br"), btn)); }
   let month = "", i = 0;
   for (const e of shown) { const m = fmt.month.format(new Date(e.start)); if (m !== month) { out.append(el("h3", { class: "sh" }, m)); month = m; } out.append(eventCard(e, i++, () => { if (PAGE === "home" && myClubs().length) renderHome(); if (S.view === "saved") render(); })); }
-  if (shown.length < matches.length) out.append(el("div", { class: "links", style: "justify-content:center" }, el("a", { href: "discover.html" }, t("discover_cta"))));
+  if (shown.length < matches.length) out.append(el("div", { class: "links center" }, el("a", { href: "discover.html" }, t("discover_cta"))));
   $("clear").hidden = !($("q")?.value || S.clubSel.size || S.distSel.size || $("place")?.value || $("radius")?.value || S.view !== "all");
   const p = new URLSearchParams();
   if ($("q")?.value) p.set("q", $("q").value); if (S.distSel.size) p.set("d", [...S.distSel].join(",")); if (S.clubSel.size) p.set("clubs", [...S.clubSel].join(","));
@@ -130,7 +132,7 @@ async function onboarding() {
   const finish = () => { D.settings = s; saveSettings(); store.set("rac.onboarded", true); dlg.close(); renderHome(); render(); if (myClubs().length) toast(t("ob_showing", { clubs: myClubs().map(id => club(id).short).join(", ") })); };
   const feedRow = (c, file) => { const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:"); return el("div", { class: "feed" }, el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.name), el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), googleLink(webcal), el("a", { href: https }, ".ics"))); };
   const nav = (nextLabel, skip) => el("div", { class: "nav" }, skip ? el("button", { class: "skip", type: "button" }, skip) : el("span"), el("button", { class: "btn", type: "button" }, nextLabel));
-  const installStep = () => { let how; if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, t("ob_installed")); else if (installPrompt) { how = el("button", { class: "install-btn", type: "button" }, t("inst_btn")); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); } else how = el("p", { class: "meta" }, t("inst_text"), " ", el("a", { href: "settings.html#install" }, t("settings"))); return how; };
+  const installStep = () => { let how; if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) how = el("p", {}, t("ob_installed")); else if (installPrompt) { how = el("button", { class: "btn", type: "button" }, t("inst_btn")); how.addEventListener("click", async () => { installPrompt.prompt(); await installPrompt.userChoice; finish(); }); } else how = el("p", { class: "meta" }, t("inst_text"), " ", el("a", { href: "settings.html#install" }, t("settings"))); return how; };
   const draw = () => {
     dlg.classList.toggle("full", member === false);
     body.replaceChildren(el("div", { class: "bar2", "aria-hidden": "true" }, ...Array.from({ length: steps() }, (_, i) => el("i", { class: i <= step ? "on" : "" }))));
@@ -160,7 +162,7 @@ async function onboarding() {
     } else if (!member && step === 4) {
       const n = nav(t("next"), t("skip")); n.lastChild.addEventListener("click", () => { step = 5; draw(); }); n.firstChild.addEventListener("click", finish);
       h2.textContent = t("ob_follow");
-      const near = guess.length ? guess : D.data.clubs.filter(c => c.district).slice(0, 4).map(c => c.id);
+      const near = guess.length ? guess : D.data.clubs.filter(isRac).slice(0, 4).map(c => c.id);
       body.append(h2, el("p", {}, t("ob_guest_text")), clubChips(new Set(s.also), id => { s.also = s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id]; draw(); }, { only: near }), n);
     } else {
       const n = nav(t("done"), null); n.lastChild.addEventListener("click", finish);
@@ -178,7 +180,7 @@ async function init() {
   try { await loadData(); } catch { return; }
   const generated = new Date(D.data.generated);
   if (Date.now() - generated > 30 * 3600e3) { $("stale").textContent = t("stale", { t: fmt.stamp.format(generated) }); $("stale").hidden = false; }
-  $("foot").replaceChildren(el("div", { class: "meta" }, t("updated", { t: fmt.stamp.format(generated) }) + " · ", el("a", { href: "public.html" }, t("members_only"))), footer());
+  $("foot").replaceChildren(el("div", { class: "meta" }, t("updated", { t: fmt.stamp.format(generated) }) + " · ", el("a", { href: "public.html" }, t("foot_polaris"))), footer());
   const p = new URLSearchParams(location.search);
   if (p.get("event")) { location.replace("event.html?id=" + encodeURIComponent(p.get("event"))); return; }
   // A shared link with filters is about all of Rotaract, not "my clubs": Discover has the UI for it.

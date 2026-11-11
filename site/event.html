@@ -28,24 +28,28 @@ addEventListener("DOMContentLoaded", async () => {
   const share = el("button", { type: "button", class: "linkbtn" }, icon("share"), t("share_event"));
   share.addEventListener("click", async () => { const url = new URL(`e/${e.id}.html`, location.href).href; const data = { title: e.title, text: `${e.title} · ${fmt.full.format(s)}${e.location ? " · " + e.location : ""}`, url }; if (navigator.share) { try { await navigator.share(data); } catch {} } else { await navigator.clipboard.writeText(url); toast(t("copied")); } });
   const hero = el("div", { class: "hero" }, e.image ? el("img", { class: "blur", src: e.image, alt: "", "aria-hidden": "true", referrerpolicy: "no-referrer" }) : null, e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null);
+  const polaris = e.url.includes("/agenda/show/");  // false for international events, which live on their organisers' sites
   const open = !e.cancelled && !isPast(e);  // otherwise the button only opens the event on Polaris
+  const goLabel = t(e.layer === "rotary" ? "open_rotary" : open ? "register" : polaris ? "open_polaris" : "details");  // a Rotary event opens on its club's own Polaris site
   main.style.cssText = clubStyle(lead.id);
   // the club's colour wash behind a frosted card, the crest under the date pane: like the cards and the club page
   wash(lead.color, club(e.clubs[1] || lead.id).color, lead.color);
   main.replaceChildren(
     el("article", { class: "evdetail glass" },
       e.image ? hero : null,
-      el("div", { class: "head" }, lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true" }) : null, datePane(e), el("div", {}, el("h1", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)), e.members ? el("span", { class: "tag dl" }, t("members_only")) : null)), starButton(e),
-        el("a", { class: "go", href: e.url, target: "_blank", rel: "noopener", title: t(open ? "register" : "open_polaris") }, icon("ext"), el("span", {}, t(open ? "register" : "open_polaris")))),
-      // members-only: Polaris' calendar file needs a login, so no "add to calendar"
-      el("div", { class: "links" }, e.members ? null : el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, icon("calendar"), t("add_cal")), share),
+      el("div", { class: "head" }, lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true" }) : null, datePane(e), el("div", {}, el("h1", {}, e.title), el("div", { class: "meta" }, metaLine(e)), el("div", { class: "tags" }, ...e.clubs.filter(c => D.clubs[c]).map(c => clubChip(c)), e.cancelled ? status("bad", null, t("cancelled")) : null, e.members ? status("", "lock", t("members_only")) : null)), starButton(e),
+        el("a", { class: "go", href: e.url, target: "_blank", rel: "noopener", title: goLabel }, icon("ext"), el("span", {}, goLabel))),
+      // members-only: Polaris' calendar file needs a login, so no "add to calendar"; international events aren't on Polaris at all
+      el("div", { class: "links" }, e.members || !polaris ? null : el("a", { href: e.url.replace("/agenda/show/", "/agenda/ical/") }, icon("calendar"), t("add_cal")), share),
       el("dl", { class: "kv" },
-        el("dt", {}, t("when")), el("dd", {}, fmt.full.format(s) + (e.allday ? "" : ", " + fmt.time.format(s) + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""))),
+        el("dt", {}, t("when")), el("dd", {}, fmt.full.format(s) + (e.allday ? (sameDay(s, lastDay(e)) ? "" : " – " + fmt.full.format(lastDay(e))) : ", " + fmt.time.format(s) + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""))),
         e.location ? el("dt", {}, t("where")) : null, e.location ? el("dd", {}, el("a", { href: mapsUrl(e.location), target: "_blank", rel: "noopener" }, icon("pin"), e.location)) : null,
         e.deadline && open ? el("dt", {}, t("deadline_h")) : null, e.deadline && open ? el("dd", { class: dayN(e.deadline) <= 2 ? "soon" : "" }, fmt.full.format(new Date(e.deadline)) + (dayN(e.deadline) >= 0 ? " · " + (dayN(e.deadline) === 0 ? t("today") : dayN(e.deadline) === 1 ? t("tomorrow") : t("in_days", { n: dayN(e.deadline) })) : "")) : null,
         e.registration ? el("dt", {}, t("registration")) : null, e.registration ? el("dd", {}, e.registration) : null),
-      el("p", { class: "desc" }, e.description || t("no_desc")),
-      e.members ? el("p", { class: "desc" }, t("members_note")) : null),
+      e.description || polaris ? el("p", { class: "desc" }, e.description || t("no_desc")) : null,
+      e.members ? el("p", { class: "desc" }, t("members_note")) : null,
+      e.layer === "rotary" ? el("p", { class: "desc" }, t("rotary_note")) : null),
+    ...(polaris ? [] : helpLinks("intl")),
     el("h3", { class: "sh" }, t("more_events")),
     ...D.data.events.filter(x => x.id !== e.id && !isPast(x) && x.clubs.some(c => e.clubs.includes(c))).slice(0, 3).map((x, i) => eventCard(x, i)),
     footer());
