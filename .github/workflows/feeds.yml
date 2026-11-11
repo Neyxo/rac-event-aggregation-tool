@@ -34,6 +34,10 @@ jobs:
       # The run is marked failed at the end so the problem gets noticed.
       - id: feeds
         continue-on-error: true
+        # Instagram pictures: either secret unset (empty) = layer off. See README "Instagram pictures".
+        env:
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
         run: python3 polaris_feed.py clubs.toml public data
       - name: Save event history
         working-directory: data

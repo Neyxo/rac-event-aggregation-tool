@@ -14,6 +14,7 @@ Usage: python3 polaris_feed.py [clubs.toml] [out_dir] [data_dir]
 import datetime as dt
 import html
 import json
+import os
 import re
 import shutil
 import sys
@@ -37,6 +38,11 @@ PUBLISH_PAST = dt.timedelta(days=730)  # feeds and site go back this far; data/ 
 CANCELLED = {"de": "Abgesagt", "fr": "Annulé", "it": "Annullato"}
 MEMBERS_ONLY = "X-MEMBERS-ONLY:TRUE"  # marks a VEVENT built from the agenda list because the event itself needs a login
 MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci"}
+IG_API = "https://graph.facebook.com/v27.0"  # Instagram API with Facebook Login (Business Discovery)
+IG_POSTS = 8
+IG_MAX_BYTES = 1_500_000  # a picture bigger than this is skipped
+IG_FIELDS = "id,media_type,media_url,thumbnail_url,permalink,caption,timestamp,children{media_type,media_url,thumbnail_url}"
+PLATFORM_HOSTS = {"polaris.rotary.ch", "team.polaris.rotary.ch"}  # Polaris' own notices in the districts' lists (one "event" runs until 2099)
 
 # Polaris ships a VTIMEZONE without DST rules, so we write a correct one ourselves.
 VTIMEZONE = """BEGIN:VTIMEZONE
@@ -113,8 +119,12 @@ def listed_events(club, backfill=False):
     return items
 
 
-def stub_vevent(event_id, item):
-    """VEVENT of a members-only event, built from what the public agenda list shows. None if its date can't be read."""
+def ics_esc(text):
+    return re.sub(r"([\\;,])", r"\\\1", text).replace("\n", "\\n")
+
+
+def stub_vevent(event_id, item, members=True):
+    """VEVENT built from what the public agenda list shows: a members-only event, or (members=False) a Rotary event. None if its date can't be read."""
     # ponytail: day-before-month dates only (de/fr/it, the languages in clubs.toml); an English list date is skipped as before
     low = item["when"].lower()
     days = [dt.datetime(int(y), MONTHS[m], int(d)) for d, m, y in re.findall(r"(\d{1,2})\.?\s+([a-zäéû]+)\s+(20\d\d)", low) if m in MONTHS]
@@ -129,11 +139,8 @@ def stub_vevent(event_id, item):
     else:
         when = [f"DTSTART;VALUE=DATE:{days[0]:%Y%m%d}", f"DTEND;VALUE=DATE:{days[-1] + dt.timedelta(days=1):%Y%m%d}"]
 
-    def esc(text):
-        return re.sub(r"([\\;,])", r"\\\1", text).replace("\n", "\\n")
-
-    text = [f"{name}:{esc(item[key])}" for name, key in (("SUMMARY", "title"), ("DESCRIPTION", "teaser"), ("LOCATION", "location")) if item[key]]
-    return [f"UID:polaris-{event_id}@rotary.ch", *text, f"URL:{item['url']}", *when, MEMBERS_ONLY]
+    text = [f"{name}:{ics_esc(item[key])}" for name, key in (("SUMMARY", "title"), ("DESCRIPTION", "teaser"), ("LOCATION", "location")) if item[key]]
+    return [f"UID:polaris-{event_id}@rotary.ch", *text, f"URL:{item['url']}", *when, *([MEMBERS_ONLY] if members else [])]
 
 
 def fetch_event(club, event_id, item=None):
@@ -150,9 +157,46 @@ def fetch_event(club, event_id, item=None):
     return clean_vevent(ics, event_id)
 
 
+def europe_event(e):
+    """One event of Rotaract Europe's events API -> (VEVENT lines, detail). Its site runs The Events Calendar, whose API this is."""
+    if e["all_day"]:
+        start, end = (dt.date.fromisoformat(e[k][:10]) for k in ("start_date", "end_date"))
+        when = [f"DTSTART;VALUE=DATE:{start:%Y%m%d}", f"DTEND;VALUE=DATE:{end + dt.timedelta(days=1):%Y%m%d}"]
+    else:
+        start, end = (dt.datetime.fromisoformat(e[k]).replace(tzinfo=dt.UTC).astimezone(TZ) for k in ("utc_start_date", "utc_end_date"))
+        if end <= start:
+            end = start + DEFAULT_DURATION
+        when = [f"DTSTART;TZID=Europe/Zurich:{start:%Y%m%dT%H%M%S}", f"DTEND;TZID=Europe/Zurich:{end:%Y%m%dT%H%M%S}"]
+    venue = e.get("venue") if isinstance(e.get("venue"), dict) else {}
+    fields = {"SUMMARY": html.unescape(e["title"]), "DESCRIPTION": html_text(e.get("description") or ""),
+              "LOCATION": ", ".join(html.unescape(venue[k]) for k in ("venue", "city", "country") if venue.get(k))}
+    image = e.get("image") if isinstance(e.get("image"), dict) else {}
+    vevent = [f"UID:rotaract-europe-{e['id']}@rotaracteurope.eu", *(f"{k}:{ics_esc(v)}" for k, v in fields.items() if v), f"URL:{e['url']}", *when]
+    return vevent, {"image": image.get("url", ""), "description": "", "registration": ""}
+
+
+def manual_event(m):
+    """An event entered by hand in clubs.toml ([[events]]: id, title, url, start, optional end/location/description/image) -> (VEVENT lines, detail)."""
+    fields = {"SUMMARY": m["title"], "DESCRIPTION": m.get("description", ""), "LOCATION": m.get("location", "")}
+    when = [f"DTSTART;VALUE=DATE:{m['start']:%Y%m%d}", f"DTEND;VALUE=DATE:{m.get('end', m['start']) + dt.timedelta(days=1):%Y%m%d}"]
+    vevent = [f"UID:{m['id']}@rac-event-aggregation-tool", *(f"{k}:{ics_esc(v)}" for k, v in fields.items() if v), f"URL:{m['url']}", *when]
+    return vevent, {"image": m.get("image", ""), "description": "", "registration": ""}
+
+
+def international_events(manual, now):
+    """{id: (VEVENT lines, detail)}: Rotaract Europe's calendar plus the hand-entered events."""
+    since = (now - REFRESH_PAST - dt.timedelta(days=1)).date().isoformat()  # covers the refresh window, so nothing looks "gone"
+    data = json.loads(get(f"https://rotaracteurope.eu/wp-json/tribe/events/v1/events?per_page=50&start_date={since}"))
+    # ponytail: one page of 50 (there are about 5). Past that, fail and keep the last history instead of cancelling what fell off; page through then.
+    if data.get("total_pages", 1) > 1:
+        raise RuntimeError("Rotaract Europe lists more than 50 events: page through total_pages")
+    events = {f"eu{e['id']}": europe_event(e) for e in data["events"]}
+    return events | {m["id"]: manual_event(m) for m in manual}
+
+
 def html_text(fragment):
     """Rough HTML -> text: paragraphs/line breaks become newlines, tags are dropped, entities decoded."""
-    t = re.sub(r"</p>|</div>|</h\d>", "\n\n", re.sub(r"<br\s*/?>|</li>", "\n", fragment))
+    t = re.sub(r"</p>|</div>|</h\d>", "\n\n", re.sub(r"<br\s*/?>|</li>", "\n", fragment.replace("\r", "")))  # a bare CR would break an ICS line
     t = html.unescape(re.sub(r"<[^>]+>", "", t))
     t = re.sub(r"[ \t]*\n[ \t]*", "\n", re.sub(r"[ \t]+", " ", t))
     return re.sub(r"\n\n+", "\n\n", t).strip()
@@ -220,9 +264,106 @@ def parse_news(page, base_url):
     return items[:6]
 
 
-def fetch_news(club):
+def fetch_news(club, page="news"):
+    """The club's news list, or (page="projects") its projects list: the same markup, so the same parser."""
     time.sleep(0.5)
-    return parse_news(get(f"{club['base_url']}/{club['lang']}/content/news"), club["base_url"])
+    return parse_news(get(f"{club['base_url']}/{club['lang']}/content/{page}"), club["base_url"])
+
+
+def instagram_user(url):
+    """Username from a profile link (https://www.instagram.com/racluzern/ -> racluzern), or '' if it doesn't look like one."""
+    name = urllib.parse.urlsplit(url).path.strip("/").split("/")[-1]
+    return name if re.fullmatch(r"[A-Za-z0-9._]+", name) else ""  # it goes into the request's field expression
+
+
+def parse_instagram(data):
+    """Business Discovery answer -> the latest posts that have a picture: id, url (permalink), image (Instagram's URL), caption, date."""
+    posts = []
+    for m in data.get("business_discovery", {}).get("media", {}).get("data", []):
+        src = m
+        if m.get("media_type") == "CAROUSEL_ALBUM":  # the album itself usually has a media_url too, but the first child is the documented one
+            src = next(iter(m.get("children", {}).get("data", [])), m)
+        # a video's media_url is the video file (and Meta omits it for some reels): its picture is thumbnail_url
+        image = src.get("thumbnail_url") if src.get("media_type") == "VIDEO" else src.get("media_url")
+        if image and m.get("permalink") and str(m.get("id", "")).isdigit():  # the id becomes a file name
+            posts.append({"id": str(m["id"]), "url": m["permalink"], "image": image,
+                          "caption": " ".join((m.get("caption") or "").split())[:140], "date": (m.get("timestamp") or "")[:10]})
+    return posts[:IG_POSTS]
+
+
+def ig_get(url):
+    """JSON from the Graph API; an API error comes back as its {"error": ...} body. The URL carries the token, so nothing raised here contains it."""
+    time.sleep(0.5)
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": USER_AGENT}), timeout=30) as r:
+            return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        try:
+            return {"error": json.loads(e.read())["error"]}
+        except Exception:
+            return {"error": {"code": e.code, "type": "HTTP", "message": ""}}
+    except (OSError, ValueError) as e:
+        raise RuntimeError(type(e).__name__) from None  # str(e) could quote the URL
+
+
+def ig_download(url, path):
+    """Save one picture from Instagram's CDN. False if it is not https, too big, empty or unreachable."""
+    if not url.startswith("https://"):
+        return False
+    time.sleep(0.4)
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": USER_AGENT}), timeout=30) as r:
+            body = r.read(IG_MAX_BYTES + 1)
+    except OSError:
+        return False
+    if not body or len(body) > IG_MAX_BYTES:
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(body)
+    return True
+
+
+def fetch_instagram(clubs, out, token, user_id, fetch=ig_get, download=ig_download):
+    """{club id: latest Instagram posts} for the clubs with an `instagram` link, pictures saved under out/ig/<club>/.
+
+    Off (no request at all) unless both the token and the owner's Instagram user id are set. One Business Discovery
+    request per club; a club that can't be read (personal or private account, any error) is simply left out.
+    Unverified against Meta's docs, so everything is read defensively: that this works without App Review for an app
+    admin's token, and that caption / children / thumbnail_url all come back inside the discovery answer.
+    """
+    token, user_id = (token or "").strip(), (user_id or "").strip()
+    if not (token and user_id):
+        return {}
+    if not user_id.isdigit():
+        print("::warning::Instagram: INSTAGRAM_USER_ID must be the numeric Instagram user id; pictures are off")
+        return {}
+    # ponytail: Instagram's picture URLs expire, so every run downloads the pictures again into the output dir and nothing
+    # is kept in data/. If the token or Meta fails, the strip falls back to photos / event pictures; cache in data/ if that hurts.
+    result = {}
+    for club in clubs:
+        name = instagram_user(club.get("instagram", ""))
+        if not name:
+            continue
+        try:
+            fields = f"business_discovery.username({name}){{media.limit({IG_POSTS}){{{IG_FIELDS}}}}}"
+            data = fetch(f"{IG_API}/{user_id}?" + urllib.parse.urlencode({"fields": fields, "access_token": token}))
+            if err := data.get("error"):
+                if err.get("code") == 190:  # OAuthException: expired or revoked. No point asking for the other clubs.
+                    print("::warning::Instagram: the token is expired or invalid. Renew the INSTAGRAM_TOKEN secret; pictures are off until then.")
+                    break
+                msg = str(err.get("message", "")).replace(token, "***")[:200]
+                print(f"{club['id']} instagram: Graph error {err.get('code')} ({err.get('type')}) {msg}")
+                continue
+            posts = []
+            for p in parse_instagram(data):
+                rel = f"ig/{club['id']}/{p['id']}.jpg"
+                if download(p["image"], out / rel):
+                    posts.append({"url": p["url"], "image": rel, "caption": p["caption"], "date": p["date"]})
+            if posts:
+                result[club["id"]] = posts
+        except Exception as e:
+            print(f"{club['id']} instagram: {str(e).replace(token, '***')[:200]}")  # pictures only, never worth failing the run
+    return result
 
 
 def unfold(ics):
@@ -300,9 +441,13 @@ def sync(history, listed, fetch, now, stamp):
             errors.append(f"{i}: {e}")
 
     gone = [i for i, ev in fresh.items() if ev is None and i in history and history[i]["status"] == "active"]
-    n_live = sum(map(live, history.values()))
-    if n_live >= 4 and len(gone) > MAX_CANCEL_RATIO * n_live:
-        raise RuntimeError(f"{len(gone)} of {n_live} live events would be cancelled at once; refusing, check Polaris")
+    # Counted twice: among all live events, and among the upcoming ones alone. A source that keeps its past events
+    # (the Rotary lists) can only ever lose upcoming ones, and a month of past events must not dilute that.
+    for what, pool in (("live", [i for i, r in history.items() if live(r)]),
+                       ("upcoming", [i for i, r in history.items() if live(r) and prop(r["vevent"], "DTEND") >= now])):
+        lost = sum(i in gone for i in pool)
+        if len(pool) >= 4 and lost > MAX_CANCEL_RATIO * len(pool):
+            raise RuntimeError(f"{lost} of {len(pool)} {what} events would be cancelled at once; refusing, check Polaris")
 
     for i, ev in fresh.items():
         rec = history.get(i)
@@ -384,15 +529,25 @@ def visible(rec, now):
     return end >= now - PUBLISH_PAST and (rec["status"] == "active" or end >= now)
 
 
-def site_data(clubs, histories, now, cache, news=None):
-    """events.json for the search site: every visible event, merged across clubs by Polaris id."""
+def merged_history(clubs, histories):
+    """The history behind all.ics: every club's events by id. The Rotary layer stays out, so Rotaract events are never drowned."""
+    return {i: rec for club in clubs if club.get("source") != "rotary" for i, rec in histories[club["id"]].items()}
+
+
+def site_data(clubs, histories, now, cache, news=None, projects=None, instagram=None):
+    """events.json for the search site: every visible event, merged across clubs by Polaris id.
+
+    The Rotary layer (district pseudo-clubs and their events) sits under its own "rotary" key, so "clubs" and "events"
+    never contain it and only code that asks for the layer sees it."""
     events = {}
-    for club in clubs:
+    for club in sorted(clubs, key=lambda c: c.get("source") == "rotary"):  # Rotary districts last: a joint event stays the Rotaract club's
+        rotary = club.get("source") == "rotary"
         for i, rec in histories[club["id"]].items():
             if not visible(rec, now):
                 continue
             if i in events:  # joint event listed by several clubs
-                events[i]["clubs"].append(club["id"])
+                if not rotary:
+                    events[i]["clubs"].append(club["id"])
                 continue
             ev = rec["vevent"]
             location = ics_text(ev, "LOCATION")
@@ -413,14 +568,22 @@ def site_data(clubs, histories, now, cache, news=None):
                 "deadline": deadline(detail.get("registration", "")),
                 "cancelled": rec["status"] == "cancelled",
                 "members": MEMBERS_ONLY in ev,
+                "layer": "rotary" if rotary else "",  # these go under the "rotary" key below; the site adds them when switched on in Settings
+                "organiser": detail.get("organiser", ""),
             }
-    return {
-        "generated": now.isoformat(timespec="minutes"),
-        "clubs": [{"id": c["id"], "name": c["name"], "short": c.get("short", c["name"]), "url": c["base_url"],
+    by_start = sorted(events.values(), key=lambda e: e["start"])
+    entries = [{"id": c["id"], "name": c["name"], "short": c.get("short", c["name"]), "url": c["base_url"],
                    "color": c.get("color", "#d41367"), "logo": c.get("logo", ""), "district": c.get("district", ""),
                    "coords": locate("", c.get("city", ""), cache), "photos": c.get("photos", []), "news": (news or {}).get(c["id"], []),
-                   "links": {k: c[k] for k in ("instagram", "linkedin") if c.get(k)}} for c in clubs],
-        "events": sorted(events.values(), key=lambda e: e["start"]),
+                   "projects": (projects or {}).get(c["id"], []),
+                   "instagram": (instagram or {}).get(c["id"], []),  # latest posts, see fetch_instagram(); [] while that layer is off
+                   "links": {k: c[k] for k in ("instagram", "linkedin") if c.get(k)},
+                   "source": c.get("source", ""), "about": c.get("about", ""), "how": c.get("how", ""), "partners": c.get("partners", [])} for c in clubs]
+    return {
+        "generated": now.isoformat(timespec="minutes"),
+        "clubs": [c for c in entries if c["source"] != "rotary"],
+        "events": [e for e in by_start if e["layer"] != "rotary"],
+        "rotary": {"clubs": [c for c in entries if c["source"] == "rotary"], "events": [e for e in by_start if e["layer"] == "rotary"]},
     }
 
 
@@ -447,9 +610,100 @@ def write_status(out, site, histories, failures, stamp):
     for cid, h in histories.items():
         clubs[cid] = {"events": len(h), "cancelled": sum(r["status"] == "cancelled" for r in h.values()),
                       "without_detail": sum("detail" not in r and r["status"] == "active" for r in h.values())}
-    status = {"generated": stamp, "events": len(site["events"]), "with_image": sum(bool(e["image"]) for e in site["events"]),
+    status = {"generated": stamp, "events": len(site["events"]), "rotary_events": len(site["rotary"]["events"]), "with_image": sum(bool(e["image"]) for e in site["events"]),
               "without_location": sum(e["coords"] is None for e in site["events"]), "clubs": clubs, "failures": failures}
     (out / "status.json").write_text(json.dumps(status, indent=1, ensure_ascii=False) + "\n")
+
+
+def sync_international(history, manual, now, stamp):
+    fresh = international_events(manual, now)
+    errors = sync(history, fresh, lambda i: fresh[i][0] if i in fresh else None, now, stamp)
+    for i, (_, detail) in fresh.items():
+        if i in history:
+            history[i]["detail"] = detail
+    return errors
+
+
+def skip_hosts(clubs):
+    """Hosts whose events the Rotary layer leaves out: Polaris' own notices and the Rotaract clubs, which have their own entries."""
+    return PLATFORM_HOSTS | {urllib.parse.urlsplit(c["base_url"]).hostname for c in clubs if c.get("source") != "rotary"}
+
+
+def rotary_items(items, skip):
+    return {i: item for i, item in items.items() if urllib.parse.urlsplit(item["url"]).hostname not in skip}
+
+
+def site_name(page):
+    """Name of a Polaris site from its page title ("Einstiegsseite | Rotary Baden"), or ''."""
+    title = re.search(r"<title>(.*?)</title>", page, re.S)
+    return html_text(title.group(1)).split("|")[-1].strip() if title else ""
+
+
+def organiser(host, names):
+    """Name of the Rotary club behind a Polaris host. One request per new host, cached in `names`; the host itself if its page can't be read."""
+    if host not in names:
+        time.sleep(0.5)
+        try:
+            names[host] = site_name(get(f"https://{host}/de/", attempts=1)) or host
+        except Exception:
+            return host  # not cached: asked again next run
+    return names[host]
+
+
+def sync_rotary(club, history, now, stamp, skip, names):
+    """A Rotary district: its own agenda plus the events its clubs share with other clubs, each built from its list item only."""
+    # ponytail: list pages only (a handful of requests per district instead of one per event), so the description is the
+    # list's teaser and an event without an end time on the list gets the default duration; fetch the event pages if that falls short
+    items = {}
+    for path in ("agenda", "agenda/other-clubs"):
+        for n in range(1, MAX_PAGES + 1):
+            time.sleep(0.5)
+            found = parse_list(get(f"{club['base_url']}/{club['lang']}/{path}?criteria%5BendsAt%5D=latest&page={n}"))
+            if not found.keys() - items.keys():  # past the last page Polaris repeats it
+                break
+            items = found | items
+    items = rotary_items(items, skip)
+
+    def fetch(i):
+        if i in items:
+            return stub_vevent(i, items[i], members=False)
+        rec = history.get(i)  # the lists only show what is still ahead: an event that is over is kept, an upcoming one that left is cancelled
+        # The start, not the end: an end the list doesn't show is our guess, and Polaris may drop the event as soon as it starts.
+        return rec["vevent"] if rec and prop(rec["vevent"], "DTSTART") < now else None
+
+    errors = sync(history, items, fetch, now, stamp)
+    hosts = {i: urllib.parse.urlsplit(item["url"]).hostname for i, item in items.items()}
+    org = {host: organiser(host, names) for host in sorted(set(hosts.values()))}  # once per host and run, also when its page can't be read
+    for i, item in items.items():
+        if i in history:
+            history[i]["detail"] = {"image": item["image"], "description": "", "registration": item["registration"], "organiser": org[hosts[i]]}
+    return errors
+
+
+def sync_polaris(club, history, now, stamp):
+    listed = listed_events(club, backfill=not history and club.get("backfill", False))
+
+    def fetch(i):
+        ev, rec = fetch_event(club, i, listed.get(i)), history.get(i)
+        # ponytail: a members-only event that left the listings looks the same as a deleted one;
+        # keep it once it has started (its end may be our default duration), cancel it while it is still upcoming
+        if ev is None and rec and MEMBERS_ONLY in rec["vevent"] and prop(rec["vevent"], "DTSTART") < now:
+            return rec["vevent"]
+        return ev
+
+    errors = sync(history, listed, fetch, now, stamp)
+    # Event page (image, full text, registration): fetched once per event, again when the event changed.
+    for i, rec in history.items():
+        if rec["status"] == "active" and ("detail" not in rec or rec["modified"] == stamp):
+            if MEMBERS_ONLY in rec["vevent"]:  # its page is the login form: the list item is all there is
+                if listed.get(i):
+                    rec["detail"] = {"image": listed[i]["image"], "description": "", "registration": listed[i]["registration"]}
+                continue
+            try:
+                rec["detail"] = fetch_detail(club, i)
+            except Exception as e:
+                errors.append(f"{i} detail: {e}")  # left out; retried next run
+    return errors
 
 
 def main():
@@ -459,36 +713,26 @@ def main():
     data.mkdir(exist_ok=True)
     now = dt.datetime.now(TZ).replace(tzinfo=None)
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
-    clubs = tomllib.loads(config.read_text())["clubs"]
+    conf = tomllib.loads(config.read_text())
+    clubs = conf["clubs"]
     failures, histories = [], {}
     news_path = data / "news.json"
     news = json.loads(news_path.read_text()) if news_path.exists() else {}
+    projects_path = data / "projects.json"
+    projects = json.loads(projects_path.read_text()) if projects_path.exists() else {}
+    names_path = data / "rotary_clubs.json"  # Polaris host -> name of the Rotary club, for the organiser label
+    names = json.loads(names_path.read_text()) if names_path.exists() else {}
     for club in clubs:
         path = data / f"{club['id']}.json"
         history = json.loads(path.read_text()) if path.exists() else {}
         try:
-            listed = listed_events(club, backfill=not history and club.get("backfill", False))
-
-            def fetch(i):
-                ev, rec = fetch_event(club, i, listed.get(i)), history.get(i)
-                # ponytail: a members-only event that left the listings looks the same as a deleted one;
-                # keep it once it is over, cancel it while it is still upcoming
-                if ev is None and rec and MEMBERS_ONLY in rec["vevent"] and prop(rec["vevent"], "DTEND") < now:
-                    return rec["vevent"]
-                return ev
-
-            errors = sync(history, listed, fetch, now, stamp)
-            # Event page (image, full text, registration): fetched once per event, again when the event changed.
-            for i, rec in history.items():
-                if rec["status"] == "active" and ("detail" not in rec or rec["modified"] == stamp):
-                    if MEMBERS_ONLY in rec["vevent"]:  # its page is the login form: the list item is all there is
-                        if listed.get(i):
-                            rec["detail"] = {"image": listed[i]["image"], "description": "", "registration": listed[i]["registration"]}
-                        continue
-                    try:
-                        rec["detail"] = fetch_detail(club, i)
-                    except Exception as e:
-                        errors.append(f"{i} detail: {e}")  # left out; retried next run
+            # "international" is not a Polaris site: Rotaract Europe's API plus the hand-entered events
+            if club.get("source") == "international":
+                errors = sync_international(history, conf.get("events", []), now, stamp)
+            elif club.get("source") == "rotary":
+                errors = sync_rotary(club, history, now, stamp, skip_hosts(clubs), names)
+            else:
+                errors = sync_polaris(club, history, now, stamp)
             path.write_text(json.dumps(history, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
             failures += [f"{club['id']} {e}" for e in errors]
         except Exception as e:
@@ -496,31 +740,36 @@ def main():
             failures.append(f"{club['id']}: {e}")
             history = json.loads(path.read_text()) if path.exists() else {}
         histories[club["id"]] = history
-        try:
-            news[club["id"]] = fetch_news(club)
-        except Exception as e:
-            print(f"{club['id']} news: {e} (keeping the last list)")  # teasers only, not worth failing the run
+        for page, lists in (("news", news), ("projects", projects)):
+            try:
+                if not club.get("source"):
+                    lists[club["id"]] = fetch_news(club, page)
+            except Exception as e:
+                print(f"{club['id']} {page}: {e} (keeping the last list)")  # teasers only, not worth failing the run
         (out / f"{club['id']}.ics").write_text(build_calendar(club, history, now), newline="")
         cancelled = sum(r["status"] == "cancelled" for r in history.values())
         print(f"{club['id']}: {len(history)} events in history ({cancelled} cancelled)")
 
     # Swiss-wide: one combined feed + the search site. Polaris ids are global, so merging dedupes joint events.
-    merged = {i: rec for club in clubs for i, rec in histories[club["id"]].items()}
+    merged = merged_history(clubs, histories)
     everyone = {"name": "Rotaract Schweiz & Liechtenstein – alle Clubs", "lang": "de"}
     (out / "all.ics").write_text(build_calendar(everyone, merged, now), newline="")
     cache_path = data / "geocode.json"
     cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
     news_path.write_text(json.dumps(news, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
-    site = site_data(clubs, histories, now, cache, news)
+    projects_path.write_text(json.dumps(projects, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+    names_path.write_text(json.dumps(names, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+    instagram = fetch_instagram(clubs, out, os.environ.get("INSTAGRAM_TOKEN"), os.environ.get("INSTAGRAM_USER_ID"))
+    site = site_data(clubs, histories, now, cache, news, projects, instagram)
     cache_path.write_text(json.dumps(cache, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
     (out / "events.json").write_text(json.dumps(site, ensure_ascii=False, separators=(",", ":")))
     shutil.copytree(Path(__file__).with_name("site"), out, dirs_exist_ok=True)
     by_id = {c["id"]: c for c in clubs}
     (out / "e").mkdir(exist_ok=True)
-    for e in site["events"]:
+    for e in site["events"] + site["rotary"]["events"]:
         (out / "e" / f"{e['id']}.html").write_text(share_page(e, " & ".join(by_id[c]["name"] if c in by_id else c for c in e["clubs"])))
     write_status(out, site, histories, failures, stamp)
-    print(f"site: {len(site['events'])} events, {sum(e['coords'] is None for e in site['events'])} without location")
+    print(f"site: {len(site['events'])} events (+ {len(site['rotary']['events'])} Rotary), {sum(e['coords'] is None for e in site['events'])} without location")
 
     for f in failures:
         print(f"::error::{f}")

@@ -9,8 +9,18 @@
 #   logo     = crest shown in the app: the canton's coat of arms, or the city's for city clubs
 #              (site/crests/, from Wikimedia Commons; Swiss/LI official coats of arms are public domain)
 #   photos   = optional list of picture URLs for the strip on the club page (otherwise: pictures of past events)
-#   instagram, linkedin = optional profile links, shown as buttons on the club page
+#   instagram, linkedin = optional profile links, shown as buttons on the club page. With the Instagram secrets set
+#              (README "Instagram pictures"), the club's latest Instagram pictures also replace the picture strip.
 #   district = Rotary district: 1980 central/north-west, 1990 west, 2000 east; empty = national
+#   about    = optional one sentence that introduces the club, shown in "About this club" on the club page
+#   how      = optional "how to join" text, in the club's own language, opened from a button on the club page. Plain text
+#              with a little structure: "## Heading", "1. Title: text" (numbered step cards), "- point" (check list),
+#              **bold**. A blank line ends a paragraph.
+#   partners = optional list of clubs this club works with, shown as links on the club page:
+#              partners = [{ name = "Rotary Club Luzern", url = "https://...", note = "Patenclub" }]
+#   source   = "international" marks the one entry that is not a Polaris site (see the end of this file);
+#              "rotary" marks a Rotary district: the events its Rotary clubs share with other clubs, read from the
+#              district site's lists only. A separate layer: off by default in the app, never in all.ics.
 
 [[clubs]]
 id = "luzern"
@@ -24,6 +34,23 @@ lang = "de"
 city = "Luzern"
 backfill = true
 instagram = "https://www.instagram.com/racluzern/"
+about = "Junge Leute aus der Region Luzern, die zusammen lernen, helfen und feiern. Gäste sind jederzeit willkommen."
+how = """
+## In drei Schritten dabei
+1. Schreib uns: Melde dich bei luzern@rotaract.ch und frag, ob du an einen Anlass kommen kannst.
+2. Komm vorbei: Als Gast kostet das nichts und verpflichtet zu nichts. Wir möchten dich an **zwei bis drei Anlässen** kennenlernen, mehr geht immer.
+3. Werde Mitglied: Aufgenommen wird an der **GV im Sommer** oder an der **Mini-GV im Januar**.
+
+## Gut zu wissen
+- Jährlicher Mitgliederbeitrag
+- Du organisierst **einen Anlass pro Jahr**
+- Nach ein bis zwei Jahren übernimmst du für ein Jahr **ein Amt im Vorstand**
+"""
+partners = [
+  { name = "Rotary eClub Zentralschweiz", url = "https://eclubzentralschweiz.rotary1980.ch" },
+  { name = "Rotary Club Luzern Wasserturm", url = "https://luzern-wasserturm.rotary1980.ch" },
+  { name = "Rotaract Club Sempachersee", url = "club.html?id=sempachersee" },
+]
 photos = [
   "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/6a7b4874c4473.jpg",
   "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/63c908dbe9663.jpg",
@@ -195,3 +222,64 @@ name = "Rotaract Schweiz/Liechtenstein (national)"
 base_url = "https://rotaract.ch"
 lang = "de"
 city = "Bern"
+
+
+# International events: Rotaract Europe's calendar (REM, EUCO, pre- and post-trips), read from its site's own events API,
+# plus the [[events]] below. Shown like a club, so people can follow it and subscribe to international.ics.
+[[clubs]]
+id = "international"
+source = "international"
+logo = "rotaract.svg"
+district = ""
+short = "International"
+color = "#d41367"
+name = "Rotaract International"
+base_url = "https://rotaracteurope.eu"
+lang = "en"
+
+# The Rotary layer: one entry per district, each with its own feed (rotary1980.ics ...). Hidden in the app until
+# "Show Rotary events" is switched on in Settings.
+[[clubs]]
+id = "rotary1980"
+source = "rotary"
+logo = "img/fam/rotary.svg"
+district = "1980"
+short = "Rotary 1980"
+color = "#17458f"
+name = "Rotary Distrikt 1980"
+base_url = "https://rotary1980.ch"
+lang = "de"
+
+[[clubs]]
+id = "rotary1990"
+source = "rotary"
+logo = "img/fam/rotary.svg"
+district = "1990"
+short = "Rotary 1990"
+color = "#17458f"
+name = "Rotary Distrikt 1990"
+base_url = "https://rotary1990.ch"
+lang = "de"
+
+[[clubs]]
+id = "rotary2000"
+source = "rotary"
+logo = "img/fam/rotary.svg"
+district = "2000"
+short = "Rotary 2000"
+color = "#17458f"
+name = "Rotary Distrikt 2000"
+base_url = "https://rotary2000.ch"
+lang = "de"
+
+# International events that have no feed, entered by hand. They appear under "Rotaract International".
+#   id (unique, never change it), title, url (the event page's main button opens it), start (date),
+#   and optionally end (date, the last day), location, description, image
+# Rotary's own convention, which Rotaractors attend too (dates and venue: the convention's FAQ page, 2026-11)
+[[events]]
+id = "ri-convention-2027"
+title = "Rotary International Convention 2027"
+start = 2027-06-26
+end = 2027-06-30
+location = "Fira Barcelona Gran Via, Barcelona, Spain"
+url = "https://convention.rotary.org/en-us/about/faqs"
