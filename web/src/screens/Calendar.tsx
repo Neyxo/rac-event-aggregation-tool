@@ -1,0 +1,181 @@
+// Calendar: the month fills the screen, no scrolling; tapping a day slides up a frosted sheet with that day's events.
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { ScreenProps } from "../App";
+import { t, tx } from "../i18n";
+import type { Event } from "../lib/types";
+import { byDay, calendarEvents, monthGrid } from "../lib/calendar";
+import { fmt, sameDay, startOfDay } from "../lib/dates";
+import { club, myClubs } from "../lib/data";
+import { clubVars, vars } from "../lib/color";
+import { EventCard, LoadError, useData } from "../components";
+
+type Scope = "mine" | "all";
+/** what the sheet shows; kept after closing so the content stays while it slides away (as the old page did) */
+interface SheetContent { day: Date; evs: Event[] }
+
+const firstOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
+
+// Every event is in its cell. A day first gets as many title lines per event as it has room for (three, two, one: a tall phone shows
+// more of each title, an iPhone SE one line); only then are events hidden from the end, with their number ("+2").
+// This measures the laid-out cells, so it works on the DOM directly, after React has rendered them (React doesn't own --l, the chips'
+// hidden or the "+n" text, so it never undoes this).
+function fit(grid: HTMLElement) {
+  for (const cell of grid.querySelectorAll<HTMLElement>(".day")) {
+    const chips = [...cell.querySelectorAll<HTMLElement>(".ch")];
+    const more = cell.querySelector<HTMLElement>(".more");
+    if (!more) continue;
+    for (const c of chips) c.hidden = false;
+    more.hidden = true;
+    for (const l of [3, 2, 1]) {
+      cell.style.setProperty("--l", String(l));
+      if (cell.scrollHeight <= cell.clientHeight + 1) break;
+    }
+    for (let n = 1; n <= chips.length && cell.scrollHeight > cell.clientHeight + 1; n++) {
+      chips[chips.length - n]!.hidden = true;
+      more.hidden = false;
+      more.textContent = "+" + n;
+    }
+  }
+}
+
+// A url() inside a custom property resolves against the stylesheet that uses it (the bundled app.css under assets/), not the page:
+// made absolute here so "crests/x.svg" still means the site's crests/ (on the old site app.css sat next to them).
+const absolute = (u: string) => (u ? new URL(u, document.baseURI).href : "");
+
+function Chip({ e }: { e: Event }) {
+  const c = club(e.clubs[0] ?? "");
+  return (
+    <span className="ch" style={clubVars(c.color, { "--crest": `url("${absolute(c.logo)}")` })} title={e.title}>
+      <i>{e.title}</i>
+    </span>
+  );
+}
+
+function DayCell({ d, month, now, selected, evs, onOpen }: { d: Date; month: Date; now: Date; selected: Date | null; evs: Event[]; onOpen: () => void }) {
+  const cls = "day" + (d.getMonth() !== month.getMonth() ? " other" : "") + (sameDay(d, now) ? " today" : "");
+  return (
+    <button type="button" className={cls} aria-pressed={!!selected && sameDay(d, selected)} aria-label={fmt.full.format(d) + ", " + t("n_on_day", { n: evs.length })} onClick={onOpen}>
+      <span className="n">{d.getDate()}</span>
+      {evs.map((e, i) => <Chip key={e.id + "/" + i} e={e} />)}
+      <span className="more" hidden />
+    </button>
+  );
+}
+
+function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; selected: Date | null; onOpen: (d: Date, evs: Event[]) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const now = new Date();
+  const g = monthGrid(month);
+  const days = byDay(calendarEvents(useData().D.data.events, scope, myClubs()), g);
+  // after every render (new month, scope, pressed day) and on resize, as the old render() and resize listener did. Again next frame
+  // (still before it is painted): coming from another screen, App's layout effect gives body its calpage class (the full-height
+  // column the cells are measured in) only after this one has run.
+  useLayoutEffect(() => {
+    if (ref.current) fit(ref.current);
+    const id = requestAnimationFrame(() => { if (ref.current) fit(ref.current); });
+    return () => cancelAnimationFrame(id);
+  });
+  useEffect(() => {
+    const onResize = () => { if (ref.current) fit(ref.current); };
+    addEventListener("resize", onResize);
+    return () => removeEventListener("resize", onResize);
+  }, []);
+  return (
+    <div className="grid" id="grid" role="grid" style={vars({ "--rows": g.cells / 7 })} ref={ref}>
+      {tx("dow").map(d => <div key={d} className="dow" role="columnheader">{d}</div>)}
+      {g.days.map(d => {
+        const evs = days[d.toDateString()] ?? [];
+        return <DayCell key={d.toDateString()} d={d} month={month} now={now} selected={selected} evs={evs} onOpen={() => onOpen(d, evs)} />;
+      })}
+    </div>
+  );
+}
+
+function Sheet({ open, content, onClose }: { open: boolean; content: SheetContent | null; onClose: () => void }) {
+  const y0 = useRef<number | null>(null);
+  return (
+    <div className={"sheet" + (open ? " open" : "")} id="sheet" aria-hidden={!open} onClick={ev => { if (ev.target === ev.currentTarget) onClose(); }}>
+      <div className="sheet-in glass">
+        {/* a swipe down on the handle closes the sheet */}
+        <div className="handle" id="sheetHandle"
+          onTouchStart={ev => { y0.current = ev.touches[0]?.clientY ?? null; }}
+          onTouchEnd={ev => { const y = ev.changedTouches[0]?.clientY; if (y0.current != null && y != null && y - y0.current > 40) onClose(); y0.current = null; }}>
+          <i />
+        </div>
+        <div className="sheet-head">
+          <h3 id="sheetTitle">{content ? fmt.full.format(content.day) : null}</h3>
+          <button type="button" className="linkbtn" id="sheetClose" data-t="close" onClick={onClose}>{t("close")}</button>
+        </div>
+        <div className="sheet-body" id="sheetBody">
+          {content && (content.evs.length
+            ? content.evs.map((e, i) => <EventCard key={e.id} e={e} i={i} />)
+            : <p className="meta">{t("no_events_day")}</p>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Calendar(_props: ScreenProps) {
+  const { ready, error, D } = useData();
+  const [month, setMonth] = useState(() => firstOfMonth(new Date()));
+  const [picked, setScope] = useState<Scope>("mine");
+  const [day, setDay] = useState<Date | null>(null);
+  const [content, setContent] = useState<SheetContent | null>(null);
+  // without clubs of my own there is nothing to narrow down to: everything, and no switch
+  const noClubs = ready && !myClubs().length;
+  const scope: Scope = noClubs ? "all" : picked;
+
+  const openDay = (d: Date, evs: Event[]) => {
+    setDay(d);
+    setContent({ day: d, evs });
+  };
+  const close = () => setDay(null);
+  // the buttons do nothing until the data is in (the old page added their listeners after loading)
+  const shiftMonth = (n: number) => { if (ready) setMonth(m => new Date(m.getFullYear(), m.getMonth() + n, 1)); };
+  const pickScope = (s: Scope) => { if (ready) setScope(s); };
+  // today's month, and the sheet when something starts today
+  const goToday = () => {
+    if (!ready) return;
+    const n = new Date();
+    setMonth(firstOfMonth(n));
+    const evs = calendarEvents(D.data.events, scope, myClubs()).filter(e => sameDay(new Date(e.start), n));
+    if (evs.length) openDay(startOfDay(n), evs);
+  };
+
+  useEffect(() => {
+    const onKey = (ev: KeyboardEvent) => { if (ev.key === "Escape") setDay(null); };
+    addEventListener("keydown", onKey);
+    return () => removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <>
+      <div className="banner" id="stale" role="status" hidden />
+      <main className="calwrap" id="main">
+        {error ? <LoadError /> : (
+          <>
+            <div className="mhead">
+              <button type="button" id="prev" data-t-label="prev_month" aria-label={t("prev_month")} onClick={() => shiftMonth(-1)}>‹</button>
+              <h2 id="mtitle">{ready ? fmt.month.format(month) : null}</h2>
+              <div className="seg scope" id="scope" role="group" hidden={noClubs}>
+                <ScopeButton s="mine" label={t("mine_short")} tk="mine_short" scope={ready ? scope : null} onPick={pickScope} />
+                <ScopeButton s="all" label={t("all_clubs_short")} tk="all_clubs_short" scope={ready ? scope : null} onPick={pickScope} />
+              </div>
+              <button type="button" id="todayBtn" data-t="today" onClick={goToday}>{t("today")}</button>
+              <button type="button" id="next" data-t-label="next_month" aria-label={t("next_month")} onClick={() => shiftMonth(1)}>›</button>
+            </div>
+            {ready ? <Grid month={month} scope={scope} selected={day} onOpen={openDay} /> : <div className="grid" id="grid" role="grid" />}
+          </>
+        )}
+      </main>
+      <Sheet open={day !== null} content={content} onClose={close} />
+      <dialog className="ob" id="ob" aria-labelledby="obTitle"><div className="ob-in" id="obBody" /></dialog>
+    </>
+  );
+}
+
+/** scope: null until the data is in (the old page had no aria-pressed then) */
+function ScopeButton({ s, label, tk, scope, onPick }: { s: Scope; label: string; tk: string; scope: Scope | null; onPick: (s: Scope) => void }) {
+  return <button type="button" data-scope={s} data-t={tk} aria-pressed={scope ? scope === s : undefined} onClick={() => onPick(s)}>{label}</button>;
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rotaract Events</title>
+<meta name="description" content="Alle öffentlichen Rotaract-Anlässe der Schweiz und Liechtensteins, als App installierbar. Your Rotaract clubs' events in Switzerland and Liechtenstein, installable as an app.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rotaract Events">
+<meta property="og:title" content="Rotaract Events">
+<meta property="og:description" content="Alle öffentlichen Rotaract-Anlässe der Schweiz und Liechtensteins. Every public Rotaract event in Switzerland and Liechtenstein.">
+<meta property="og:image" content="https://neyxo.github.io/rac-event-aggregation-tool/screenshot-wide.png">
+<meta property="og:url" content="https://neyxo.github.io/rac-event-aggregation-tool/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17151c" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Rotaract">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-180.png">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script type="module" src="./src/main.tsx"></script>
+</head>
+<body data-page="home">
+<!-- the app renders into #root, which is display: contents (app.css): header#top, main, nav#tabs stay children of body for the CSS -->
+<div id="root"></div>
+</body>
+</html>
