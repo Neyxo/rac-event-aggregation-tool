@@ -26,7 +26,7 @@ function renderHome() {
   // what changed since the last visit: ids and start times seen one visit ago (visits closer than an hour count as one)
   const seen = store.get("rac.seen", null), cur = Object.fromEntries(mineEv.map(e => [e.id, e.start])), prev = seen && Date.now() - seen.at > 36e5 ? (store.set("rac.seenPrev", seen.map), seen.map) : store.get("rac.seenPrev", null);
   if (!seen || Date.now() - seen.at > 36e5) store.set("rac.seen", { at: Date.now(), map: cur });
-  D.newIds = new Set(prev ? Object.keys(cur).filter(id => !(id in prev)) : []);
+  D.newIds = new Set(devFlag("New") ? mineEv.slice(1, 4).map(e => e.id) : prev ? Object.keys(cur).filter(id => !(id in prev)) : []);
   const moved = prev ? Object.keys(cur).filter(id => id in prev && prev[id] !== cur[id]).length : 0;
   const deadlines = mineEv.filter(e => e.deadline && dayN(e.deadline) >= 0 && dayN(e.deadline) <= 21).sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 3);
   const saved = D.data.events.filter(e => !isPast(e) && D.saved.has(e.id)).slice(0, 3);
@@ -179,7 +179,7 @@ async function init() {
   chrome(PAGE);
   try { await loadData(); } catch { return; }
   const generated = new Date(D.data.generated);
-  if (Date.now() - generated > 30 * 3600e3) { $("stale").textContent = t("stale", { t: fmt.stamp.format(generated) }); $("stale").hidden = false; }
+  if (Date.now() - generated > 30 * 3600e3 || devFlag("Stale")) { $("stale").textContent = t("stale", { t: fmt.stamp.format(generated) }); $("stale").hidden = false; }
   $("foot").replaceChildren(el("div", { class: "meta" }, t("updated", { t: fmt.stamp.format(generated) }) + " · ", el("a", { href: "public.html" }, t("foot_polaris"))), footer());
   const p = new URLSearchParams(location.search);
   if (p.get("event")) { location.replace("event.html?id=" + encodeURIComponent(p.get("event"))); return; }

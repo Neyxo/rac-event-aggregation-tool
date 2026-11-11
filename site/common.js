@@ -15,6 +15,11 @@ const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
 };
+// Developer mode's preview switches (dev.html): each is a rac.dev* key that only counts while developer mode is on
+const devFlag = k => store.get("rac.dev", false) ? store.get("rac.dev" + k, null) : null;
+// "pretend a date": every "now" on this device is shifted so that today is that day. Dates of events are untouched.
+(() => { const off = new Date(devFlag("Date") + "T" + new Date().toTimeString().slice(0, 8)) - Date.now(); if (!devFlag("Date") || isNaN(off)) return;
+  const Real = Date; window.Date = class extends Real { constructor(...a) { if (a.length) super(...a); else super(Real.now() + off); } static now() { return Real.now() + off; } }; })();
 let toastTimer;
 function toast(msg, action) {
   let tt = $("toast"); if (!tt) { tt = el("div", { class: "toast", id: "toast", role: "status" }); document.body.append(tt); }
@@ -51,7 +56,8 @@ function chrome(active, { back = false, extra = null } = {}) {
   const left = back ? (() => { const a = hbtn("back", "./", null); a.setAttribute("aria-label", t("back")); a.addEventListener("click", ev => { if (history.length > 1) { ev.preventDefault(); history.back(); } }); return a; })() : null;
   top.replaceChildren(el("div", { class: "wrap bar" },
     el("div", { class: "lft" }, left, el("a", { class: "brand", href: "./", "aria-label": "Rotaract Events" }, el("img", { src: "rotaract.svg", alt: "Rotaract" }))),
-    el("div", { class: "rgt" }, extra, hbtn("wheel", "about.html", "Rotaract", active === "about"), hbtn("info", "public.html", t("info"), active === "app"), hbtn("settings", "settings.html", t("settings"), active === "settings"))));
+    // developer mode (Settings, ten taps on "made by") puts the developer page one tap away on every page; its button is lit while a preview switch is on
+    el("div", { class: "rgt" }, extra, store.get("rac.dev", false) ? hbtn("code", "dev.html", "Dev", active === "dev" || !!(devFlag("Date") || devFlag("Guest") || devFlag("New") || devFlag("Stale"))) : null, hbtn("wheel", "about.html", "Rotaract", active === "about"), hbtn("info", "public.html", t("info"), active === "app"), hbtn("settings", "settings.html", t("settings"), active === "settings"))));
   document.documentElement.style.setProperty("--stick", top.offsetHeight + "px");  // sticky section headings start under the top bar
   if (!frostBar) { frostBar = el("div", { id: "frost", "aria-hidden": "true" }); document.body.prepend(frostBar); }
   const tabs = $("tabs");
@@ -60,7 +66,7 @@ function chrome(active, { back = false, extra = null } = {}) {
 }
 function qaList(items, name = "qa") { return items.map(([q, a]) => el("details", { name }, el("summary", {}, q), el("p", {}, a))); }
 Object.assign(ICON, {
-  refresh: "M21 12a9 9 0 1 1-3-6.7M21 4v5h-5", clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2", lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4", shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  refresh: "M21 12a9 9 0 1 1-3-6.7M21 4v5h-5", code: "M8 6l-6 6 6 6M16 6l6 6-6 6", clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2", lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4", shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
   belloff: "M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0M3 3l18 18", offline: "M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 3.5-2.2M19 13a10 10 0 0 0-5-2.7M12 20h.01",
 });
 // a link that looks like one: icon in the colour p, title, one line, chevron
@@ -105,10 +111,11 @@ async function loadData() {
   D.settings = store.get("rac.settings", old?.clubs?.length ? { home: old.clubs[0], also: old.clubs.slice(1) } : { home: "", also: [] });
   D.settings.also = (D.settings.also || []).filter(id => D.clubs[id] && id !== D.settings.home);
   if (!D.clubs[D.settings.home]) D.settings.home = "";
+  if (devFlag("Guest")) D.settings = { home: "", also: [] };  // preview as a guest: in memory only, saveSettings() is off meanwhile
   if (old) { localStorage.removeItem("rac.prefs"); store.set("rac.settings", D.settings); }
   return D.data;
 }
-function saveSettings() { store.set("rac.settings", D.settings); }
+function saveSettings() { if (!devFlag("Guest")) store.set("rac.settings", D.settings); }
 function myClubs() { return [D.settings.home, ...D.settings.also].filter(id => D.clubs[id]); }
 function club(id) { return D.clubs[id] || { id, name: id, short: id, color: "#d41367", logo: "" }; }
 function clubStyle(id) { const c = club(id).color || "#d41367"; return `--c:${c};--on-c:${onColor(c)}`; }
