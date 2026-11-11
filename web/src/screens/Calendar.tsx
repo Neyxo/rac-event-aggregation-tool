@@ -7,7 +7,7 @@ import { byDay, calendarEvents, monthGrid } from "../lib/calendar";
 import { fmt, sameDay, startOfDay } from "../lib/dates";
 import { club, myClubs } from "../lib/data";
 import { clubVars, cx, vars } from "../lib/color";
-import { EventCard, LoadError, useData, useEventListener } from "../components";
+import { EventCard, LoadError, useData, useEventListener, useModal } from "../components";
 
 type Scope = "mine" | "all";
 /** what the sheet shows; kept after closing so the content stays while it slides away */
@@ -93,18 +93,11 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
 function Sheet({ open, content, onClose }: { open: boolean; content: SheetContent | null; onClose: () => void }) {
   const dlg = useRef<HTMLDialogElement>(null), title = useRef<HTMLHeadingElement>(null), y0 = useRef<number | null>(null);
   const [shown, setShown] = useState(false);
+  useModal(dlg, open, { focus: title, closeAfter: 300 });  // 300: the .sheet-in transition
   useEffect(() => {
-    const d = dlg.current;
-    if (!d) return;
-    if (open) {
-      if (!d.open) d.showModal?.();
-      title.current?.focus();
-      const id = requestAnimationFrame(() => setShown(true));  // a frame after showing, so the slide-in transitions
-      return () => cancelAnimationFrame(id);
-    }
-    setShown(false);
-    const id = setTimeout(() => d.close?.(), 300);  // the .sheet-in transition
-    return () => clearTimeout(id);
+    if (!open) { setShown(false); return; }
+    const id = requestAnimationFrame(() => setShown(true));  // a frame after showing, so the slide-in transitions
+    return () => cancelAnimationFrame(id);
   }, [open]);
   return (
     <dialog className={cx("sheet", shown && "open")} id="sheet" aria-labelledby="sheetTitle" ref={dlg}
