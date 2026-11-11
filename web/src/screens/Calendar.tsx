@@ -93,7 +93,7 @@ function Sheet({ open, content, onClose }: { open: boolean; content: SheetConten
     <div className={"sheet" + (open ? " open" : "")} id="sheet" aria-hidden={!open} onClick={ev => { if (ev.target === ev.currentTarget) onClose(); }}>
       <div className="sheet-in glass">
         {/* a swipe down on the handle closes the sheet */}
-        <div className="handle" id="sheetHandle"
+        <div className="handle"
           onTouchStart={ev => { y0.current = ev.touches[0]?.clientY ?? null; }}
           onTouchEnd={ev => { const y = ev.changedTouches[0]?.clientY; if (y0.current != null && y != null && y - y0.current > 40) onClose(); y0.current = null; }}>
           <i />
@@ -143,14 +143,13 @@ export default function Calendar(_props: ScreenProps) {
 
   return (
     <>
-      <div className="banner" id="stale" role="status" hidden />
       <main className="calwrap" id="main">
         {error ? <LoadError /> : (
           <>
             <div className="mhead">
               <button type="button" id="prev" aria-label={t("prev_month")} onClick={() => shiftMonth(-1)}>‹</button>
               <h2 id="mtitle">{ready ? fmt.month.format(month) : null}</h2>
-              <div className="seg scope" id="scope" role="group" hidden={noClubs}>
+              <div className="seg scope" role="group" hidden={noClubs}>
                 <ScopeButton s="mine" label={t("mine_short")} scope={ready ? scope : null} onPick={pickScope} />
                 <ScopeButton s="all" label={t("all_clubs_short")} scope={ready ? scope : null} onPick={pickScope} />
               </div>
@@ -162,7 +161,6 @@ export default function Calendar(_props: ScreenProps) {
         )}
       </main>
       <Sheet open={day !== null} content={content} onClose={close} />
-      <dialog className="ob" id="ob" aria-labelledby="obTitle"><div className="ob-in" id="obBody" /></dialog>
     </>
   );
 }

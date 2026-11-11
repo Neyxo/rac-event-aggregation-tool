@@ -30,13 +30,13 @@ export default function Intl(_props: ScreenProps) {
   useWash("#d41367", "#0067c8", "#009739");
   useStickyHeads();
   useTitle(x.h);
-  if (error) return <main className="wrap fam" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap fam"><LoadError /></main>;
   return (
-    <main className="wrap fam" id="main">
-      <h1 id="h">{x.h}</h1>
-      <p className="lead" id="lead">{x.lead}</p>
-      <h2 className="sh lv1" id="kindsH">{x.kinds_h}</h2>
-      <div className="tiles2" id="kinds">
+    <main className="wrap fam">
+      <h1>{x.h}</h1>
+      <p className="lead">{x.lead}</p>
+      <h2 className="sh lv1">{x.kinds_h}</h2>
+      <div className="tiles2">
         {x.kinds.map(([title, text], i) => (
           <div key={i} className="ft glass" style={vars({ "--p": COL[i % 3]! })}>
             <div className="ic"><Icon name={KIND_IC[i] ?? "info"} /></div>
@@ -45,16 +45,16 @@ export default function Intl(_props: ScreenProps) {
           </div>
         ))}
       </div>
-      <h2 className="sh lv1" id="nextH">{x.next_h}</h2>
-      <div id="next"><Next /></div>
+      <h2 className="sh lv1">{x.next_h}</h2>
+      <Next />
       <section className="box tint glass" style={vars({ "--p": "#d41367" })}>
-        <div className="bh" id="whyH"><div className="ic"><Icon name="heart" /></div><h2 id="whyT">{x.why_h}</h2></div>
-        <ul className="yes" id="why">{x.why.map((s, i) => <li key={i}>{s}</li>)}</ul>
+        <div className="bh"><div className="ic"><Icon name="heart" /></div><h2>{x.why_h}</h2></div>
+        <ul className="yes">{x.why.map((s, i) => <li key={i}>{s}</li>)}</ul>
       </section>
       <h2 className="sh lv1">{t("faq")}</h2>
-      <section className="box glass"><div className="qa" id="qa"><QaList items={x.qa} /></div></section>
+      <section className="box glass"><div className="qa"><QaList items={x.qa} /></div></section>
       <h2 className="sh lv1">{t("read_on")}</h2>
-      <div id="more"><HelpLinks keys={["world", "family", "guide"]} /></div>
+      <HelpLinks keys={["world", "family", "guide"]} />
       <div id="foot"><Footer /></div>
     </main>
   );

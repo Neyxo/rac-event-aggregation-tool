@@ -1,6 +1,6 @@
 // Home: the member overview, explore mode for a guest, the list, and the welcome steps, on the fixture data (today: 11 Nov 2026, 10:00).
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { eventById, getData, initData, loadData, setSettings, toggleSaved } from "../lib/data";
 import { parseHash } from "../lib/route";
@@ -37,57 +37,66 @@ const show = async () => {
   await act(async () => {});
   return r;
 };
-const ids = () => [...document.querySelectorAll("#results a.event")].map(a => a.id.slice(3));
+const href = (a: Element) => a.getAttribute("href");
+// the list has no accessible name; #results is what the "new since your last visit" line jumps to
+const results = () => document.getElementById("results")!;
+const cards = () => within(results()).queryAllByRole("link").filter(a => href(a)!.startsWith("#/event/"));
+const ids = () => cards().map(a => href(a)!.slice("#/event/".length));
+const card = (id: string) => cards().find(a => href(a) === "#/event/" + id)!;
+const toastText = () => document.getElementById("toast")?.textContent;
+const views = () => within(screen.getByRole("group", { name: "Filters" }));
+const hello = () => within(screen.getByRole("heading", { level: 1 }).parentElement!);
+const savedPane = () => within(screen.getByText("Saved").parentElement!);
+const star = (title: string) => within(results()).getByRole("button", { name: "Save event: " + title });
 
 describe("Home, member", () => {
   beforeEach(() => { setSettings({ home: "zuerich", also: ["luzern"] }); });
 
   it("greets, shows the next event, the panes, and lists the rest of my clubs' events plus the international ones", async () => {
     await show();
-    expect(document.querySelector(".hello h1")?.textContent).toBe("Good morning 👋");
-    expect(document.querySelector(".hello .sub")?.textContent).toBe("1 event this week");
-    expect([...document.querySelectorAll(".hello .chips a")].map(a => [a.getAttribute("href"), a.className])).toEqual([["#/club/zuerich", "chip club main"], ["#/club/luzern", "chip club "]]);
-    expect(document.querySelector("a.nx")?.getAttribute("href")).toBe("#/event/219091");
-    expect(document.querySelector("a.nx .k")?.textContent).toBe("Next event · Zürich");
-    expect(document.querySelector("#listTitle")?.textContent).toBe("Coming up");
+    screen.getByRole("heading", { level: 1, name: "Good morning 👋" });
+    screen.getByText("1 event this week");
+    // the main club's chip comes first and is marked (the CSS highlights .main)
+    expect(hello().getAllByRole("link").map(a => [href(a), a.classList.contains("main")])).toEqual([["#/club/zuerich", true], ["#/club/luzern", false]]);
+    expect(href(screen.getByRole("link", { name: /^Next event · Zürich/ }))).toBe("#/event/219091");
+    screen.getByRole("heading", { name: "Coming up" });
     // the next event is not repeated; Zurich International is not one of my clubs
     expect(ids()).toEqual(["eu2069", "eu2067"]);
-    expect(document.querySelector("#summary")?.textContent).toBe("2 events");
-    expect(document.querySelector("#results")?.hasAttribute("aria-busy")).toBe(false);
-    expect([...document.querySelectorAll("#views button")].map(b => b.getAttribute("aria-pressed"))).toEqual(["true", "false"]);
+    screen.getByText("2 events");
+    expect(results().hasAttribute("aria-busy")).toBe(false);
+    expect(views().getByRole("button", { pressed: true }).textContent).toBe("Upcoming");
     expect(document.body.classList.contains("wash")).toBe(true);
-    expect(document.querySelector(".panes .pane .m")?.textContent).toBe("Nothing open.");
-    expect(document.querySelector("a.more")?.getAttribute("href")).toBe("#/guide");
+    screen.getByText("Nothing open.");
+    expect(screen.getAllByRole("link").some(a => href(a) === "#/guide")).toBe(true);
   });
 
   it("news since the last visit: new events get the tag, the line jumps to the list", async () => {
     setSettings({ home: "zuerich", also: ["zurich-international"] });
     localStorage.setItem("rac.seen", JSON.stringify({ at: Date.now() - 2 * 36e5, map: { "219091": "2026-11-11T19:00" } }));
     await show();
-    expect(document.querySelector("a.news")?.getAttribute("href")).toBe("#results");
-    expect(document.querySelector("a.news b")?.textContent).toBe("1 new");
-    expect(document.querySelector("a.news span")?.textContent).toBe(" since your last visit · 1 moved");
-    expect(document.querySelector("#ev-222796 .st.new")).not.toBeNull();
-    expect(document.querySelector("#ev-eu2069 .st.new")).toBeNull();
+    expect(href(screen.getByRole("link", { name: "1 new since your last visit · 1 moved" }))).toBe("#results");
+    expect(within(card("222796")).queryByText("NEW")).not.toBeNull();
+    expect(within(card("eu2069")).queryByText("NEW")).toBeNull();
     expect(JSON.parse(localStorage.getItem("rac.seen")!).at).toBe(Date.now());
     // the tags are Home's: a card anywhere else (Discover, a club) gets none
     const other = render(<EventCard e={eventById("222796")!} />).container;
-    expect(other.querySelector(".st.new")).toBeNull();
+    expect(within(other).queryByText("NEW")).toBeNull();
   });
 
   it("a star redraws the saved pane; the saved view lists saved events of any club", async () => {
     await show();
-    fireEvent.click(document.querySelector("#ev-eu2069 .star")!);
-    expect([...document.querySelectorAll(".panes .pane:nth-child(2) a.r span")].map(s => s.textContent)).toEqual(["Pre-REM Satu Mare"]);
-    expect(document.querySelector("#toast")?.textContent).toBe("Saved ★");
-    fireEvent.click(document.querySelector("#views button:nth-child(2)")!);
+    fireEvent.click(star("Pre-REM Satu Mare"));
+    expect(savedPane().getAllByRole("link").map(href)).toEqual(["#/event/eu2069"]);
+    savedPane().getByText("Pre-REM Satu Mare");
+    expect(toastText()).toBe("Saved ★");
+    fireEvent.click(views().getByRole("button", { name: "Saved ★" }));
     expect(ids()).toEqual(["eu2069"]);
     expect(location.hash).toBe("#/?view=saved");
-    expect(document.querySelector("#clear")?.hasAttribute("hidden")).toBe(false);
+    screen.getByRole("button", { name: "Clear" });
     // unsaving in the saved view takes it off the list
-    fireEvent.click(document.querySelector("#ev-eu2069 .star")!);
-    expect(document.querySelector("#results .empty")?.textContent).toContain("Nothing saved yet.");
-    fireEvent.click(document.querySelector("#results .empty .linkbtn")!);
+    fireEvent.click(star("Pre-REM Satu Mare"));
+    within(results()).getByText(/^Nothing saved yet\./);
+    fireEvent.click(within(results()).getByRole("button", { name: "Show all upcoming" }));
     expect(location.hash).toBe("#/");
   });
 });
@@ -97,35 +106,34 @@ describe("Home follows the shared state", () => {
 
   it("a star on a card mounted elsewhere updates Home's saved pane and the card's own star", async () => {
     await show();
-    const pane = () => [...document.querySelectorAll(".panes .pane:nth-child(2) a.r span")].map(s => s.textContent);
-    expect(pane()).toEqual([]);
+    expect(savedPane().queryAllByRole("link")).toEqual([]);
     const elsewhere = render(<EventCard e={eventById("eu2069")!} />).container;
-    fireEvent.click(elsewhere.querySelector(".star")!);
-    expect(pane()).toEqual(["Pre-REM Satu Mare"]);
-    expect(document.querySelector("#results #ev-eu2069 .star")?.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(within(elsewhere).getByRole("button", { name: "Save event: Pre-REM Satu Mare" }));
+    expect(savedPane().getAllByRole("link").map(href)).toEqual(["#/event/eu2069"]);
+    expect(star("Pre-REM Satu Mare").getAttribute("aria-pressed")).toBe("true");
     expect(JSON.parse(localStorage.getItem("rac.saved")!)).toEqual(["eu2069"]);
   });
 
   it("changing the settings redraws Home: greeting chips, wash and next event follow the new main club", async () => {
     await show();
-    expect(document.querySelector(".hello .chips a.main")?.getAttribute("href")).toBe("#/club/zuerich");
+    expect(hello().getAllByRole("link").map(href)).toEqual(["#/club/zuerich", "#/club/luzern"]);
     act(() => { setSettings({ home: "luzern", also: [] }); });
-    expect([...document.querySelectorAll(".hello .chips a")].map(a => a.getAttribute("href"))).toEqual(["#/club/luzern"]);
+    expect(hello().getAllByRole("link").map(href)).toEqual(["#/club/luzern"]);
     expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "luzern", also: [] });
   });
 });
 
 describe("a new navigation to Home", () => {
-  it("starts over from the URL, as a page load did (the Home tab from the saved view)", async () => {
+  it("starts over from the URL (the Home tab from the saved view shows the upcoming events)", async () => {
     setSettings({ home: "zuerich", also: ["luzern"] });
     toggleSaved("eu2069");
     await act(async () => { history.replaceState(null, "", "/#/?view=saved"); window.dispatchEvent(new HashChangeEvent("hashchange")); });
     const W = () => <Home route={useRoute()} />;
     render(<W />);
     await act(async () => {});
-    expect(document.querySelector("#views [aria-pressed=true]")?.textContent).toBe("Saved ★");
+    expect(views().getByRole("button", { pressed: true }).textContent).toBe("Saved ★");
     await act(async () => { history.pushState(null, "", "#/"); window.dispatchEvent(new HashChangeEvent("hashchange")); });
-    expect(document.querySelector("#views [aria-pressed=true]")?.textContent).toBe("Upcoming");
+    expect(views().getByRole("button", { pressed: true }).textContent).toBe("Upcoming");
     expect(ids()).toEqual(["eu2069", "eu2067"]);
   });
 });
@@ -135,20 +143,21 @@ describe("Home, guest", () => {
 
   it("explore mode: the invitation, the club finder, every Rotaract event", async () => {
     await show();
-    expect(document.querySelector(".explore .k")?.textContent).toBe("New here?");
-    expect(document.querySelector(".cta.new input.in")).not.toBeNull();
-    expect(document.querySelector(".hello")).toBeNull();
+    screen.getByText("New here?");
+    screen.getByRole("textbox", { name: "Your town or postcode" });
+    expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
     expect(document.body.classList.contains("wash")).toBe(false);
     expect(ids()).toEqual(["219091", "222796", "eu2069", "eu2067"]);
-    expect(document.querySelector("#listTitle")?.textContent).toBe("Coming up");
+    screen.getByRole("heading", { name: "Coming up" });
   });
 
   it("with a position known in this tab, the events within 50 km come first", async () => {
     sessionStorage.setItem("rac.here", JSON.stringify([47.37, 8.54]));  // Zurich
     await show();
-    expect(document.querySelector("#listTitle")?.textContent).toBe("Events near you");
+    screen.getByRole("heading", { name: "Events near you" });
     expect(ids()).toEqual(["219091", "222796"]);
-    expect(document.querySelectorAll(".cta .near a.chip").length).toBe(3);
+    // the club finder shows the three nearest clubs with their distance
+    expect(screen.getAllByText(/^\d+ km$/).length).toBe(3);
   });
 
   it("a filter link is Discover's", async () => {
@@ -165,68 +174,78 @@ describe("welcome steps", () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  const dlg = () => document.querySelector<HTMLDialogElement>("dialog#ob")!;
-  const next = () => fireEvent.click(dlg().querySelector(".nav .btn")!);
-  const title = () => dlg().querySelector("h2#obTitle");
+  const dlg = () => screen.getByRole<HTMLDialogElement>("dialog", { hidden: true });
+  const inDlg = () => within(dlg());
+  const click = (name: string | RegExp) => fireEvent.click(inDlg().getByRole("button", { name }));
+  const title = () => inDlg().getByRole("heading", { level: 2 });
+  const start = async () => {
+    await show();
+    fireEvent.click(screen.getByRole("button", { name: "Get started" }));
+    await act(async () => {});
+  };
+  // the progress dots are decoration (aria-hidden): only the CSS reads them
+  const dots = (sel: string) => dlg().querySelectorAll(".bar2 " + sel).length;
 
   it("as a guest: three slides, clubs near, install; finishing saves the clubs and shows them", async () => {
     await show();
     expect(dlg().open).toBe(false);
-    fireEvent.click(document.querySelector(".explore .primary")!);
+    fireEvent.click(screen.getByRole("button", { name: "Get started" }));
     await act(async () => {});
     expect(dlg().open).toBe(true);
-    expect(title()?.textContent).toBe("Welcome 👋");
+    screen.getByRole("dialog", { name: "Welcome 👋" });
     expect(document.activeElement).toBe(title());
-    await act(async () => { fireEvent.click(dlg().querySelector(".choice .alt")!); });
-    expect(dlg().className).toBe("ob full");
-    expect(dlg().querySelectorAll(".bar2 i").length).toBe(6);
-    expect(dlg().querySelector(".slide h2")?.textContent).toBe("Who we are");
+    await act(async () => { click("Not (yet)"); });
+    // a guest's welcome is the full-screen one (CSS: .ob.full)
+    expect(dlg().classList.contains("full")).toBe(true);
+    expect(dots("i")).toBe(6);
+    expect(title().textContent).toBe("Who we are");
     expect(document.activeElement).toBe(title());
-    next();
-    expect(dlg().querySelectorAll(".slide .pill p").length).toBe(3);
-    next();
-    next();
-    expect(title()?.textContent).toBe("Clubs near you");
-    fireEvent.click(dlg().querySelector(".chips button")!);
-    next();
-    expect(title()?.textContent).toBe("Install as an app?");
-    expect(dlg().querySelector("p.meta a")?.getAttribute("href")).toBe("#/settings#install");
-    next();
+    click("Next");
+    expect(title().textContent).toBe("What we do");
+    for (const p of ["Learn.", "Help.", "Celebrate."]) inDlg().getByText(p);
+    click("Next");
+    click("Next");
+    expect(title().textContent).toBe("Clubs near you");
+    click("Rotaract Zurich International");
+    click("Next");
+    expect(title().textContent).toBe("Install as an app?");
+    expect(href(inDlg().getByRole("link", { name: "Settings" }))).toBe("#/settings#install");
+    click("Done");
     expect(dlg().open).toBe(false);
     expect(JSON.parse(localStorage.getItem("rac.onboarded")!)).toBe(true);
     // the guess for English without a position: the international clubs of Zurich and Geneva (only Zurich's is in the fixture)
     expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "", also: ["zurich-international"] });
-    expect(document.querySelector("#toast")?.textContent).toBe("Showing ZH Intl");
-    expect(document.querySelector(".hello")).not.toBeNull();
+    expect(toastText()).toBe("Showing ZH Intl");
+    screen.getByRole("heading", { level: 1 });
   });
 
   it("as a member: main club and others, the calendar feeds, install", async () => {
-    await show();
-    fireEvent.click(document.querySelector(".explore .primary")!);
-    await act(async () => {});
-    await act(async () => { fireEvent.click(dlg().querySelector(".choice .btn:not(.alt)")!); });
-    expect(dlg().className).toBe("ob");
-    expect(dlg().querySelectorAll(".bar2 i.on").length).toBe(2);
-    expect(title()?.textContent).toBe("Which clubs are you interested in?");
-    const [main, also] = [...dlg().querySelectorAll(".chips")];
-    fireEvent.click([...main!.querySelectorAll("button")].find(b => b.textContent === "Bern")!);
-    fireEvent.click([...also!.querySelectorAll("button")].find(b => b.textContent === "Luzern")!);
-    expect(dlg().querySelector(".chips button[aria-pressed=true]")?.textContent).toBe("Bern");
+    await start();
+    await act(async () => { click("Yes, I'm a member"); });
+    expect(dlg().classList.contains("full")).toBe(false);
+    expect(dots("i.on")).toBe(2);
+    expect(title().textContent).toBe("Which clubs are you interested in?");
+    // a club is in both pickers: the main one first, then the others
+    fireEvent.click(inDlg().getAllByRole("button", { name: "Rotaract Bern" })[0]!);
+    fireEvent.click(inDlg().getAllByRole("button", { name: "Rotaract Luzern" }).at(-1)!);
+    // the main club is no longer offered among the others
+    expect(inDlg().getByRole("button", { name: "Rotaract Bern" }).getAttribute("aria-pressed")).toBe("true");
     expect(document.activeElement).toBe(title());
-    next();
-    expect([...dlg().querySelectorAll(".feed .name")].map(n => n.textContent)).toEqual(["Rotaract Bern", "Rotaract Luzern", "All Rotaract events CH & LI"]);
-    expect(dlg().querySelector(".feed .l a")?.getAttribute("href")).toMatch(/^webcal:.*\/bern\.ics$/);
-    next();
-    expect(dlg().querySelector(".credit")).not.toBeNull();
-    next();
+    click("Next");
+    for (const n of ["Rotaract Bern", "Rotaract Luzern", "All Rotaract events CH & LI"]) inDlg().getByText(n);
+    expect(inDlg().getAllByRole("link", { name: "Apple / Outlook" }).map(href)).toEqual([
+      expect.stringMatching(/^webcal:.*\/bern\.ics$/), expect.stringMatching(/^webcal:.*\/luzern\.ics$/), expect.stringMatching(/^webcal:.*\/all\.ics$/),
+    ]);
+    click("Next");
+    inDlg().getByText("Made by Jean-Michel Carrel · Rotaract Club Luzern");
+    click("Done");
     expect(getData().settings).toEqual({ home: "bern", also: ["geneve-international", "luzern"] });
-    expect(document.querySelector(".hello .chips a.main")?.getAttribute("href")).toBe("#/club/bern");
+    const main = hello().getAllByRole("link")[0]!;
+    expect([href(main), main.classList.contains("main")]).toEqual(["#/club/bern", true]);
   });
 
   it("Esc finishes like Skip", async () => {
-    await show();
-    fireEvent.click(document.querySelector(".explore .primary")!);
-    await act(async () => {});
+    await start();
     fireEvent(dlg(), new Event("cancel", { cancelable: true }));
     expect(dlg().open).toBe(false);
     expect(JSON.parse(localStorage.getItem("rac.onboarded")!)).toBe(true);

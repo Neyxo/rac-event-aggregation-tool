@@ -72,16 +72,16 @@ export default function MapScreen(_props: ScreenProps) {
   }, [ready, past]);
 
   // events.json failed: the offline note in place of the screen, map included
-  if (error) return <main className="mapwrap" id="main"><LoadError /></main>;
+  if (error) return <main className="mapwrap"><LoadError /></main>;
   return (
-    <main className="mapwrap" id="main">
+    <main className="mapwrap">
       <div id="map" ref={box} />
       <label className="icon-btn mapopt">
-        <input type="checkbox" id="past" checked={past} onChange={ev => { setPast(ev.target.checked); history.replaceState({ ...(history.state as object | null), past: ev.target.checked }, ""); }} />
+        <input type="checkbox" checked={past} onChange={ev => { setPast(ev.target.checked); history.replaceState({ ...(history.state as object | null), past: ev.target.checked }, ""); }} />
         {" "}
         <span>{t("v_past")}</span>
         {" · "}
-        <span id="summary">{count === null ? "" : nEvents(count)}</span>
+        <span>{count === null ? "" : nEvents(count)}</span>
       </label>
     </main>
   );

@@ -49,26 +49,26 @@ export default function Guide(_props: ScreenProps) {
   useWash(ready && (home ? home.color : COL[0]), ready && COL[1], ready && COL[2]);
   useStickyHeads();
   useTitle(nm.h);
-  if (error) return <main className="wrap fam" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap fam"><LoadError /></main>;
   // each step leads somewhere: the club's Polaris site, Settings, Subscribe, the club's next event
   const next: Event | undefined = ready ? D.data.events.find(e => !isPast(e) && !e.cancelled && e.layer !== "rotary" && (!home || e.clubs.includes(home.id))) : undefined;
   const to = [home?.url || undefined, href("settings"), href("subscribe"), next ? href("event", next.id) : href("discover")];
   return (
-    <main className="wrap fam" id="main">
-      <div className="hero glass" id="hero" style={home ? clubVars(home.color) : undefined}>{ready ? <HeroContent home={home} /> : null}</div>
-      <h2 className="sh lv1" id="stepsH">{nm.steps_h}</h2>
-      <ol className="nsteps" id="steps">
+    <main className="wrap fam">
+      <div className="hero glass" style={home ? clubVars(home.color) : undefined}>{ready ? <HeroContent home={home} /> : null}</div>
+      <h2 className="sh lv1">{nm.steps_h}</h2>
+      <ol className="nsteps">
         {ready && nm.steps.map(([title, text], i) => (
           <Step key={i} n={i + 1} title={title} text={i === 3 && next ? `${fmt.dm.format(new Date(next.start))} · ${next.title}` : text} to={to[i]} />
         ))}
       </ol>
-      <div className="facts" id="facts">
+      <div className="facts">
         {ready && nm.facts.map(([v, l], i) => (
           <div key={i} className="glass" style={vars({ "--p": COL[i]! })}><b>{v.replace("{n}", String(nClubs()))}</b><span>{l}</span></div>
         ))}
       </div>
       <h2 className="sh lv1">{t("read_on")}</h2>
-      <div id="more"><HelpLinks keys={["words", "family", "world"]} /></div>
+      <HelpLinks keys={["words", "family", "world"]} />
       <div id="foot"><Footer /></div>
     </main>
   );

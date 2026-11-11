@@ -20,11 +20,11 @@ export default function Words(_props: ScreenProps) {
   const shown = rows.map(([w, d]) => fold(w + d).includes(needle));
   const n = shown.filter(Boolean).length;
   return (
-    <main className="wrap fam" id="main">
-      <h1 id="h">{nm.words_h}</h1>
-      <p className="lead" id="lead">{nm.words_sub}</p>
-      <input className="wsearch" type="search" id="q" autoComplete="off" placeholder={nm.words_ph} aria-label={nm.words_ph} onChange={ev => setQ(ev.target.value)} />
-      <dl className="gloss glass" id="gloss" hidden={!n}>
+    <main className="wrap fam">
+      <h1>{nm.words_h}</h1>
+      <p className="lead">{nm.words_sub}</p>
+      <input className="wsearch" type="search" autoComplete="off" placeholder={nm.words_ph} aria-label={nm.words_ph} onChange={ev => setQ(ev.target.value)} />
+      <dl className="gloss glass" hidden={!n}>
         {rows.map(([w, d], i) => {
           const prev = rows[i - 1];
           const letter = !prev || initial(w) !== initial(prev[0]);
@@ -33,9 +33,9 @@ export default function Words(_props: ScreenProps) {
           );
         })}
       </dl>
-      <p className="fine" id="none" hidden={!!n}>{nm.words_none}</p>
+      <p className="fine" hidden={!!n}>{nm.words_none}</p>
       <h2 className="sh lv1">{t("read_on")}</h2>
-      <div id="more"><HelpLinks keys={["guide", "family"]} /></div>
+      <HelpLinks keys={["guide", "family"]} />
       <div id="foot"><Footer /></div>
     </main>
   );

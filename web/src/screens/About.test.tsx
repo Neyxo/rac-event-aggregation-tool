@@ -2,8 +2,9 @@
 // the questions, and the top-bar share button.
 import { useState, type ReactNode } from "react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
+import { t } from "../i18n";
 import { parseHash } from "../lib/route";
 import { getData, isRac, loadData, setSettings } from "../lib/data";
 import { ExtraContext } from "../components/Chrome";
@@ -17,7 +18,7 @@ function Host() {
   const [extra, setExtra] = useState<ReactNode>(null);
   return (
     <ExtraContext.Provider value={setExtra}>
-      <header id="top">{extra}</header>
+      <header>{extra}</header>
       <About route={route} />
       <Toast />
     </ExtraContext.Provider>
@@ -35,38 +36,42 @@ afterEach(() => {
 });
 
 describe("about", () => {
-  it("draws the morph, the people line, the links, the questions and the footer in order", () => {
+  /** the morph's words, in order; their box carries .on while open (the CSS reveals it) */
+  const word = (w: string) => screen.getByText(w).parentElement!;
+  const WORDS = ["Learn.", "Help.", "Celebrate."];
+
+  it("draws the morph, the people line, the links, the questions and the footer", () => {
     const { container } = render(<Host />);
-    const main = container.querySelector(":scope > main.wrap.about#main")!;
-    expect([...main.querySelector("section.after")!.children].map(n => n.tagName + (n.id ? "#" + n.id : ""))).toEqual(["H2", "P", "DIV#cta", "H3", "DIV#more", "H3", "DIV#qa", "DIV#foot"]);
-    expect([...main.querySelectorAll("#words .w .word")].map(w => w.textContent)).toEqual(["Learn.", "Help.", "Celebrate."]);
-    expect([...main.querySelectorAll("#words .pic img")].map(i => i.getAttribute("src"))).toEqual(["img/learn.jpg", "img/help.jpg", "img/party.jpg"]);
-    expect(main.querySelectorAll("#prog i")).toHaveLength(3);
+    expect(WORDS.map(w => word(w).querySelector("img")!.getAttribute("src"))).toEqual(["img/learn.jpg", "img/help.jpg", "img/party.jpg"]);
+    expect(container.querySelectorAll(".prog i")).toHaveLength(3);
     // jsdom has no layout: the track has no scroll range, so the last word is open
-    expect(main.querySelector("#words")!.className).toBe("words");
-    expect(main.querySelector("#words .w:nth-child(3)")!.className).toBe("w on");
-    expect(main.querySelector<HTMLElement>("#stage")!.style.getPropertyValue("--p")).toBe("#d41367");
+    expect(container.querySelector(".words")!.className).toBe("words");
+    expect(word("Celebrate.").className).toBe("w on");
+    expect(container.querySelector<HTMLElement>(".stage")!.style.getPropertyValue("--p")).toBe("#d41367");
     const n = getData().data.clubs.filter(isRac).length;
-    expect([...main.querySelectorAll("p.lead")].find(p => p.textContent!.includes("clubs between"))!.textContent).toMatch(new RegExp("^" + n + " "));
-    expect([...main.querySelectorAll("#more a.more")].map(a => a.getAttribute("href"))).toEqual(["#/guide", "#/words", "#/intl", "#/about-more", "#/family"]);
-    expect(main.querySelectorAll("#qa details[name=qa]")).toHaveLength(5);
-    expect(main.querySelector("#qa summary")!.textContent).toBe("Who can join?");
-    expect(main.querySelector("#foot footer")).not.toBeNull();
+    screen.getByText(new RegExp("^" + n + " clubs between"));
+    expect(screen.getAllByRole("link").map(a => a.getAttribute("href"))).toEqual(["#/guide", "#/words", "#/intl", "#/about-more", "#/family"]);
+    const qa = container.querySelectorAll("details[name=qa]");
+    expect(qa).toHaveLength(5);
+    expect(within(qa[0] as HTMLElement).getByText("Who can join?").tagName).toBe("SUMMARY");
+    screen.getByText(t("made_by"));
     expect(document.body.classList.contains("wash")).toBe(true);
   });
 
   it("asks a visitor without a main club to find one, and leaves that out for a member", () => {
     const guest = render(<Host />);
-    expect(guest.container.querySelector("#cta .cta.new")).not.toBeNull();
+    screen.getByText(t("ab_find_title"));
+    screen.getByRole("textbox", { name: t("ab_find_ph") });
     guest.unmount();
     setSettings({ ...getData().settings, home: "luzern" });
-    const member = render(<Host />);
-    expect(member.container.querySelector("#cta")!.children).toHaveLength(0);
+    render(<Host />);
+    expect(screen.queryByText(t("ab_find_title"))).toBeNull();
+    expect(screen.queryByText(t("your_club"))).toBeNull();
   });
 
   it("falls back to an event picture when a pillar picture is missing", () => {
-    const { container } = render(<Host />);
-    const img = container.querySelector<HTMLImageElement>("#words .pic img")!;
+    render(<Host />);
+    const img = word("Learn.").querySelector("img")!;
     fireEvent.error(img);
     expect(img.getAttribute("src")).toMatch(/^https:/);
     expect(img.getAttribute("referrerpolicy")).toBe("no-referrer");
@@ -75,13 +80,12 @@ describe("about", () => {
   it("shares the about page from the top bar: copies the link and says so without Web Share", async () => {
     const writeText = vi.fn(async () => {});
     vi.stubGlobal("navigator", { ...navigator, share: undefined, clipboard: { writeText } });
-    const { container } = render(<Host />);
-    const btn = container.querySelector<HTMLButtonElement>("#top button.hbtn")!;
+    render(<Host />);
+    const btn = screen.getByRole("button", { name: "Share" });
     expect(btn.title).toBe("Share this page");
-    expect(btn.textContent).toBe("Share");
     await act(async () => { fireEvent.click(btn); });
     expect(writeText).toHaveBeenCalledWith(expect.stringMatching(/\/s\/en\/about\.html$/));
-    await waitFor(() => expect(container.querySelector("#toast")!.textContent).toBe("Link copied"));
+    await waitFor(() => expect(screen.getByRole("status").textContent).toBe("Link copied"));
     vi.unstubAllGlobals();
   });
 
@@ -92,8 +96,8 @@ describe("about", () => {
     const h = vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockReturnValue(4000);
     try {
       const { container } = render(<Host />);
-      expect(container.querySelector("#words")!.className).toBe("words closed");
-      expect([...container.querySelectorAll("#words .w")].map(w => w.className)).toEqual(["w", "w", "w"]);
+      expect(container.querySelector(".words")!.className).toBe("words closed");
+      expect(WORDS.map(w => word(w).className)).toEqual(["w", "w", "w"]);
     } finally {
       rect.mockRestore(); h.mockRestore();
       Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
@@ -101,9 +105,9 @@ describe("about", () => {
   });
 
   it("removes the share button when the screen goes", () => {
-    const { container, unmount } = render(<Host />);
-    expect(container.querySelector("#top button")).not.toBeNull();
+    const { unmount } = render(<Host />);
+    screen.getByRole("button", { name: "Share" });
     unmount();
-    expect(document.querySelector("#top button")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Share" })).toBeNull();
   });
 });

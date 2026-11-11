@@ -75,7 +75,7 @@ function PlaceInput({ api }: { api: FilterApi }) {
     void api.setPlace(text);
   }, ref);
   return (
-    <input type="text" id="place" autoComplete="off" placeholder={t("place_ph")} aria-label={t("place_ph")} ref={ref}
+    <input type="text" autoComplete="off" placeholder={t("place_ph")} aria-label={t("place_ph")} ref={ref}
       value={api.placeText} onChange={ev => api.setPlaceText(ev.target.value)} onKeyDown={ev => { if (ev.key === "Enter") ev.currentTarget.blur(); }} />
   );
 }
@@ -106,12 +106,12 @@ function FilterBar({ api, ready }: { api: FilterApi; ready: boolean }) {
         <div className="row" id="clubs" role="group" aria-label={t("clubs")}>{ready && <ClubRow api={api} />}</div>
         <div className="tools">
           <PlaceInput api={api} />
-          <button className="linkbtn" type="button" id="locate" onClick={api.locate}>📍 <span>{t("locate")}</span></button>
-          <select id="radius" aria-label={t("radius")} value={api.live.r} onChange={ev => change(api, { r: ev.target.value })}>
+          <button className="linkbtn" type="button" onClick={api.locate}>📍 <span>{t("locate")}</span></button>
+          <select aria-label={t("radius")} value={api.live.r} onChange={ev => change(api, { r: ev.target.value })}>
             <option value="">{t("any_distance")}</option>
             {["10", "25", "50", "100"].map(r => <option key={r} value={r}>{r + " km"}</option>)}
           </select>
-          <div className="hint" id="placeHint" hidden={!api.hint}>{api.hint}</div>
+          <div className="hint" hidden={!api.hint}>{api.hint}</div>
         </div>
       </div>
     </div>

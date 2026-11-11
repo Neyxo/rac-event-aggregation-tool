@@ -52,7 +52,7 @@ export default function AboutMore(_props: ScreenProps) {
   return (
     <main className="wrap more">
       <h1>{t("ab_more")}</h1>
-      <section className="vis" id="rotary">
+      <section className="vis">
         {/* a club photo, not a cropped event poster */}
         {ready ? <PillarPic k="help" className="bg" /> : <img className="bg" alt="" referrerPolicy="no-referrer" />}
         <div className="pane">
@@ -62,24 +62,24 @@ export default function AboutMore(_props: ScreenProps) {
         </div>
       </section>
       <section className="vis map">
-        <div className="bg" id="swiss" ref={swiss} />
+        <div className="bg" ref={swiss} />
         <div className="pane">
           <b>{ready ? t("sp_dist", { n: nClubs() }) : t("sp_dist")}</b>
           <span>{t("sp_dist_t")}</span>
-          <div className="leg" id="leg">
+          <div className="leg">
             {ready && Object.entries(DISTRICT_COLOR).map(([d, c]) => <span key={d} style={{ color: c }}>{"D" + d}</span>)}
           </div>
         </div>
       </section>
       <section className="vis map">
-        <div className="bg" id="world" ref={world} />
+        <div className="bg" ref={world} />
         <div className="pane">
           <b>{t("sp_world")}</b>
           <span>{t("sp_world_t")}</span>
         </div>
       </section>
-      <div id="more">{ready && <HelpLinks keys={["intl", "family", "guide"]} />}</div>
-      <div id="cta">{ready && <CtaBlock />}</div>
+      {ready && <HelpLinks keys={["intl", "family", "guide"]} />}
+      {ready && <CtaBlock />}
       <div id="foot">{ready && <Footer />}</div>
     </main>
   );

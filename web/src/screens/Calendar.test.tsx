@@ -1,12 +1,12 @@
 // The calendar screen: the month grid, scope, month navigation, the day sheet and fit().
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { useLayoutEffect } from "react";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
 import type { Event } from "../lib/types";
 import { getData, initData, loadData, setSettings } from "../lib/data";
-import { parseHash } from "../lib/route";
+import { href, parseHash } from "../lib/route";
 import { fmt } from "../lib/dates";
 import { t } from "../i18n";
 import Calendar from "./Calendar";
@@ -31,127 +31,138 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 const show = () => render(<Calendar route={parseHash("#/calendar")} />).container;
-const days = (c: HTMLElement) => [...c.querySelectorAll<HTMLButtonElement>("#grid > button.day")];
-/** a day of the shown month by its number */
-const day = (c: HTMLElement, n: number) => days(c).filter(b => !b.classList.contains("other"))[n - 1]!;
+const button = (name: string) => screen.getByRole("button", { name });
+const monthTitle = () => screen.getByRole("heading", { level: 2 }).textContent;
+const days = () => within(screen.getByRole("grid")).getAllByRole("button");
+/** a day button by its label ("Wednesday, 11 November 2026, 1 event"); November 2026 unless told otherwise */
+const day = (n: number, m = 10, y = 2026) => {
+  const label = fmt.full.format(new Date(y, m, n)) + ", ";
+  return screen.getByRole("button", { name: x => x.startsWith(label) });
+};
 const titles = (b: HTMLElement) => [...b.querySelectorAll(".ch")].map(s => s.getAttribute("title"));
-const sheet = (c: HTMLElement) => c.querySelector<HTMLElement>("#sheet")!;
+/** the sheet: its own element (the backdrop) for the class that slides it in and the backdrop click */
+const sheet = () => document.querySelector<HTMLElement>(".sheet")!;
+const isOpen = () => sheet().classList.contains("open");
+/** the links of the event cards in the sheet (each card also links its clubs) */
+const sheetLinks = () => within(sheet()).queryAllByRole("link", { hidden: true }).map(a => a.getAttribute("href")).filter(h => h?.startsWith(href("event", "")));
 
 describe("calendar", () => {
-  it("draws the month: header, weekdays, 42 cells from Monday, today, other-month days", () => {
-    const c = show();
-    expect(c.querySelector("#stale.banner")?.hasAttribute("hidden")).toBe(true);
-    expect(c.querySelector("main#main.calwrap > .mhead > h2#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
-    expect(c.querySelector("#prev")?.getAttribute("aria-label")).toBe(t("prev_month"));
-    expect(c.querySelectorAll("#grid > .dow[role=columnheader]")).toHaveLength(7);
-    const grid = c.querySelector<HTMLElement>("#grid")!;
-    expect(grid.style.getPropertyValue("--rows")).toBe("6");
-    expect(days(c)).toHaveLength(42);
-    expect(days(c)[0]!.querySelector(".n")?.textContent).toBe("26");
-    expect(days(c)[0]!.className).toBe("day other");
-    expect(day(c, 11).className).toBe("day today");
-    expect(day(c, 11).getAttribute("aria-label")).toBe(fmt.full.format(new Date(2026, 10, 11)) + ", " + t("n_on_day", { n: 1 }));
-    expect(day(c, 11).getAttribute("aria-pressed")).toBe("false");
-    const chip = day(c, 11).querySelector<HTMLElement>(".ch")!;
+  it("draws the month: title, weekdays, 42 cells from Monday, today, other-month days", () => {
+    show();
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 10, 1)));
+    expect(button(t("prev_month"))).toBeTruthy();
+    expect(screen.getAllByRole("columnheader")).toHaveLength(7);
+    expect(screen.getByRole("grid").style.getPropertyValue("--rows")).toBe("6");
+    expect(days()).toHaveLength(42);
+    expect(days()[0]!.querySelector(".n")?.textContent).toBe("26");
+    expect(days()[0]!.classList.contains("other")).toBe(true);
+    const today = day(11);
+    expect(today.classList.contains("today")).toBe(true);
+    expect(today.classList.contains("other")).toBe(false);
+    expect(today.getAttribute("aria-label")).toBe(fmt.full.format(new Date(2026, 10, 11)) + ", " + t("n_on_day", { n: 1 }));
+    expect(today.getAttribute("aria-pressed")).toBe("false");
+    const chip = today.querySelector<HTMLElement>(".ch")!;
     expect(chip.style.getPropertyValue("--c")).toBe("#1f78d1");
     expect(chip.style.getPropertyValue("--crest")).toMatch(/^url\(".*crests\/zuerich\.svg"\)$/);
-    expect(chip.querySelector("i")?.textContent).toBe("Informal: Konzert in der Tonhalle Zürich");
-    expect(day(c, 11).lastElementChild?.matches("span.more[hidden]")).toBe(true);
+    expect(within(today).getByText("Informal: Konzert in der Tonhalle Zürich")).toBeTruthy();
+    expect(today.querySelector<HTMLElement>(".more")?.hidden).toBe(true);
   });
 
   it("scope: my clubs first, all on demand; no switch without clubs", () => {
-    const c = show();
-    const [mine, all] = [...c.querySelectorAll<HTMLButtonElement>("#scope > button")];
-    expect(mine!.getAttribute("aria-pressed")).toBe("true");
-    expect(titles(day(c, 7))).toEqual([]);
-    fireEvent.click(all!);
-    expect(all!.getAttribute("aria-pressed")).toBe("true");
-    expect(mine!.getAttribute("aria-pressed")).toBe("false");
-    expect(titles(day(c, 7))).toEqual(["Essen für Alle Volunteering 28.11"]);
+    show();
+    const [mine, all] = [button(t("mine_short")), button(t("all_clubs_short"))];
+    expect(mine.getAttribute("aria-pressed")).toBe("true");
+    expect(titles(day(7))).toEqual([]);
+    fireEvent.click(all);
+    expect(all.getAttribute("aria-pressed")).toBe("true");
+    expect(mine.getAttribute("aria-pressed")).toBe("false");
+    expect(titles(day(7))).toEqual(["Essen für Alle Volunteering 28.11"]);
     cleanup();
     setSettings({ home: "", also: [] });
-    const g = show();
-    expect(g.querySelector("#scope")?.hasAttribute("hidden")).toBe(true);
-    expect(titles(day(g, 7))).toEqual(["Essen für Alle Volunteering 28.11"]);
+    show();
+    expect(screen.queryByRole("group")).toBeNull();
+    expect(screen.queryByRole("button", { name: t("all_clubs_short") })).toBeNull();
+    expect(titles(day(7))).toEqual(["Essen für Alle Volunteering 28.11"]);
   });
 
   it("month navigation and today", () => {
-    const c = show();
-    fireEvent.click(c.querySelector("#next")!);
-    expect(c.querySelector("#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 11, 1)));
-    fireEvent.click(c.querySelector("#prev")!);
-    fireEvent.click(c.querySelector("#prev")!);
-    expect(c.querySelector("#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 9, 1)));
-    expect(sheet(c).className).toBe("sheet");
+    show();
+    fireEvent.click(button(t("next_month")));
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 11, 1)));
+    fireEvent.click(button(t("prev_month")));
+    fireEvent.click(button(t("prev_month")));
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 9, 1)));
+    expect(isOpen()).toBe(false);
     // today has an event that starts today: back to November, and the sheet opens on it
-    fireEvent.click(c.querySelector("#todayBtn")!);
-    expect(c.querySelector("#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
-    expect(sheet(c).className).toBe("sheet open");
-    expect(c.querySelector("#sheetTitle")?.textContent).toBe(fmt.full.format(new Date(2026, 10, 11)));
-    expect(day(c, 11).getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click(button(t("today")));
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 10, 1)));
+    expect(isOpen()).toBe(true);
+    expect(screen.getByRole("heading", { level: 3 }).textContent).toBe(fmt.full.format(new Date(2026, 10, 11)));
+    expect(day(11).getAttribute("aria-pressed")).toBe("true");
   });
 
   it("today without an event today only moves to the month", () => {
     vi.setSystemTime(new Date("2026-11-12T10:00"));
-    const c = show();
-    fireEvent.click(c.querySelector("#next")!);
-    fireEvent.click(c.querySelector("#todayBtn")!);
-    expect(c.querySelector("#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
-    expect(sheet(c).getAttribute("aria-hidden")).toBe("true");
+    show();
+    fireEvent.click(button(t("next_month")));
+    fireEvent.click(button(t("today")));
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 10, 1)));
+    expect(sheet().getAttribute("aria-hidden")).toBe("true");
   });
 
   it("a day opens the frosted sheet with its events; close, backdrop, Escape and a swipe down close it", () => {
-    const c = show();
-    const s = sheet(c);
+    show();
+    const s = sheet();
     expect(s.getAttribute("aria-hidden")).toBe("true");
-    fireEvent.click(day(c, 11));
-    expect(s.className).toBe("sheet open");
+    fireEvent.click(day(11));
+    expect(isOpen()).toBe(true);
     expect(s.getAttribute("aria-hidden")).toBe("false");
-    expect([...c.querySelectorAll("#sheetBody > a.event")].map(a => a.id)).toEqual(["ev-219091"]);
-    expect(day(c, 11).getAttribute("aria-pressed")).toBe("true");
+    expect(sheetLinks()).toEqual([href("event", "219091")]);
+    expect(day(11).getAttribute("aria-pressed")).toBe("true");
 
-    fireEvent.click(c.querySelector("#sheetClose")!);
-    expect(s.className).toBe("sheet");
-    expect(day(c, 11).getAttribute("aria-pressed")).toBe("false");
+    fireEvent.click(button(t("close")));
+    expect(isOpen()).toBe(false);
+    expect(day(11).getAttribute("aria-pressed")).toBe("false");
     // the content stays while the sheet slides away
-    expect(c.querySelector("#sheetBody > a.event")).not.toBeNull();
+    expect(sheetLinks()).toEqual([href("event", "219091")]);
 
-    fireEvent.click(day(c, 11));
+    fireEvent.click(day(11));
     fireEvent.click(s.querySelector(".sheet-in")!);
-    expect(s.className).toBe("sheet open");
+    expect(isOpen()).toBe(true);
     fireEvent.click(s);
-    expect(s.className).toBe("sheet");
+    expect(isOpen()).toBe(false);
 
-    fireEvent.click(day(c, 11));
+    fireEvent.click(day(11));
     fireEvent.keyDown(window, { key: "Escape" });
-    expect(s.className).toBe("sheet");
+    expect(isOpen()).toBe(false);
 
-    fireEvent.click(day(c, 11));
-    const handle = c.querySelector("#sheetHandle")!;
+    fireEvent.click(day(11));
+    const handle = s.querySelector(".handle")!;
     fireEvent.touchStart(handle, { touches: [{ clientY: 100 }] });
     fireEvent.touchEnd(handle, { changedTouches: [{ clientY: 120 }] });
-    expect(s.className).toBe("sheet open");
+    expect(isOpen()).toBe(true);
     fireEvent.touchStart(handle, { touches: [{ clientY: 100 }] });
     fireEvent.touchEnd(handle, { changedTouches: [{ clientY: 160 }] });
-    expect(s.className).toBe("sheet");
+    expect(isOpen()).toBe(false);
   });
 
   it("an empty day says so", () => {
-    const c = show();
-    fireEvent.click(day(c, 12));
-    expect(c.querySelector("#sheetBody > p.meta")?.textContent).toBe(t("no_events_day"));
+    show();
+    fireEvent.click(day(12));
+    expect(within(sheet()).getByText(t("no_events_day"))).toBeTruthy();
+    expect(sheetLinks()).toEqual([]);
   });
 
   it("multi-day and all-day events are on every day they touch", () => {
     setSettings({ home: "", also: [] });
     addEvents(ev({ id: "m", title: "Weekend", start: "2026-11-20T18:00", end: "2026-11-22T12:00" }));
-    const c = show();
-    expect([20, 21, 22, 23].map(n => titles(day(c, n)).includes("Weekend"))).toEqual([true, true, true, false]);
-    fireEvent.click(c.querySelector("#next")!);
-    fireEvent.click(c.querySelector("#next")!);
+    show();
+    expect([20, 21, 22, 23].map(n => titles(day(n)).includes("Weekend"))).toEqual([true, true, true, false]);
+    fireEvent.click(button(t("next_month")));
+    fireEvent.click(button(t("next_month")));
     // all day 26–28 January (ends at the midnight after the 28th), and 28 January – 31 January
-    expect([25, 26, 27, 28, 29].map(n => titles(day(c, n)).length)).toEqual([0, 1, 1, 2, 1]);
-    expect(titles(day(c, 31))).toEqual(["REM Cluj Napoca – REMSYLVANIA"]);
+    expect([25, 26, 27, 28, 29].map(n => titles(day(n, 0, 2027)).length)).toEqual([0, 1, 1, 2, 1]);
+    expect(titles(day(31, 0, 2027))).toEqual(["REM Cluj Napoca – REMSYLVANIA"]);
   });
 });
 
@@ -177,8 +188,8 @@ describe("fit", () => {
   it("gives a day 3, 2, 1 title lines, then hides events from the end with +n; again on resize", () => {
     setSettings({ home: "", also: [] });
     addEvents(...["a", "b", "c"].map(id => ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" })));
-    const c = show();
-    const cell = day(c, 19);
+    show();
+    const cell = day(19);
     const more = cell.querySelector<HTMLElement>(".more")!;
     const shown = () => [...cell.querySelectorAll<HTMLElement>(".ch")].map(x => !x.hidden);
     expect(cell.style.getPropertyValue("--l")).toBe("3");
@@ -208,9 +219,9 @@ describe("fit", () => {
       useLayoutEffect(() => { document.body.classList.add("calpage"); return () => document.body.classList.remove("calpage"); });
       return <Calendar route={parseHash("#/calendar")} />;
     }
-    const c = render(<Shell />).container;
+    render(<Shell />);
     await act(() => new Promise(requestAnimationFrame));
-    expect(day(c, 19).style.getPropertyValue("--l")).toBe("1");
+    expect(day(19).style.getPropertyValue("--l")).toBe("1");
     Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, get(this: HTMLElement) { return this.classList.contains("day") ? H : 0; } });
   });
 });

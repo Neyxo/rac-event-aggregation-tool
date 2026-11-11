@@ -1,24 +1,27 @@
 // The calendar before and without events.json (its own file: useData() loads once per module instance).
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { parseHash } from "../lib/route";
 import { fmt } from "../lib/dates";
+import { t } from "../i18n";
 import Calendar from "./Calendar";
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers(); localStorage.clear(); });
-const $ = (s: string) => document.querySelector(s);
 const route = parseHash("#/calendar");
+const button = (name: string) => screen.getByRole("button", { name });
+const sheet = () => document.querySelector<HTMLElement>(".sheet")!;
 
 describe("Calendar loading", () => {  // in this order: a failed load is retried, a pending one is not
   it("events.json fails: <main> holds only the offline note", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) })));
     await act(async () => { render(<Calendar route={route} />); });
-    const main = $("main.calwrap#main")!;
-    expect(main.children).toHaveLength(1);
-    expect(main.firstElementChild?.className).toBe("empty");
-    expect(main.querySelector("button.linkbtn")).not.toBeNull();
-    expect($("#sheet")?.getAttribute("aria-hidden")).toBe("true");
+    const main = screen.getByRole("main");
+    expect(within(main).getByText(t("offline"))).toBeTruthy();
+    expect(within(main).getAllByRole("button").map(b => b.textContent)).toEqual([t("refresh")]);
+    expect(screen.queryByRole("grid")).toBeNull();
+    expect(screen.queryByRole("heading")).toBeNull();
+    expect(sheet().getAttribute("aria-hidden")).toBe("true");
   });
   it("month, scope and today buttons do nothing until the data is in", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
@@ -27,11 +30,11 @@ describe("Calendar loading", () => {  // in this order: a failed load is retried
     let answer!: () => void;
     vi.stubGlobal("fetch", vi.fn(() => new Promise(ok => { answer = () => ok({ ok: true, json: async () => structuredClone(fixture) }); })));
     render(<Calendar route={route} />);
-    expect($("#mtitle")?.textContent).toBe("");
-    for (const s of ["#next", "#next", "#prev", "#scope button:nth-child(2)", "#todayBtn"]) fireEvent.click($(s)!);
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toBe("");
+    for (const n of ["next_month", "next_month", "prev_month", "all_clubs_short", "today"] as const) fireEvent.click(button(t(n)));
     await act(async () => { answer(); });
-    expect($("#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
-    expect($("#scope button:nth-child(1)")?.getAttribute("aria-pressed")).toBe("true");
-    expect($("#sheet")?.className).toBe("sheet");
+    expect(screen.getByRole("heading", { level: 2 }).textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
+    expect(button(t("mine_short")).getAttribute("aria-pressed")).toBe("true");
+    expect(sheet().classList.contains("open")).toBe(false);
   });
 });

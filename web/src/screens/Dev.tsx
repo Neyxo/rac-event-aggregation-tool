@@ -48,7 +48,7 @@ async function readDevice(): Promise<Device> {
 }
 
 function Btn({ label, onClick }: { label: string; onClick: () => void }) {
-  return <button type="button" className="linkbtn " onClick={onClick}>{label}</button>;
+  return <button type="button" className="linkbtn" onClick={onClick}>{label}</button>;
 }
 function Link({ label, to }: { label: string; to: string }) {
   return <a className="linkbtn" href={to} target={/^https?:/.test(to) ? "_blank" : undefined} rel="noopener">{label}</a>;
@@ -67,7 +67,7 @@ function Fold({ title, items }: { title: string; items: ReactNode[] }) {
 /** ClubChip for a club object: the Rotary districts are not among the clubs while their layer is off, and adding them there would
  *  leak them into the other screens */
 function Chip({ c }: { c: Club }) {
-  return <a className="chip club " href={href("club", c.id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}</a>;
+  return <a className="chip club" href={href("club", c.id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}</a>;
 }
 
 /** the workflow's cron: 17 *\/6 * * * (UTC) */
@@ -90,7 +90,7 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
       <p className={"devstate " + level}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
       <p className="meta">{`Next scheduled run about ${fmt.stamp.format(nextRun())} (GitHub often starts it late).` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
-      {/* new in status.json: a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
+      {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
       {warnings.map((w, i) => <p key={i} className="devstate warn"><i />{w}</p>)}
       <div className="facts devfacts">
         <Count label="upcoming" n={up.length} />
@@ -263,7 +263,7 @@ function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[
   const all = [...data.clubs.filter(c => c.source !== "rotary"), ...rotClubs];
   const line = (c: Club) => {
     const s: Partial<Status["clubs"][string]> = st.clubs[c.id] || {};
-    const unreadable = st.unreadable?.[c.id];  // new in status.json: agenda items whose date the feed could not read
+    const unreadable = st.unreadable?.[c.id];  // agenda items whose date the feed could not read
     return `${upBy[c.id] || 0} upcoming · ${s.events ?? "?"} in history` + (s.cancelled ? ` · ${s.cancelled} cancelled` : "") + (s.without_detail ? ` · ${s.without_detail} without details` : "") + (unreadable ? ` · ${unreadable} with no readable date` : "");
   };
   return <>{all.map(c => <div key={c.id} className="devclub"><Chip c={c} /><span>{line(c)}</span><a href={c.id + ".ics"}>.ics</a></div>)}</>;
@@ -282,16 +282,17 @@ export default function Dev(_props: ScreenProps) {
   // the sections fill once both events.json and status.json are in, so nothing jumps
   const go = ready && st;
   // events.json failed: the offline note in place of the screen
-  if (error) return <main className="wrap settings dev" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap settings dev"><LoadError /></main>;
   return (
-    <main className="wrap settings dev" id="main">
+    <main className="wrap settings dev">
       <h1>Developer</h1>
       <p className="lead">For the people who run this app. English only. Everything here affects this device alone.</p>
-      <section className="glass"><h2>Last build</h2><div id="build">{go && <Build st={st} own={own} up={up} rot={rot.events} />}</div></section>
-      <section className="glass"><h2>Preview on this device</h2><div id="preview">{go && <Preview />}</div></section>
-      <section className="glass"><h2>This device</h2><div id="device">{go && dev && <DeviceInfo dev={dev} />}</div></section>
-      <section className="glass"><h2>Content checks</h2><div className="qa" id="checks">{go && dev && <Checks own={own} up={up} />}</div></section>
-      <section className="glass"><h2>Clubs and layers</h2><div id="clubs">{go && dev && <Clubs st={st} own={own} rot={rot.events} rotClubs={rot.clubs} />}</div></section>
+      <section className="glass"><h2>Last build</h2>{go && <Build st={st} own={own} up={up} rot={rot.events} />}</section>
+      <section className="glass"><h2>Preview on this device</h2>{go && <Preview />}</section>
+      <section className="glass"><h2>This device</h2>{go && dev && <DeviceInfo dev={dev} />}</section>
+      <section className="glass"><h2>Content checks</h2><div className="qa">{go && dev && <Checks own={own} up={up} />}</div></section>
+      {/* the wrapper makes the first row :first-child, so it has no top border */}
+      <section className="glass"><h2>Clubs and layers</h2><div>{go && dev && <Clubs st={st} own={own} rot={rot.events} rotClubs={rot.clubs} />}</div></section>
       <div id="foot">{go && dev && <Footer source />}</div>
     </main>
   );

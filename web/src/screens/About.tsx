@@ -73,11 +73,11 @@ function Stage({ ready, phase }: { ready: boolean; phase: Phase }) {
   const { cur, all } = phase;
   const color = cur < 0 ? CLOSED_COLOR : PILLARS[cur]!.color;
   return (
-    <div className="stage" id="stage" style={cur === -2 ? undefined : vars({ "--p": color })}>
-      <div className="prog" id="prog" aria-hidden="true">
+    <div className="stage" style={cur === -2 ? undefined : vars({ "--p": color })}>
+      <div className="prog" aria-hidden="true">
         {PILLARS.map((p, i) => <i key={p.k} className={i === cur ? "on" : undefined} />)}
       </div>
-      <div className={cur === -1 && !all ? "words closed" : "words"} id="words">
+      <div className={cur === -1 && !all ? "words closed" : "words"}>
         {ready && PILLARS.map((p, i) => (
           <div key={p.k} className={all || i === cur ? "w on" : "w"} style={vars({ "--p": p.color })}>
             <div className="word">{p.word + "."}</div>
@@ -103,20 +103,20 @@ export default function About(_props: ScreenProps) {
   const track = useRef<HTMLDivElement>(null);
   const phase = usePhase(track, ready);
   // events.json failed: the offline note in place of the screen
-  if (error) return <main className="wrap about" id="main"><LoadError /></main>;
+  if (error) return <main className="wrap about"><LoadError /></main>;
   return (
-    <main className="wrap about" id="main">
-      <div className="track" id="track" ref={track}>
+    <main className="wrap about">
+      <div className="track" ref={track}>
         <Stage ready={ready} phase={phase} />
       </div>
       <section className="after">
         <h2>{t("ab_people")}</h2>
         <p className="lead">{ready ? t("ab_people_t", { n: nClubs() }) : t("ab_people_t")}</p>
-        <div id="cta">{ready && !D.clubs[D.settings.home] && <CtaBlock />}</div>
+        {ready && !D.clubs[D.settings.home] && <CtaBlock />}
         <h3 className="sh">{t("read_on")}</h3>
-        <div id="more">{ready && <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />}</div>
+        {ready && <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />}
         <h3 className="sh">{t("faq")}</h3>
-        <div className="qa" id="qa"><QaList items={QA.map(i => [t(`ab_q${i}`), t(`ab_a${i}`)])} /></div>
+        <div className="qa"><QaList items={QA.map(i => [t(`ab_q${i}`), t(`ab_a${i}`)])} /></div>
         <div id="foot">{ready && <Footer />}</div>
       </section>
     </main>

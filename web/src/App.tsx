@@ -9,7 +9,7 @@
  * HOW A SCREEN WORKS (web/src/screens/<Name>.tsx):
  * - export default function Name({ route }: ScreenProps). route.params.id is the id of #/event/<id> and #/club/<id>; route.query is
  *   the URLSearchParams after "?" in the hash (Discover's filters). The screen is remounted when the route name or id changes.
- * - Render what sits between </header> and <nav>: usually <main className="..." id="main">, plus siblings such as the stale banner
+ * - Render what sits between </header> and <nav>: usually <main className="..."> (id="main" on the skip-link screens), plus siblings such as the stale banner
  *   before main, the calendar sheet or the onboarding <dialog>.
  *   No wrapper elements: app.css has child selectors. Never render header, nav, #frost or #toast: App does.
  * - Data: const { ready, error, D } = useData(); render <Skel/>s until ready, <LoadError/> on error. D is a read-only snapshot:
@@ -69,7 +69,7 @@ interface Meta {
   back?: boolean;
   /** the default <title>; a screen with a title of its own calls useTitle() */
   title: string;
-  /** the "skip to content" link (the list pages had it) */
+  /** the "skip to events" link, on the screens that open on a long list */
   skip?: boolean;
 }
 const T = (s: string) => s + " · Rotaract Events";
