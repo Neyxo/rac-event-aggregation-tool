@@ -1,5 +1,10 @@
 # Rotaract event aggregation tool
 
+[![Build feeds](https://github.com/Neyxo/rotaract-events/actions/workflows/feeds.yml/badge.svg)](https://github.com/Neyxo/rotaract-events/actions/workflows/feeds.yml)
+[![Version](https://img.shields.io/github/package-json/v/Neyxo/rotaract-events)](https://github.com/Neyxo/rotaract-events/releases)
+[![Licence: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE.md)
+[![Live site](https://img.shields.io/website?url=https%3A%2F%2Fneyxo.github.io%2Frotaract-events%2F&label=site)](https://neyxo.github.io/rotaract-events/)
+
 Collects the events of every Rotaract club in Switzerland & Liechtenstein from their Polaris sites and publishes them as an installable web app and as calendar feeds you can subscribe to.
 
 **https://neyxo.github.io/rotaract-events/**
@@ -37,9 +42,24 @@ Edit its `[[clubs]]` entry in `clubs.toml`: Polaris website, language, city, cre
 
 GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions), with read and write workflow permissions. `.github/workflows/feeds.yml` runs every night, on every push and by hand. Lint, typecheck and the tests run on a push or by hand; the nightly run only builds and syncs.
 
+## Versions
+
+[Semantic versioning](https://semver.org); the number is in `package.json` and shows in the app under Settings and on the developer screen. The site deploys on every push, so a version marks a milestone, not a deploy. To release:
+
+```bash
+npm version minor              # or patch / major: bumps package.json, commits and tags
+git push --follow-tags         # the tag becomes a GitHub release with generated notes
+```
+
 ## More detail
 
 - [The site](docs/site.md): the app, routes, languages, share pages, what is stored on the device
 - [How events are tracked](docs/tracking.md): updates, cancellations, safety brake, locations
 - [Layers](docs/layers.md): members-only events, international events, Rotary events, Instagram pictures
 - [Design rules](docs/design.md): buttons, chips, status, cards, frosted glass
+
+## Licence
+
+[PolyForm Noncommercial 1.0.0](LICENSE.md): you may use, change and share the code for any noncommercial purpose, which includes personal projects, charities, schools and other clubs. Commercial use needs my permission; ask by opening an issue.
+
+The licence covers the code. Club crests, the Rotaract and Rotary names and marks, and the event texts belong to their owners. By contributing you agree that your contribution may be published under this licence and relicensed by the copyright holder.
