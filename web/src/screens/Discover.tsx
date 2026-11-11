@@ -1,12 +1,12 @@
 // Discover: every event of Rotaract, with search, district and club chips, place and radius, and the
 // views upcoming / near me / saved / past. The filters live in the URL (#/discover?q=&d=&clubs=&place=&r=&view=).
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, myClubs } from "../lib/data";
 import { clubVars } from "../lib/color";
 import { DISTRICT_IDS, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
-import { ClubChips, ClubMark, LoadError, Popup, useData, useNav, useStickyHeads } from "../components";
+import { ClubChips, ClubMark, LoadError, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, type FilterApi } from "./EventList";
 
@@ -67,19 +67,13 @@ function ClubRow({ api }: { api: FilterApi }) {
 /** the place field: it counts once committed (the native change event: blur, or Enter, which blurs) */
 function PlaceInput({ api }: { api: FilterApi }) {
   const ref = useRef<HTMLInputElement>(null);
-  const onChange = useRef<() => void>(() => {});
-  onChange.current = () => {
+  // the native change event, not React's onChange (which fires on every keystroke)
+  useEventListener("change", () => {
     const text = ref.current?.value ?? "";
     api.update({ place: text });
     api.recount();
     void api.setPlace(text);
-  };
-  useEffect(() => {
-    const el = ref.current;
-    const h = () => onChange.current();
-    el?.addEventListener("change", h);
-    return () => el?.removeEventListener("change", h);
-  }, []);
+  }, ref);
   return (
     <input type="text" id="place" autoComplete="off" placeholder={t("place_ph")} aria-label={t("place_ph")} ref={ref}
       value={api.placeText} onChange={ev => api.setPlaceText(ev.target.value)} onKeyDown={ev => { if (ev.key === "Enter") ev.currentTarget.blur(); }} />

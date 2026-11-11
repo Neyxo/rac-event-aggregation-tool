@@ -1,5 +1,5 @@
 // Hooks every screen can use: the data, stored values, the colour wash, the morphing hero, the sticky headings.
-import { useEffect, useLayoutEffect, useMemo, useState, useSyncExternalStore, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type RefObject } from "react";
 import { getData, loadData, loaded, subscribeData, type AppData } from "../lib/data";
 import { store, type StoreKey, type StoreKeys } from "../lib/store";
 
@@ -92,6 +92,21 @@ if (typeof window !== "undefined") addEventListener("scroll", onScroll, { passiv
 /** call in every screen with .sh headings: re-measures after each render of that screen (scrolling re-measures on its own) */
 export function useStickyHeads(): void {
   useLayoutEffect(() => { stickyHeads(); });
+}
+
+/** An event listener on window (or on target's element) while the component is mounted. It always calls the latest handler, so the
+ *  handler can read current props and state without re-subscribing. */
+type EventOf<K extends string> = K extends keyof WindowEventMap ? WindowEventMap[K] : Event;  // "beforeinstallprompt" is no DOM type
+export function useEventListener<K extends string>(type: K, handler: (e: EventOf<K>) => void, target?: RefObject<EventTarget | null>): void {
+  const latest = useRef(handler);
+  latest.current = handler;
+  useEffect(() => {
+    const el = target ? target.current : window;
+    if (!el) return;
+    const h = (e: Event) => latest.current(e as EventOf<K>);
+    el.addEventListener(type, h);
+    return () => el.removeEventListener(type, h);
+  }, [type, target]);
 }
 
 /** document.title for this screen ("<title> · Rotaract Events"); App sets the route's default first, this runs after it */
