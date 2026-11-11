@@ -86,21 +86,6 @@ describe("about", () => {
     vi.unstubAllGlobals();
   });
 
-  it("measures the morph where App is about to scroll, not at the previous screen's scroll position", () => {
-    // arrived from a screen scrolled to 2500: the track (4000 px, starting at the top) would read the last word open; App then scrolls to 0
-    Object.defineProperty(window, "scrollY", { value: 2500, configurable: true });
-    const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({ top: -2500 } as DOMRect);
-    const h = vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockReturnValue(4000);
-    try {
-      const { container } = render(<Host />);
-      expect(container.querySelector(".words")!.className).toBe("words closed");
-      expect(WORDS.map(w => word(w).className)).toEqual(["w", "w", "w"]);
-    } finally {
-      rect.mockRestore(); h.mockRestore();
-      Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
-    }
-  });
-
   it("removes the share button when the screen goes", () => {
     const { unmount } = render(<Host />);
     screen.getByRole("button", { name: "Share" });

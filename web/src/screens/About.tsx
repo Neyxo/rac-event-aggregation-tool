@@ -7,16 +7,15 @@ import { nClubs } from "../lib/data";
 import { BRAND, vars } from "../lib/color";
 import type { Pillar } from "../lib/pillars";
 import { shareUrl } from "../lib/share";
-import { CtaBlock, Footer, HelpLinks, Icon, PillarPic, QaList, share, useData, useEventListener, useNav, useStickyHeads, useWash } from "../components";
-import { scrollTarget } from "../components/router";
+import { CtaBlock, Footer, HelpLinks, Icon, PillarPic, QaList, share, useData, useEventListener, useStickyHeads, useWash } from "../components";
 
 const PILLARS: { k: Pillar; color: string; word: string; text: string }[] = [
-  { k: "learn", color: "#0067c8", word: t("ab_learn"), text: t("ab_learn_t") },
-  { k: "help", color: "#009739", word: t("ab_help"), text: t("ab_help_t") },
-  { k: "party", color: "#d41367", word: t("ab_party"), text: t("ab_party_t") },
+  { k: "learn", color: BRAND.azure, word: t("ab_learn"), text: t("ab_learn_t") },
+  { k: "help", color: BRAND.green, word: t("ab_help"), text: t("ab_help_t") },
+  { k: "party", color: BRAND.cranberry, word: t("ab_party"), text: t("ab_party_t") },
 ];
 const QA = [1, 2, 3, 4, 5] as const;
-const CLOSED_COLOR = "#d41367";
+const CLOSED_COLOR = BRAND.cranberry;
 
 /** the top bar's share button on this screen (App's route table puts it there) */
 export function ShareButton() {
@@ -34,13 +33,11 @@ interface Phase { cur: number; all: boolean }
 /** The scroll range of the track split into four parts, with a little hysteresis so it never flickers at a boundary. */
 function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   const [phase, setPhase] = useState<Phase>({ cur: -2, all: false });
-  const nav = useNav();
-  /** y: the scroll position to measure at (default: the current one) */
-  const measure = (y?: number) => {
+  const measure = () => {
     const tr = track.current;
     if (!tr) return;
     const range = tr.offsetHeight - innerHeight, top = tr.getBoundingClientRect().top;
-    const p = range > 0 ? Math.min(1, Math.max(0, (y === undefined ? -top : y - (top + scrollY)) / range)) : 1;
+    const p = range > 0 ? Math.min(1, Math.max(0, -top / range)) : 1;
     const raw = p * 4 - 1;
     setPhase(ph => {
       const next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > ph.cur ? -0.08 : 0.08))));
@@ -50,9 +47,7 @@ function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   useEventListener("scroll", () => measure());
   useEventListener("resize", () => measure());
   useLayoutEffect(() => {
-    // this runs before App scrolls to the top (or back to where it was), so measure at that position, not at the previous screen's, or a
-    // word flashes open and closes again
-    measure(scrollTarget(nav));
+    measure();
     // reduced motion: everything open at first (no scroll-driven reveal); the next phase change takes over again
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPhase(ph => ({ ...ph, all: true }));
   }, []);

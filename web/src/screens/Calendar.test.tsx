@@ -1,6 +1,5 @@
 // The calendar screen: the month grid, scope, month navigation, the day sheet and fit().
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { useLayoutEffect } from "react";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
@@ -223,20 +222,5 @@ describe("fit", () => {
     expect(shown()).toEqual([true, true, true]);
     expect(more.hidden).toBe(true);
     expect(cell.style.getPropertyValue("--l")).toBe("3");
-  });
-
-  it("fits again once App has made body the full-height calpage column (its layout effect runs after the screen's)", async () => {
-    setSettings({ home: "", also: [] });
-    addEvents(...["a", "b", "c"].map(id => ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" })));
-    const tall = H;
-    Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, get(this: HTMLElement) { return this.classList.contains("day") ? (document.body.classList.contains("calpage") ? 70 : tall) : 0; } });
-    function Shell() {  // as App: the body class in a parent layout effect
-      useLayoutEffect(() => { document.body.classList.add("calpage"); return () => document.body.classList.remove("calpage"); });
-      return <Calendar route={parseHash("#/calendar")} />;
-    }
-    render(<Shell />);
-    await act(() => new Promise(requestAnimationFrame));
-    expect(day(19).style.getPropertyValue("--l")).toBe("1");
-    Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, get(this: HTMLElement) { return this.classList.contains("day") ? H : 0; } });
   });
 });

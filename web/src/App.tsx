@@ -104,23 +104,29 @@ export const ROUTE_META: Record<RouteName, Meta> = {
   dev: { screen: Dev, page: "dev", active: "dev", title: T("Developer"), main: "wrap settings dev" },
 };
 
-export default function App() {
-  const route = useRoute(), nav = useNav(), meta = ROUTE_META[route.name], Screen = meta.screen, Extra = meta.extra;
-  // body[data-page], the page classes and the default title; before the screen's own effects (useTitle) run
+/** The page around the screen: body[data-page], the page classes, the default title, and the scroll position (top for a new
+ *  navigation, the old one for back/forward, again next frame after images). Rendered before the screen: React runs an earlier
+ *  sibling's layout effects first, so the screen's own effects already see the new page and its scroll position. */
+function Page({ meta, nav }: { meta: Meta; nav: ReturnType<typeof useNav> }) {
   useLayoutEffect(() => {
     const b = document.body;
     b.dataset.page = meta.page;
     b.classList.toggle("calpage", meta.cls === "calpage"); b.classList.toggle("frosted", meta.cls === "frosted");
     document.title = meta.title;
   }, [meta]);
-  // after the new screen is in the DOM: top for a new navigation, the old position for back/forward (again next frame, after images)
   useLayoutEffect(() => {
     const y = scrollTarget(nav);
     scrollTo(0, y);
     if (y) { const id = requestAnimationFrame(() => scrollTo(0, y)); return () => cancelAnimationFrame(id); }
   }, [nav.id]);
+  return null;
+}
+
+export default function App() {
+  const route = useRoute(), nav = useNav(), meta = ROUTE_META[route.name], Screen = meta.screen, Extra = meta.extra;
   return (
     <>
+      <Page meta={meta} nav={nav} />
       <div id="frost" aria-hidden="true" />
       {meta.skip && <a className="skip" {...inPageLink("main")}>{t("skip_to")}</a>}
       <TopBar active={meta.active} back={meta.back} extra={Extra && <Extra />} />

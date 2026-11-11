@@ -55,10 +55,8 @@ export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): 
       root.style.setProperty("--stick", Math.round(Math.max(top, Math.min(node.getBoundingClientRect().bottom, top + node.offsetHeight))) + "px");
     };
     addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick);
-    // first tick next frame: this effect runs before App's, which scrolls the new screen to the top (or back to where it was); measured
-    // now, the head would see the previous screen's scroll position and flash compact
-    const first = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(first); removeEventListener("scroll", tick); removeEventListener("resize", tick); root.style.setProperty("--stick", bar.offsetHeight + "px"); };
+    tick();
+    return () => { removeEventListener("scroll", tick); removeEventListener("resize", tick); root.style.setProperty("--stick", bar.offsetHeight + "px"); };
   }, [ref, ready]);
 }
 

@@ -67,14 +67,9 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
   const now = new Date();
   const g = monthGrid(month);
   const days = byDay(calendarEvents(useData().data.events, scope, myClubs()), g);
-  // after every render (new month, scope, pressed day) and on resize. Again next frame
-  // (still before it is painted): coming from another screen, App's layout effect gives body its calpage class (the full-height
-  // column the cells are measured in) only after this one has run.
-  useLayoutEffect(() => {
-    if (ref.current) fit(ref.current);
-    const id = requestAnimationFrame(() => { if (ref.current) fit(ref.current); });
-    return () => cancelAnimationFrame(id);
-  });
+  // after every render (new month, scope, pressed day) and on resize; body already has its calpage class (the full-height column the
+  // cells are measured in): App sets it in an earlier sibling's layout effect
+  useLayoutEffect(() => { if (ref.current) fit(ref.current); });
   useEventListener("resize", () => { if (ref.current) fit(ref.current); });
   return (
     <div className="grid" id="grid" role="grid" style={vars({ "--rows": g.cells / 7 })} ref={ref}>

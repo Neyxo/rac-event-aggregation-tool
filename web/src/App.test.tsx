@@ -3,7 +3,8 @@ import { act, cleanup, render, screen, within } from "@testing-library/react";
 import { fixture } from "./test/fixture";
 import { t } from "./i18n";
 import { loadData } from "./lib/data";
-import App from "./App";
+import { useLayoutEffect } from "react";
+import App, { ROUTE_META } from "./App";
 
 window.scrollTo = (() => {}) as typeof window.scrollTo;  // jsdom has no layout
 window.matchMedia ??= ((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
@@ -17,6 +18,23 @@ afterEach(() => { cleanup(); location.hash = ""; });
 const go = async (h: string) => { await act(async () => { location.hash = h; window.dispatchEvent(new HashChangeEvent("hashchange")); }); };
 
 describe("App shell", () => {
+  it("sets up the page (body, title, scroll) before the screen's own layout effects run, so a screen measures the new page", async () => {
+    const log: string[] = [], scroll = window.scrollTo, words = ROUTE_META.words.screen;
+    window.scrollTo = (() => { log.push("scroll"); }) as typeof window.scrollTo;
+    ROUTE_META.words.screen = function Probe() {
+      useLayoutEffect(() => { log.push("screen on " + document.body.dataset.page); }, []);
+      return <main />;
+    };
+    try {
+      render(<App />);
+      log.length = 0;
+      await go("#/words");
+      expect(log).toEqual(["scroll", "screen on words"]);
+    } finally {
+      ROUTE_META.words.screen = words; window.scrollTo = scroll;
+      await go("#/");
+    }
+  });
   it("renders the chrome around the screen, in body order, and sets the page per route", async () => {
     render(<App />);
     const root = document.getElementById("root") ?? document.body.firstElementChild!;

@@ -84,8 +84,7 @@ export default function Settings(_props: ScreenProps) {
     requestAnimationFrame(() => devSec.current?.scrollIntoView({ behavior: "smooth", block: "center" }));  // once it is shown
   };
   // #/settings#install (the welcome steps link here): jump to the install row, centred, so the sticky top bar doesn't cover its
-  // title. An effect, not a layout effect: App scrolls a new screen to the top in its layout effect, which runs after this screen's.
-  // Back/forward keeps the restored position instead.
+  // title. After App has scrolled the new screen to the top; back/forward keeps the restored position instead.
   useEffect(() => {
     if (!pop && location.hash.endsWith("#install")) document.getElementById("install")?.scrollIntoView({ block: "center" });
   }, []);
