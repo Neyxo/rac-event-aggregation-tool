@@ -7,5 +7,5 @@ export { EventCard, NewIds, StarButton, DatePane, DeadlineTag, NextUp, Status, S
 export { ClubMark, ClubLabel, ClubChip, ClubTiles, ClubChips } from "./Club";
 export { MoreLink, HelpLinks, Footer, QaList, GoogleLink, FeedLinks, feedUrls, share, LangSelect, type HelpKey } from "./Links";
 export { CtaBlock, NewsCard, NewsStrip, Rich, PillarPic, LoadError } from "./Blocks";
-export { useData, useSaved, useStored, useWash, useMorphHead, useStickyHeads, stickyHeads, useTitle, useEventListener, useInstallPrompt } from "./hooks";
+export { useData, useSaved, useStored, useWash, useMorphHead, useStickyHeads, stickyHeads, useTitle, useEventListener, useInstallPrompt, useModal } from "./hooks";
 export { useRoute, useNav, navigate, replaceQuery, inPageLink } from "./router";

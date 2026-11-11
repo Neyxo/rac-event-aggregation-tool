@@ -10,7 +10,7 @@ import type { Pillar } from "../lib/pillars";
 import { href } from "../lib/route";
 import { store } from "../lib/store";
 import type { Club, Settings } from "../lib/types";
-import { ClubChips, ClubMark, FeedLinks, PillarPic, toast, useData, useInstallPrompt } from "../components";
+import { ClubChips, ClubMark, FeedLinks, PillarPic, toast, useData, useInstallPrompt, useModal } from "../components";
 
 interface Ob {
   /** the clubs being chosen; saved on finish */
@@ -168,18 +168,12 @@ export function Onboarding({ run, onFinish }: { run: number; onFinish: () => voi
   useEffect(() => {
     if (run) setOb({ s: { home: D.settings.home, also: [...D.settings.also] }, member: null, step: 0, guess: [] });
   }, [run]);
-  // every step (and every chip tap) puts the focus on the title, so a screen reader reads where it is
-  useEffect(() => {
-    const d = dlg.current;
-    if (!ob || !d || ob.done) return;
-    if (!d.open) d.showModal();
-    h2.current?.focus();
-  }, [ob]);
+  // every step (and every chip tap) puts the focus on the title, so a screen reader reads where it is; finished, it closes
+  useModal(dlg, !!ob && !ob.done, { focus: h2, refocus: ob });
   const finish = (s: Settings) => {
     setSettings(s);
     store.set("rac.onboarded", true);
     setOb(o => o && { ...o, done: true });
-    dlg.current?.close();
     onFinish();
     const mine = myClubs();
     if (mine.length) toast(t("ob_showing", { clubs: mine.map(id => club(id).short).join(", ") }));

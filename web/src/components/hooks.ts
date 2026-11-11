@@ -117,3 +117,22 @@ export function useEventListener<K extends string>(type: K, handler: (e: EventOf
 export function useTitle(title: string | null | undefined): void {
   useEffect(() => { if (title) document.title = title + " · Rotaract Events"; }, [title]);
 }
+
+/** A <dialog> shown modal while open: focus inside it, the page behind out of reach (Tab included), Escape cancels it. The focus goes
+ *  to focus (a title, so a screen reader reads where it is), again whenever refocus changes. When open turns false the dialog closes,
+ *  closeAfter ms later when it has an exit transition to play first. */
+export function useModal(dlg: RefObject<HTMLDialogElement | null>, open: boolean, { focus, refocus, closeAfter = 0 }: { focus?: RefObject<HTMLElement | null>; refocus?: unknown; closeAfter?: number } = {}): void {
+  useEffect(() => {
+    const d = dlg.current;
+    if (!d) return;
+    if (open) {
+      if (!d.open) d.showModal?.();
+      focus?.current?.focus();
+      return;
+    }
+    if (!d.open) return;
+    if (!closeAfter) { d.close?.(); return; }
+    const id = setTimeout(() => d.close?.(), closeAfter);
+    return () => clearTimeout(id);
+  }, [open, refocus]);
+}
