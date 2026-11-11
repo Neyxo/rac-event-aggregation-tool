@@ -3,8 +3,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { initData, loadData, setSettings } from "../lib/data";
-import { parseHash } from "../lib/route";
-import { useRoute } from "../components";
+import { navigate, useRoute } from "../components";
 import Discover from "./Discover";
 
 beforeAll(async () => {
@@ -27,9 +26,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+/** Discover as App renders it: its route follows the URL (the list reads its filters from there) */
+const Routed = () => <Discover route={useRoute()} />;
 const show = async (hash = "#/discover") => {
-  history.replaceState(null, "", "/" + hash);
-  const r = render(<Discover route={parseHash(hash)} />);
+  history.replaceState(null, "", "/");
+  navigate(hash, { replace: true });
+  const r = render(<Routed />);
   await act(async () => {});
   return r;
 };
@@ -131,6 +133,20 @@ describe("Discover", () => {
     expect(location.hash).toBe("#/discover?place=Z%C3%BCrich&r=25");
     fireEvent.change(radius(), { target: { value: "" } });
     expect(ids()).toHaveLength(4);
+  });
+
+  it("a place geocoded after leaving Discover doesn't write its filters into the next screen's URL", async () => {
+    let answer!: () => void;
+    vi.stubGlobal("fetch", vi.fn(() => new Promise(res => { answer = () => res({ json: async () => ({ results: [{ attrs: { lat: 47.37, lon: 8.54, label: "Zürich" } }] }) }); })));
+    const { unmount } = await show();
+    fireEvent.click(filters());
+    const place = screen.getByRole("textbox", { name: "Near a place or postcode" });
+    fireEvent.input(place, { target: { value: "Zürich" } });
+    await act(async () => { place.dispatchEvent(new Event("change")); });
+    unmount();
+    history.replaceState(null, "", "/#/");  // somewhere else now
+    await act(async () => { answer(); });
+    expect(location.hash).toBe("#/");
   });
 
   it("near me asks for the position; saved and past views", async () => {

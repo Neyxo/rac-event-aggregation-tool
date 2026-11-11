@@ -161,8 +161,6 @@ function HomeScreen({ route }: ScreenProps) {
   const res = f ? selectEvents(D.data.events, f, { page: "home", mine, saved: D.saved, skip, scope: scopeClubs("home", mine), club }) : null;
   if (res?.title) guestTitle.current = res.title;
   const title = member ? t("home_soon") : t(guestTitle.current);
-  // the new clubs are in the state already (setSettings re-rendered this screen); the list follows on the next draw
-  const afterOb = () => api.draw();
   // the cards tag the events new since the last visit, here only: Discover, Calendar or a club screen tag nothing
   return (
     <NewIds.Provider value={changes?.newIds ?? NOTHING_NEW}>
@@ -176,11 +174,11 @@ function HomeScreen({ route }: ScreenProps) {
         {news.length ? <h3 className="sh hn">{t("news")}</h3> : null}
         {news.length ? <NewsStrip items={news} className="strip teasers hn" /> : null}
         <ListHead titleId="listTitle" title={title} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
-        <Views views={["all", "saved"]} pressed={api.inited ? api.live.view : undefined} onPick={api.setView} />
+        <Views views={["all", "saved"]} pressed={api.live.view} onPick={api.setView} />
         <Results res={res} view={f?.view ?? "all"} onClear={api.clear} />
         <Foot />
       </main>
-      <Onboarding run={obRun} onFinish={afterOb} />
+      <Onboarding run={obRun} />
     </NewIds.Provider>
   );
 }

@@ -3,8 +3,7 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { eventById, getData, initData, loadData, setSettings, toggleSaved } from "../lib/data";
-import { parseHash } from "../lib/route";
-import { EventCard, Toast, useRoute } from "../components";
+import { EventCard, Toast, navigate, useRoute } from "../components";
 import Home from "./Home";
 
 beforeAll(async () => {
@@ -32,8 +31,11 @@ afterEach(() => {
   document.body.className = "";
 });
 
+/** Home as App renders it: its route follows the URL (the list reads its filters from there) */
+const Routed = () => <Home route={useRoute()} />;
 const show = async () => {
-  const r = render(<><Home route={parseHash(location.hash)} /><Toast /></>);
+  navigate(location.hash, { replace: true });
+  const r = render(<><Routed /><Toast /></>);
   await act(async () => {});
   return r;
 };
