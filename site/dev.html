@@ -2,44 +2,108 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dev · Rotaract Events</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Developer · Rotaract Events</title>
 <meta name="robots" content="noindex">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="app.css">
 <script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
 </head>
-<body>
-<header><div class="wrap bar"><a class="brand" href="./"><img src="rotaract.svg" alt="Rotaract"><span>Dev</span></a>
-  <div class="actions"><a class="icon-btn" href="map.html">Map</a><a class="icon-btn" href="https://github.com/Neyxo/rac-event-aggregation-tool/actions/workflows/feeds.yml" target="_blank" rel="noopener">Actions</a><a class="icon-btn" href="./">‹ App</a></div></div></header>
-<main class="wrap">
-  <section class="card"><h2>Last build</h2><div id="build" class="meta">Loading status.json…</div><div id="failures"></div></section>
-  <section class="card"><h2>Clubs</h2><table class="dev" id="clubs"><thead><tr><th>Club</th><th>District</th><th>History</th><th>Upcoming</th><th>Cancelled</th><th>No detail</th><th>Feed</th></tr></thead><tbody></tbody></table></section>
-  <section class="card"><h2>This device</h2><div id="device" class="meta"></div><pre id="local"></pre>
-    <div class="links"><button class="linkbtn" id="clearLocal" type="button">Clear local data & caches</button><button class="linkbtn" id="unreg" type="button">Unregister service worker</button><a href="status.json">status.json</a><a href="events.json">events.json</a></div></section>
+<body data-page="dev">
+<header id="top"></header>
+<main class="wrap settings dev" id="main">
+  <h1>Developer</h1>
+  <p class="lead">For the people who run this app. English only. Everything here affects this device alone.</p>
+  <section class="glass"><h2>Last build</h2><div id="build"></div></section>
+  <section class="glass"><h2>Preview on this device</h2><div id="preview"></div></section>
+  <section class="glass"><h2>This device</h2><div id="device"></div></section>
+  <section class="glass"><h2>Content checks</h2><div class="qa" id="checks"></div></section>
+  <section class="glass"><h2>Clubs and layers</h2><div id="clubs"></div></section>
+  <div id="foot"></div>
 </main>
-<script>
-const $ = id => document.getElementById(id);
-function el(tag, attrs = {}, ...children) { const n = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) k === "class" ? n.className = v : n.setAttribute(k, v); for (const c of children) if (c != null && c !== false) n.append(c); return n; }
-(async () => {
-  const [status, data] = await Promise.all([fetch("status.json", { cache: "no-cache" }).then(r => r.json()), fetch("events.json", { cache: "no-cache" }).then(r => r.json())]);
-  const gen = new Date(data.generated), age = Math.round((Date.now() - gen) / 36e5);
-  $("build").textContent = `Generated ${gen.toLocaleString()} (${age} h ago) · ${status.events} visible events · ${status.with_image} with picture · ${status.without_location} without location · stamp ${status.generated}`;
-  $("failures").append(status.failures.length ? el("pre", {}, status.failures.join("\n")) : el("p", { class: "meta" }, "No failures in the last run."));
-  const now = new Date(), up = {};
-  for (const e of data.events) if (new Date(e.end) >= now) for (const c of e.clubs) up[c] = (up[c] || 0) + 1;
-  for (const c of data.clubs) {
-    const s = status.clubs[c.id] || {};
-    $("clubs").tBodies[0].append(el("tr", {}, el("td", {}, el("a", { href: "club.html?id=" + c.id }, c.name)), el("td", {}, c.district || "–"), el("td", {}, s.events ?? "?"), el("td", {}, up[c.id] || 0), el("td", {}, s.cancelled ?? "?"), el("td", {}, s.without_detail ?? "?"), el("td", {}, el("a", { href: c.id + ".ics" }, ".ics"))));
-  }
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+// The developer page: reached from the Dev button in the top bar once developer mode is on (Settings, ten taps on "made by").
+addEventListener("DOMContentLoaded", async () => {
+  chrome("dev");
+  const row = (label, ...right) => el("div", { class: "setrow" }, el("span", {}, label), ...right);
+  const btn = (label, fn, cls = "") => { const b = el("button", { type: "button", class: "linkbtn " + cls }, label); b.addEventListener("click", fn); return b; };
+  const link = (label, href) => el("a", { class: "linkbtn", href, target: /^https?:/.test(href) ? "_blank" : null, rel: "noopener" }, label);
+  const fold = (title, items) => items.length ? el("details", {}, el("summary", {}, `${title} (${items.length})`), el("div", { class: "devlist" }, ...items)) : el("p", { class: "devok" }, "✓ " + title + ": none");
+  await loadData();
+  const st = await fetch("status.json", { cache: "no-cache" }).then(r => r.json()).catch(() => ({ clubs: {}, failures: ["status.json could not be loaded"] }));
+  const data = D.data, rot = data.rotary || { clubs: [], events: [] }, own = data.events.filter(e => e.layer !== "rotary"), up = own.filter(e => !isPast(e));
+
+  // --- last build: freshness, counts per layer, failures first
+  const gen = new Date(data.generated), age = (Date.now() - gen) / 36e5, level = age < 8 ? "ok" : age < 30 ? "warn" : "bad";
+  const next = (() => { const n = new Date(), d = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate(), Math.floor(n.getUTCHours() / 6) * 6, 17)); if (d <= n) d.setUTCHours(d.getUTCHours() + 6); return d; })();  // the workflow's cron: 17 */6 * * * (UTC)
+  const insta = data.clubs.filter(c => (c.instagram || []).length).length;
+  const count = (label, n) => el("div", {}, el("b", {}, n), el("span", {}, label));
+  $("build").append(
+    el("p", { class: "devstate " + level }, el("i"), `Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")),
+    el("p", { class: "meta" }, `Next scheduled run about ${fmt.stamp.format(next)} (GitHub often starts it late).` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")),
+    (st.failures || []).length ? el("pre", { class: "devfail" }, st.failures.join("\n")) : el("p", { class: "devok" }, "✓ No failures in the last run"),
+    el("div", { class: "facts devfacts" },
+      count("upcoming", up.length), count("in the app", own.length), count("international", own.filter(e => e.clubs.includes("international")).length),
+      count("Rotary layer", rot.events.length), count("members only", own.filter(e => e.members).length), count("cancelled", own.filter(e => e.cancelled).length)),
+    el("p", { class: "meta" }, insta ? `Instagram layer: on, ${insta} clubs with pictures.` : "Instagram layer: off (no pictures in this build)."),
+    el("div", { class: "links" }, st.run ? link("This run's log", st.run) : null, link("All runs", "https://github.com/Neyxo/rac-event-aggregation-tool/actions/workflows/feeds.yml"), link("status.json", "status.json"), link("events.json", "events.json"), link("Map", "map.html")));
+
+  // --- preview switches: rac.dev* keys read through devFlag() in common.js and app.js
+  const sw = key => { const g = el("div", { class: "seg" }); for (const [v, label] of [[false, "Off"], [true, "On"]]) { const b = el("button", { type: "button", "aria-pressed": String(!!store.get(key, false) === v) }, label); b.addEventListener("click", () => { store.set(key, v); location.reload(); }); g.append(b); } return g; };
+  const date = el("input", { type: "date", value: store.get("rac.devDate", "") || "", "aria-label": "Pretend date" });
+  date.addEventListener("change", () => { store.set("rac.devDate", date.value); location.reload(); });
+  $("preview").append(
+    row("See the app as a guest", sw("rac.devGuest")),
+    row("Mark three events as new", sw("rac.devNew")),
+    row("Show the old-data banner", sw("rac.devStale")),
+    row("Pretend today is", el("div", { class: "tools" }, date, store.get("rac.devDate", "") ? btn("Real date", () => { store.set("rac.devDate", ""); location.reload(); }) : null)),
+    el("p", { class: "meta" }, "As a guest your clubs are hidden, not deleted, and club changes are not saved meanwhile. The Dev button in the top bar stays lit while a switch is on."),
+    el("div", { class: "links" }, link("Run the welcome steps", "./?welcome"), btn("Show the New-in-the-club card again", () => { localStorage.removeItem("rac.guideSeen"); toast("Done: it is back on Home"); })));
+
+  // --- this device: version, service worker, stored values one by one
   const reg = "serviceWorker" in navigator ? await navigator.serviceWorker.getRegistration() : null;
   const names = "caches" in window ? await caches.keys() : [];
   let cached = 0; for (const n of names) cached += (await (await caches.open(n)).keys()).length;
-  $("device").textContent = `${navigator.userAgent}\nSW: ${reg ? (reg.active ? "active" : "registered") : "none"} · caches: ${names.join(", ") || "none"} (${cached} entries) · standalone: ${matchMedia("(display-mode: standalone)").matches} · lang: ${navigator.language}`;
-  const local = {}; for (const k of Object.keys(localStorage)) if (k.startsWith("rac.")) local[k] = localStorage.getItem(k);
-  $("local").textContent = JSON.stringify(local, null, 1);
-  $("clearLocal").addEventListener("click", async () => { for (const k of Object.keys(localStorage)) if (k.startsWith("rac.")) localStorage.removeItem(k); for (const n of names) await caches.delete(n); location.reload(); });
-  $("unreg").addEventListener("click", async () => { if (reg) await reg.unregister(); location.reload(); });
-})();
+  const keys = Object.keys(localStorage).filter(k => k.startsWith("rac.")).sort();
+  const stored = k => el("div", { class: "devkey" }, el("code", {}, k), el("span", {}, localStorage.getItem(k)),
+    btn("Edit", () => { const v = prompt(k, localStorage.getItem(k)); if (v == null) return; try { JSON.parse(v); } catch { alert("Not valid JSON, nothing changed."); return; } localStorage.setItem(k, v); location.reload(); }),
+    btn("Delete", () => { if (confirm("Delete " + k + "?")) { localStorage.removeItem(k); location.reload(); } }));
+  $("device").append(
+    el("p", { class: "meta" }, `Service worker: ${reg ? (reg.active ? "active" : "registered") : "none"} · cache: ${cached} files · installed app: ${matchMedia("(display-mode: standalone)").matches || !!navigator.standalone ? "yes" : "no"} · online: ${navigator.onLine ? "yes" : "no"} · device language: ${navigator.language}`),
+    el("p", { class: "meta devua" }, navigator.userAgent),
+    el("div", { class: "links" },
+      btn("Check for an update", async () => { if (reg) await reg.update(); for (const n of names) await caches.delete(n); location.reload(); }),
+      btn("Unregister service worker", async () => { if (reg) await reg.unregister(); location.reload(); }),
+      btn("Clear all app data", async () => { if (!confirm("Delete your clubs, saved events and every other setting of this app on this device? Developer mode stays on.")) return; for (const k of keys) if (k !== "rac.dev" && k !== "rac.devUnlocked") localStorage.removeItem(k); for (const n of names) await caches.delete(n); location.reload(); })),
+    el("h3", {}, `Stored on this device (${keys.length})`), ...keys.map(stored));
+
+  // --- content checks: what a club could fix on Polaris, and texts that are missing in a language
+  const ev = e => el("a", { href: "event.html?id=" + e.id }, `${fmt.dms.format(new Date(e.start))} · ${club(e.clubs[0]).short} · ${e.title}`);
+  const real = data.clubs.filter(c => !c.source), lastOf = c => own.filter(e => e.clubs.includes(c.id)).at(-1);
+  const quiet = real.filter(c => !up.some(e => e.clubs.includes(c.id)));
+  const missing = []; for (const l of ["de", "fr", "it"]) for (const [k, v] of Object.entries(I18N.en)) {
+    if (!(k in I18N[l])) missing.push(`${l}: ${k}`);
+    else if (v && typeof v === "object" && !Array.isArray(v)) for (const sub of Object.keys(v)) if (!(sub in I18N[l][k])) missing.push(`${l}: ${k}.${sub}`);
+  }
+  $("checks").append(
+    fold("Upcoming events without a place", up.filter(e => !e.location).map(ev)),
+    fold("Upcoming events with a place the map can't find", up.filter(e => e.location && !e.coords).map(ev)),
+    fold("Upcoming events without a picture", up.filter(e => !e.image).map(ev)),
+    fold("Upcoming events without a description", up.filter(e => !e.description && !e.members).map(ev)),
+    fold("Clubs with no upcoming event", quiet.map(c => el("a", { href: "club.html?id=" + c.id }, c.name + (lastOf(c) ? " · last: " + fmt.date.format(new Date(lastOf(c).start)) : " · never had one here")))),
+    fold("Texts missing in a language", missing.map(m => el("span", {}, m))));
+
+  // --- clubs and layers: one line each, Rotary districts included whether or not the layer is switched on
+  const upBy = {}; for (const e of [...own, ...rot.events]) if (!isPast(e)) for (const c of e.clubs) upBy[c] = (upBy[c] || 0) + 1;
+  const all = [...data.clubs.filter(c => c.source !== "rotary"), ...rot.clubs];
+  for (const c of all) { D.clubs[c.id] ||= c; const s = st.clubs[c.id] || {};
+    $("clubs").append(el("div", { class: "devclub" }, clubChip(c.id), el("span", {}, `${upBy[c.id] || 0} upcoming · ${s.events ?? "?"} in history` + (s.cancelled ? ` · ${s.cancelled} cancelled` : "") + (s.without_detail ? ` · ${s.without_detail} without details` : "")), el("a", { href: c.id + ".ics" }, ".ics"))); }
+  $("foot").append(footer(true));
+});
 </script>
 </body>
 </html>

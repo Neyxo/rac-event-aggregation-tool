@@ -611,7 +611,10 @@ def write_status(out, site, histories, failures, stamp):
         clubs[cid] = {"events": len(h), "cancelled": sum(r["status"] == "cancelled" for r in h.values()),
                       "without_detail": sum("detail" not in r and r["status"] == "active" for r in h.values())}
     status = {"generated": stamp, "events": len(site["events"]), "rotary_events": len(site["rotary"]["events"]), "with_image": sum(bool(e["image"]) for e in site["events"]),
-              "without_location": sum(e["coords"] is None for e in site["events"]), "clubs": clubs, "failures": failures}
+              "without_location": sum(e["coords"] is None for e in site["events"]), "clubs": clubs, "failures": failures,
+              # for the developer page: which commit built this and where the run's log is (empty outside GitHub Actions)
+              "commit": os.environ.get("GITHUB_SHA", "")[:7],
+              "run": "{GITHUB_SERVER_URL}/{GITHUB_REPOSITORY}/actions/runs/{GITHUB_RUN_ID}".format(**os.environ) if os.environ.get("GITHUB_RUN_ID") else ""}
     (out / "status.json").write_text(json.dumps(status, indent=1, ensure_ascii=False) + "\n")
 
 

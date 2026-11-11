@@ -34,6 +34,10 @@
     <a class="setrow link" href="./?welcome"><span data-t="rerun"></span></a>
     <a class="setrow link" href="public.html"><span data-t="app_h"></span></a>
   </section>
+  <section class="glass" id="devSec" hidden><h2 data-t="dev_h"></h2>
+    <div class="setrow"><span data-t="dev_mode"></span><div class="seg" id="devSeg"><button type="button" data-k="off" data-t="off"></button><button type="button" data-k="on" data-t="on"></button></div></div>
+    <a class="setrow link" id="devLink" href="dev.html"><span data-t="dev_page"></span></a>
+  </section>
   <div id="foot"></div>
 </main>
 <nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
@@ -72,7 +76,13 @@ addEventListener("DOMContentLoaded", async () => {
     show(ios ? "ios" : /Android/.test(ua) ? "android" : "desktop"); body.append(tabs, steps);
   };
   inst();
-  $("foot").append(footer());
+  // Developer mode, like on Android: ten quick taps on the "made by" line unlock a Developer section. Its switch shows or hides the
+  // developer page link; the section itself stays once unlocked (rac.devUnlocked), the switch is rac.dev.
+  const dev = () => { $("devSec").hidden = !store.get("rac.devUnlocked", false); const on = store.get("rac.dev", false); $("devLink").hidden = !on; for (const b of $("devSeg").children) b.setAttribute("aria-pressed", String(on === (b.dataset.k === "on"))); };
+  for (const b of $("devSeg").children) b.addEventListener("click", () => { store.set("rac.dev", b.dataset.k === "on"); dev(); chrome("settings"); });
+  const made = footer(); let taps = [];
+  made.addEventListener("click", () => { const now = Date.now(); taps = [...taps.filter(x => now - x < 3000), now]; if (taps.length >= 10 && !store.get("rac.devUnlocked", false)) { store.set("rac.devUnlocked", true); store.set("rac.dev", true); dev(); chrome("settings"); toast(t("dev_on")); $("devSec").scrollIntoView({ behavior: "smooth", block: "center" }); } });
+  dev(); $("foot").append(made);
 });
 </script>
 </body>
