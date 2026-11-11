@@ -59,17 +59,18 @@ function chrome(active, { back = false, extra = null } = {}) {
 }
 function qaList(items, name = "qa") { return items.map(([q, a]) => el("details", { name }, el("summary", {}, q), el("p", {}, a))); }
 Object.assign(ICON, {
-  refresh: "M21 12a9 9 0 1 1-3-6.7M21 4v5h-5", lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4", shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
+  refresh: "M21 12a9 9 0 1 1-3-6.7M21 4v5h-5", clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2", lock: "M6 11h12v10H6zM8 11V7a4 4 0 0 1 8 0v4", shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z",
   belloff: "M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0M3 3l18 18", offline: "M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 3.5-2.2M19 13a10 10 0 0 0-5-2.7M12 20h.01",
 });
 // a link that looks like one: icon in the colour p, title, one line, chevron
 function moreLink(href, title, sub, ic = "info", p = "#0067c8") {
-  return el("a", { class: "more glass", href, style: "--p:" + p }, el("div", { class: "ic" }, icon(ic)), el("div", { class: "tx" }, el("b", {}, title), sub ? el("span", {}, sub) : null), icon("back", "chev"));
+  const ext = /^https?:/.test(href);  // another site opens in a new tab, like every other external link
+  return el("a", { class: "more glass", href, style: "--p:" + p, target: ext ? "_blank" : null, rel: ext ? "noopener" : null }, el("div", { class: "ic" }, icon(ic)), el("div", { class: "tx" }, el("b", {}, title), sub ? el("span", {}, sub) : null), icon("back", "chev"));
 }
 // the cards to the explanatory pages, by key, so every page words and draws them the same
 function helpLinks(...keys) {
   const nm = t("nm"), all = { guide: ["guide.html", nm.h, nm.steps_h, "flag", "#d41367"], words: ["words.html", nm.words_h, nm.words_sub, "book", "#009739"], app: ["public.html", t("app_h"), t("app_lead"), "info", "#0067c8"],
-    sub: ["subscribe.html", t("sub_title"), t("ab_sub_sub"), "calendar", "#0067c8"], world: ["about-more.html", t("ab_more"), t("ab_more_sub"), "globe", "#009739"], family: ["family.html", t("fam_h"), t("fam_sub"), "wheel", "#0067c8"] };
+    sub: ["subscribe.html", t("sub_title"), t("ab_sub_sub"), "calendar", "#0067c8"], world: ["about-more.html", t("ab_more"), t("ab_more_sub"), "globe", "#009739"], family: ["family.html", t("fam_h"), t("fam_sub"), "wheel", "#0067c8"], intl: ["intl.html", t("intl").h, t("intl").sub, "globe", "#d41367"] };
   return keys.map(k => moreLink(...all[k]));
 }
 function footer(source = false) { return el("footer", {}, t("made_by"), source ? " · " : null, source && el("a", { href: "https://github.com/Neyxo/rac-event-aggregation-tool", target: "_blank", rel: "noopener" }, t("source"))); }
@@ -86,10 +87,17 @@ async function loadData() {
     D.data = await r.json();
   } catch (e) {
     // Offline on a first visit, or the site is broken: say so instead of a skeleton forever. Callers stop here.
-    const retry = el("button", { type: "button" }, t("refresh")); retry.addEventListener("click", () => location.reload());
+    const retry = el("button", { class: "linkbtn", type: "button" }, t("refresh")); retry.addEventListener("click", () => location.reload());
     document.querySelector("main")?.replaceChildren(el("div", { class: "empty" }, t("offline"), el("br"), retry));
     throw e;
   }
+  // The Rotary layer (events Rotary clubs share with other clubs, one pseudo-club per district) has its own key in events.json and is
+  // only added here when switched on in Settings: off, no page (and no older copy of this code) ever sees it. The one exception is a
+  // shared link to a Rotary event, which still opens that one event, without its district.
+  const rot = D.data.rotary || { clubs: [], events: [] }, on = store.get("rac.rotary", false);
+  const linked = !on && document.body.dataset.page === "event" && rot.events.find(e => e.id === new URLSearchParams(location.search).get("id"));
+  if (on) D.data.clubs.push(...rot.clubs);
+  if (on || linked) D.data.events = [...D.data.events, ...(on ? rot.events : [linked])].sort((a, b) => a.start.localeCompare(b.start));
   for (const c of D.data.clubs) D.clubs[c.id] = c;
   D.saved = new Set(store.get("rac.saved", []));
   const old = store.get("rac.prefs", null);
@@ -104,8 +112,15 @@ function myClubs() { return [D.settings.home, ...D.settings.also].filter(id => D
 function club(id) { return D.clubs[id] || { id, name: id, short: id, color: "#d41367", logo: "" }; }
 function clubStyle(id) { const c = club(id).color || "#d41367"; return `--c:${c};--on-c:${onColor(c)}`; }
 function clubMark(c) { return c.logo ? el("img", { src: c.logo, alt: "", loading: "lazy" }) : el("span", { class: "dot" }); }
-function clubChip(id, extra = "") { const c = club(id); return el("a", { class: "tag " + extra, href: "club.html?id=" + id, style: clubStyle(id), "aria-label": c.name }, clubMark(c), c.short); }
-const nClubs = () => D.data.clubs.filter(c => c.district).length;
+function clubLabel(id) { const c = club(id); return el("span", { class: "cl", style: clubStyle(id) }, clubMark(c), c.short); }  // a club as a plain value (a Settings row), not a link
+// the club chip: crest and name, always opens the club; the same on cards, the event page, Home and in "we work with"
+function clubChip(id, extra = "") { const c = club(id); return el("a", { class: "chip club " + extra, href: "club.html?id=" + id, style: clubStyle(id), "aria-label": c.name }, clubMark(c), c.short); }
+// status: an icon (or a dot) and coloured text, never a box, never clickable
+function status(kind, ic, text) { return el("span", { class: "st " + kind }, ic ? icon(ic) : el("i"), text); }
+// a real Rotaract club: in a district, and not a pseudo-club ("source": international, or a Rotary district, which has a district too)
+const isRac = c => c.district && !c.source;
+const nClubs = () => D.data.clubs.filter(isRac).length;
+const metaLine = e => [e.organiser, whenShort(e), placeShort(e)].filter(Boolean).join(" · ");  // a Rotary event names the club that hosts it
 const fmt = {
   day: new Intl.DateTimeFormat(LOCALE, { day: "numeric" }), mon: new Intl.DateTimeFormat(LOCALE, { month: "short" }), month: new Intl.DateTimeFormat(LOCALE, { month: "long", year: "numeric" }),
   wd: new Intl.DateTimeFormat(LOCALE, { weekday: "short" }), wdl: new Intl.DateTimeFormat(LOCALE, { weekday: "long" }), time: new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" }),
@@ -114,12 +129,14 @@ const fmt = {
 };
 const dayN = d => Math.round((startOfDay(d) - startOfDay(new Date())) / 864e5);  // whole days from today
 // "Register by 14 Nov" while the deadline is still ahead; red in the last two days
-function deadlineTag(e) { const n = e.deadline && !e.cancelled ? dayN(e.deadline) : -1; return n < 0 ? null : el("span", { class: "tag dl" + (n <= 2 ? " soon" : "") }, t("reg_by", { d: fmt.dms.format(new Date(e.deadline)) })); }
+function deadlineTag(e) { const n = e.deadline && !e.cancelled ? dayN(e.deadline) : -1; return n < 0 ? null : status(n <= 2 ? "soon" : "", "clock", t("reg_by", { d: fmt.dms.format(new Date(e.deadline)) })); }
 // Apple Maps on iOS (opens the app), Google Maps elsewhere
 const mapsUrl = place => (IOS ? "https://maps.apple.com/?q=" : "https://www.google.com/maps/search/?api=1&query=") + encodeURIComponent(place);
 // news teasers older than a year are not news
 const freshNews = c => (c.news || []).filter(n => !n.date || Date.now() - new Date(n.date) < 365 * 864e5);
-function whenShort(e) { const s = new Date(e.start), en = new Date(e.end); return e.allday ? fmt.wdl.format(s) + " · " + t("all_day") : `${fmt.wd.format(s)} ${fmt.time.format(s)}` + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""); }
+// the day an all-day event ends on (its end is the midnight after)
+const lastDay = e => new Date(new Date(e.end) - 1);
+function whenShort(e) { const s = new Date(e.start), en = new Date(e.end); return e.allday ? (sameDay(s, lastDay(e)) ? fmt.wdl.format(s) + " · " + t("all_day") : fmt.dm.format(s) + " – " + fmt.dm.format(lastDay(e))) : `${fmt.wd.format(s)} ${fmt.time.format(s)}` + (sameDay(s, en) ? "–" + fmt.time.format(en) : ""); }
 function placeShort(e) { return (e.location || "").split(",")[0]; }
 function isPast(e) { return new Date(e.end) < new Date(); }
 function datePane(e) { const s = new Date(e.start); return el("div", { class: "date glass", "aria-hidden": "true" }, el("b", {}, fmt.day.format(s)), el("span", {}, fmt.mon.format(s))); }
@@ -134,15 +151,15 @@ function starButton(e, onChange) {
 function nextUp(e, label = t("next_event")) {
   const days = Math.max(0, Math.round((startOfDay(e.start) - startOfDay(new Date())) / 864e5));
   return el("a", { class: "nx glass", href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) },
-    el("div", {}, el("div", { class: "k" }, label), el("div", { class: "cd" }, days === 0 ? t("today") : days === 1 ? t("tomorrow") : t("in_days", { n: days })), el("h4", {}, e.title), el("div", { class: "m" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("span", { class: "ring" }, t("details") + " →")),
-    e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null);
+    el("div", {}, el("div", { class: "k" }, label), el("div", { class: "cd" }, days === 0 ? t("today") : days === 1 ? t("tomorrow") : t("in_days", { n: days })), el("h4", {}, e.title), el("div", { class: "m" }, whenShort(e) + (e.location ? " · " + placeShort(e) : ""))),
+    e.image ? el("img", { src: e.image, alt: "", referrerpolicy: "no-referrer" }) : null, icon("back", "chev"));
 }
 function eventCard(e, i = 0, onChange) {
   const lead = club(e.clubs[0]);
-  return el("a", { class: "event" + (e.cancelled ? " cancelled" : "") + (D.newIds?.has(e.id) ? " new" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
+  return el("a", { class: "event" + (e.cancelled ? " cancelled" : ""), href: "event.html?id=" + e.id, style: clubStyle(e.clubs[0]) + `;--i:${Math.min(i, 12)}`, id: "ev-" + e.id },
     lead.logo ? el("img", { class: "wm", src: lead.logo, alt: "", "aria-hidden": "true", loading: "lazy" }) : null,
     datePane(e),
-    el("div", { class: "body" }, el("h4", {}, e.cancelled ? el("span", { class: "badge" }, t("cancelled")) : null, e.title), el("div", { class: "meta" }, whenShort(e) + (e.location ? " · " + placeShort(e) : "")), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)), e.members ? el("span", { class: "tag dl" }, t("members_only")) : null, isPast(e) ? null : deadlineTag(e))),
+    el("div", { class: "body" }, el("h4", {}, e.title), el("div", { class: "meta" }, metaLine(e)), el("div", { class: "tags" }, ...e.clubs.map(c => clubChip(c)), e.cancelled ? status("bad", null, t("cancelled")) : null, D.newIds?.has(e.id) ? status("new", null, t("new_tag")) : null, e.members ? status("", "lock", t("members_only")) : null, isPast(e) ? null : deadlineTag(e))),
     el("div", { class: "side" }, starButton(e, onChange), e.image ? el("img", { class: "thumb", src: e.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null));
 }
 
@@ -160,7 +177,7 @@ async function guessPosition() {
   } catch {}
   return null;
 }
-function nearestClubs(pos, n = 3, maxKm = 1e9) { return D.data.clubs.filter(c => c.coords && c.district).map(c => ({ c, d: km(pos, c.coords) })).filter(x => x.d <= maxKm).sort((a, b) => a.d - b.d).slice(0, n); }
+function nearestClubs(pos, n = 3, maxKm = 1e9) { return D.data.clubs.filter(c => c.coords && isRac(c)).map(c => ({ c, d: km(pos, c.coords) })).filter(x => x.d <= maxKm).sort((a, b) => a.d - b.d).slice(0, n); }
 async function guessClubs() { const pos = await guessPosition(); if (pos) { const near = nearestClubs(pos, 2, 35); if (near.length) return near.map(x => x.c.id); } return { fr: ["fribourg", "geneve-international"], it: ["ticino"], en: ["zurich-international", "geneve-international"] }[LANG] || []; }
 
 // --- club tiles (settings, onboarding): crest + name, single (radio) or multi
@@ -168,9 +185,9 @@ function clubTiles(selected, onPick, { single = false, exclude = [] } = {}) {
   const grid = el("div", { class: "tiles", role: single ? "radiogroup" : "group" });
   if (single) { const none = el("button", { class: "tile none", type: "button", role: "radio", "aria-checked": String(!selected) }, el("b", {}, t("none"))); none.addEventListener("click", () => onPick("")); grid.append(none); }
   for (const c of D.data.clubs) {
-    if (exclude.includes(c.id)) continue;
+    if (exclude.includes(c.id) || (single && c.source)) continue;  // a pseudo-club (international, a Rotary district) is never a main club
     const on = single ? selected === c.id : selected.has(c.id);
-    const b = el("button", { class: "tile", type: "button", style: clubStyle(c.id), role: single ? "radio" : "checkbox", "aria-checked": String(on) }, clubMark(c), el("b", {}, c.short), el("span", {}, c.district ? "D" + c.district : t("national")));
+    const b = el("button", { class: "tile", type: "button", style: clubStyle(c.id), role: single ? "radio" : "checkbox", "aria-checked": String(on) }, clubMark(c), el("b", {}, c.short), el("span", {}, c.district ? "D" + c.district : c.source ? "" : t("national")));
     b.addEventListener("click", () => onPick(c.id));
     grid.append(b);
   }
@@ -182,7 +199,7 @@ function clubChips(selected, onPick, { single = false, exclude = [], only = null
   const box = el("div", { class: "chips" });
   if (single) { const none = el("button", { class: "chip", type: "button", "aria-pressed": String(!selected) }, t("none")); none.addEventListener("click", () => onPick("")); box.append(none); }
   for (const c of D.data.clubs) {
-    if (exclude.includes(c.id) || (only && !only.includes(c.id))) continue;
+    if (exclude.includes(c.id) || (only && !only.includes(c.id)) || (single && c.source)) continue;
     const on = single ? selected === c.id : selected.has(c.id);
     const b = el("button", { class: "chip club", type: "button", style: clubStyle(c.id), "aria-pressed": String(on), "aria-label": c.name }, clubMark(c), c.short);
     b.addEventListener("click", () => onPick(c.id)); box.append(b);
@@ -226,11 +243,11 @@ function ctaBlock(onPlace) {
   }
   const input = el("input", { class: "in", type: "text", placeholder: t("ab_find_ph"), "aria-label": t("ab_find_ph"), autocomplete: "off" });
   const go = el("button", { class: "go", type: "button" }, t("ab_find_btn")), near = el("div", { class: "near" }), hint = el("div", { class: "hint" });
-  const show = pos => { here.set(pos); near.replaceChildren(...nearestClubs(pos, 3).map(({ c, d }) => el("a", { class: "nc", href: "club.html?id=" + c.id, style: clubStyle(c.id) }, clubMark(c), el("span", {}, c.short, el("small", {}, Math.round(d) + " km"))))); onPlace?.(pos); };
+  const show = pos => { here.set(pos); near.replaceChildren(...nearestClubs(pos, 3).map(({ c, d }) => (() => { const a = clubChip(c.id); a.append(el("small", {}, Math.round(d) + " km")); return a; })())); onPlace?.(pos); };
   const find = async () => { const q = input.value.trim(); if (!q) return; hint.textContent = t("locating"); try { const hit = await geocode(q); if (!hit) { hint.textContent = t("place_nf"); return; } hint.textContent = "📍 " + hit.label; show(hit.coords); } catch { hint.textContent = t("place_err"); } };
   go.addEventListener("click", find); input.addEventListener("keydown", ev => { if (ev.key === "Enter") find(); });
   // the approximate position is only looked up on this tap, never on page load
-  const me = el("button", { class: "nc", type: "button" }, "📍 " + t("near_btn"));
+  const me = el("button", { class: "linkbtn", type: "button" }, "📍 " + t("near_btn"));
   me.addEventListener("click", async () => { hint.textContent = t("locating"); const pos = await guessPosition(); hint.textContent = pos ? "" : t("loc_na"); if (pos) show(pos); });
   if (here.get()) show(here.get()); else near.append(me);
   return el("div", { class: "cta glass new" }, el("div", { class: "k" }, t("ab_find_title")), el("div", { class: "find" }, input, go), hint, near);
@@ -299,6 +316,24 @@ function pillarPic(k) {
 // --- news teasers: picture with the title on it, linking to the article on the club's site (only the link is stored)
 function newsCard(n) { return el("a", { class: "nw", href: n.url, target: "_blank", rel: "noopener" }, n.image ? el("img", { src: n.image, alt: "", loading: "lazy", referrerpolicy: "no-referrer" }) : null, el("div", { class: "t" }, el("b", {}, n.title), n.date ? el("span", {}, fmt.date.format(new Date(n.date))) : null)); }
 function newsStrip(items) { return el("div", { class: "strip teasers" }, ...items.map(newsCard)); }
+
+// --- a club's own text with a little structure and no HTML: "## Heading", "1. Title: text" (numbered step cards), "- point" (check list),
+// **bold**; a blank line ends a paragraph
+function rich(text, color) {
+  const inline = s => s.split(/\*\*(.+?)\*\*/).map((p, i) => i % 2 ? el("b", {}, p) : p);
+  const out = el("div", { class: "rich", style: "--p:" + (color || "#d41367") }); let para = [], group = null;
+  const flush = () => { if (para.length) out.append(el("p", {}, ...inline(para.join(" ")))); para = []; };
+  const into = (tag, cls) => { flush(); if (group?.className !== cls) { group = el(tag, { class: cls }); out.append(group); } return group; };
+  for (const line of text.trim().split("\n").map(l => l.trim())) {
+    let m;
+    if (!line) { flush(); group = null; }
+    else if ((m = line.match(/^##\s+(.*)/))) { flush(); group = null; out.append(el("h3", {}, m[1])); }
+    else if ((m = line.match(/^(\d+)\.\s+(.*)/))) { const [title, ...rest] = m[2].split(": "); into("ol", "nsteps").append(el("li", { class: "step" }, el("div", { class: "ic" }, m[1]), el("div", { class: "tx" }, el("b", {}, ...inline(title)), rest.length ? el("span", {}, ...inline(rest.join(": "))) : null))); }
+    else if ((m = line.match(/^-\s+(.*)/))) into("ul", "pts").append(el("li", {}, el("span", {}, ...inline(m[1]))));
+    else { group = null; para.push(line); }
+  }
+  flush(); return out;
+}
 
 // --- service worker
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});

@@ -18,8 +18,10 @@
   <h1 data-t="settings"></h1>
   <p class="lead" data-t="set_hint"></p>
   <section class="glass"><h2 data-t="set_clubs_h"></h2>
-    <div class="setrow"><span data-t="main_club"></span><div class="cur" id="homeCur"></div><button class="linkbtn" type="button" id="homeBtn" data-t="change"></button></div>
-    <div class="setrow"><span data-t="also_show"></span><div class="cur" id="alsoCur"></div><button class="linkbtn" type="button" id="alsoBtn" data-t="change"></button></div>
+    <button class="setrow link" type="button" id="homeBtn"><span data-t="main_club"></span><div class="cur" id="homeCur"></div></button>
+    <button class="setrow link" type="button" id="alsoBtn"><span data-t="also_show"></span><div class="cur" id="alsoCur"></div></button>
+    <div class="setrow"><span data-t="rotary_show"></span><div class="seg" id="rotarySeg"><button type="button" data-k="off" data-t="off"></button><button type="button" data-k="on" data-t="on"></button></div></div>
+    <p class="meta" data-t="rotary_hint" style="margin:0"></p>
   </section>
   <section class="glass"><h2 data-t="set_app_h"></h2>
     <div class="setrow"><span data-t="language"></span><span id="langBox"></span></div>
@@ -43,8 +45,8 @@ addEventListener("DOMContentLoaded", async () => {
   await loadData();
   const draw = () => {
     const s = D.settings;
-    $("homeCur").replaceChildren(s.home ? clubChip(s.home) : el("span", { class: "meta" }, t("none")));
-    $("alsoCur").replaceChildren(...(s.also.length ? s.also.map(id => clubChip(id)) : [el("span", { class: "meta" }, t("none"))]));
+    $("homeCur").replaceChildren(s.home ? clubLabel(s.home) : el("span", { class: "meta" }, t("none")));
+    $("alsoCur").replaceChildren(...(s.also.length ? s.also.map(id => clubLabel(id)) : [el("span", { class: "meta" }, t("none"))]));
     for (const b of $("themeSeg").children) b.setAttribute("aria-pressed", String(document.documentElement.dataset.theme === b.dataset.k));
   };
   draw();
@@ -52,6 +54,8 @@ addEventListener("DOMContentLoaded", async () => {
   $("alsoBtn").addEventListener("click", () => popup(t("pick_also"), redraw => clubChips(new Set(D.settings.also), id => { const a = D.settings.also; D.settings.also = a.includes(id) ? a.filter(x => x !== id) : [...a, id]; saveSettings(); draw(); redraw(); }, { exclude: [D.settings.home] })));
   $("langBox").append(langSelect());
   for (const b of $("themeSeg").children) b.addEventListener("click", () => { setTheme(b.dataset.k); draw(); });
+  // the Rotary layer: loadData() applies it, so the page reloads to pick the districts up (or drop them) in "also show"; every other page reads it on load
+  for (const b of $("rotarySeg").children) { b.setAttribute("aria-pressed", String(store.get("rac.rotary", false) === (b.dataset.k === "on"))); b.addEventListener("click", () => { store.set("rac.rotary", b.dataset.k === "on"); location.reload(); }); }
   $("link").value = location.origin + location.pathname.replace(/[^/]*$/, "");
   $("copy").addEventListener("click", async () => { await navigator.clipboard.writeText($("link").value); toast(t("copied")); });
   for (const a of document.querySelectorAll(".setrow.link")) a.append(icon("back", "chev"));
@@ -60,9 +64,9 @@ addEventListener("DOMContentLoaded", async () => {
   const inst = () => {
     const body = $("installBody"); body.replaceChildren();
     if (matchMedia("(display-mode: standalone)").matches || navigator.standalone) { body.append(el("p", { class: "meta" }, t("inst_done"))); return; }
-    if (prompt) { const b = el("button", { class: "install-btn", type: "button" }, t("inst_btn")); b.addEventListener("click", async () => { prompt.prompt(); await prompt.userChoice; }); body.append(b); return; }
+    if (prompt) { const b = el("button", { class: "linkbtn primary", type: "button" }, t("inst_btn")); b.addEventListener("click", async () => { prompt.prompt(); await prompt.userChoice; }); body.append(b); return; }
     const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    const tabs = el("div", { class: "tabs", role: "tablist" }), steps = el("ol", { class: "steps" });
+    const tabs = el("div", { class: "seg", role: "tablist" }), steps = el("ol", { class: "steps" });
     const show = key => { for (const b of tabs.children) b.setAttribute("aria-selected", String(b.dataset.key === key)); steps.replaceChildren(...t("g_" + key).map(s => el("li", {}, s))); };
     for (const key of ["ios", "android", "desktop"]) { const b = el("button", { type: "button", role: "tab", "data-key": key }, t(key)); b.addEventListener("click", () => show(key)); tabs.append(b); }
     show(ios ? "ios" : /Android/.test(ua) ? "android" : "desktop"); body.append(tabs, steps);
