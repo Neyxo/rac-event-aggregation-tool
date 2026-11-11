@@ -1,0 +1,1253 @@
+{
+ "193099": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/7541044462.jpg",
+   "organiser": "Rotary St. Gallen-Freudenberg",
+   "registration": "Anmeldung bis: 19.12.2026 23:59"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-193099@rotary.ch",
+   "SUMMARY:9. Rotary Speeddating 2027",
+   "DESCRIPTION:Programm\\, 9. Rotary Berufswahl\\nSpeed-Dating Datum:      Mi. 3. März 2027 (10:00 – 11:45\\; anschl. Bratwurst-Lunch)   Ort:                  Kantonsschule am Burggraben\\, St.Gallen (Turnhallen)  Rot. Christoph\\nMeili Mob:\\n+41 76 326 77 97 christoph.meili@innovationsgesellschaft.ch",
+   "LOCATION:Kantonsschule am Burggraben St. Gallen",
+   "URL:https://rotaryfreudenberg.ch/de/agenda/show/193099",
+   "DTSTART;TZID=Europe/Zurich:20270303T100000",
+   "DTEND;TZID=Europe/Zurich:20270303T140000"
+  ]
+ },
+ "212090": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a352299deb59.jpeg",
+   "organiser": "Rotary Rotary Club Arosa",
+   "registration": "Anmeldung bis: 20.01.2027 08:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212090@rotary.ch",
+   "SUMMARY:Meeting mit Vortrag Water Survival Box",
+   "LOCATION:Hotel Astoria",
+   "URL:https://arosa.rotary2000.ch/de/agenda/show/212090",
+   "DTSTART;TZID=Europe/Zurich:20270120T120000",
+   "DTEND;TZID=Europe/Zurich:20270120T140000"
+  ]
+ },
+ "212625": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/4527246037.jpeg",
+   "organiser": "Rotary St. Moritz",
+   "registration": "Anmeldung bis: 16.11.2026 19:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212625@rotary.ch",
+   "SUMMARY:Lunch Hotel Grace La Margna",
+   "DESCRIPTION:Club-Meeting jeweils Dienstags von Ende September bis Ende November im Hotel Grace La Margna von 12.15 bis 14.00\\n\\n*****\\n\\nClub-Meeting on Tuesday from end September until end November in the Hotel Grace La Margna from 12.15 till 14.00",
+   "LOCATION:Hotel Grace La Margna",
+   "URL:https://rotary-stmoritz.ch/de/agenda/show/212625",
+   "DTSTART;TZID=Europe/Zurich:20261117T121500",
+   "DTEND;TZID=Europe/Zurich:20261117T140000"
+  ]
+ },
+ "212626": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/8638427834.jpeg",
+   "organiser": "Rotary St. Moritz",
+   "registration": "Anmeldung bis: 23.11.2026 19:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212626@rotary.ch",
+   "SUMMARY:Lunch Hotel Grace La Margna",
+   "DESCRIPTION:Club-Meeting jeweils Dienstags von Ende September bis Ende November im Hotel Grace La Margna von 12.15 bis 14.00\\n\\n*****\\n\\nClub-Meeting on Tuesday from end September until end November in the Hotel Grace La Margna from 12.15 till 14.00",
+   "LOCATION:Hotel Grace La Margna",
+   "URL:https://rotary-stmoritz.ch/de/agenda/show/212626",
+   "DTSTART;TZID=Europe/Zurich:20261124T121500",
+   "DTEND;TZID=Europe/Zurich:20261124T140000"
+  ]
+ },
+ "212627": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/1830355406.jpeg",
+   "organiser": "Rotary St. Moritz",
+   "registration": "Anmeldung bis: 30.11.2026 19:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212627@rotary.ch",
+   "SUMMARY:Lunch Hotel Grace La Margna",
+   "DESCRIPTION:Club-Meeting jeweils Dienstags von Ende September bis Ende November im Hotel Grace La Margna von 12.15 bis 14.00\\n\\n*****\\n\\nClub-Meeting on Tuesday from end September until end November in the Hotel Grace La Margna from 12.15 till 14.00",
+   "LOCATION:Hotel Grace La Margna",
+   "URL:https://rotary-stmoritz.ch/de/agenda/show/212627",
+   "DTSTART;TZID=Europe/Zurich:20261201T121500",
+   "DTEND;TZID=Europe/Zurich:20261201T140000"
+  ]
+ },
+ "212628": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/5084783421.jpeg",
+   "organiser": "Rotary St. Moritz",
+   "registration": "Anmeldung bis: 07.12.2026 19:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212628@rotary.ch",
+   "SUMMARY:Lunch und Generalversammlung Hotel Grace La Margna (Essen beginnt um 12:00 Uhr)",
+   "DESCRIPTION:Lunch und Generalversammlung 1. Teil im Hotel Grace La Margna. Das Essen beginnt um 12.00 Uhr\\, die GV um 13.00 Uhr (Ende ca. 14.00 Uhr). ***** Lunch and General Assembly (part 1) at the Hotel Grace La Margna. Lunch starts at 12.00\\, the General Assembly at 13.00 (end approx. 14.00).",
+   "LOCATION:Hotel Grace La Margna",
+   "URL:https://rotary-stmoritz.ch/de/agenda/show/212628",
+   "DTSTART;TZID=Europe/Zurich:20261208T120000",
+   "DTEND;TZID=Europe/Zurich:20261208T140000"
+  ]
+ },
+ "212629": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/4877041103.jpeg",
+   "organiser": "Rotary St. Moritz",
+   "registration": "Anmeldung bis: 15.12.2026 19:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212629@rotary.ch",
+   "SUMMARY:Lunch Hotel Grace La Margna",
+   "DESCRIPTION:Club-Meeting jeweils Dienstags von Ende September bis Ende November im Hotel Grace La Margna von 12.15 bis 14.00\\n\\n*****\\n\\nClub-Meeting on Tuesday from end September until end November in the Hotel Grace La Margna from 12.15 till 14.00",
+   "LOCATION:Hotel Grace La Margna",
+   "URL:https://rotary-stmoritz.ch/de/agenda/show/212629",
+   "DTSTART;TZID=Europe/Zurich:20261215T121500",
+   "DTEND;TZID=Europe/Zurich:20261215T140000"
+  ]
+ },
+ "213452": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ac2526cb0abf.jpg",
+   "organiser": "Rotary Winterthur",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213452@rotary.ch",
+   "SUMMARY:Jahresfest Rotary Club Winterthur",
+   "DESCRIPTION:Rotaryfest des RC\\nWinterthur\\n\\nBerufsbildungsschule Winterthur BBW\\, Wülflingerstrasse 17 in\\nWinterthur (8 Minuten vom Bahnhof Winterthur entfernt\\, Parkplätze aussen und in\\nder Tiefgarage vorhanden)\\n\\n Das Motto «Junge Menschen begeistern Rotarierinnen und\\nRotarier» prägt das diesjährige Fest unsere...",
+   "LOCATION:Berufsbildungsschule Winterthur BBW an der Wülflingerstrasse 17",
+   "URL:https://rotary-winterthur.ch/de/agenda/show/213452",
+   "DTSTART;TZID=Europe/Zurich:20261121T170000",
+   "DTEND;TZID=Europe/Zurich:20261121T230000"
+  ]
+ },
+ "213803": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a15434d7019f.jpg",
+   "organiser": "Rotary Zurich Circle International",
+   "registration": "Anmeldung bis: 16.11.2026 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213803@rotary.ch",
+   "SUMMARY:Zauberpark Christmas Event with Kamrad",
+   "DESCRIPTION:Tonight we want to enchant you - with the \"Zauberpark\" - the music- and light-festival of the Zurich Airport. Come along on a journey for all senses - good food and drinks to smell and enjoy\\, light art to see and a powerful concert to enjoy.   Program From 18.00 Starts Welcome and Apéro Riché at ZR...",
+   "LOCATION:Starts at the ZRH Innovation Hub (Adress: The Circle 46)",
+   "URL:https://rczci.ch/de/agenda/show/213803",
+   "DTSTART;TZID=Europe/Zurich:20261120T180000",
+   "DTEND;TZID=Europe/Zurich:20261120T220000"
+  ]
+ },
+ "213877": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6acfb38aaa664.",
+   "organiser": "Rotary Zurich Circle International",
+   "registration": "Anmeldung bis: 14.01.2027 16:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213877@rotary.ch",
+   "SUMMARY:RotaryKlang Neujahrskonzert",
+   "DESCRIPTION:Dieses besondere Konzert ist Teil eines gemeinsamen Programms aller fünf Rotary Clubs – RC Dielsdorf\\, RC Zürich-Glattal\\, RC Zürcher Unterland\\, RC Zürich Flughafen und RC Zürich Circle International – und zeigt die Stärke der Zusammenarbeit innerhalb der Rotary-Gemeinschaft. Freut euch auf ein musi...",
+   "LOCATION:Circle Convention Hall",
+   "URL:https://rczci.ch/de/agenda/show/213877",
+   "DTSTART;TZID=Europe/Zurich:20270114T183000",
+   "DTEND;TZID=Europe/Zurich:20270114T220000"
+  ]
+ },
+ "215765": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ace1c177dd0c.jpg",
+   "organiser": "Rotary Zürcher Weinland",
+   "registration": "Anmeldung bis: 19.11.2026 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215765@rotary.ch",
+   "SUMMARY:Vortrag von Danilo Della Casa\\, COO of Event Structures bei der Firma Nüssli",
+   "DESCRIPTION:NÜSSLI – Connecting You. Als weltweit\\nführender Event- und Baudienstleister trägt NÜSSLI dazu bei\\, dass Emotionen bei Sport-\\,\\nKultur- und Business-Projekten hautnah miterlebt werden können. Nüssli steht international an der Spitze im Projektmanagement und in der baulichen Umsetzung\\nkomplexer Infras...",
+   "LOCATION:Landgasthof zum Bahnhof",
+   "URL:https://rotary-zuercherweinland.ch/de/agenda/show/215765",
+   "DTSTART;TZID=Europe/Zurich:20261210T121500",
+   "DTEND;TZID=Europe/Zurich:20261210T141500"
+  ]
+ },
+ "215773": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6914985992.png",
+   "organiser": "Rotary Am Greifensee",
+   "registration": "Anmeldung bis: 29.12.2026 08:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215773@rotary.ch",
+   "SUMMARY:Stallwache",
+   "LOCATION:Restaurant Schifflände",
+   "URL:https://am-greifensee.rotary2000.ch/de/agenda/show/215773",
+   "DTSTART;TZID=Europe/Zurich:20261229T115000",
+   "DTEND;TZID=Europe/Zurich:20261229T133000"
+  ]
+ },
+ "216085": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a38efaaca577.png",
+   "organiser": "Rotary Golfers IGFR",
+   "registration": "Anmeldung bis: 03.03.2027 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216085@rotary.ch",
+   "SUMMARY:2. IGFR-REISE – Belek",
+   "DESCRIPTION:Liebe Freundinnen und Freunde von IGFR Switzerland Nach der erfolgreichen ersten Reise nach Marrakesch freue ich mich\\, Ihnen die 2. IGFR Switzerland Golfreise nach Belek in der Türkei vom 3. bis 10. März 2027 anzukündigen. Diese Reise bietet uns die Gelegenheit\\, die Golfsaison unter der Sonne der t...",
+   "LOCATION:Sera communiqué",
+   "URL:https://golfeurs-igfr.polaris.rotary.ch/de/agenda/show/216085",
+   "DTSTART;TZID=Europe/Zurich:20270303T101500",
+   "DTEND;TZID=Europe/Zurich:20270310T101500"
+  ]
+ },
+ "217170": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/5382435718.jpg",
+   "organiser": "Rotary Zürcher Weinland",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217170@rotary.ch",
+   "SUMMARY:Rotary \"Restaurant Wystübli 2026\"",
+   "DESCRIPTION:Der Rotary Club Zürcher Weinland führt auch dieses Jahr das Restaurant Wystübli im Schloss Andelfingen \\n\\nam Andelfinger Jahrmarkt 2026. Warme (ab 11 Uhr) und kalte Speisen durchgehend verfügbar.  Alle Gäste\\, jung und alt\\, auch alle rotarischen Freunde\\, sind herzlich eingeladen bei uns im Wystübli e...",
+   "LOCATION:Schloss Andelfingen",
+   "URL:https://rotary-zuercherweinland.ch/de/agenda/show/217170",
+   "DTSTART;TZID=Europe/Zurich:20261111T090000",
+   "DTEND;TZID=Europe/Zurich:20261111T220000"
+  ]
+ },
+ "217172": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/1062764221.JPG",
+   "organiser": "Rotary Zürcher Weinland",
+   "registration": "Anmeldung bis:"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-217172@rotary.ch",
+   "SUMMARY:Wanderung ins Neue Jahr: Vergangenheit ist wie eine Treppenstufe\\; sie ist Basis für die nächste Stufe",
+   "LOCATION:Ein Bummel in und um Andelfingen herum",
+   "URL:https://rotary-zuercherweinland.ch/de/agenda/show/217172",
+   "DTSTART;TZID=Europe/Zurich:20261230T130000",
+   "DTEND;TZID=Europe/Zurich:20261230T190000"
+  ]
+ },
+ "218203": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a5ce779ac766.jpg",
+   "organiser": "Rotary St. Gallen-Freudenberg",
+   "registration": "Anmeldung bis: 15.12.2026 14:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218203@rotary.ch",
+   "SUMMARY:Adventsbesinnung in der Kathedrale - Partneranlass (Anmeldung nur Essen)",
+   "LOCATION:Kathedrale St.Gallen",
+   "URL:https://rotaryfreudenberg.ch/de/agenda/show/218203",
+   "DTSTART;TZID=Europe/Zurich:20261216T120000",
+   "DTEND;TZID=Europe/Zurich:20261216T140000"
+  ]
+ },
+ "218728": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/2114983699.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 14.11.2026 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218728@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218728",
+   "DTSTART;TZID=Europe/Zurich:20261113T173000",
+   "DTEND;TZID=Europe/Zurich:20261113T183000"
+  ]
+ },
+ "218729": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/8129715330.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 21.11.2026 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218729@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218729",
+   "DTSTART;TZID=Europe/Zurich:20261120T173000",
+   "DTEND;TZID=Europe/Zurich:20261120T183000"
+  ]
+ },
+ "218730": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/3650927620.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 28.11.2026 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218730@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218730",
+   "DTSTART;TZID=Europe/Zurich:20261127T173000",
+   "DTEND;TZID=Europe/Zurich:20261127T183000"
+  ]
+ },
+ "218731": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6982004819.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 05.12.2026 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218731@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218731",
+   "DTSTART;TZID=Europe/Zurich:20261204T173000",
+   "DTEND;TZID=Europe/Zurich:20261204T183000"
+  ]
+ },
+ "218732": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/8872810594.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 19.12.2026 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218732@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218732",
+   "DTSTART;TZID=Europe/Zurich:20261218T173000",
+   "DTEND;TZID=Europe/Zurich:20261218T183000"
+  ]
+ },
+ "218733": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/4243333655.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 12.12.2026 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218733@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218733",
+   "DTSTART;TZID=Europe/Zurich:20261211T173000",
+   "DTEND;TZID=Europe/Zurich:20261211T183000"
+  ]
+ },
+ "218734": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/4254480668.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 09.01.2027 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218734@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218734",
+   "DTSTART;TZID=Europe/Zurich:20270108T173000",
+   "DTEND;TZID=Europe/Zurich:20270108T183000"
+  ]
+ },
+ "218735": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/5054050082.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218735@rotary.ch",
+   "SUMMARY:Frohe Festtage (kein Hyatt Apéro)",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218735",
+   "DTSTART;TZID=Europe/Zurich:20261225T173000",
+   "DTEND;TZID=Europe/Zurich:20261225T183000"
+  ]
+ },
+ "218736": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/8030153809.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218736@rotary.ch",
+   "SUMMARY:Allen ein gutes Neues Jahr! (kein Hyatt Apéro)",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/218736",
+   "DTSTART;TZID=Europe/Zurich:20270101T173000",
+   "DTEND;TZID=Europe/Zurich:20270101T183000"
+  ]
+ },
+ "218928": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6288040493.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 23.11.2026 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218928@rotary.ch",
+   "SUMMARY:Vollmond Apero *Lounge Special*",
+   "DESCRIPTION:Vollmond-Apéro – Lounge Special Liebe Rotarierinnen und Rotarier Geniesst einen entspannten Abend beim Vollmond-Apéro – Lounge Special in der Lounge von Heiri Arter. Freut euch auf gute Gespräche und geselliges Beisammensein in besonderer Atmosphäre.",
+   "LOCATION:Fyrabig Lounge",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/218928",
+   "DTSTART;TZID=Europe/Zurich:20261124T180000",
+   "DTEND;TZID=Europe/Zurich:20261124T190000"
+  ]
+ },
+ "219131": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/5029369984.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 17.12.2026 09:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219131@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219131",
+   "DTSTART;TZID=Europe/Zurich:20261217T114500",
+   "DTEND;TZID=Europe/Zurich:20261217T134500"
+  ]
+ },
+ "219133": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/4190895928.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 21.01.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219133@rotary.ch",
+   "SUMMARY:Vollmond-Apéro",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219133",
+   "DTSTART;TZID=Europe/Zurich:20270122T180000",
+   "DTEND;TZID=Europe/Zurich:20270122T190000"
+  ]
+ },
+ "219142": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/8251549595.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 20.02.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219142@rotary.ch",
+   "SUMMARY:Vollmond-Apéro",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219142",
+   "DTSTART;TZID=Europe/Zurich:20270221T180000",
+   "DTEND;TZID=Europe/Zurich:20270221T190000"
+  ]
+ },
+ "219143": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/5577524499.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 21.03.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219143@rotary.ch",
+   "SUMMARY:Vollmond-Apéro",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219143",
+   "DTSTART;TZID=Europe/Zurich:20270322T180000",
+   "DTEND;TZID=Europe/Zurich:20270322T190000"
+  ]
+ },
+ "219144": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/8512096517.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 20.04.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219144@rotary.ch",
+   "SUMMARY:Vollmond-Apéro",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219144",
+   "DTSTART;TZID=Europe/Zurich:20270421T180000",
+   "DTEND;TZID=Europe/Zurich:20270421T190000"
+  ]
+ },
+ "219146": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/7322505169.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 19.05.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219146@rotary.ch",
+   "SUMMARY:Vollmond-Apéro",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219146",
+   "DTSTART;TZID=Europe/Zurich:20270520T180000",
+   "DTEND;TZID=Europe/Zurich:20270520T190000"
+  ]
+ },
+ "219147": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/7378322706.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 18.06.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219147@rotary.ch",
+   "SUMMARY:Vollmond-Apéro",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219147",
+   "DTSTART;TZID=Europe/Zurich:20270619T180000",
+   "DTEND;TZID=Europe/Zurich:20270619T190000"
+  ]
+ },
+ "219340": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a81a83b5453f.png",
+   "organiser": "Rotary Volketswil",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219340@rotary.ch",
+   "SUMMARY:Lunch at work",
+   "LOCATION:Weitere Informationen folgen",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219340",
+   "DTSTART;TZID=Europe/Zurich:20261126T114500",
+   "DTEND;TZID=Europe/Zurich:20261126T134500"
+  ]
+ },
+ "219341": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a81aa670a509.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 19.11.2026 09:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219341@rotary.ch",
+   "SUMMARY:Mitgliederversammlung",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219341",
+   "DTSTART;TZID=Europe/Zurich:20261119T114500",
+   "DTEND;TZID=Europe/Zurich:20261119T134500"
+  ]
+ },
+ "219342": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a81abda6bf82.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 01.12.2026 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219342@rotary.ch",
+   "SUMMARY:Chlausabig inkl. PartnerIn",
+   "LOCATION:Parkhotel Wallberg",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219342",
+   "DTSTART;TZID=Europe/Zurich:20261203T190000",
+   "DTEND;TZID=Europe/Zurich:20261203T220000"
+  ]
+ },
+ "219343": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a81ad3607d68.png",
+   "organiser": "Rotary Volketswil",
+   "registration": "Anmeldung bis: 05.01.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219343@rotary.ch",
+   "SUMMARY:Fondueplausch in Maur inkl. PartnerIn",
+   "LOCATION:Waldhütte der Holzkorporation Maur",
+   "URL:https://rotaryvolketswil.ch/de/agenda/show/219343",
+   "DTSTART;TZID=Europe/Zurich:20270107T190000",
+   "DTEND;TZID=Europe/Zurich:20270107T220000"
+  ]
+ },
+ "219606": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a871258537c3.JPG",
+   "organiser": "Rotary Zurich International",
+   "registration": "Anmeldung bis: 16.11.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219606@rotary.ch",
+   "SUMMARY:Social Project - Pfuusbus Cooking at Pfarrer Sieber",
+   "DESCRIPTION:As every year\\, also in 2026/2027 we are helping hands-on at Pfarrer Sieber's Pfuusbus preparing dinner and handing it out.",
+   "LOCATION:Talk to Bernd - but we all know where to find the Pfuusbus and Sozialwerk Pfarrer Sieber",
+   "URL:https://zurich-international.rotary2000.ch/de/agenda/show/219606",
+   "DTSTART;TZID=Europe/Zurich:20261118T180000",
+   "DTEND;TZID=Europe/Zurich:20261118T220000"
+  ]
+ },
+ "219615": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a87d5a639a0f.JPG",
+   "organiser": "Rotary Zurich International",
+   "registration": "Anmeldung bis: 07.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219615@rotary.ch",
+   "SUMMARY:SOCIAL PROJECT - PFUUSBUS COOKING AT PFARRER SIEBER",
+   "DESCRIPTION:As every year\\, also in 2026/2027 we are helping hands-on at Pfarrer Sieber's Pfuusbus preparing dinner and handing it out.",
+   "LOCATION:Sozialwerk Pfarrer Sieber's Pfuusbus - Bernd has details if necessary",
+   "URL:https://zurich-international.rotary2000.ch/de/agenda/show/219615",
+   "DTSTART;TZID=Europe/Zurich:20261209T180000",
+   "DTEND;TZID=Europe/Zurich:20261209T220000"
+  ]
+ },
+ "219618": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6a87e08e70fc7.jpg",
+   "organiser": "Rotary Zurich International",
+   "registration": "Anmeldung bis: 19.11.2026 08:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219618@rotary.ch",
+   "SUMMARY:Social Project - Xmas Wreath Making with Sherif",
+   "DESCRIPTION:As is great tradition\\, we are very happy to continue our Wreath Making tradition which is one of the cornerstones of our club's fund raising activities. A big thanks to Sherif and the crew for organising this event. We are looking forward to a very active participation from our members. This partic...",
+   "LOCATION:Neuweg 16",
+   "URL:https://zurich-international.rotary2000.ch/de/agenda/show/219618",
+   "DTSTART;TZID=Europe/Zurich:20261121T080000",
+   "DTEND;TZID=Europe/Zurich:20261121T180000"
+  ]
+ },
+ "219652": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/2845273083.jpg",
+   "organiser": "Rotary Liechtenstein",
+   "registration": "Anmeldung bis: 19.11.2026 07:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219652@rotary.ch",
+   "SUMMARY:Gipfel-Treffen bei Peter Demmel",
+   "LOCATION:Kaffeeösterei Demmel",
+   "URL:https://liechtenstein.rotary2000.ch/de/agenda/show/219652",
+   "DTSTART;TZID=Europe/Zurich:20261119T070000",
+   "DTEND;TZID=Europe/Zurich:20261119T080000"
+  ]
+ },
+ "219653": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/5378223905.jpg",
+   "organiser": "Rotary Liechtenstein",
+   "registration": "Anmeldung bis: 17.12.2026 07:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219653@rotary.ch",
+   "SUMMARY:Gipfel-Treffen bei Peter Demmel",
+   "LOCATION:Kaffeeösterei Demmel",
+   "URL:https://liechtenstein.rotary2000.ch/de/agenda/show/219653",
+   "DTSTART;TZID=Europe/Zurich:20261217T070000",
+   "DTEND;TZID=Europe/Zurich:20261217T080000"
+  ]
+ },
+ "220481": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ab8f5254a4b6.jpg",
+   "organiser": "Rotary Zürich Zoo",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220481@rotary.ch",
+   "SUMMARY:ROTARY BENEFIZ-BALL 2026 ZU GUNSTEN DER LEWA CONSERVACY",
+   "DESCRIPTION:Der Rotary Club Küsnacht-Zürich freut sich sehr\\, das Leuchtturmprojekt des Rotary Club Zürich Zoo in der LEWA Wildlife Conservacy erneut aktiv zu unterstützen. Erleben Sie einen festlichen Anlass und unterstützen Sie gleichzeitig mit Ihrer Teilnahme unser nachhaltiges Engagement für die Lewa-Region...",
+   "LOCATION:Zunfthaus zur Schmiden",
+   "URL:https://rc-zuerich-zoo.ch/de/agenda/show/220481",
+   "DTSTART;TZID=Europe/Zurich:20261121T183000",
+   "DTEND;TZID=Europe/Zurich:20261121T233000"
+  ]
+ },
+ "220741": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6aa3e0df61773.jpg",
+   "organiser": "Rotary Zürcher Weinland",
+   "registration": "Anmeldung bis: 21.01.2027 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220741@rotary.ch",
+   "SUMMARY:Begegnung mit Marius Weyermann\\, Kommandant der Kantonspolizei Zürich",
+   "DESCRIPTION:Marius Weyermann berichtet über die Kantonspolizei Zürich\\, die Sicherheitslage in unserem Kanton und die Herausforderungen der Zukunft.",
+   "LOCATION:Landgasthof zum Bahnhof",
+   "URL:https://rotary-zuercherweinland.ch/de/agenda/show/220741",
+   "DTSTART;TZID=Europe/Zurich:20270121T121500",
+   "DTEND;TZID=Europe/Zurich:20270121T140000"
+  ]
+ },
+ "220891": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6aa84dbcd51b9.jpg",
+   "organiser": "Rotary Uster",
+   "registration": "Anmeldung bis: 26.11.2026 10:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220891@rotary.ch",
+   "SUMMARY:Rotary am Uster-Märt",
+   "DESCRIPTION:End Polio Now – der Rotary-Bär kommt nach Uster! Gemeinsam gegen Kinderlähmung Am 26. und 27. November 2026 ist der Rotary Club Uster am Uster Märt mit einem eigenen Stand dabei. Im Mittelpunkt stehen sympathischen Rotary-Plüschbären – als Botschafter für eine Welt ohne Kinderlähmung. Mit dem Verkau...",
+   "LOCATION:Uster Märt",
+   "URL:https://uster.rotary2000.ch/de/agenda/show/220891",
+   "DTSTART;TZID=Europe/Zurich:20261126T100000",
+   "DTEND;TZID=Europe/Zurich:20261127T210000"
+  ]
+ },
+ "221151": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ab0c0252ed1b.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221151@rotary.ch",
+   "SUMMARY:Kunsthausdirex Demeester zeigt Munch & Lassnig",
+   "DESCRIPTION:Kunsthausdirektorin Ann Demeester führt um 17.55.durch die Ausstellung\\, die Malereien des norwegischen Klassikers Edvard Munch (1863-1944) und der Österreicherin Maria Lassnig (1919-2014) konfrontiert. Partner & Begleiterin willkommen. Bitte Tickets individuell & vorgängig erwerben.",
+   "LOCATION:Kunsthaus Zürich",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/221151",
+   "DTSTART;TZID=Europe/Zurich:20261112T174500",
+   "DTEND;TZID=Europe/Zurich:20261112T190000"
+  ]
+ },
+ "221152": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ab0c2db6420a.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 13.11.2026 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221152@rotary.ch",
+   "SUMMARY:Prof. Siegwart: Drohnen & Robotik",
+   "DESCRIPTION:Prof. Dr. Roland Siegwart forscht und lehrt an der ETH zu Robotik und Drohnen. Das Thema wird je nach Aktualität auf den Vortrag hin adjustiert.",
+   "LOCATION:Zunfthaus zur Zimmerleuten",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/221152",
+   "DTSTART;TZID=Europe/Zurich:20261116T114500",
+   "DTEND;TZID=Europe/Zurich:20261116T133000"
+  ]
+ },
+ "221173": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ab0ec06d7ec9.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 14.12.2026 11:45"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221173@rotary.ch",
+   "SUMMARY:Sarah Andrina Schütz: Führen mit Moderation",
+   "DESCRIPTION:Wer führt\\, wenn alle sprechen? Sarah Andrina Schütz. Moderatorin und Unternehmerin\\, spricht über die Macht der richtigen Frage. Und darüber\\, wie man mit Bundesräten redet\\, Kongresse eröffnet oder Live-Formate gestaltet.",
+   "LOCATION:Zunfthaus zur Zimmerleuten",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/221173",
+   "DTSTART;TZID=Europe/Zurich:20261214T114500",
+   "DTEND;TZID=Europe/Zurich:20261214T133000"
+  ]
+ },
+ "221789": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ac64b2f84903.jpg",
+   "organiser": "Rotary Zurich International",
+   "registration": "Anmeldung bis: 30.11.2026 19:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221789@rotary.ch",
+   "SUMMARY:Meeting with District Governor Dieter Bambauer",
+   "DESCRIPTION:Our district governor Dieter Bambauer will visit us and provides us with an overview of district activities\\, potential for engagement beyond the club\\, and food for thought as regards our own club's path.",
+   "LOCATION:Bodega Española",
+   "URL:https://zurich-international.rotary2000.ch/de/agenda/show/221789",
+   "DTSTART;TZID=Europe/Zurich:20261202T190000",
+   "DTEND;TZID=Europe/Zurich:20261202T210000"
+  ]
+ },
+ "222066": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/1701786570.jpg",
+   "organiser": "Rotary Zürich-Knonaueramt",
+   "registration": "Anmeldung bis: 07.01.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222066@rotary.ch",
+   "SUMMARY:Partneranlass: Metzgete",
+   "DESCRIPTION:Liebe rotarische Freundinnen und Freunde Wir nähern uns unserer traditionellen Metzgete. Gerne würden wir Mitglieder der angeschriebenen Clubs\\, an diesem gemütlichen Anlass begrüssen. Dieser findet statt am: Donnerstag\\, 14. Januar 2027  18.30 Uhr in der alten Schützenstube im Schützenhaus Zwillikon...",
+   "LOCATION:auswärts gemäss Programm",
+   "URL:https://zuerich-knonaueramt.rotary2000.ch/de/agenda/show/222066",
+   "DTSTART;TZID=Europe/Zurich:20270114T183000",
+   "DTEND;TZID=Europe/Zurich:20270114T230000"
+  ]
+ },
+ "222239": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/1014959568.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 22.01.2027 11:45"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222239@rotary.ch",
+   "SUMMARY:Zur Zukunft des Krieges in der Ukraine",
+   "DESCRIPTION:Dr. Ivo Mijnssen war ab 2022 Kriegsreporter in der Ukraine.\\n2025 gewann er den Zürcher Journalistenpreis und veröffentlichte mit Dominic\\nNahr «Das\\nwilde Feld. Front und Hinterland in der Ukraine 2022 – 2025.». Mijnssen ist\\nSoziologe\\, Osteuropa-Historiker und stellvertretender...",
+   "LOCATION:Zunfthaus zur Zimmerleuten",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/222239",
+   "DTSTART;TZID=Europe/Zurich:20270125T114500",
+   "DTEND;TZID=Europe/Zurich:20270125T133000"
+  ]
+ },
+ "222331": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ad9b49e08a9c.jpg",
+   "organiser": "Rotary Zürcher Weinland",
+   "registration": "Anmeldung bis: 19.11.2026 10:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222331@rotary.ch",
+   "SUMMARY:Vortrag über die Stiftung mine-ex: 25 Jahre Erfolg und Herausforderungen heute und in Zukunft.",
+   "DESCRIPTION:mine-ex ist eine schweizerische rotarische\\nStiftung mit Sitz in Burgdorf. Ihr Zweck ist\\, Opfern von Landminen eine\\nwürdiges Leben zu ermöglichen. Haupttätigkeitsgebiete sind Kambodscha\\,\\nAfghanistan und die Ukraine. Alle Spenden gehen in die Einsatzgebiete\\, der\\nStiftungsrat arbeitet ehrenamtlich.",
+   "LOCATION:Landgasthof zum Bahnhof",
+   "URL:https://rotary-zuercherweinland.ch/de/agenda/show/222331",
+   "DTSTART;TZID=Europe/Zurich:20261119T121500",
+   "DTEND;TZID=Europe/Zurich:20261119T140000"
+  ]
+ },
+ "222447": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/1639292365.jpg",
+   "organiser": "Rotary Distrikt 2000",
+   "registration": "Anmeldung bis: 28.02.2027 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222447@rotary.ch",
+   "SUMMARY:RYLA 2027",
+   "DESCRIPTION:Das RYLA (Rotary Youth Leadership Academy) ist ein Seminar voller Inspiration und Impulse zur Entdeckung und Entwicklung der Persönlichkeit junger Erwachsener. Im viertägigen Seminar dreht sich alles um das Thema Führung. Die Teilnehmenden setzen sich mit den verschiedenen Aspekten dieses Themas au...",
+   "LOCATION:Stump's Alpenrose",
+   "URL:https://rotary2000.ch/de/agenda/show/222447",
+   "DTSTART;TZID=Europe/Zurich:20270429T080000",
+   "DTEND;TZID=Europe/Zurich:20270502T130000"
+  ]
+ },
+ "222532": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6adf0d75a80c3.jpg",
+   "organiser": "Rotary Zürcher Weinland",
+   "registration": "Anmeldung bis: 18.03.2027 10:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222532@rotary.ch",
+   "SUMMARY:Vortrag von Claudia Sedioli",
+   "DESCRIPTION:Claudia Sedioli ist Dozentin für Kommunikation an der Zürcher\\nHochschule für Angewandte Wissenschaften (ZHAW) und Inhaberin von Sedioli Kommunikation\\,\\neiner Agentur für Moderation und Kommunikation. Menschen mit Kommunikation zu\\nerreichen\\, ist seit ihrem Studium der Germanistik und Hispanistik an d...",
+   "LOCATION:Landgasthof zum Bahnhof",
+   "URL:https://rotary-zuercherweinland.ch/de/agenda/show/222532",
+   "DTSTART;TZID=Europe/Zurich:20270318T121500",
+   "DTEND;TZID=Europe/Zurich:20270318T140000"
+  ]
+ },
+ "222769": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6ae7285741c97.jpg",
+   "organiser": "Rotary Am Greifensee",
+   "registration": "Anmeldung bis: 13.04.2027 08:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222769@rotary.ch",
+   "SUMMARY:Phagentherapie als Alternative zu Antibiotka",
+   "LOCATION:Restaurant Schifflände",
+   "URL:https://am-greifensee.rotary2000.ch/de/agenda/show/222769",
+   "DTSTART;TZID=Europe/Zurich:20270413T115000",
+   "DTEND;TZID=Europe/Zurich:20270413T133000"
+  ]
+ },
+ "222871": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6615827125.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 16.01.2027 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222871@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/222871",
+   "DTSTART;TZID=Europe/Zurich:20270115T173000",
+   "DTEND;TZID=Europe/Zurich:20270115T183000"
+  ]
+ },
+ "222872": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/2784595259.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 23.01.2027 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222872@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/222872",
+   "DTSTART;TZID=Europe/Zurich:20270122T173000",
+   "DTEND;TZID=Europe/Zurich:20270122T193000"
+  ]
+ },
+ "222874": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/9496534573.jpg",
+   "organiser": "Rotary Zürich-Nord",
+   "registration": "Anmeldung bis: 30.01.2027 17:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222874@rotary.ch",
+   "SUMMARY:Hyatt Apéro",
+   "LOCATION:Hotel Hyatt",
+   "URL:https://rotary-zh-nord.ch/de/agenda/show/222874",
+   "DTSTART;TZID=Europe/Zurich:20270129T173000",
+   "DTEND;TZID=Europe/Zurich:20270129T193000"
+  ]
+ },
+ "223117": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6af1c83d86867.jpg",
+   "organiser": "Rotary Liechtenstein",
+   "registration": "Anmeldung bis: 01.12.2026 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223117@rotary.ch",
+   "SUMMARY:Berufsdienst: Klassifikationsvortrag Gerald Hosp",
+   "DESCRIPTION:Rotary ist eine berufsständisch aufgebaute Gemeinschaft. Sie lebt von und mit Vertretern der verschiedenen beruflichen Klassifikationen. Rotarier wird man durch seinen Beruf. Jeder Rotarier ist im Club der Repräsentant seines Berufszweiges. Klassifikationsvorträge dienen dem Berufsdienst für die ro...",
+   "LOCATION:Hotel Gasthof Löwen",
+   "URL:https://liechtenstein.rotary2000.ch/de/agenda/show/223117",
+   "DTSTART;TZID=Europe/Zurich:20261201T121500",
+   "DTEND;TZID=Europe/Zurich:20261201T134500"
+  ]
+ },
+ "223119": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6af1ca5bdb035.jpg",
+   "organiser": "Rotary Liechtenstein",
+   "registration": "Anmeldung bis: 17.11.2026 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223119@rotary.ch",
+   "SUMMARY:Berufsdienst: Klassifikationsvortrag Thomas Gisler",
+   "DESCRIPTION:Rotary ist eine berufsständisch aufgebaute Gemeinschaft. Sie lebt von und mit Vertretern der verschiedenen beruflichen Klassifikationen. Rotarier wird man durch seinen Beruf. Jeder Rotarier ist im Club der Repräsentant seines Berufszweiges. Klassifikationsvorträge dienen dem Berufsdienst für die ro...",
+   "LOCATION:Hotel Gasthof Löwen",
+   "URL:https://liechtenstein.rotary2000.ch/de/agenda/show/223119",
+   "DTSTART;TZID=Europe/Zurich:20261117T121500",
+   "DTEND;TZID=Europe/Zurich:20261117T134500"
+  ]
+ },
+ "223124": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary2000.ch/media/cache/rotary_website_event_grid/6af1de18533f2.jpg",
+   "organiser": "Rotary Liechtenstein",
+   "registration": "Anmeldung bis: 24.11.2026 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223124@rotary.ch",
+   "SUMMARY:Vortragsmeeting: Friedensprojekt Europa?",
+   "DESCRIPTION:Unser rotarischer Freund André Ritter lässt uns im Rahmen seines Vortrags an seinen neuen Skepsis zum ursprünglichen Friedensprojekt Europa aus den 80-er Jahren teilhaben. Vor dem Hintergrund der aktualisierten Friedensdenkschrift der Evangelischen Kirche Deutschlands gibt er Einblicke in das aktue...",
+   "LOCATION:Hotel Gasthof Löwen",
+   "URL:https://liechtenstein.rotary2000.ch/de/agenda/show/223124",
+   "DTSTART;TZID=Europe/Zurich:20261124T121500",
+   "DTEND;TZID=Europe/Zurich:20261124T134500"
+  ]
+ }
+}

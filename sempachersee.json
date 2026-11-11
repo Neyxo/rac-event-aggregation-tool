@@ -20,6 +20,27 @@
    "CATEGORIES:Rotaract"
   ]
  },
+ "219898": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract-sempachersee.ch/media/cache/rotary_website_event_grid/6a8efa9e79eb2.jpg",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-219898@rotary.ch",
+   "SUMMARY:Anlass mit RC Sursee - Treberwurst-Essen im Falläsch",
+   "DESCRIPTION:Einfach authentisch. Markus Bättig passionierter Jäger und einer der ersten Weinproduzenten der Region gewährt uns einen Einblick in das Weingut Falläsch und verköstigt uns zusammen mit dem Räbbärg-Chörli Kaltbach in authentisch-bodenständiger Manier mit einem Treberwurst-Menu (gekocht im Holzofen-...",
+   "LOCATION:Falläsch 1 Kaltbach",
+   "URL:https://rotaract-sempachersee.ch/de/agenda/show/219898",
+   "DTSTART;TZID=Europe/Zurich:20261119T190000",
+   "DTEND;TZID=Europe/Zurich:20261119T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
  "222792": {
   "detail": {
    "description": "Die Adventszeit ist die perfekte Gelegenheit, gemeinsam einen gemütlichen Abend zu verbringen. Deshalb treffen wir uns gemeinsam mit dem Rotaract Luzern auf einen warmen Glühwein am Rudolfs Weihnachtsmarkt.\n\nFreut euch auf gute Gespräche, einen gemütlichen Austausch und gesellige Stunden in weihnachtlicher Atmosphäre. Nutzt die Gelegenheit, bekannte Gesichter wiederzusehen, neue Kontakte zu knüpfen und gemeinsam die Vorfreude auf Weihnachten zu geniessen.\n\nWir freuen uns auf einen stimmungsvollen Abend mit euch und wünschen euch schon jetzt eine schöne Adventszeit!\n\nHerzlichen Dank an den Rotaract Luzern für die Organisation dieses Anlasses.",
@@ -39,6 +60,48 @@
    "DTEND;TZID=Europe/Zurich:20261127T220000",
    "LOCATION:Luzern",
    "CATEGORIES:Rotaract"
+  ]
+ },
+ "223009": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract-sempachersee.ch/media/cache/rotary_website_event_grid/6aeb90ef26374.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223009@rotary.ch",
+   "SUMMARY:Rotary Jubiläumsapéro",
+   "DESCRIPTION:2027 feiern unsere beiden Paten-Clubs besondere Jubiläen: Der Rotary Club Sursee blickt auf 70 Jahre zurück\\, der Rotary Club Sempachersee auf 25 Jahre Clubgeschichte. Gemeinsam wollen wir feiern. Wir wurden von den beiden Rotary Clubs zum Präsenz-Apéro eingeladen. Dieser Abend wird einen clubüberg...",
+   "LOCATION:Bar/Eventlokal \"Die Weinerei 1877\"",
+   "URL:https://rotaract-sempachersee.ch/de/agenda/show/223009",
+   "DTSTART;TZID=Europe/Zurich:20270303T180000",
+   "DTEND;TZID=Europe/Zurich:20270303T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "223014": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract-sempachersee.ch/media/cache/rotary_website_event_grid/6aec65b2a1e5b.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223014@rotary.ch",
+   "SUMMARY:Operette \"Gräfin Mariza\"",
+   "DESCRIPTION:Einfach beschwingt. «Gräfin Mariza» ist eine berühmte Operette von Emmerich Kálmán\\, die 1924 in Wien uraufgeführt wurde. Im ungarischen Flair flieht Gräfin Mariza vor ihren aufdringlichen Verehrern auf ihr Landgut und erfindet einen Verlobten\\, den Baron Zsupán. Überraschend taucht ein echter Baron...",
+   "LOCATION:Stadttheater Sursee",
+   "URL:https://rotaract-sempachersee.ch/de/agenda/show/223014",
+   "DTSTART;TZID=Europe/Zurich:20270305T180000",
+   "DTEND;TZID=Europe/Zurich:20270305T230000",
+   "X-MEMBERS-ONLY:TRUE"
   ]
  }
 }

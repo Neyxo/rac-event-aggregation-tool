@@ -1,0 +1,1368 @@
+{
+ "210630": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/69a5960bd8d36.jpg",
+   "organiser": "Rotary RYLA Distrikt 1980",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210630@rotary.ch",
+   "SUMMARY:Rotary Youth Leadership Award 2026",
+   "LOCATION:Hotel Kettenbrücken",
+   "URL:https://ryla.rotary1980.ch/de/agenda/show/210630",
+   "DTSTART;TZID=Europe/Zurich:20261120T170000",
+   "DTEND;TZID=Europe/Zurich:20261122T130000"
+  ]
+ },
+ "215326": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a86d7fdc5839.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 21.01.2027 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215326@rotary.ch",
+   "SUMMARY:Mountain2Sea: Mit dem Ruderboot über den Atlantik",
+   "LOCATION:Park-Hotel am Rhein",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215326",
+   "DTSTART;TZID=Europe/Zurich:20270121T120000",
+   "DTEND;TZID=Europe/Zurich:20270121T133000"
+  ]
+ },
+ "215470": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2330453115.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 16.11.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215470@rotary.ch",
+   "SUMMARY:Präsenzlunch (Dienstag)",
+   "DESCRIPTION:Der Präsenzlunch findet wie üblich am Dienstag statt. Der Abendanlass jedoch tags zuvor am Montag.",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215470",
+   "DTSTART;TZID=Europe/Zurich:20261117T121500",
+   "DTEND;TZID=Europe/Zurich:20261117T133000"
+  ]
+ },
+ "215471": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a2fe45083c7f.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 23.11.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215471@rotary.ch",
+   "SUMMARY:Allgemeine Schweizerische Militärzeitschrift - Schweizer Sicherheits- und Militärpublizistik",
+   "DESCRIPTION:Die Mitglieder erwartet ein kompakter und aktueller Einblick in die Arbeit der Allgemeine Schweizerische Militärzeitschrift (ASMZ). Chefredaktor Christian Brändli gibt einen Überblick über sicherheitspolitische Entwicklungen und die Rolle der ASMZ als Fachmedium im sicherheitspolitischen Diskurs. I...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215471",
+   "DTSTART;TZID=Europe/Zurich:20261124T121500",
+   "DTEND;TZID=Europe/Zurich:20261124T133000"
+  ]
+ },
+ "215473": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a9cf98021d65.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 04.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215473@rotary.ch",
+   "SUMMARY:Adventsmarkt",
+   "DESCRIPTION:Am Samstag\\, 5. Dezember 2026\\, findet der Badener Adventsmarkt statt. Auch dieses Jahr dürfen wir als Rotary Club Baden den Grillstand inklusive Suppenausgabe betreiben. Damit das Ganze gelingt\\, brauchen wir zupackende Rotarier\\, die uns tatkräftig unterstützen. Es erwartet euch ein geselliger Einsat...",
+   "LOCATION:Kirchplatz",
+   "URL:https://rotary-baden.ch/de/agenda/show/215473",
+   "DTSTART;TZID=Europe/Zurich:20261205T083000",
+   "DTEND;TZID=Europe/Zurich:20261205T173000"
+  ]
+ },
+ "215474": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a415473a9a06.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 07.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215474@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215474",
+   "DTSTART;TZID=Europe/Zurich:20261208T121500",
+   "DTEND;TZID=Europe/Zurich:20261208T133000"
+  ]
+ },
+ "215475": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a2fe648cb4e3.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 14.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215475@rotary.ch",
+   "SUMMARY:Werte und die Rechtssprechung",
+   "DESCRIPTION:Gerichtspräsident Viktor Egloff (Obergericht Aargau) gibt spannende Einblicke in das Spannungsfeld zwischen gesellschaftlichen Werten und moderner Rechtsprechung. Im Zentrum des Referats steht die Frage\\, wie sich juristische Entscheidungen in einem sich wandelnden Werteumfeld behaupten – und wo Ger...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215475",
+   "DTSTART;TZID=Europe/Zurich:20261215T121500",
+   "DTEND;TZID=Europe/Zurich:20261215T133000"
+  ]
+ },
+ "215478": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a4b3d6ee9f88.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 21.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215478@rotary.ch",
+   "SUMMARY:Bericht zu \"Niggi hilft Togo\"",
+   "DESCRIPTION:Niggi Wiederkehr berichtet uns von einem aussergewöhnlichen Hilfsprojekt in Togo – einem der ärmsten Länder der Welt. Dort führt der Graue Star bei vielen Menschen aufgrund fehlender medizinischer Versorgung zur Erblindung. Bereits eine vergleichsweise einfache Operation kann jedoch nicht nur einem...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215478",
+   "DTSTART;TZID=Europe/Zurich:20261222T121500",
+   "DTEND;TZID=Europe/Zurich:20261222T133000"
+  ]
+ },
+ "215479": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/3166751144.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 28.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215479@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215479",
+   "DTSTART;TZID=Europe/Zurich:20261229T121500",
+   "DTEND;TZID=Europe/Zurich:20261229T141500"
+  ]
+ },
+ "215527": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a300d4ee5e9c.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 04.01.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215527@rotary.ch",
+   "SUMMARY:Vorstellung Pfarrleitung des Katholisches Pfarramts Baden",
+   "DESCRIPTION:Mit Claudio Tomassini-Balmer und Stefan Essig darf der Rotary Club Baden zwei Persönlichkeiten kennenlernen\\, die seit vielen Jahren mit grossem Engagement in der Seelsorge und Gemeindearbeit wirken. Gemeinsam übernehmen sie die Leitung der Pfarrei Baden und bringen dabei unterschiedliche\\, wertvolle...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215527",
+   "DTSTART;TZID=Europe/Zurich:20270105T121500",
+   "DTEND;TZID=Europe/Zurich:20270105T133000"
+  ]
+ },
+ "215528": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7721389660.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 11.01.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215528@rotary.ch",
+   "SUMMARY:Präsenzlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215528",
+   "DTSTART;TZID=Europe/Zurich:20270112T121500",
+   "DTEND;TZID=Europe/Zurich:20270112T133000"
+  ]
+ },
+ "215533": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a30147328e5c.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 18.01.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215533@rotary.ch",
+   "SUMMARY:Digitale Transformation - Zur Zukunft unserer Gesellschaft",
+   "DESCRIPTION:Die digitale Transformation verändert Wirtschaft\\, Gesellschaft und unseren Alltag grundlegend. Prof. Dr. Andréa Belliger zeigt auf\\, wie neue Technologien nicht nur Prozesse optimieren\\, sondern auch unser Denken\\, unsere Organisationen und unser Zusammenleben nachhaltig prägen. Als Co-Direktorin des ...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215533",
+   "DTSTART;TZID=Europe/Zurich:20270119T121500",
+   "DTEND;TZID=Europe/Zurich:20270119T133000"
+  ]
+ },
+ "215544": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/9280710191.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 08.02.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215544@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215544",
+   "DTSTART;TZID=Europe/Zurich:20270209T121500",
+   "DTEND;TZID=Europe/Zurich:20270209T133000"
+  ]
+ },
+ "215545": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1056255910.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 15.02.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215545@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215545",
+   "DTSTART;TZID=Europe/Zurich:20270216T121500",
+   "DTEND;TZID=Europe/Zurich:20270216T133000"
+  ]
+ },
+ "215546": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1647983928.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 22.02.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215546@rotary.ch",
+   "SUMMARY:Präsenzlunch (Dienstag)",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215546",
+   "DTSTART;TZID=Europe/Zurich:20270223T121500",
+   "DTEND;TZID=Europe/Zurich:20270223T133000"
+  ]
+ },
+ "215550": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a301be5b9608.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 01.03.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215550@rotary.ch",
+   "SUMMARY:Zukunft von KI im Recht - Die grossen Änderungen",
+   "DESCRIPTION:Künstliche Intelligenz verändert die Arbeitswelt – und die Juristerei steht dabei im Zentrum eines tiefgreifenden Wandels. Welche Aufgaben wird KI künftig übernehmen? Wo liegen Chancen\\, wo die rechtlichen und ethischen Grenzen? David Rosenthal gibt Einblicke in die Zukunft der Rechtsberatung im Zei...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215550",
+   "DTSTART;TZID=Europe/Zurich:20270302T121500",
+   "DTEND;TZID=Europe/Zurich:20270302T133000"
+  ]
+ },
+ "215555": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/3792731751.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 15.03.2027 18:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215555@rotary.ch",
+   "SUMMARY:Präsenzlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215555",
+   "DTSTART;TZID=Europe/Zurich:20270316T121500",
+   "DTEND;TZID=Europe/Zurich:20270316T133000"
+  ]
+ },
+ "215568": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/8109306594.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 05.04.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215568@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215568",
+   "DTSTART;TZID=Europe/Zurich:20270406T121500",
+   "DTEND;TZID=Europe/Zurich:20270406T133000"
+  ]
+ },
+ "215569": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/9043978446.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 12.04.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215569@rotary.ch",
+   "SUMMARY:Präsenzlunch (Dienstag)",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215569",
+   "DTSTART;TZID=Europe/Zurich:20270413T121500",
+   "DTEND;TZID=Europe/Zurich:20270413T133000"
+  ]
+ },
+ "215578": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2671664959.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 19.04.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215578@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215578",
+   "DTSTART;TZID=Europe/Zurich:20270420T121500",
+   "DTEND;TZID=Europe/Zurich:20270420T133000"
+  ]
+ },
+ "215579": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a303d25c6bdb.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 26.04.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215579@rotary.ch",
+   "SUMMARY:Old-Timer Rallies - Erlebnisse von \"Team Paddy Murphy\"",
+   "DESCRIPTION:Mick Schneider vom „Team Paddy Murphy“ gibt spannende Einblicke in die Welt der Oldtimer-Rallyes – aus der Perspektive eines Fahrers und Organisators. Er berichtet aus erster Hand\\, wie solche Rallyes geplant\\, geführt und auf der Strecke erlebt werden. Dabei geht es nicht nur um klassische Fahrzeuge...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215579",
+   "DTSTART;TZID=Europe/Zurich:20270427T121500",
+   "DTEND;TZID=Europe/Zurich:20270427T133000"
+  ]
+ },
+ "215581": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a304026ee03c.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 03.05.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215581@rotary.ch",
+   "SUMMARY:Der Wert des Debattierens",
+   "DESCRIPTION:Debatten sind ein zentrales Element demokratischer Bildung – sie schulen Urteilsfähigkeit\\, fördern differenziertes Argumentieren und stärken die Fähigkeit\\, komplexe gesellschaftliche Fragen einzuordnen. Im Lunch-Referat gibt Prof. Dr. Monika Waldis einen Einblick in aktuelle Forschungsarbeiten der ...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215581",
+   "DTSTART;TZID=Europe/Zurich:20270504T121500",
+   "DTEND;TZID=Europe/Zurich:20270504T133000"
+  ]
+ },
+ "215582": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7651898718.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 10.05.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215582@rotary.ch",
+   "SUMMARY:Präsenzlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215582",
+   "DTSTART;TZID=Europe/Zurich:20270511T121500",
+   "DTEND;TZID=Europe/Zurich:20270511T133000"
+  ]
+ },
+ "215584": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7407969485.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 17.05.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215584@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215584",
+   "DTSTART;TZID=Europe/Zurich:20270518T121500",
+   "DTEND;TZID=Europe/Zurich:20270518T133000"
+  ]
+ },
+ "215587": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a304588cb07e.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 08.06.2027 13:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215587@rotary.ch",
+   "SUMMARY:Einsatz von KI beim SVA Aargau - Digitalisierung in der Verwaltung",
+   "DESCRIPTION:Wie verändert Künstliche Intelligenz die Bearbeitung staatlicher Leistungen konkret? Wir erhalten einen praxisnahen Einblick\\, wie KI bereits heute in der Prämienverbilligung eingesetzt wird – von Effizienzsteigerung über Prozessautomatisierung bis hin zu verbesserten Entscheidungsgrundlagen. Michel...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215587",
+   "DTSTART;TZID=Europe/Zurich:20270608T121500",
+   "DTEND;TZID=Europe/Zurich:20270608T133000"
+  ]
+ },
+ "215588": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a30461f1b6d8.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 14.06.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215588@rotary.ch",
+   "SUMMARY:Risikobasierter Ansatz im juristischen Alltag",
+   "DESCRIPTION:Ein spannender Lunch im Zeichen moderner Rechtsanwendung: Der risikobasierte Ansatz prägt zunehmend\\, wie Juristinnen und Juristen Fälle beurteilen\\, Prioritäten setzen und rechtliche Entscheidungen strukturieren. David Vasella\\, Partner bei Walder Wyss\\, gibt Einblicke in die praktische Umsetzung dies...",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215588",
+   "DTSTART;TZID=Europe/Zurich:20270615T121500",
+   "DTEND;TZID=Europe/Zurich:20270615T141500"
+  ]
+ },
+ "215589": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1301860455.jpg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 21.06.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215589@rotary.ch",
+   "SUMMARY:Präsenzlunch",
+   "LOCATION:Hotel Du Parc",
+   "URL:https://rotary-baden.ch/de/agenda/show/215589",
+   "DTSTART;TZID=Europe/Zurich:20270622T121500",
+   "DTEND;TZID=Europe/Zurich:20270622T133000"
+  ]
+ },
+ "215682": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2278551109.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 23.11.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215682@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215682",
+   "DTSTART;TZID=Europe/Zurich:20261124T070000",
+   "DTEND;TZID=Europe/Zurich:20261124T080000"
+  ]
+ },
+ "215683": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7293747056.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 28.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215683@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215683",
+   "DTSTART;TZID=Europe/Zurich:20261229T070000",
+   "DTEND;TZID=Europe/Zurich:20261229T080000"
+  ]
+ },
+ "215685": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/5607062956.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 25.01.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215685@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215685",
+   "DTSTART;TZID=Europe/Zurich:20270126T070000",
+   "DTEND;TZID=Europe/Zurich:20270126T080000"
+  ]
+ },
+ "215686": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1341353545.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 22.02.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215686@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215686",
+   "DTSTART;TZID=Europe/Zurich:20270223T070000",
+   "DTEND;TZID=Europe/Zurich:20270223T080000"
+  ]
+ },
+ "215687": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6627590190.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 29.03.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215687@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215687",
+   "DTSTART;TZID=Europe/Zurich:20270330T070000",
+   "DTEND;TZID=Europe/Zurich:20270330T080000"
+  ]
+ },
+ "215688": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/3161846795.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 26.04.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215688@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215688",
+   "DTSTART;TZID=Europe/Zurich:20270427T070000",
+   "DTEND;TZID=Europe/Zurich:20270427T080000"
+  ]
+ },
+ "215689": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/8429625982.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 24.05.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215689@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215689",
+   "DTSTART;TZID=Europe/Zurich:20270525T070000",
+   "DTEND;TZID=Europe/Zurich:20270525T080000"
+  ]
+ },
+ "215690": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6126110238.jpeg",
+   "organiser": "Rotary Baden",
+   "registration": "Anmeldung bis: 28.06.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215690@rotary.ch",
+   "SUMMARY:Breakfast @ Heaven",
+   "DESCRIPTION:Ein guter Tag beginnt mit guten Gesprächen: Beim monatlichen Rotary-Frühstück treffen wir uns in entspannter Atmosphäre zum Austausch\\, Netzwerken und gemeinsamen Start in den Tag. Die Confiserie Himmel steht für die feine Art\\, Genuss zu leben. Mit viel Leidenschaft verbindet sie höchste Qualität\\, k...",
+   "LOCATION:Café Himmel - Breakfast at Heaven",
+   "URL:https://rotary-baden.ch/de/agenda/show/215690",
+   "DTSTART;TZID=Europe/Zurich:20270629T070000",
+   "DTEND;TZID=Europe/Zurich:20270629T080000"
+  ]
+ },
+ "215747": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7450946943.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 20.11.2026 06:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215747@rotary.ch",
+   "SUMMARY:Präsenzfrühstück",
+   "LOCATION:Beck Maier",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215747",
+   "DTSTART;TZID=Europe/Zurich:20261120T063000",
+   "DTEND;TZID=Europe/Zurich:20261120T073000"
+  ]
+ },
+ "215748": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a32f87b359d5.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 19.11.2026 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215748@rotary.ch",
+   "SUMMARY:Besuch von Govenor Urs F. Meyer",
+   "LOCATION:Park-Hotel am Rhein",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215748",
+   "DTSTART;TZID=Europe/Zurich:20261119T120000",
+   "DTEND;TZID=Europe/Zurich:20261119T133000"
+  ]
+ },
+ "215749": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6aa3d24742280.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 03.12.2026 14:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215749@rotary.ch",
+   "SUMMARY:Weihnachtsanlass",
+   "LOCATION:Restaurant Eden Rheinfelden",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215749",
+   "DTSTART;TZID=Europe/Zurich:20261203T180000",
+   "DTEND;TZID=Europe/Zurich:20261203T230000"
+  ]
+ },
+ "215750": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2854981716.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 01.12.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215750@rotary.ch",
+   "SUMMARY:Feierabend-Apéro mit dem RC Rheinfelden-Fricktal",
+   "LOCATION:Restaurant Feldschlösschen",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215750",
+   "DTSTART;TZID=Europe/Zurich:20261201T180000",
+   "DTEND;TZID=Europe/Zurich:20261201T200000"
+  ]
+ },
+ "215751": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a32f996df3b2.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 10.12.2026 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215751@rotary.ch",
+   "SUMMARY:1. Mitgliederversammlung",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215751",
+   "DTSTART;TZID=Europe/Zurich:20261210T120000",
+   "DTEND;TZID=Europe/Zurich:20261210T133000"
+  ]
+ },
+ "215752": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2807478006.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 11.12.2026 06:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-215752@rotary.ch",
+   "SUMMARY:Präsenzfrühstück",
+   "LOCATION:Beck Maier",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/215752",
+   "DTSTART;TZID=Europe/Zurich:20261211T063000",
+   "DTEND;TZID=Europe/Zurich:20261211T073000"
+  ]
+ },
+ "216085": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a38efaaca577.png",
+   "organiser": "Rotary Golfers IGFR",
+   "registration": "Anmeldung bis: 03.03.2027 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216085@rotary.ch",
+   "SUMMARY:2. IGFR-REISE – Belek",
+   "DESCRIPTION:Liebe Freundinnen und Freunde von IGFR Switzerland Nach der erfolgreichen ersten Reise nach Marrakesch freue ich mich\\, Ihnen die 2. IGFR Switzerland Golfreise nach Belek in der Türkei vom 3. bis 10. März 2027 anzukündigen. Diese Reise bietet uns die Gelegenheit\\, die Golfsaison unter der Sonne der t...",
+   "LOCATION:Sera communiqué",
+   "URL:https://golfeurs-igfr.polaris.rotary.ch/de/agenda/show/216085",
+   "DTSTART;TZID=Europe/Zurich:20270303T101500",
+   "DTEND;TZID=Europe/Zurich:20270310T101500"
+  ]
+ },
+ "216412": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6721869035.jpg",
+   "organiser": "Rotary Olten",
+   "registration": "Anmeldung bis: 19.11.2026 06:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216412@rotary.ch",
+   "SUMMARY:Earlybird",
+   "DESCRIPTION:Earlybird\\nJeden 3. Donnerstag im Monat",
+   "LOCATION:Hotel Arte",
+   "URL:https://rotary-olten.ch/de/agenda/show/216412",
+   "DTSTART;TZID=Europe/Zurich:20261119T061500",
+   "DTEND;TZID=Europe/Zurich:20261119T070000"
+  ]
+ },
+ "216413": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7162169173.jpg",
+   "organiser": "Rotary Olten",
+   "registration": "Anmeldung bis: 17.12.2026 06:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216413@rotary.ch",
+   "SUMMARY:Earlybird",
+   "DESCRIPTION:Earlybird\\nJeden 3. Donnerstag im Monat",
+   "LOCATION:Hotel Arte",
+   "URL:https://rotary-olten.ch/de/agenda/show/216413",
+   "DTSTART;TZID=Europe/Zurich:20261217T061500",
+   "DTEND;TZID=Europe/Zurich:20261217T070000"
+  ]
+ },
+ "218819": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a7097f1b17cf.jfif",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 12.11.2026 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218819@rotary.ch",
+   "SUMMARY:Wenn die Realität nicht mehr verhandelt. Führung und Entscheidung im Krisenfall",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/218819",
+   "DTSTART;TZID=Europe/Zurich:20261112T120000",
+   "DTEND;TZID=Europe/Zurich:20261112T133000"
+  ]
+ },
+ "220180": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a96e0cfe7983.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220180@rotary.ch",
+   "SUMMARY:KEIN Rotary Lunch",
+   "LOCATION:KEIN Rotary Lunch",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/220180",
+   "DTSTART;TZID=Europe/Zurich:20261224T120000",
+   "DTEND;TZID=Europe/Zurich:20261224T133000"
+  ]
+ },
+ "220181": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a96e14194253.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220181@rotary.ch",
+   "SUMMARY:KEIN Rotary Dinner",
+   "LOCATION:KEIN Rotary Dinner",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/220181",
+   "DTSTART;TZID=Europe/Zurich:20261231T190000",
+   "DTEND;TZID=Europe/Zurich:20261231T210000"
+  ]
+ },
+ "220182": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a96e44c0a42d.jfif",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 14.01.2027 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220182@rotary.ch",
+   "SUMMARY:Vier Jahre Südamerika – Herausforderungen\\, Erfahrungen und neue Perspektiven",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/220182",
+   "DTSTART;TZID=Europe/Zurich:20270114T120000",
+   "DTEND;TZID=Europe/Zurich:20270114T133000"
+  ]
+ },
+ "220184": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6a96e54aefa0b.jfif",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 01.04.2027 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220184@rotary.ch",
+   "SUMMARY:Die Zukunft der Aus- und Weiterbildung in der Schweiz",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/220184",
+   "DTSTART;TZID=Europe/Zurich:20270401T120000",
+   "DTEND;TZID=Europe/Zurich:20270401T133000"
+  ]
+ },
+ "220316": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6ae4921631138.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 17.12.2026 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220316@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Park-Hotel am Rhein",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/220316",
+   "DTSTART;TZID=Europe/Zurich:20261217T120000",
+   "DTEND;TZID=Europe/Zurich:20261217T133000"
+  ]
+ },
+ "220965": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6aaa5fef2a2f0.png",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 07.01.2027 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220965@rotary.ch",
+   "SUMMARY:Klassifikationsvortrag Markus Schmid",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/220965",
+   "DTSTART;TZID=Europe/Zurich:20270107T120000",
+   "DTEND;TZID=Europe/Zurich:20270107T133000"
+  ]
+ },
+ "221011": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/7739953776.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 26.11.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221011@rotary.ch",
+   "SUMMARY:Simona Predeanu – Provis Spitex & Kurzvorstellung unserer neuen Austauschstudentin",
+   "LOCATION:Park-Hotel am Rhein",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/221011",
+   "DTSTART;TZID=Europe/Zurich:20261126T190000",
+   "DTEND;TZID=Europe/Zurich:20261126T210000"
+  ]
+ },
+ "221701": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": "Anmeldung bis: 16.11.2026 08:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221701@rotary.ch",
+   "SUMMARY:Vortrag: Verdauung und Gesundheit",
+   "LOCATION:Gasthof Kreuz Egerkingen",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/221701",
+   "DTSTART;TZID=Europe/Zurich:20261116T120000",
+   "DTEND;TZID=Europe/Zurich:20261116T133000"
+  ]
+ },
+ "221702": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221702@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Gasthof Kreuz Egerkingen",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/221702",
+   "DTSTART;TZID=Europe/Zurich:20261130T121500",
+   "DTEND;TZID=Europe/Zurich:20261130T133000"
+  ]
+ },
+ "221703": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221703@rotary.ch",
+   "SUMMARY:Präsenzapéro (Datum beachten)",
+   "LOCATION:Restaurant Eintracht Kestenholz",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/221703",
+   "DTSTART;TZID=Europe/Zurich:20261210T180000",
+   "DTEND;TZID=Europe/Zurich:20261210T193000"
+  ]
+ },
+ "221704": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221704@rotary.ch",
+   "SUMMARY:Partneranlass: Pharmalogistik\\, Galexis AG Niederbipp",
+   "LOCATION:Galexis AG",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/221704",
+   "DTSTART;TZID=Europe/Zurich:20261125T180000",
+   "DTEND;TZID=Europe/Zurich:20261125T200000"
+  ]
+ },
+ "221705": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221705@rotary.ch",
+   "SUMMARY:Freundschaftstreffen in Wetzlar",
+   "LOCATION:Wetzlar",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/221705",
+   "DTSTART;TZID=Europe/Zurich:20261113T120000",
+   "DTEND;TZID=Europe/Zurich:20261115T120000"
+  ]
+ },
+ "221752": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1612120067.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 10.06.2027 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221752@rotary.ch",
+   "SUMMARY:2. Mitgliederversammlung",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/221752",
+   "DTSTART;TZID=Europe/Zurich:20270610T120000",
+   "DTEND;TZID=Europe/Zurich:20270610T133000"
+  ]
+ },
+ "221753": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1708490772.jpg",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 15.01.2027 06:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221753@rotary.ch",
+   "SUMMARY:Präsenzfrühstück",
+   "LOCATION:Beck Maier",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/221753",
+   "DTSTART;TZID=Europe/Zurich:20270115T063000",
+   "DTEND;TZID=Europe/Zurich:20270115T073000"
+  ]
+ },
+ "222424": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222424@rotary.ch",
+   "SUMMARY:Vortrag: Bienen und Menschen",
+   "LOCATION:Vebo Genusswerkstatt Oensingen",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/222424",
+   "DTSTART;TZID=Europe/Zurich:20261207T120000",
+   "DTEND;TZID=Europe/Zurich:20261207T133000"
+  ]
+ },
+ "222425": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222425@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Vebo Genusswerkstatt Oensingen",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/222425",
+   "DTSTART;TZID=Europe/Zurich:20261214T121500",
+   "DTEND;TZID=Europe/Zurich:20261214T133000"
+  ]
+ },
+ "222426": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222426@rotary.ch",
+   "SUMMARY:Plauderlunch",
+   "LOCATION:Vebo Genusswerkstatt Oensingen",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/222426",
+   "DTSTART;TZID=Europe/Zurich:20261221T121500",
+   "DTEND;TZID=Europe/Zurich:20261221T133000"
+  ]
+ },
+ "222427": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Balsthal",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222427@rotary.ch",
+   "SUMMARY:Partneranlass: Weihnachten",
+   "LOCATION:Bergrestaurant Roggen",
+   "URL:https://balsthal.rotary1980.ch/de/agenda/show/222427",
+   "DTSTART;TZID=Europe/Zurich:20261203T174500",
+   "DTEND;TZID=Europe/Zurich:20261203T223000"
+  ]
+ },
+ "222592": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6ae0755d583b1.jpg",
+   "organiser": "Rotary Olten",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222592@rotary.ch",
+   "SUMMARY:TANZINOLTEN Partneranlass",
+   "DESCRIPTION:TANZINOLTEN feiert 30 Jahre und lädt den Rotary Club zum Partneranlass mit exklusivem Apéro auf der Galerie der Schützi ein. Das Choreographen-Duo Katarzyna Gdaniec und Marco Cantalupo der Abendvorstellung \"Land Of Hope\" der Compagnie Linga werden uns ihre Arbeit persönlich vorstellen.  Um Anmeldu...",
+   "LOCATION:Kulturzentrum Schützenmatte",
+   "URL:https://rotary-olten.ch/de/agenda/show/222592",
+   "DTSTART;TZID=Europe/Zurich:20261111T183000",
+   "DTEND;TZID=Europe/Zurich:20261111T213000"
+  ]
+ },
+ "222706": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6ae4933d605e7.jfif",
+   "organiser": "Rotary Laufenburg-Fricktal",
+   "registration": "Anmeldung bis: 11.03.2027 00:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222706@rotary.ch",
+   "SUMMARY:Warum die Technik selten die grösste Herausforderung ist",
+   "LOCATION:Restaurant Post",
+   "URL:https://rotary-laufenburg.ch/de/agenda/show/222706",
+   "DTSTART;TZID=Europe/Zurich:20270311T120000",
+   "DTEND;TZID=Europe/Zurich:20270311T133000"
+  ]
+ },
+ "222831": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2298069620.jpg",
+   "organiser": "Rotary Olten",
+   "registration": "Anmeldung bis: 11.11.2026 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222831@rotary.ch",
+   "SUMMARY:Regio Apéro",
+   "DESCRIPTION:Regio Apéro\\nJeden 2. Mittwoch im Monat",
+   "LOCATION:Galerie - Bar",
+   "URL:https://rotary-olten.ch/de/agenda/show/222831",
+   "DTSTART;TZID=Europe/Zurich:20261111T180000",
+   "DTEND;TZID=Europe/Zurich:20261111T190000"
+  ]
+ },
+ "222832": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6506939353.jpg",
+   "organiser": "Rotary Olten",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222832@rotary.ch",
+   "SUMMARY:Regio Apéro",
+   "DESCRIPTION:Regio Apéro\\nJeden 2. Mittwoch im Monat",
+   "LOCATION:Galerie - Bar",
+   "URL:https://rotary-olten.ch/de/agenda/show/222832",
+   "DTSTART;TZID=Europe/Zurich:20261209T180000",
+   "DTEND;TZID=Europe/Zurich:20261209T190000"
+  ]
+ }
+}

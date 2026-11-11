@@ -1,1 +1,204 @@
-{}
+{
+ "201861": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract.li/media/cache/rotary_website_event_grid/69b3099c8e4b1.jpg",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-201861@rotary.ch",
+   "SUMMARY:Vortrag bei Rotary Liechtenstein (RAC input Serie)",
+   "DESCRIPTION:Vincent Menne ist Präsident des Komitees Rotaract Schweiz-Liechtenstein und seit über sieben Jahren mit Herz und Tatkraft bei Rotaract aktiv. Am 31. März erzählt er uns\\, wie er als Deutscher zum Jus-Studium nach Bern kam\\, über 140.000 Studierende in der Schweizer Politik vertrat und nun als Vizeprä...",
+   "LOCATION:Herrengasse 35",
+   "URL:https://rotaract.li/de/agenda/show/201861",
+   "DTSTART;TZID=Europe/Zurich:20260331T120000",
+   "DTEND;TZID=Europe/Zurich:20260331T140000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221602": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221602@rotary.ch",
+   "SUMMARY:Schokoladen Event",
+   "LOCATION:Hohenems",
+   "URL:https://rotaract.li/de/agenda/show/221602",
+   "DTSTART;TZID=Europe/Zurich:20261012T190000",
+   "DTEND;TZID=Europe/Zurich:20261012T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221604": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221604@rotary.ch",
+   "SUMMARY:Seltene Erden aus dem Abfall",
+   "LOCATION:tbd",
+   "URL:https://rotaract.li/de/agenda/show/221604",
+   "DTSTART;TZID=Europe/Zurich:20261020T190000",
+   "DTEND;TZID=Europe/Zurich:20261020T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221605": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221605@rotary.ch",
+   "SUMMARY:Stammtisch",
+   "LOCATION:tbd",
+   "URL:https://rotaract.li/de/agenda/show/221605",
+   "DTSTART;TZID=Europe/Zurich:20261026T190000",
+   "DTEND;TZID=Europe/Zurich:20261026T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221606": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221606@rotary.ch",
+   "SUMMARY:Autobahn Rockn Roll",
+   "LOCATION:tdb",
+   "URL:https://rotaract.li/de/agenda/show/221606",
+   "DTSTART;TZID=Europe/Zurich:20261103T190000",
+   "DTEND;TZID=Europe/Zurich:20261103T220000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221607": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221607@rotary.ch",
+   "SUMMARY:Stammtisch",
+   "LOCATION:tbd",
+   "URL:https://rotaract.li/de/agenda/show/221607",
+   "DTSTART;TZID=Europe/Zurich:20261109T190000",
+   "DTEND;TZID=Europe/Zurich:20261109T220000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221608": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract.li/media/cache/rotary_website_event_grid/6abfb38a489f6.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221608@rotary.ch",
+   "SUMMARY:Kunterbunt Feldkirch (Keramik Workshop\\, Painting)",
+   "LOCATION:Ketschelenstraße 1",
+   "URL:https://rotaract.li/de/agenda/show/221608",
+   "DTSTART;TZID=Europe/Zurich:20261127T190000",
+   "DTEND;TZID=Europe/Zurich:20261127T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221609": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221609@rotary.ch",
+   "SUMMARY:Blick hinter der Kulissen der NZZ",
+   "LOCATION:tbd",
+   "URL:https://rotaract.li/de/agenda/show/221609",
+   "DTSTART;TZID=Europe/Zurich:20261201T190000",
+   "DTEND;TZID=Europe/Zurich:20261201T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "221610": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221610@rotary.ch",
+   "SUMMARY:Halbjahresversammlung / Weihnachtsfeier",
+   "LOCATION:tbd",
+   "URL:https://rotaract.li/de/agenda/show/221610",
+   "DTSTART;TZID=Europe/Zurich:20261221T190000",
+   "DTEND;TZID=Europe/Zurich:20261221T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "222341": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract.li/media/cache/rotary_website_event_grid/6ad9d268b391b.jpg",
+   "registration": "Anmeldung bis: 13.11.2026 17:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222341@rotary.ch",
+   "SUMMARY:Besichtigung der Uhrmacher Werkstatt Huber",
+   "DESCRIPTION:Im Rahmen einer Besichtigung der Uhrmacherwerkstatt im Weissen Würfel bei Huber in Vaduz erhalten wir Einblicke in die tägliche Arbeit eines Uhrmachers. Dabei lernen wir die verschiedenen Arbeitsschritte\\, die handwerklichen Techniken sowie die Präzision kennen\\, die für die Uhrmacherei erforderlich ...",
+   "LOCATION:Städtle 34",
+   "URL:https://rotaract.li/de/agenda/show/222341",
+   "DTSTART;TZID=Europe/Zurich:20261116T170000",
+   "DTEND;TZID=Europe/Zurich:20261116T200000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ }
+}

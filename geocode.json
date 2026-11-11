@@ -85,6 +85,10 @@
   47.43473,
   9.37736
  ],
+ "AMM Künzli": [
+  47.63343,
+  8.78426
+ ],
  "Adligenswil (genauer Standort": null,
  "Adligenswil (genauer Standort, wird nach Anmeldung mitgeteilt)": null,
  "Adlisbergstrasse 36 8044 Zürich": [
@@ -165,6 +169,7 @@
   47.42326,
   9.3745
  ],
+ "Bar/Eventlokal \"Die Weinerei 1877\"": null,
  "Barbarakeller - Rothenburgerhaus": null,
  "Barfüserplatz, Steinenberg 14, 4051 Basel": [
   47.55422,
@@ -182,9 +187,21 @@
   47.37573,
   8.53994
  ],
+ "Beau-Rivage Genève": [
+  47.26168,
+  7.0945
+ ],
  "Beau-Rivage Genève, Quai du Mont-Blanc 13, 1201 Genève": [
   46.21022,
   6.15452
+ ],
+ "Beck Maier": [
+  46.94448,
+  8.45772
+ ],
+ "Bergrestaurant Roggen": [
+  47.30412,
+  7.71707
  ],
  "Berlin": [
   47.66504,
@@ -199,6 +216,7 @@
   46.94733,
   7.45109
  ],
+ "Berufsbildungsschule Winterthur BBW an der Wülflingerstrasse 17": null,
  "Besammlung - Bahnhof Luzern": [
   47.04872,
   8.31133
@@ -221,6 +239,10 @@
  "Blumenmarkt, Marktplatz 25, 9000 St.Gallen": [
   47.42583,
   9.3746
+ ],
+ "Bodega Española": [
+  46.98198,
+  8.02076
  ],
  "Bourbaki Panorama Luzern, Löwenplatz 11, 6004 Luzern": [
   47.05698,
@@ -246,6 +268,7 @@
   46.90576,
   8.2554
  ],
+ "Bundesamt für Strassen ASTRA": null,
  "Bundeshaus Bern": [
   46.95456,
   7.42068
@@ -267,6 +290,7 @@
   46.94848,
   7.54126
  ],
+ "Café Himmel - Breakfast at Heaven": null,
  "Cascina di Sorengo, Via Cremignone 4G, 6924 Sorengo": [
   46.00357,
   8.93272
@@ -309,6 +333,11 @@
   46.83236,
   9.51654
  ],
+ "Cinéma Rex et Salle del Castillo à Vevey": [
+  47.09862,
+  7.95494
+ ],
+ "Circle Convention Hall": null,
  "Claridenstrasse 2, 6003 Luzern": [
   47.04357,
   8.30616
@@ -316,6 +345,14 @@
  "Claridenstrassse 2, 6003 Luzern (im neuen Himmelrich)": [
   47.04548,
   8.30561
+ ],
+ "Congress Hotel Seepark Thun": [
+  47.09862,
+  7.95494
+ ],
+ "Cully": [
+  46.48908,
+  6.72825
  ],
  "Cupra Marittima": [
   47.0114,
@@ -342,6 +379,10 @@
  "Ecocentro di Massagno, Via Lepori 8, 6900 Massagno": [
   46.01328,
   8.93939
+ ],
+ "Ein Bummel in und um Andelfingen herum": [
+  47.09862,
+  7.95494
  ],
  "Einsiedeln": [
   47.12044,
@@ -379,10 +420,22 @@
   47.12578,
   8.31018
  ],
+ "Espace Perrier": [
+  47.19372,
+  7.23858
+ ],
  "Exact location TBA": null,
+ "FOOUND 2000": [
+  46.07196,
+  6.93527
+ ],
  "Falkenstrasse 11, 8008 Zürich": [
   47.36508,
   8.54763
+ ],
+ "Falläsch 1 Kaltbach": [
+  47.03328,
+  9.53056
  ],
  "Felsenheim Sachseln, Flüelistrasse 33": [
   46.86843,
@@ -392,10 +445,15 @@
   46.48925,
   7.25025
  ],
+ "Ferme de Pierre-à-Bot": [
+  46.67459,
+  6.69966
+ ],
  "Finsterwald": [
   46.97383,
   8.10388
  ],
+ "Fira Barcelona Gran Via, Barcelona, Spain": null,
  "Fischer Weine, Bahnhofplatz 7, 6210 Sursee": [
   47.17061,
   8.0986
@@ -424,6 +482,10 @@
   46.80337,
   7.16178
  ],
+ "Fyrabig Lounge": [
+  47.18442,
+  7.36792
+ ],
  "Färihaus Rotsee": [
   46.14031,
   7.23744
@@ -431,6 +493,18 @@
  "GOLDSCHMIED STUTZ, Schwanenplatz 4, 6004 Luzern": [
   47.05318,
   8.30845
+ ],
+ "Galerie - Bar": [
+  47.0352,
+  7.24634
+ ],
+ "Galexis AG": [
+  47.51826,
+  7.81481
+ ],
+ "Gasthof Kreuz Egerkingen": [
+  47.09862,
+  7.95494
  ],
  "Gedecktes Aussenfeld Eiszentrum Luzern": null,
  "Gemeinschaftsraum Steini, Ziegeleiweg 1, 6048 Horw": [
@@ -495,6 +569,10 @@
   46.91964,
   8.01763
  ],
+ "Herrengasse 35": [
+  47.16315,
+  7.35726
+ ],
  "Hertensteinstrasse 23, 6004 Luzern": [
   47.05421,
   8.30846
@@ -540,6 +618,10 @@
   47.07795,
   8.3245
  ],
+ "Hohenems": [
+  47.38502,
+  9.65676
+ ],
  "Holzerhurd 60, 8046 Zürich": [
   47.42335,
   8.49681
@@ -547,6 +629,34 @@
  "Horw": [
   47.01303,
   8.32617
+ ],
+ "Hotel Arte": [
+  47.08044,
+  9.24843
+ ],
+ "Hotel Astoria": [
+  47.35183,
+  8.72271
+ ],
+ "Hotel Du Parc": [
+  46.2979,
+  7.06171
+ ],
+ "Hotel Gasthof Löwen": [
+  46.24608,
+  8.02451
+ ],
+ "Hotel Grace La Margna": [
+  47.09862,
+  7.95494
+ ],
+ "Hotel Hyatt": [
+  47.11001,
+  7.8456
+ ],
+ "Hotel Kettenbrücken": [
+  47.11001,
+  7.8456
  ],
  "Hotel National, Haldenstrasse 4, 6006 Luzern": [
   47.05483,
@@ -604,6 +714,11 @@
   47.05473,
   8.30089
  ],
+ "KEIN Rotary Dinner": [
+  46.19226,
+  8.84375
+ ],
+ "KEIN Rotary Lunch": null,
  "KKL Luzern": [
   47.05043,
   8.31223
@@ -613,18 +728,38 @@
   8.31517
  ],
  "KUNI & GUNDE - Café, Bistro & Bar, Schneidergasse 2, 4051 Basel": null,
+ "Kaffeeösterei Demmel": [
+  47.12063,
+  7.63568
+ ],
  "Kanton Schwyz": [
   47.02445,
   8.65235
+ ],
+ "Kantonsschule am Burggraben St. Gallen": [
+  47.40893,
+  9.37917
  ],
  "Kapellplatz beim Fritischibrunnen, Luzern": null,
  "Kasernenstrasse 22, 4410 Liestal": [
   47.48242,
   7.73722
  ],
+ "Kathedrale St.Gallen": [
+  47.42358,
+  9.38851
+ ],
  "Kernkraftwerk Leibstadt AG, Eigen, 5325 Leibstadt": [
   47.59548,
   8.19608
+ ],
+ "Ketschelenstraße 1": [
+  46.11687,
+  9.07295
+ ],
+ "Kirchplatz": [
+  46.88282,
+  8.6421
  ],
  "Kletterpark Pilatus": [
   46.58103,
@@ -647,6 +782,14 @@
   8.30578
  ],
  "Kulturhof hinter Musegg und online": null,
+ "Kulturzentrum Schützenmatte": [
+  47.22392,
+  7.45768
+ ],
+ "Kunsthaus Zürich": [
+  47.37132,
+  8.5493
+ ],
  "Kursaal Bern, Kornhausstrasse 3, 3013 Bern": [
   46.95308,
   7.44927
@@ -672,6 +815,10 @@
   47.58428,
   7.64972
  ],
+ "Landgasthof zum Bahnhof": [
+  47.09589,
+  7.51866
+ ],
  "Langstrasse 62, 8004 Zürich": [
   47.37674,
   8.52613
@@ -688,6 +835,10 @@
  "Lido di Lugano, Via Lido, 6900 Lugano": [
   46.0051,
   8.96186
+ ],
+ "Lieu de livraison à choisir": [
+  46.20381,
+  6.88445
  ],
  "Limmatpromenade, Baden": [
   47.47985,
@@ -740,6 +891,10 @@
   47.05698,
   8.31093
  ],
+ "L’ESPACE": [
+  46.30991,
+  7.22398
+ ],
  "L’ESPACE, 1 Rue du 23-Août, 1205 Genève, Suisse": [
   46.19823,
   6.13394
@@ -761,6 +916,10 @@
  "Manabar": [
   47.08941,
   7.02264
+ ],
+ "Marché de Fribourg - Rue de Romont": [
+  47.09862,
+  7.95494
  ],
  "Martel am Bahnhof St.Gallen; Poststrasse 11, CH-9001 St.Gallen": [
   47.42464,
@@ -815,6 +974,10 @@
   47.35915,
   8.53645
  ],
+ "Mühle Burgholz": [
+  46.94823,
+  7.27155
+ ],
  "Mühlefluhstrasse 1, 6354 Vitznau": [
   47.00954,
   8.48957
@@ -843,6 +1006,10 @@
  "Neuweg 12, 8125 Zollikerberg": [
   47.34764,
   8.6004
+ ],
+ "Neuweg 16": [
+  46.31063,
+  7.98748
  ],
  "Noch Offen": [
   46.86141,
@@ -883,8 +1050,21 @@
   46.00121,
   8.94625
  ],
+ "Park-Hotel am Rhein": [
+  47.09862,
+  7.95494
+ ],
+ "Parkhotel Wallberg": [
+  47.2663,
+  8.01644
+ ],
  "Parkplatz Tannwald, Leymen": null,
+ "Pavillon des Mangettes": [
+  46.74116,
+  6.89501
+ ],
  "Piazza Riforma + FLAMEL Restaurant & Mixology Bar": null,
+ "Pier 7 / Bellevue (Details folgen)": null,
  "Pilatusstrasse 1, 6003 Luzern": [
   47.04983,
   8.30902
@@ -942,15 +1122,36 @@
   47.09862,
   7.95494
  ],
+ "Restaurant Eden Rheinfelden": [
+  47.51475,
+  7.98517
+ ],
+ "Restaurant Eintracht Kestenholz": null,
+ "Restaurant Feldschlösschen": [
+  47.54644,
+  7.78446
+ ],
  "Restaurant Jam Jam, Hirschengraben 45/47, 6003 Luzern": null,
  "Restaurant Pacifico Luzern, Pilatusstrasse 15, 6002 Luzern ": null,
+ "Restaurant Post": [
+  47.15548,
+  8.72178
+ ],
  "Restaurant Rathaus Brauerei": [
   47.01044,
   7.03198
  ],
+ "Restaurant Schifflände": [
+  47.6086,
+  8.26348
+ ],
  "Restaurant Schützenhaus Basel": [
   47.15894,
   7.27187
+ ],
+ "Restaurant Schüür": [
+  46.83236,
+  9.51654
  ],
  "Restaurant Stern, Burgerstrasse 35 CH-6003 Luzern": [
   47.04933,
@@ -1042,6 +1243,10 @@
   47.09862,
   7.95494
  ],
+ "Schloss Andelfingen": [
+  47.59605,
+  8.68014
+ ],
  "Schlössli Collab Pop-Up, Sternmattstrasse 3, Luzern": null,
  "Schmidgasse 6, 8001 Zürich": [
   47.37471,
@@ -1087,11 +1292,19 @@
   46.74264,
   8.85363
  ],
+ "Sera communiqué": [
+  47.38985,
+  7.54864
+ ],
  "Shine-Bar, Sempacherstrasse 16, 6003 Luzern": [
   47.04789,
   8.30801
  ],
  "Siebe Dupf Kellerei AG Kasernenstrasse 25 4410 Liestal": null,
+ "Siehe Programm": [
+  46.839,
+  7.8003
+ ],
  "Sihlfeldstrasse 49, 8003 Zürich": [
   47.37471,
   8.51673
@@ -1107,6 +1320,15 @@
  "Solothurn": [
   47.20806,
   7.5298
+ ],
+ "Sozialwerk Pfarrer Sieber's Pfuusbus - Bernd has details if necessary": null,
+ "Spain": [
+  46.74001,
+  9.53514
+ ],
+ "Spielplatz Unterbach": [
+  46.26085,
+  7.77985
  ],
  "Sprenger AG Geigenbau, Neugasse 53, 9000 St.Gallen": [
   47.42411,
@@ -1136,6 +1358,11 @@
   47.55315,
   7.5907
  ],
+ "Stadttheater Sursee": [
+  47.1782,
+  8.10303
+ ],
+ "Starts at the ZRH Innovation Hub (Adress: The Circle 46)": null,
  "Station Reuti, Hasliberg": [
   46.73148,
   8.21218
@@ -1151,6 +1378,14 @@
  "Straussenfarm Sempachersee, Stockmatt 1A, 6204 Sempach": [
   47.12983,
   8.21287
+ ],
+ "Stump's Alpenrose": [
+  46.80027,
+  9.90019
+ ],
+ "Städtle 34": [
+  47.13925,
+  9.5225
  ],
  "Stärnemärit Kleine Schanze Bern": [
   46.94562,
@@ -1172,6 +1407,7 @@
   47.00598,
   8.33766
  ],
+ "Talk to Bernd - but we all know where to find the Pfuusbus and Sozialwerk Pfarrer Sieber": null,
  "Talstation Stöckalp; Melchsee-Frutt": [
   46.7889,
   8.27408
@@ -1235,6 +1471,10 @@
   47.42025,
   9.37028
  ],
+ "Uster Märt": [
+  47.35183,
+  8.72271
+ ],
  "Utoquai 50, 8008 Zürich": [
   47.36178,
   8.54716
@@ -1248,6 +1488,7 @@
   7.95494
  ],
  "Van der Merwe Center (Allschwil), Gewerbestrasse 30, 4123 Allschwil": null,
+ "Vebo Genusswerkstatt Oensingen": null,
  "Verkehrshaus der Schweiz, Haldenstrasse 44, 6006 Luzern": null,
  "Via Ceresio 15, Capannone di Pregassona": [
   46.0177,
@@ -1278,6 +1519,7 @@
   47.11353,
   8.37602
  ],
+ "Waldhütte der Holzkorporation Maur": null,
  "Wallis": [
   47.33399,
   8.01826
@@ -1288,6 +1530,7 @@
   47.3689,
   8.54559
  ],
+ "Weitere Informationen folgen": null,
  "Werftestrasse 5, 6005 Luzern": [
   47.04784,
   8.31528
@@ -1295,6 +1538,10 @@
  "Werftsteg, 6005 Luzern": [
   47.04539,
   8.30306
+ ],
+ "Wetzlar": [
+  47.33649,
+  8.47152
  ],
  "Wildpark Peter & Paul, Wildpark-Haus an der Kirchlistrasse 98, 9010 St.Gallen": null,
  "Winkelriedstrasse 30": [
@@ -1346,10 +1593,15 @@
   47.0238,
   7.48347
  ],
+ "Zunfthaus zur Schmiden": [
+  47.09862,
+  7.95494
+ ],
  "Zunfthaus zur Waag": [
   47.57809,
   8.29505
  ],
+ "Zunfthaus zur Zimmerleuten": null,
  "Zurich": [
   47.37721,
   8.52731
@@ -1362,6 +1614,7 @@
   47.06816,
   8.28146
  ],
+ "auswärts gemäss Programm": null,
  "bei Kathi Zuhause, Brunnhalde 2": null,
  "folgt": [
   47.34102,
@@ -1386,6 +1639,10 @@
  "tbd": [
   46.94818,
   9.52404
+ ],
+ "tdb": [
+  47.34963,
+  7.65176
  ],
  "wird nach Anmeldung mitgeteilt)": null,
  "ØYA Bar Kafé Klub, Schwertgasse 27, 9000 St. Gallen, Schweiz": null

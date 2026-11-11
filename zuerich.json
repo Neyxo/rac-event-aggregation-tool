@@ -566,6 +566,27 @@
    "CATEGORIES:Rotaract"
   ]
  },
+ "213355": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract-zuerich.ch/media/cache/rotary_website_event_grid/6a0b48ee56fa0.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213355@rotary.ch",
+   "SUMMARY:Summer Vibes by the Lake",
+   "DESCRIPTION:☀️ Sommer\\, See & gute Gesellschaft! 🚤🧺 Freu dich auf einen entspannten Sommerabend am Zürichsee mit Pedalo fahren\\, feinem Picknick und bester Stimmung – vorausgesetzt\\, das Wetter spielt mit. 🌅 Falls uns die Sonne im Stich lässt\\, erwartet dich ein gemütliches Alternativprogramm mit Billard und D...",
+   "LOCATION:Pier 7 / Bellevue (Details folgen)",
+   "URL:https://rotaract-zuerich.ch/de/agenda/show/213355",
+   "DTSTART;TZID=Europe/Zurich:20260703T183000",
+   "DTEND;TZID=Europe/Zurich:20260703T223000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
  "213373": {
   "detail": {
    "description": "Join us for this week’s Rotaract Zürich informal! We’ll be meeting at Raygrodski for relaxed drinks, good conversation, and a chance to catch up with fellow members. If you’d like to join, please sign up here so we can plan accordingly. Looking forward to seeing you there!\n\nThis is a public event where photos are taken, which may be published. If you prefer not to appear, please inform the photographer.",

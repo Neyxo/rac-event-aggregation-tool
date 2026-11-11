@@ -1,0 +1,603 @@
+{
+ "212918": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/69f72c37a7af6.png",
+   "organiser": "Rotary Vevey-Montreux-Riviera",
+   "registration": "Anmeldung bis: 05.02.2027 18:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-212918@rotary.ch",
+   "SUMMARY:Action \"Image et Partage\"",
+   "DESCRIPTION:Le RC Vevey-Montreux-Riviera est l'initiateur du projet \"Image et Partage\" en collaboration avec le RC Montreux-Vevey. Cette opération se fait pour et avec l'association Partage Riviera dont la mission est d'apporter une aide alimentaire aux personnes et aux familles dans le besoin sur la Riviera\\, ...",
+   "LOCATION:Cinéma Rex et Salle del Castillo à Vevey",
+   "URL:https://vevey-montreux-riviera.rotary1990.ch/de/agenda/show/212918",
+   "DTSTART;TZID=Europe/Zurich:20270206T100000",
+   "DTEND;TZID=Europe/Zurich:20270206T140000"
+  ]
+ },
+ "213942": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/2539148680.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 29.11.2026 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213942@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213942",
+   "DTSTART;TZID=Europe/Zurich:20261130T120000",
+   "DTEND;TZID=Europe/Zurich:20261130T133000"
+  ]
+ },
+ "213944": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/7513726204.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 13.12.2026 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213944@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213944",
+   "DTSTART;TZID=Europe/Zurich:20261214T120000",
+   "DTEND;TZID=Europe/Zurich:20261214T133000"
+  ]
+ },
+ "213945": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/4611572029.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 03.01.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213945@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213945",
+   "DTSTART;TZID=Europe/Zurich:20270104T120000",
+   "DTEND;TZID=Europe/Zurich:20270104T133000"
+  ]
+ },
+ "213946": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/9225552792.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 31.01.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213946@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213946",
+   "DTSTART;TZID=Europe/Zurich:20270201T120000",
+   "DTEND;TZID=Europe/Zurich:20270201T133000"
+  ]
+ },
+ "213947": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/7156239190.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 14.02.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213947@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213947",
+   "DTSTART;TZID=Europe/Zurich:20270215T120000",
+   "DTEND;TZID=Europe/Zurich:20270215T130300"
+  ]
+ },
+ "213948": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/7717495702.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 28.02.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213948@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213948",
+   "DTSTART;TZID=Europe/Zurich:20270301T120000",
+   "DTEND;TZID=Europe/Zurich:20270301T133000"
+  ]
+ },
+ "213949": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/8334935000.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 14.03.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213949@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213949",
+   "DTSTART;TZID=Europe/Zurich:20270315T120000",
+   "DTEND;TZID=Europe/Zurich:20270315T133000"
+  ]
+ },
+ "213950": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/9888473609.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 11.04.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213950@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213950",
+   "DTSTART;TZID=Europe/Zurich:20270412T120000",
+   "DTEND;TZID=Europe/Zurich:20270412T133000"
+  ]
+ },
+ "213951": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/9489868566.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 25.04.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213951@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213951",
+   "DTSTART;TZID=Europe/Zurich:20270426T120000",
+   "DTEND;TZID=Europe/Zurich:20270426T133000"
+  ]
+ },
+ "213952": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6231270272.jpg",
+   "organiser": "Rotary Thun",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213952@rotary.ch",
+   "SUMMARY:KEIN in between-Lunch",
+   "DESCRIPTION:Das Hotel Seepark ist aufgrund einer geschlossenen Gesellschaft den ganzen Tag geschlossen!",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213952",
+   "DTSTART;TZID=Europe/Zurich:20270510T120000",
+   "DTEND;TZID=Europe/Zurich:20270510T133000"
+  ]
+ },
+ "213953": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/9993759757.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 30.05.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213953@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213953",
+   "DTSTART;TZID=Europe/Zurich:20270531T120000",
+   "DTEND;TZID=Europe/Zurich:20270531T133000"
+  ]
+ },
+ "213954": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/8150693151.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 13.06.2027 12:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-213954@rotary.ch",
+   "SUMMARY:in between-Lunch",
+   "DESCRIPTION:Info zu den in between-Lunches: findet alle 14 Tage um 12:00 Uhr statt\\, ohne Apéro\\, Referate und Clubinfos",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/213954",
+   "DTSTART;TZID=Europe/Zurich:20270614T120000",
+   "DTEND;TZID=Europe/Zurich:20270614T133000"
+  ]
+ },
+ "216085": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6a38efaaca577.png",
+   "organiser": "Rotary Golfers IGFR",
+   "registration": "Anmeldung bis: 03.03.2027 10:15"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216085@rotary.ch",
+   "SUMMARY:2. IGFR-REISE – Belek",
+   "DESCRIPTION:Liebe Freundinnen und Freunde von IGFR Switzerland Nach der erfolgreichen ersten Reise nach Marrakesch freue ich mich\\, Ihnen die 2. IGFR Switzerland Golfreise nach Belek in der Türkei vom 3. bis 10. März 2027 anzukündigen. Diese Reise bietet uns die Gelegenheit\\, die Golfsaison unter der Sonne der t...",
+   "LOCATION:Sera communiqué",
+   "URL:https://golfeurs-igfr.polaris.rotary.ch/de/agenda/show/216085",
+   "DTSTART;TZID=Europe/Zurich:20270303T101500",
+   "DTEND;TZID=Europe/Zurich:20270310T101500"
+  ]
+ },
+ "216844": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/1491675794.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 15.11.2026 11:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216844@rotary.ch",
+   "SUMMARY:Lunch mit Apéro - Vortrag Salome Meier\\, Rettungssanitäterin",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/216844",
+   "DTSTART;TZID=Europe/Zurich:20261116T113000",
+   "DTEND;TZID=Europe/Zurich:20261116T133000"
+  ]
+ },
+ "216845": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6adcefe93e91c.",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 17.11.2026 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216845@rotary.ch",
+   "SUMMARY:CHLOUSEABEND (Abendanlass)",
+   "LOCATION:Restaurant Schüür",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/216845",
+   "DTSTART;TZID=Europe/Zurich:20261127T183000",
+   "DTEND;TZID=Europe/Zurich:20261127T235500"
+  ]
+ },
+ "216846": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/3170028603.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 06.12.2026 11:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216846@rotary.ch",
+   "SUMMARY:Lunch mit Apéro - Präsentation Gewinner Rotary Preis - Clubaufnahme(n)",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/216846",
+   "DTSTART;TZID=Europe/Zurich:20261207T113000",
+   "DTEND;TZID=Europe/Zurich:20261207T133000"
+  ]
+ },
+ "216848": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/7427749729.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 20.12.2026 11:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-216848@rotary.ch",
+   "SUMMARY:Lunch mit Apéro - Lesung\\, Stefan Wertmüller",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/216848",
+   "DTSTART;TZID=Europe/Zurich:20261221T113000",
+   "DTEND;TZID=Europe/Zurich:20261221T133000"
+  ]
+ },
+ "220297": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6a9eb2bdcb599.png",
+   "organiser": "Rotary Lavaux",
+   "registration": "Anmeldung bis: 30.11.2026 23:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220297@rotary.ch",
+   "SUMMARY:RC LAVAUX - ACTION MINE-EX 2026",
+   "DESCRIPTION:Dans le cadre de l'action \"mine-ex 2026\"\\, Antoine Bovard à Treytorrens\\,  Domaine Chaudet à Rivaz\\,  Jean-François Chevalley à Treytorrens\\,  Les Frères Dubois à Cully et  Pierre Henchoz à Riex s’assemblent pour proposer un carton découvertes de 6 grands vins et un choix de pots vaudois.",
+   "LOCATION:Cully",
+   "URL:https://lavaux.rotary1990.ch/de/agenda/show/220297",
+   "DTSTART;TZID=Europe/Zurich:20260903T121500",
+   "DTEND;TZID=Europe/Zurich:20261130T235500"
+  ]
+ },
+ "221595": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/5929669547.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 10.01.2027 11:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221595@rotary.ch",
+   "SUMMARY:Lunch mit Apéro - Vortrag Tom Christen\\, Loeb Thun",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/221595",
+   "DTSTART;TZID=Europe/Zurich:20270111T113000",
+   "DTEND;TZID=Europe/Zurich:20270111T133000"
+  ]
+ },
+ "221596": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/9757546109.jpg",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 24.01.2027 11:30"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221596@rotary.ch",
+   "SUMMARY:Lunch mit Apéro - Vortrag Reserve/Plauderlunch",
+   "LOCATION:Congress Hotel Seepark Thun",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/221596",
+   "DTSTART;TZID=Europe/Zurich:20270125T113000",
+   "DTEND;TZID=Europe/Zurich:20270125T133000"
+  ]
+ },
+ "221597": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 11.01.2027 17:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221597@rotary.ch",
+   "SUMMARY:Glas und Metall erleben bei AMM Künzli Thun",
+   "DESCRIPTION:Wir freuen uns den Glas- und Metallbauer AMM Künzli näher kennen zu lernen.  Thema: Glas und Metall erleben Eintreffen ab 17:00 Uhr. Abgerundet wird der Anlass mit einem Apéro riche.",
+   "LOCATION:AMM Künzli",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/221597",
+   "DTSTART;TZID=Europe/Zurich:20270118T170000",
+   "DTEND;TZID=Europe/Zurich:20270118T200000"
+  ]
+ },
+ "221598": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "organiser": "Rotary Thun",
+   "registration": "Anmeldung bis: 02.02.2027 17:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221598@rotary.ch",
+   "SUMMARY:Besuch Mühle Burgholz",
+   "LOCATION:Mühle Burgholz",
+   "URL:https://thun.rotary1990.ch/de/agenda/show/221598",
+   "DTSTART;TZID=Europe/Zurich:20270209T170000",
+   "DTEND;TZID=Europe/Zurich:20270209T200000"
+  ]
+ },
+ "221714": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6ac55422a0d15.png",
+   "organiser": "Rotary Neuchâtel",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221714@rotary.ch",
+   "SUMMARY:Soirée de Gala du 100e anniversaire du RC Neuchâtel",
+   "DESCRIPTION:Soirée de Gala du 100e anniversaireDîner-spectacle et soirée caritative pour célébrer les 100 ans du Rotary Club de NeuchâtelVendredi 15 janvier 2027\\, 19h00 · Espace Perrier\\, Marin-Épagnier Chères Amies\\, Chers Amis\\, En 2027\\, le Rotary Club de Neuchâtel\\, l’un des dix plus anciens clubs de Suisse\\, aur...",
+   "LOCATION:Espace Perrier",
+   "URL:https://neuchatel.rotary1990.ch/de/agenda/show/221714",
+   "DTSTART;TZID=Europe/Zurich:20270115T190000",
+   "DTEND;TZID=Europe/Zurich:20270115T235900"
+  ]
+ },
+ "221944": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6acba382e1751.jpg",
+   "organiser": "Rotary Neuchâtel",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-221944@rotary.ch",
+   "SUMMARY:Soirée Sapin Rotarien - jeudi 10 décembre 2026",
+   "DESCRIPTION:Chère Rotarienne\\, Cher Rotarien\\,\\nMadame\\, Monsieur\\, Le comité d’organisation du « Sapin Rotarien » du Rotary\\nClub de Neuchâtel a le plaisir de vous convier à une « Soirée\\nFondue » le Jeudi\\n10 décembre 2026 - Ferme de Pierre-à-Bot\\, Neuchâtel\\, à 19h00 Retrouvons-nous dans un espace convivial autour d’...",
+   "LOCATION:Ferme de Pierre-à-Bot",
+   "URL:https://neuchatel.rotary1990.ch/de/agenda/show/221944",
+   "DTSTART;TZID=Europe/Zurich:20261210T190000",
+   "DTEND;TZID=Europe/Zurich:20261210T235500"
+  ]
+ },
+ "222250": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6ad62411678c1.jpg",
+   "organiser": "Rotary Chablais.ch",
+   "registration": "Anmeldung bis: 29.08.2027 08:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222250@rotary.ch",
+   "SUMMARY:\"Canard trophy\" 2027 sur le canal Bras-Neuf",
+   "DESCRIPTION:Le 22 août\\, faites la course pour le sourire des enfants hospitalisés Chaque année\\, des centaines d'enfants traversent l'épreuve de l'hospitalisation dans notre région. Heureusement\\, au cœur de l'Hôpital Riviera-Chablais\\, l'espace d'animation Le Sparadrap leur offre une bulle d'oxygène : un coin ...",
+   "LOCATION:Pavillon des Mangettes",
+   "URL:https://chablais.rotary1990.ch/de/agenda/show/222250",
+   "DTSTART;TZID=Europe/Zurich:20270829T080000",
+   "DTEND;TZID=Europe/Zurich:20270829T150000"
+  ]
+ },
+ "222720": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6ae4c1a46829e.png",
+   "organiser": "Rotary Fribourg-Sarine",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222720@rotary.ch",
+   "SUMMARY:Action en faveur de Diabète Fribourg - 50 ans !",
+   "LOCATION:Marché de Fribourg - Rue de Romont",
+   "URL:https://fribourg-sarine.rotary1990.ch/de/agenda/show/222720",
+   "DTSTART;TZID=Europe/Zurich:20261118T080000",
+   "DTEND;TZID=Europe/Zurich:20261118T123000"
+  ]
+ },
+ "222864": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6ae8a39dbda69.png",
+   "organiser": "Rotary Montreux-Vevey",
+   "registration": "Anmeldung bis: 06.12.2026 23:59"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222864@rotary.ch",
+   "SUMMARY:🎁 ACTION DE NOËL 💝 \"Tuorta da Nusch\" PolioPlus | Commande",
+   "DESCRIPTION:La Tuorta da Nusch est de retour !  Une tourte. Un geste. Des milliers d’enfants protégés. L'an dernier\\, vous avez répondu présents — et le résultat a été à la hauteur de votre générosité. Cette année\\, on remet ça\\, avec la même conviction et la même gourmandise.en faveur de End Polio Now\\, le program...",
+   "LOCATION:Lieu de livraison à choisir",
+   "URL:https://montreux-vevey.rotary1990.ch/de/agenda/show/222864",
+   "DTSTART;TZID=Europe/Zurich:20261105T000000",
+   "DTEND;TZID=Europe/Zurich:20261206T235900"
+  ]
+ },
+ "222952": {
+  "detail": {
+   "description": "",
+   "image": "https://rotary1990.ch/media/cache/rotary_website_event_grid/6aee0af006822.jpg",
+   "organiser": "Rotary Yverdon-les-Bains",
+   "registration": "Anmeldung bis: 10.12.2026 22:55"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222952@rotary.ch",
+   "SUMMARY:Info / Commande de Saumon 2026",
+   "DESCRIPTION:Commandez votre saumon directement dans Polaris. C'est encore devenu plus simple !  Commandes ouvertes jusqu'à 10. décembre 2025 Le lieu exact et la date de la collecte seront communiqués ultérieurement.",
+   "LOCATION:-",
+   "URL:https://yverdon-les-bains.rotary1990.ch/de/agenda/show/222952",
+   "DTSTART;TZID=Europe/Zurich:20261105T120000",
+   "DTEND;TZID=Europe/Zurich:20261210T120000"
+  ]
+ }
+}

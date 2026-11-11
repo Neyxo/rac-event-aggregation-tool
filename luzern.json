@@ -6572,6 +6572,48 @@
    "DTEND;TZID=Europe/Zurich:20260912T193000"
   ]
  },
+ "218597": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_event_grid/6a69cd9114c70.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218597@rotary.ch",
+   "SUMMARY:Elmer citro Quellenweg",
+   "DESCRIPTION:☆ Samstag\\, 26. September 2026\\nElmer citro Quellenweg\\nTreffpunkt 10 Uhr\\, Spielplatz Unterbach 8767 Elm.\\n- Fahrgemeinschaften bilden bzw. bei der Anmeldung angeben ob jemand noch Leute mitnehmen kann. - Anmelden bis 20. Sept.\\n\\n☆ Auf den Spuren des Wassers können auf dieser 1-1.5 h Rundwanderung al...",
+   "LOCATION:Spielplatz Unterbach",
+   "URL:https://rotaract-luzern.ch/de/agenda/show/218597",
+   "DTSTART;TZID=Europe/Zurich:20260926T100000",
+   "DTEND;TZID=Europe/Zurich:20260926T140000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
+ "218599": {
+  "detail": {
+   "description": "",
+   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_event_grid/6a69cf322d2a3.png",
+   "registration": "Anmeldung bis: 19.02.2027 13:00"
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-218599@rotary.ch",
+   "SUMMARY:Skitag auf der Melchsee-Frutt",
+   "DESCRIPTION:Lust auf einen Tag im Schnee? Wir verbringen gemeinsam einen Skitag im Skigebiet Melchsee-Frutt. Die Anreise erfolgt individuell und ist auch mit dem ÖV gut machbar.Treffpunkt ist um 08:15 Uhr bei der Talstation Stöckalp. Skiticket\\, Ausrüstung\\, Anreise und Mittagessen (Picknick) organisiert und bez...",
+   "LOCATION:Talstation Stöckalp\\; Melchsee-Frutt",
+   "URL:https://rotaract-luzern.ch/de/agenda/show/218599",
+   "DTSTART;TZID=Europe/Zurich:20270220T080000",
+   "DTEND;TZID=Europe/Zurich:20270220T170000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
  "219875": {
   "detail": {
    "description": "Wir werfen einen Blick in das Holzingenieur-Büro von Pirmin Jung.\n\nEs ist eines der weltweit führenden Holzingenieurbüros und mittlerweile an neun Standorten in der Schweiz und Deutschland tätig.\n\nWir dürfen einen spannenden Vortrag von Pirmin Jung über sein Unternehmen sowie das Bürogebäude „Haus des Holzes” geniessen und anschliessend an einer Führung durch die Räumlichkeiten teilnehmen.\n\nAnschliessend gehen wir gemeinsam in der Stadt Sursee etwas trinken oder essen.\n\nTrefpunkt 18:00 vor dem Eingang des Haus des Holzes in Sursee, gut erreichbar mit dem ÖV.\n\nAnmeldeschluss Montag 12. Oktober.\n\nWir freuen uns über viele Teilnehmer und danken Cédric für die Organisation des Events.",

@@ -363,16 +363,16 @@
    "registration": "Registration until: Friday, November 27, 2026 at 11:00 AM\n\nMax. number of participants: 20"
   },
   "first_seen": "20261107T103915Z",
-  "modified": "20261107T174645Z",
-  "sequence": 1,
+  "modified": "20261111T095123Z",
+  "sequence": 2,
   "status": "active",
   "vevent": [
    "UID:polaris-222797@rotary.ch",
    "SUMMARY:Essen für Alle Volunteering 28.11",
    "DESCRIPTION:Website: https://www.essenfueralle.org/",
    "URL:https://zurich-international.rotaract.ch/en/agenda/show/222797",
-   "DTSTART;TZID=Europe/Zurich:20261107T103000",
-   "DTEND;TZID=Europe/Zurich:20261107T140000",
+   "DTSTART;TZID=Europe/Zurich:20261128T103000",
+   "DTEND;TZID=Europe/Zurich:20261128T143000",
    "LOCATION:Holzerhurd 60\\, 8046 Zürich",
    "CATEGORIES:Rotaract"
   ]

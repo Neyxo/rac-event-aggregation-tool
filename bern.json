@@ -20,6 +20,27 @@
    "CATEGORIES:Rotaract"
   ]
  },
+ "202042": {
+  "detail": {
+   "description": "",
+   "image": "https://bern.rotaract.ch/media/cache/rotary_website_event_grid/6967f19a116ed.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-202042@rotary.ch",
+   "SUMMARY:Tagesausflug Zürich - Kultur und Technik",
+   "DESCRIPTION:Kultur und Technik erleben - hautnah und exklusiv",
+   "LOCATION:Siehe Programm",
+   "URL:https://bern.rotaract.ch/de/agenda/show/202042",
+   "DTSTART;TZID=Europe/Zurich:20260221T090000",
+   "DTEND;TZID=Europe/Zurich:20260221T170000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
  "202043": {
   "detail": {
    "description": "Interdistrict Conference - IDC with Presidents Meeting (PM) 2026\n\n.\n\nTHE meeting for Rotaractors from all over Switzerland/Liechtenstein. 🤩\n\nOptional dinner in the evening.\n\nPlease log in and register here:\nhttps://bern.rotaract.ch/de/agenda/show/207967",
@@ -60,6 +81,27 @@
    "DTEND;TZID=Europe/Zurich:20260115T200000",
    "LOCATION:Universität Bern\\, Raum A-124 in der UniS",
    "CATEGORIES:Rotaract"
+  ]
+ },
+ "202816": {
+  "detail": {
+   "description": "",
+   "image": "https://bern.rotaract.ch/media/cache/rotary_website_event_grid/68bc5efdb5aba.jpg",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-202816@rotary.ch",
+   "SUMMARY:Besuch des Bundesamts für Strassen ASTRA",
+   "DESCRIPTION:Ort:\\nBundesamt für Strassen ASTRA\\, Pulverstr. 13\\, Ittigen –\\nSitzungszimmer 008 (EG)",
+   "LOCATION:Bundesamt für Strassen ASTRA",
+   "URL:https://bern.rotaract.ch/de/agenda/show/202816",
+   "DTSTART;TZID=Europe/Zurich:20260324T180000",
+   "DTEND;TZID=Europe/Zurich:20260324T193000",
+   "X-MEMBERS-ONLY:TRUE"
   ]
  },
  "204136": {

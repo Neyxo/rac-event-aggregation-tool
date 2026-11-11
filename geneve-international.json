@@ -20,6 +20,26 @@
    "CATEGORIES:Rotaract"
   ]
  },
+ "210486": {
+  "detail": {
+   "description": "",
+   "image": "https://geneve-international.rotaract.ch/media/cache/rotary_website_event_grid/69a08ba16b3c0.png",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-210486@rotary.ch",
+   "SUMMARY:Meeting conference \"Navigating global uncertainty for a better future !\"",
+   "LOCATION:L’ESPACE",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/210486",
+   "DTSTART;TZID=Europe/Zurich:20260304T190000",
+   "DTEND;TZID=Europe/Zurich:20260304T210000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
  "210907": {
   "detail": {
    "description": "",
@@ -125,6 +145,27 @@
    "CATEGORIES:Rotaract"
   ]
  },
+ "220491": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-220491@rotary.ch",
+   "SUMMARY:Rentrée Meeting",
+   "DESCRIPTION:Join us for our kick-off meeting of the 2026/2027 Rotaract year!\\n\\nWe’ll present the upcoming activities and projects\\, share ideas\\, and discuss what we have planned for the year ahead.",
+   "LOCATION:FOOUND 2000",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/220491",
+   "DTSTART;TZID=Europe/Zurich:20260916T190000",
+   "DTEND;TZID=Europe/Zurich:20260916T200000",
+   "X-MEMBERS-ONLY:TRUE"
+  ]
+ },
  "221457": {
   "detail": {
    "description": "",
@@ -228,6 +269,27 @@
    "DTEND;TZID=Europe/Zurich:20261125T210000",
    "LOCATION:Beau-Rivage Genève\\, Quai du Mont-Blanc 13\\, 1201 Genève",
    "CATEGORIES:Rotaract"
+  ]
+ },
+ "222672": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-222672@rotary.ch",
+   "SUMMARY:Governor Visit",
+   "DESCRIPTION:A special meeting with the\\n\\nGovernor of District1990\\, René Loretan\\, followed by a friendly gathering with our members to celebrate the end of the year and wish everyone happy holidays!",
+   "LOCATION:Beau-Rivage Genève",
+   "URL:https://geneve-international.rotaract.ch/fr/agenda/show/222672",
+   "DTSTART;TZID=Europe/Zurich:20261216T180000",
+   "DTEND;TZID=Europe/Zurich:20261216T200000",
+   "X-MEMBERS-ONLY:TRUE"
   ]
  },
  "222674": {

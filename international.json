@@ -1,0 +1,93 @@
+{
+ "eu2067": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:rotaract-europe-2067@rotaracteurope.eu",
+   "SUMMARY:REM Cluj Napoca – REMSYLVANIA",
+   "URL:https://rotaracteurope.eu/event/rem-cluj-napoca-remsylvania/",
+   "DTSTART;VALUE=DATE:20270128",
+   "DTEND;VALUE=DATE:20270201"
+  ]
+ },
+ "eu2069": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:rotaract-europe-2069@rotaracteurope.eu",
+   "SUMMARY:Pre-REM Satu Mare",
+   "URL:https://rotaracteurope.eu/event/pre-rem-satu-mare/",
+   "DTSTART;VALUE=DATE:20270126",
+   "DTEND;VALUE=DATE:20270129"
+  ]
+ },
+ "eu2071": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:rotaract-europe-2071@rotaracteurope.eu",
+   "SUMMARY:Post-REM Sibiu",
+   "URL:https://rotaracteurope.eu/event/post-rem-sibiu/",
+   "DTSTART;VALUE=DATE:20270131",
+   "DTEND;VALUE=DATE:20270203"
+  ]
+ },
+ "eu2074": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:rotaract-europe-2074@rotaracteurope.eu",
+   "SUMMARY:EUCO Napoli",
+   "URL:https://rotaracteurope.eu/event/euco-napoli/",
+   "DTSTART;VALUE=DATE:20270414",
+   "DTEND;VALUE=DATE:20270419"
+  ]
+ },
+ "ri-convention-2027": {
+  "detail": {
+   "description": "",
+   "image": "",
+   "registration": ""
+  },
+  "first_seen": "20261111T095123Z",
+  "modified": "20261111T095123Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:ri-convention-2027@rac-event-aggregation-tool",
+   "SUMMARY:Rotary International Convention 2027",
+   "LOCATION:Fira Barcelona Gran Via\\, Barcelona\\, Spain",
+   "URL:https://convention.rotary.org/en-us/about/faqs",
+   "DTSTART;VALUE=DATE:20270626",
+   "DTEND;VALUE=DATE:20270701"
+  ]
+ }
+}
