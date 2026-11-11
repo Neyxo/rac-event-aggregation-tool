@@ -85,6 +85,7 @@ const en = {
   inst_title: "Install on your phone",
   inst_text: "Works like an app: an icon on your home screen, opens instantly, and shows the last events you saw even when you're offline. Nothing to download from an app store.",
   inst_btn: "Install app",
+  inst_chrome: "Open in Chrome",
   inst_done: "✓ You're using the installed app.",
   ios: "iPhone / iPad",
   android: "Android",

@@ -4,7 +4,7 @@ import { t, tx } from "../i18n";
 import { setRotary, setSettings, withAlsoToggled, withHome } from "../lib/data";
 import { anyDevFlag } from "../lib/dev";
 import { guessOS, type OS } from "../lib/geo";
-import { install, isInstalled } from "../lib/install";
+import { chromeUrl, install, isInstalled } from "../lib/install";
 import { href } from "../lib/route";
 import { setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
@@ -27,14 +27,17 @@ function Cur({ ids }: { ids: string[] }) {
   return <div className="cur">{ids.map(c => <ClubLabel key={c} id={c} />)}</div>;
 }
 
-/** installed: a note; Chrome's prompt available: one button; otherwise the steps per system, the reader's own first */
+/** installed: a note; Chrome's prompt available: one button; otherwise the steps per system, the reader's own first
+ *  (on Samsung Internet under a link that opens the app in Chrome) */
 function Install() {
   const prompt = useInstallPrompt();
   const [os, setOS] = useState<OS>(guessOS);
   if (isInstalled()) return <div id="installBody"><p className="meta">{t("inst_done")}</p></div>;
   if (prompt) return <div id="installBody"><button className="linkbtn primary" type="button" onClick={() => void install()}>{t("inst_btn")}</button></div>;
+  const chrome = chromeUrl();
   return (
     <div id="installBody">
+      {chrome && <a className="linkbtn primary" href={chrome}>{t("inst_chrome")}</a>}
       <div className="seg" role="tablist">
         {(["ios", "android", "desktop"] as const).map(k => (
           <button key={k} type="button" role="tab" aria-selected={os === k} onClick={() => setOS(k)}>{t(k)}</button>

@@ -82,6 +82,7 @@ const de: Messages = {
   inst_title: "Auf dem Handy installieren",
   inst_text: "Funktioniert wie eine App: ein Icon auf dem Homescreen, öffnet sofort und zeigt die zuletzt geladenen Anlässe auch offline. Nichts aus einem App Store laden.",
   inst_btn: "App installieren",
+  inst_chrome: "In Chrome öffnen",
   inst_done: "✓ Du nutzt die installierte App.",
   ios: "iPhone / iPad",
   android: "Android",

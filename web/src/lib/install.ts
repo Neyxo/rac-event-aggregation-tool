@@ -11,9 +11,15 @@ let caught: InstallPrompt | null = null;
 let installed = false;
 const { subscribe, emit } = emitter();
 
+/** Samsung Internet: the app it builds targets an old Android, so Play Protect blocks the install as unsafe; Chrome's installs */
+const samsung = (): boolean => /SamsungBrowser/.test(navigator.userAgent);
+/** on Samsung Internet, a link that opens the app in Chrome, to install it from there; null elsewhere */
+export const chromeUrl = (): string | null => samsung() ? `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end` : null;
+
 if (typeof window !== "undefined") {
   addEventListener("beforeinstallprompt", e => {
     e.preventDefault();
+    if (samsung()) return;
     caught = e as InstallPrompt;
     emit();
   });

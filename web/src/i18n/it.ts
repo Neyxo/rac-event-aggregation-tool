@@ -82,6 +82,7 @@ const it: Messages = {
   inst_title: "Installa sul telefono",
   inst_text: "Funziona come un'app: un'icona nella schermata iniziale, si apre subito e mostra gli ultimi eventi anche offline. Niente da scaricare da uno store.",
   inst_btn: "Installa l'app",
+  inst_chrome: "Apri in Chrome",
   inst_done: "✓ Stai usando l'app installata.",
   ios: "iPhone / iPad",
   android: "Android",

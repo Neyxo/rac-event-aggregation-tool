@@ -138,6 +138,18 @@ describe("Settings", () => {
     expect(steps()).not.toEqual(before);
   });
 
+  it("install on Samsung Internet (Play Protect blocks its installs): the prompt is not offered; a link opens the app in Chrome, above the Android steps", () => {
+    vi.spyOn(navigator, "userAgent", "get").mockReturnValue("Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36");
+    const ev = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), { prompt: vi.fn(async () => {}) });
+    dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(true);
+    show();
+    expect(screen.queryByRole("button", { name: "Install app" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Open in Chrome" }).getAttribute("href")).toBe("intent://localhost:3000/#Intent;scheme=https;package=com.android.chrome;end");
+    expect(screen.getByRole("tab", { name: "Android" }).getAttribute("aria-selected")).toBe("true");
+    vi.restoreAllMocks();
+  });
+
   it("install: the browser's prompt, caught before Settings was opened, is one button; dismissed, the steps come back", async () => {
     const ev = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), { prompt: vi.fn(async () => {}), userChoice: Promise.resolve({ outcome: "dismissed" }) });
     dispatchEvent(ev);  // fires early, on whatever screen the app opened on
