@@ -2,3 +2,5 @@ public/
 __pycache__/
 data/
 docs-local/
+node_modules/
+dist/

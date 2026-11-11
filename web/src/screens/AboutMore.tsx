@@ -1,0 +1,86 @@
+// Rotary, districts & the world: three full-bleed visuals, each with a frosted pane carrying one line, then links.
+// The two maps are pictures, not tools: no controls, no dragging.
+import { useEffect, useRef } from "react";
+import type { ScreenProps } from "../App";
+import { t } from "../i18n";
+import { isRac, nClubs } from "../lib/data";
+import type { Club, Coords } from "../lib/types";
+import { CtaBlock, Footer, HelpLinks, LoadError, PillarPic, useData, useWash } from "../components";
+
+// the same grey swisstopo map as the Map screen (not imported from there: that would pull Leaflet into the main bundle)
+const SWISSTOPO_GREY = "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg";
+const DISTRICT_COLOR: Record<string, string> = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
+// dots on major cities, illustrating the worldwide network
+const CITIES: Coords[] = [[47, 8], [51.5, -0.1], [40.7, -74], [34, -118], [19.4, -99], [-23.5, -46.6], [-34.6, -58.4], [30, 31.2], [-1.3, 36.8], [-26.2, 28], [6.5, 3.4], [28.6, 77.2], [19, 72.8], [1.3, 103.8], [35.7, 139.7], [37.6, 127], [31.2, 121.5], [-33.9, 151.2], [-37.8, 145], [41.9, 12.5], [48.9, 2.3], [52.5, 13.4], [55.8, 37.6], [-12, -77], [4.7, -74.1], [25.3, 55.3], [14.6, 121], [-6.2, 106.8], [13.8, 100.5], [45.4, -75.7]];
+
+/** Leaflet is loaded here on demand, so the other screens never fetch it; returns the cleanup */
+function drawMaps(swiss: HTMLElement, world: HTMLElement, clubs: Club[]): () => void {
+  let maps: { remove(): void }[] = [];
+  let gone = false;
+  void Promise.all([import("leaflet"), import("leaflet/dist/leaflet.css")]).then(([{ default: L }]) => {
+    if (gone) return;
+    const opts = { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, keyboard: false };
+    const m1 = L.map(swiss, opts);
+    L.tileLayer(SWISSTOPO_GREY, { maxZoom: 18 }).addTo(m1);
+    const pts = clubs.filter(c => c.coords && isRac(c));
+    for (const c of pts) L.circleMarker(c.coords!, { radius: 7, color: "#fff", weight: 2, fillColor: DISTRICT_COLOR[c.district], fillOpacity: 1 }).addTo(m1).bindTooltip(c.name);
+    // the pane covers the bottom
+    m1.fitBounds(pts.map(c => c.coords!), { paddingTopLeft: [24, 24], paddingBottomRight: [24, 150] });
+    const m2 = L.map(world, opts).setView([22, 10], 1);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 5 }).addTo(m2);
+    for (const p of CITIES) L.circleMarker(p, { radius: 4, color: "#fff", weight: 1, fillColor: "#d41367", fillOpacity: .95 }).addTo(m2);
+    maps = [m1, m2];
+  });
+  return () => {
+    gone = true;
+    maps.forEach(m => m.remove());
+  };
+}
+
+export default function AboutMore(_props: ScreenProps) {
+  const { ready, error, D } = useData();
+  useWash("#0067c8", "#009739", "#d41367");
+  const swiss = useRef<HTMLDivElement>(null);
+  const world = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!ready) return;
+    return drawMaps(swiss.current!, world.current!, D.data.clubs);
+  }, [ready]);
+
+  // the old page replaced the whole of main
+  if (error) return <main className="wrap more"><LoadError /></main>;
+  return (
+    <main className="wrap more">
+      <h1 data-t="ab_more">{t("ab_more")}</h1>
+      <section className="vis" id="rotary">
+        {/* a club photo, not a cropped event poster */}
+        {ready ? <PillarPic k="help" className="bg" /> : <img className="bg" alt="" referrerPolicy="no-referrer" />}
+        <div className="pane">
+          <img className="wheel" src="rotaract.svg" alt="Rotaract" />
+          <b data-t="sp_rotary">{t("sp_rotary")}</b>
+          <span data-t="sp_rotary_t">{t("sp_rotary_t")}</span>
+        </div>
+      </section>
+      <section className="vis map">
+        <div className="bg" id="swiss" ref={swiss} />
+        <div className="pane">
+          <b data-t="sp_dist">{ready ? t("sp_dist", { n: nClubs() }) : t("sp_dist")}</b>
+          <span data-t="sp_dist_t">{t("sp_dist_t")}</span>
+          <div className="leg" id="leg">
+            {ready && Object.entries(DISTRICT_COLOR).map(([d, c]) => <span key={d} style={{ color: c }}>{"D" + d}</span>)}
+          </div>
+        </div>
+      </section>
+      <section className="vis map">
+        <div className="bg" id="world" ref={world} />
+        <div className="pane">
+          <b data-t="sp_world">{t("sp_world")}</b>
+          <span data-t="sp_world_t">{t("sp_world_t")}</span>
+        </div>
+      </section>
+      <div id="more">{ready && <HelpLinks keys={["intl", "family", "guide"]} />}</div>
+      <div id="cta">{ready && <CtaBlock />}</div>
+      <div id="foot">{ready && <Footer />}</div>
+    </main>
+  );
+}
