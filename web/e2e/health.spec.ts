@@ -1,9 +1,37 @@
 // Across screens: navigation through the chrome and the cards, what one screen leaves behind for the next (body classes, wash,
 // title), no console errors or 404s anywhere, no listeners piling up, and the installed app's first start.
+import AxeBuilder from "@axe-core/playwright";
 import { expect, go, MEMBER, standalone, test } from "./fixtures";
 
 const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#/club/luzern", "#/settings", "#/subscribe", "#/about", "#/about-more",
   "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/event/nope", "#/club/nope"];
+
+// What axe found when the check was added, as "<screen> <rule>": open work, not accepted. Fix one, delete its line; anything not
+// listed here fails the test.
+const KNOWN_A11Y = new Set<string>([
+  "#/ label-content-name-mismatch",
+  "#/about color-contrast",
+  "#/about-more color-contrast",
+  "#/calendar aria-required-children",
+  "#/calendar aria-required-parent",
+  "#/calendar color-contrast",
+  "#/calendar label-content-name-mismatch",
+  "#/club/luzern label-content-name-mismatch",
+  "#/dev color-contrast",
+  "#/dev label-content-name-mismatch",
+  "#/discover color-contrast",
+  "#/discover label-content-name-mismatch",
+  "#/family color-contrast",
+  "#/guide color-contrast",
+  "#/intl color-contrast",
+  "#/map color-contrast",
+  "#/public color-contrast",
+  "#/settings color-contrast",
+  "#/settings label",
+  "#/settings label-content-name-mismatch",
+  "#/words color-contrast",
+  "#/words definition-list",
+]);
 
 test.describe("member", () => {
   test.use({ storage: { ...MEMBER, "rac.dev": true, "rac.devUnlocked": true } });
@@ -18,6 +46,21 @@ test.describe("member", () => {
     }
     expect(problems.console).toEqual([]);
     expect(problems.http).toEqual([]);
+  });
+
+  test("every screen: no new accessibility violations (axe, WCAG 2.1 A/AA)", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });  // nothing measured halfway through a fade
+    await page.goto("./");
+    await expect(page.locator(".hello")).toBeVisible();
+    const found: string[] = [];
+    for (const h of SCREENS) {
+      await go(page, h);
+      await expect(page.locator("main")).toBeVisible();
+      await page.waitForLoadState("networkidle");
+      for (const v of (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations)
+        if (!KNOWN_A11Y.has(`${h} ${v.id}`)) found.push(`${h} ${v.id}: ${v.nodes.map(n => n.target.join(" ")).join(", ")}`);
+    }
+    expect(found).toEqual([]);
   });
 
   test("tabs, top bar and cards lead everywhere; nothing of one screen stays on the next", async ({ page }) => {
