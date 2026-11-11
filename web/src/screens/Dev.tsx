@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { I18N } from "../i18n";
 import { club } from "../lib/data";
-import { clubVars } from "../lib/color";
+import { clubVars, cx } from "../lib/color";
 import { fmt, isPast } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { href } from "../lib/route";
@@ -87,7 +87,7 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
   const warnings = st.warnings ?? [];
   return (
     <>
-      <p className={"devstate " + level}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
+      <p className={cx("devstate", level)}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
       <p className="meta">{`Next scheduled run about ${fmt.stamp.format(nextRun())} (GitHub often starts it late).` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}

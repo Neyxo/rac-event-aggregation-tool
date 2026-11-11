@@ -2,7 +2,7 @@
 import type { ReactNode } from "react";
 import { t } from "../i18n";
 import { club } from "../lib/data";
-import { clubVars } from "../lib/color";
+import { clubVars, cx } from "../lib/color";
 import { href } from "../lib/route";
 import type { Club } from "../lib/types";
 import { useData } from "./hooks";
@@ -20,7 +20,7 @@ export function ClubLabel({ id }: { id: string }) {
  *  extra: more classes ("main" on Home); children go after the name (<small>12 km</small>). */
 export function ClubChip({ id, extra = "", children }: { id: string; extra?: string; children?: ReactNode }) {
   const c = club(id);
-  return <a className={"chip club " + extra} href={href("club", id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}{children}</a>;
+  return <a className={cx("chip club", extra)} href={href("club", id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}{children}</a>;
 }
 
 type Pick = { onPick: (id: string) => void; exclude?: string[] } & ({ single: true; selected: string } | { single?: false; selected: Set<string> });

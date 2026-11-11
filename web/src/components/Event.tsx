@@ -3,7 +3,7 @@
 import { createContext, useContext, type MouseEvent } from "react";
 import { t } from "../i18n";
 import { club, toggleSaved } from "../lib/data";
-import { clubVars } from "../lib/color";
+import { clubVars, cx } from "../lib/color";
 import { daysUntil, deadlineState, fmt, isPast, metaLine, placeShort, whenShort } from "../lib/dates";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
@@ -17,7 +17,7 @@ export const NewIds = createContext<ReadonlySet<string>>(new Set());
 
 /** status: an icon (or a dot) and coloured text, never a box, never clickable. kind: "" | "bad" | "new" | "soon" */
 export function Status({ kind, ic, text }: { kind: string; ic?: IconName | null; text: string }) {
-  return <span className={"st " + kind}>{ic ? <Icon name={ic} /> : <i />}{text}</span>;
+  return <span className={cx("st", kind)}>{ic ? <Icon name={ic} /> : <i />}{text}</span>;
 }
 
 /** "Register by 14 Nov" while the deadline is still ahead; red in the last two days. Nothing otherwise. */
@@ -70,7 +70,7 @@ export function EventCard({ e, i = 0 }: { e: Event; i?: number }) {
   const lead = club(e.clubs[0] ?? "");
   const newIds = useContext(NewIds);
   return (
-    <a className={"event" + (e.cancelled ? " cancelled" : "")} href={href("event", e.id)} style={clubVars(lead.color, { "--i": Math.min(i, 12) })} id={"ev-" + e.id}>
+    <a className={cx("event", e.cancelled && "cancelled")} href={href("event", e.id)} style={clubVars(lead.color, { "--i": Math.min(i, 12) })} id={"ev-" + e.id}>
       {lead.logo ? <img className="wm" src={lead.logo} alt="" aria-hidden="true" loading="lazy" /> : null}
       <DatePane e={e} />
       <div className="body">

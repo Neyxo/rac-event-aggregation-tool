@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { t } from "../i18n";
 import { club, freshNews, isRac, myClubs, setSettings } from "../lib/data";
-import { clubVars, vars } from "../lib/color";
+import { clubVars, cx, vars } from "../lib/color";
 import { dayN, isPast } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { whatChanged, type Changes } from "../lib/changes";
@@ -42,7 +42,7 @@ const dLabel = (n: number) => n === 0 ? t("today") : n === 1 ? t("tomorrow") : t
 /** a pane row: colour bar, title, days left, chevron */
 function Row({ e, label, soon = false }: { e: Event; label: string; soon?: boolean }) {
   return (
-    <a className={"r" + (soon ? " soon" : "")} href={href("event", e.id)} style={clubVars(club(e.clubs[0] ?? "").color)}>
+    <a className={cx("r", soon && "soon")} href={href("event", e.id)} style={clubVars(club(e.clubs[0] ?? "").color)}>
       <i />
       <span>{e.title}</span>
       <b>{label}</b>
@@ -311,7 +311,7 @@ function Onboarding({ run, onFinish }: { run: number; onFinish: () => void }) {
   };
   const set = (o: Partial<Ob>) => setOb(cur => cur && { ...cur, ...o });
   return (
-    <dialog className={"ob" + (ob?.member === false ? " full" : "")} id="ob" aria-labelledby="obTitle" ref={dlg}
+    <dialog className={cx("ob", ob?.member === false && "full")} id="ob" aria-labelledby="obTitle" ref={dlg}
       onCancel={ev => { ev.preventDefault(); if (ob) finish(ob.s); }}>
       <div className="ob-in">
         {ob ? <Bar n={ob.member === false ? 6 : 4} step={ob.step} /> : null}

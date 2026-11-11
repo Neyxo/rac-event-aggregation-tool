@@ -1,5 +1,8 @@
-// Club colours: the text colour that reads on a colour, and the CSS variables a club's chip, card or page is painted with.
+// Club colours: the text colour that reads on a colour, and the CSS variables a club's chip, card or page is painted with. And cx().
 import type { CSSProperties } from "react";
+
+/** a className from parts, the falsy ones left out: cx("day", other && "other", today && "today") */
+export const cx = (...a: (string | false | null | undefined)[]): string => a.filter(Boolean).join(" ");
 
 /** dark text on light colours, white on dark ones */
 export function onColor(hex: string): "#1f1c26" | "#fff" {
