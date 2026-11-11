@@ -108,6 +108,6 @@ describe("DataBoundary", () => {
     expect(f).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("main").getAttribute("aria-busy")).toBe("true");
     await act(async () => { answer(); });
-    await screen.findByRole("grid");
+    await screen.findByRole("button", { name: t("prev_month") });  // the calendar itself
   });
 });

@@ -248,7 +248,7 @@ dialog.sheet::backdrop { background: none; }
 .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
 .dow { text-align: center; font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 4px 0; }
 .day { min-height: 100px; border: 1px solid var(--line); border-radius: 8px; padding: 4px; background: var(--surface); text-align: left; font: inherit; display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-.day.other { opacity: .45; }
+.day.other { background: none; } .day.other .n { font-weight: 400; }
 .day.today { background: var(--today); border-color: var(--accent); }
 .day[aria-pressed=true] { outline: 2px solid var(--azure); outline-offset: -2px; }
 .day .n { font-size: .78rem; font-weight: 600; color: var(--muted); }

@@ -72,8 +72,8 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
   useLayoutEffect(() => { if (ref.current) fit(ref.current); });
   useEventListener("resize", () => { if (ref.current) fit(ref.current); });
   return (
-    <div className="grid" id="grid" role="grid" style={vars({ "--rows": g.cells / 7 })} ref={ref}>
-      {tx("dow").map(d => <div key={d} className="dow" role="columnheader">{d}</div>)}
+    <div className="grid" id="grid" style={vars({ "--rows": g.cells / 7 })} ref={ref}>
+      {tx("dow").map(d => <div key={d} className="dow" aria-hidden="true">{d}</div>)}
       {g.days.map(d => {
         const evs = days[d.toDateString()] ?? [];
         return <DayCell key={d.toDateString()} d={d} month={month} now={now} selected={selected} evs={evs} onOpen={() => onOpen(d, evs)} />;

@@ -12,8 +12,6 @@ const KNOWN_A11Y = new Set<string>([
   "#/ label-content-name-mismatch",
   "#/about color-contrast",
   "#/about-more color-contrast",
-  "#/calendar aria-required-children",
-  "#/calendar aria-required-parent",
   "#/calendar color-contrast",
   "#/calendar label-content-name-mismatch",
   "#/club/luzern label-content-name-mismatch",

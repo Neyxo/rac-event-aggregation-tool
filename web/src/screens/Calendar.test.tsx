@@ -32,7 +32,7 @@ afterEach(() => { cleanup(); vi.useRealTimers(); });
 const show = () => render(<Calendar route={parseHash("#/calendar")} />).container;
 const button = (name: string) => screen.getByRole("button", { name });
 const monthTitle = () => screen.getByRole("heading", { level: 2 }).textContent;
-const days = () => within(screen.getByRole("grid")).getAllByRole("button");
+const days = () => within(document.getElementById("grid")!).getAllByRole("button");
 /** a day button by its label ("Wednesday, 11 November 2026, 1 event"); November 2026 unless told otherwise */
 const day = (n: number, m = 10, y = 2026) => {
   const label = fmt.full.format(new Date(y, m, n)) + ", ";
@@ -56,8 +56,8 @@ describe("calendar", () => {
     show();
     expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 10, 1)));
     expect(button(t("prev_month"))).toBeTruthy();
-    expect(screen.getAllByRole("columnheader")).toHaveLength(7);
-    expect(screen.getByRole("grid").style.getPropertyValue("--rows")).toBe("6");
+    expect(document.querySelectorAll("#grid .dow")).toHaveLength(7);
+    expect(document.getElementById("grid")!.style.getPropertyValue("--rows")).toBe("6");
     expect(days()).toHaveLength(42);
     expect(days()[0]!.querySelector(".n")?.textContent).toBe("26");
     expect(days()[0]!.classList.contains("other")).toBe(true);
