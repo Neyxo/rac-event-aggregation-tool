@@ -2,15 +2,15 @@
 // A member: welcome, clubs, calendar, install. A guest: welcome, three slides, clubs near, install.
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { t } from "../i18n";
-import { club, isRac, myClubs, setSettings } from "../lib/data";
-import { clubVars, cx, vars } from "../lib/color";
+import { club, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../lib/data";
+import { BRAND, cx, vars } from "../lib/color";
 import { guessClubs } from "../lib/geo";
 import { install, isInstalled } from "../lib/install";
 import type { Pillar } from "../lib/pillars";
 import { href } from "../lib/route";
 import { store } from "../lib/store";
-import type { Club, Settings } from "../lib/types";
-import { ClubChips, ClubMark, FeedLinks, PillarPic, toast, useData, useInstallPrompt, useModal } from "../components";
+import type { Settings } from "../lib/types";
+import { ClubChips, FeedRow, PillarPic, toast, useData, useInstallPrompt, useModal } from "../components";
 
 interface Ob {
   /** the clubs being chosen; saved on finish */
@@ -33,16 +33,6 @@ function ObNav({ next, skip, onNext, onSkip }: { next: string; skip?: string; on
   );
 }
 
-/** a calendar feed: Apple (webcal:), Google, the .ics file */
-function FeedRow({ c, file }: { c: Club | null; file: string }) {
-  return (
-    <div className="feed">
-      <div className="name" style={c ? clubVars(c.color) : undefined}>{c ? <ClubMark c={c} /> : null}{c ? c.name : t("all_feed_short")}</div>
-      <FeedLinks file={file} />
-    </div>
-  );
-}
-
 function InstallHow({ onDone }: { onDone: () => void }) {
   const prompt = useInstallPrompt();
   if (isInstalled()) return <p>{t("ob_installed")}</p>;
@@ -50,8 +40,8 @@ function InstallHow({ onDone }: { onDone: () => void }) {
   return <p className="meta">{t("inst_text")} <a href={href("settings") + "#install"}>{t("settings")}</a></p>;
 }
 
-const SLIDES: [k: "who" | "what" | "how", color: string, pic: Pillar][] = [["who", "#0067c8", "learn"], ["what", "#009739", "help"], ["how", "#d41367", "party"]];
-const PILLARS: [Pillar, string][] = [["learn", "#0067c8"], ["help", "#009739"], ["party", "#d41367"]];
+const SLIDES: [k: "who" | "what" | "how", color: string, pic: Pillar][] = [["who", BRAND.azure, "learn"], ["what", BRAND.green, "help"], ["how", BRAND.cranberry, "party"]];
+const PILLARS: [Pillar, string][] = [["learn", BRAND.azure], ["help", BRAND.green], ["party", BRAND.cranberry]];
 const SLIDE_TITLE = { who: "ob_who", what: "ob_what", how: "ob_how" } as const;
 
 /** a guest's slides 1-3: who we are, what we do, how to start */
@@ -74,7 +64,7 @@ function Slide({ step, title }: { step: number; title: ReactNode }) {
 function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void; finish: (s: Settings) => void; h2: RefObject<HTMLHeadingElement | null> }) {
   const { s, member, step, guess } = ob;
   const D = useData();
-  const toggleAlso = (id: string) => set({ s: { ...s, also: s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id] } });
+  const toggleAlso = (id: string) => set({ s: withAlsoToggled(s, id) });
   const title = (text: string) => <h2 id="obTitle" tabIndex={-1} ref={h2}>{text}</h2>;
   if (step === 0) {
     const yes = async () => {
@@ -99,13 +89,12 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
     );
   }
   if (member && step === 1) {
-    const pickHome = (id: string) => set({ s: { home: id, also: s.also.filter(x => x !== id) } });
     return (
       <>
         {title(t("ob_q"))}
         <p>{s.home ? t("ob_pre") : t("ob_pick")}</p>
         <h3>{t("ob_main")}</h3>
-        <ClubChips single selected={s.home} onPick={pickHome} />
+        <ClubChips single selected={s.home} onPick={id => set({ s: withHome(s, id) })} />
         <h3>{t("ob_also")}</h3>
         <ClubChips selected={new Set(s.also)} onPick={toggleAlso} exclude={[s.home]} />
         <ObNav next={t("next")} skip={t("skip")} onNext={() => set({ step: 2 })} onSkip={() => finish(s)} />
@@ -119,9 +108,9 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
         {title(t("ob_sub"))}
         <p>{t("ob_sub_text")}</p>
         <div className="feeds stack">
-          {ids.map(id => <FeedRow key={id} c={club(id)} file={id + ".ics"} />)}
+          {ids.map(id => <FeedRow key={id} c={club(id)} />)}
           {ids.length ? <p className="meta" style={{ margin: "4px 0 0" }}>{t("ob_or")}</p> : null}
-          <FeedRow c={null} file="all.ics" />
+          <FeedRow name={t("all_feed_short")} />
           <p className="meta" style={{ margin: "6px 0 0" }}>{t("ob_help")}<a href={href("subscribe")} target="_blank">{t("ob_help_link")}</a></p>
         </div>
         <ObNav next={t("next")} skip={t("not_now")} onNext={() => set({ step: 3 })} onSkip={() => set({ step: 3 })} />

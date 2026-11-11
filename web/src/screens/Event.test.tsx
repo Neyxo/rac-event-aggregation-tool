@@ -65,7 +65,7 @@ describe("event screen", () => {
     screen.getByRole("link", { name: t("register") });
     expect(screen.queryByRole("link", { name: t("add_cal") })).toBeNull();
     expect(document.querySelector("a.more")?.getAttribute("href")).toBe("#/intl");
-    expect(screen.getByText(t("when")).nextElementSibling?.textContent).toMatch(/2027 – .*2027$/);
+    expect(screen.getByText(t("when")).nextElementSibling?.textContent).toMatch(/January\s–\s.* January 2027$/);
   });
 
   it("a Rotary event opens from a shared link with the layer off, without its district", () => {

@@ -3,8 +3,8 @@
 import { useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, myClubs } from "../lib/data";
-import { clubVars } from "../lib/color";
-import { activeCount, DISTRICT_IDS, hasFilters, selectEvents, type Filters } from "../lib/filters";
+import { clubVars, DISTRICT_IDS, DISTRICTS } from "../lib/color";
+import { activeCount, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
 import { ClubChips, ClubMark, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
 import type { ScreenProps } from "../App";
@@ -12,13 +12,6 @@ import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, t
 
 /** a chip, the radius or the district changed: the list follows */
 const change = (api: FilterApi, patch: Partial<Filters>) => api.update(patch, true);
-
-const toggled = (set: Set<string>, id: string): Set<string> => {
-  const next = new Set(set);
-  if (next.has(id)) next.delete(id);
-  else next.add(id);
-  return next;
-};
 
 /** "District: All · D1980 · D1990 · D2000" */
 function DistrictRow({ api }: { api: FilterApi }) {
@@ -28,8 +21,8 @@ function DistrictRow({ api }: { api: FilterApi }) {
       <span className="rowlabel">{t("district")}</span>
       <button className="chip district" type="button" aria-pressed={d.size === 0} onClick={() => change(api, { d: new Set() })}>{t("all")}</button>
       {DISTRICT_IDS.map(id => {
-        const name = t(`d${id}`);
-        return <button key={id} className="chip district" type="button" aria-pressed={d.has(id)} title={name} onClick={() => change(api, { d: toggled(d, id) })}>{name}</button>;
+        const name = t(DISTRICTS[id].key);
+        return <button key={id} className="chip district" type="button" aria-pressed={d.has(id)} title={name} onClick={() => change(api, { d: d.symmetricDifference(new Set([id])) })}>{name}</button>;
       })}
     </>
   );
@@ -40,7 +33,7 @@ function ClubRow({ api }: { api: FilterApi }) {
   const [picking, setPicking] = useState(false);
   const D = useData();
   const { clubs, d } = api.live;
-  const toggle = (id: string) => change(api, { clubs: toggled(api.live.clubs, id) });
+  const toggle = (id: string) => change(api, { clubs: api.live.clubs.symmetricDifference(new Set([id])) });
   // with districts chosen, the picker offers only their clubs
   const only = d.size ? D.data.clubs.filter(c => d.has(c.district)).map(c => c.id) : null;
   return (

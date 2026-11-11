@@ -7,8 +7,8 @@ import { isRac, nClubs } from "../lib/data";
 import { SWISSTOPO_GREY } from "../lib/geo";
 import type { Club, Coords } from "../lib/types";
 import { CtaBlock, Footer, HelpLinks, PillarPic, useData, useWash } from "../components";
+import { BRAND, DISTRICT_IDS, DISTRICTS, isDistrict } from "../lib/color";
 
-const DISTRICT_COLOR: Record<string, string> = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
 // dots on major cities, illustrating the worldwide network
 const CITIES: Coords[] = [[47, 8], [51.5, -0.1], [40.7, -74], [34, -118], [19.4, -99], [-23.5, -46.6], [-34.6, -58.4], [30, 31.2], [-1.3, 36.8], [-26.2, 28], [6.5, 3.4], [28.6, 77.2], [19, 72.8], [1.3, 103.8], [35.7, 139.7], [37.6, 127], [31.2, 121.5], [-33.9, 151.2], [-37.8, 145], [41.9, 12.5], [48.9, 2.3], [52.5, 13.4], [55.8, 37.6], [-12, -77], [4.7, -74.1], [25.3, 55.3], [14.6, 121], [-6.2, 106.8], [13.8, 100.5], [45.4, -75.7]];
 
@@ -22,12 +22,12 @@ function drawMaps(swiss: HTMLElement, world: HTMLElement, clubs: Club[]): () => 
     const m1 = L.map(swiss, opts);
     L.tileLayer(SWISSTOPO_GREY, { maxZoom: 18 }).addTo(m1);
     const pts = clubs.filter(c => c.coords && isRac(c));
-    for (const c of pts) L.circleMarker(c.coords!, { radius: 7, color: "#fff", weight: 2, fillColor: DISTRICT_COLOR[c.district], fillOpacity: 1 }).addTo(m1).bindTooltip(c.name);
+    for (const c of pts) L.circleMarker(c.coords!, { radius: 7, color: "#fff", weight: 2, fillColor: isDistrict(c.district) ? DISTRICTS[c.district].color : BRAND.cranberry, fillOpacity: 1 }).addTo(m1).bindTooltip(c.name);
     // the pane covers the bottom
     m1.fitBounds(pts.map(c => c.coords!), { paddingTopLeft: [24, 24], paddingBottomRight: [24, 150] });
     const m2 = L.map(world, opts).setView([22, 10], 1);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 5 }).addTo(m2);
-    for (const p of CITIES) L.circleMarker(p, { radius: 4, color: "#fff", weight: 1, fillColor: "#d41367", fillOpacity: .95 }).addTo(m2);
+    for (const p of CITIES) L.circleMarker(p, { radius: 4, color: "#fff", weight: 1, fillColor: BRAND.cranberry, fillOpacity: .95 }).addTo(m2);
     maps = [m1, m2];
   });
   return () => {
@@ -38,7 +38,7 @@ function drawMaps(swiss: HTMLElement, world: HTMLElement, clubs: Club[]): () => 
 
 export default function AboutMore(_props: ScreenProps) {
   const D = useData();
-  useWash("#0067c8", "#009739", "#d41367");
+  useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
   const swiss = useRef<HTMLDivElement>(null);
   const world = useRef<HTMLDivElement>(null);
   useEffect(() => drawMaps(swiss.current!, world.current!, D.data.clubs), []);
@@ -61,7 +61,7 @@ export default function AboutMore(_props: ScreenProps) {
           <b>{t("sp_dist", { n: nClubs() })}</b>
           <span>{t("sp_dist_t")}</span>
           <div className="leg">
-            {Object.entries(DISTRICT_COLOR).map(([d, c]) => <span key={d} style={{ color: c }}>{"D" + d}</span>)}
+            {DISTRICT_IDS.map(d => <span key={d} style={{ color: DISTRICTS[d].color }}>{"D" + d}</span>)}
           </div>
         </div>
       </section>

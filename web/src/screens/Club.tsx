@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
 import { freshNews } from "../lib/data";
-import { clubVars } from "../lib/color";
+import { clubVars, DISTRICTS, isDistrict } from "../lib/color";
 import { isPast } from "../lib/dates";
 import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
@@ -14,7 +14,6 @@ import {
   useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
 } from "../components";
 
-const DISTRICT = { "1980": "d1980", "1990": "d1990", "2000": "d2000" } as const;
 const isIcon = (k: string): k is IconName => k in ICON;
 
 /** a round icon link in the colour block (website, socials) */
@@ -117,7 +116,7 @@ export default function Club({ route }: ScreenProps) {
   const hasPhotos = (c.instagram || []).length > 0 || (c.photos?.length ? c.photos.length : pastPics.length) > 0;
   const news = freshNews(c);
   const projects = c.projects || [];
-  const subLine = [c.district ? t(DISTRICT[c.district as keyof typeof DISTRICT]) : c.source ? null : t("national"), c.city].filter(Boolean).join(" · ");
+  const subLine = [isDistrict(c.district) ? t(DISTRICTS[c.district].key) : c.source ? null : t("national"), c.city].filter(Boolean).join(" · ");
   return (
     <main className="wrap clubpage" style={clubVars(c.color)}>
       <i className="sent" aria-hidden="true" />

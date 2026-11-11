@@ -2,14 +2,16 @@
 import { useState, type MouseEventHandler } from "react";
 import { LANG, LANGS, setLang, t, tx, type Lang, type Pair } from "../i18n";
 import { IOS, PHONE } from "../lib/geo";
-import { vars } from "../lib/color";
+import { BRAND, clubVars, vars } from "../lib/color";
 import { href } from "../lib/route";
+import type { Club } from "../lib/types";
+import { ClubMark } from "./Club";
 import { Icon, type IconName } from "./Icon";
 import { Popup } from "./Popup";
 import { toast } from "./Toast";
 
 /** a link that looks like one: icon in the colour p, title, one line, chevron. Another site opens in a new tab. */
-export function MoreLink({ to, title, sub, ic = "info", p = "#0067c8" }: { to: string; title: string; sub?: string; ic?: IconName; p?: string }) {
+export function MoreLink({ to, title, sub, ic = "info", p = BRAND.azure }: { to: string; title: string; sub?: string; ic?: IconName; p?: string }) {
   const ext = /^https?:/.test(to);
   return (
     <a className="more glass" href={to} style={vars({ "--p": p })} target={ext ? "_blank" : undefined} rel={ext ? "noopener" : undefined}>
@@ -24,13 +26,13 @@ export type HelpKey = "guide" | "words" | "app" | "sub" | "world" | "family" | "
 const help = (k: HelpKey): [string, string, string, IconName, string] => {
   const nm = tx("nm"), intl = tx("intl");
   switch (k) {
-    case "guide": return [href("guide"), nm.h, nm.steps_h, "flag", "#d41367"];
-    case "words": return [href("words"), nm.words_h, nm.words_sub, "book", "#009739"];
-    case "app": return [href("public"), t("app_h"), t("app_lead"), "info", "#0067c8"];
-    case "sub": return [href("subscribe"), t("sub_title"), t("ab_sub_sub"), "calendar", "#0067c8"];
-    case "world": return [href("about-more"), t("ab_more"), t("ab_more_sub"), "globe", "#009739"];
-    case "family": return [href("family"), t("fam_h"), t("fam_sub"), "wheel", "#0067c8"];
-    case "intl": return [href("intl"), intl.h, intl.sub, "globe", "#d41367"];
+    case "guide": return [href("guide"), nm.h, nm.steps_h, "flag", BRAND.cranberry];
+    case "words": return [href("words"), nm.words_h, nm.words_sub, "book", BRAND.green];
+    case "app": return [href("public"), t("app_h"), t("app_lead"), "info", BRAND.azure];
+    case "sub": return [href("subscribe"), t("sub_title"), t("ab_sub_sub"), "calendar", BRAND.azure];
+    case "world": return [href("about-more"), t("ab_more"), t("ab_more_sub"), "globe", BRAND.green];
+    case "family": return [href("family"), t("fam_h"), t("fam_sub"), "wheel", BRAND.azure];
+    case "intl": return [href("intl"), intl.h, intl.sub, "globe", BRAND.cranberry];
   }
 };
 /** the cards to the explanatory screens, by key, so every screen words and draws them the same */
@@ -59,9 +61,13 @@ export async function share(data: { title: string; text?: string; url: string })
     try { await navigator.share(data); } catch { /* dismissed */ }
     return false;
   }
-  await navigator.clipboard.writeText(data.url);
-  toast(t("copied"));
+  await copy(data.url);
   return true;
+}
+/** to the clipboard, and say so */
+export async function copy(text: string): Promise<void> {
+  await navigator.clipboard.writeText(text);
+  toast(t("copied"));
 }
 
 /** a calendar feed's address: absolute, because calendar apps get the link without this page around it; webcal: makes Apple and
@@ -75,6 +81,21 @@ export function feedUrls(file: string): { https: string; webcal: string } {
 export function FeedLinks({ file }: { file: string }) {
   const { https, webcal } = feedUrls(file);
   return <div className="l"><a href={webcal}>{t("apple")}</a><GoogleLink webcal={webcal} /><a href={https}>.ics</a></div>;
+}
+
+/** a feed's row: the club (crest and name, a link to its page with link) or, without one, the all-clubs feed under name; the
+ *  upcoming count when given; then Apple / Google / .ics */
+export function FeedRow({ c = null, name, count, link = false }: { c?: Club | null; name?: string; count?: number; link?: boolean }) {
+  return (
+    <div className="feed">
+      <div className="name" style={c ? clubVars(c.color) : undefined}>
+        {c ? <ClubMark c={c} /> : null}
+        {c ? (link ? <a href={href("club", c.id)}>{c.name}</a> : c.name) : name}
+        {count != null ? <span className="meta">{t("n_upcoming", { n: count })}</span> : null}
+      </div>
+      <FeedLinks file={c ? c.id + ".ics" : "all.ics"} />
+    </div>
+  );
 }
 
 /** Google's phone apps can't subscribe to a calendar, only a computer browser can. So on a phone the Google link explains that and

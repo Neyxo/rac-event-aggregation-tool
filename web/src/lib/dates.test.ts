@@ -64,7 +64,7 @@ describe("when", () => {
   it("whenLong", () => {
     expect(whenLong(ev({ id: "a", start: "2026-11-11T18:00", end: "2026-11-11T21:30" }))).toBe("Wednesday, 11 November 2026, 18:00–21:30");
     expect(whenLong(ev({ id: "a", allday: true, start: "2026-11-14T00:00", end: "2026-11-15T00:00" }))).toBe("Saturday, 14 November 2026");
-    expect(whenLong(ev({ id: "a", allday: true, start: "2026-11-14T00:00", end: "2026-11-16T00:00" }))).toBe("Saturday, 14 November 2026 – Sunday, 15 November 2026");
+    expect(whenLong(ev({ id: "a", allday: true, start: "2026-11-14T00:00", end: "2026-11-16T00:00" }))).toMatch(/^Saturday 14\sNovember\s–\sSunday 15\sNovember 2026$/);
   });
   it("place and meta line", () => {
     const e = ev({ id: "a", start: "2026-11-11T18:00", end: "2026-11-11T21:30", location: "Rudolfs Weihnacht, Inseliquai, 6005 Luzern", organiser: "Rotary Club Bern" });

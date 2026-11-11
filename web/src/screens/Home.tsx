@@ -4,8 +4,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, freshNews, myClubs } from "../lib/data";
-import { clubVars, cx } from "../lib/color";
-import { dayN, isPast } from "../lib/dates";
+import { BRAND, clubVars, cx } from "../lib/color";
+import { dayN, isPast, relDay } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { whatChanged, type Changes } from "../lib/changes";
 import { hasFilters, isFilterLink, scopeClubs, selectEvents } from "../lib/filters";
@@ -24,7 +24,6 @@ import { Onboarding } from "./Onboarding";
 /** my clubs' upcoming events */
 const mineEvents = (events: Event[], mine: string[]): Event[] => events.filter(e => e.clubs.some(c => mine.includes(c)) && !isPast(e));
 const NOTHING_NEW: ReadonlySet<string> = new Set();
-const dLabel = (n: number) => n === 0 ? t("today") : n === 1 ? t("tomorrow") : t("d_short", { n });
 
 // ---------- the member overview
 
@@ -74,11 +73,11 @@ function Panes({ mineEv }: { mineEv: Event[] }) {
     <div className="panes">
       <div className="pane glass">
         <div className="k">{t("deadline_h")}</div>
-        {deadlines.length ? deadlines.map(e => <Row key={e.id} e={e} label={dLabel(dayN(e.deadline))} soon={dayN(e.deadline) <= 2} />) : <p className="m">{t("none_open")}</p>}
+        {deadlines.length ? deadlines.map(e => <Row key={e.id} e={e} label={relDay(dayN(e.deadline))} soon={dayN(e.deadline) <= 2} />) : <p className="m">{t("none_open")}</p>}
       </div>
       <div className="pane glass">
         <div className="k"><Icon name="star" />{t("saved_h")}</div>
-        {saved.length ? saved.map(e => <Row key={e.id} e={e} label={dLabel(dayN(e.start))} />) : <p className="m">{t("none_saved")}</p>}
+        {saved.length ? saved.map(e => <Row key={e.id} e={e} label={relDay(dayN(e.start))} />) : <p className="m">{t("none_saved")}</p>}
       </div>
     </div>
   );
@@ -153,7 +152,7 @@ function HomeScreen({ route }: ScreenProps) {
   const mineEv = member ? mineEvents(D.data.events, mine) : [];
   const main = D.settings.home || mine[0] || "";
   const cols = member ? [main, ...mine.filter(id => id !== main)] : [];
-  useWash(...cols.slice(0, 3).map(id => club(id).color), member && "#d41367", member && "#0067c8");
+  useWash(...cols.slice(0, 3).map(id => club(id).color), member && BRAND.cranberry, member && BRAND.azure);
 
   const news = member ? mine.flatMap(id => freshNews(club(id))).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4) : [];
   const f = api.shown;

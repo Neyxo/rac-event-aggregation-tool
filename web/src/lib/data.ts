@@ -3,6 +3,7 @@
 // and notify subscribers, and useData() / useSaved() (components/hooks) re-render every mounted component that reads it.
 import type { Club, Event, EventsJson, Settings } from "./types";
 import { store } from "./store";
+import { BRAND } from "./color";
 import { devFlag } from "./dev";
 
 export interface AppData {
@@ -107,6 +108,11 @@ export function setSettings(settings: Settings): void {
   if (!devFlag("Guest")) store.set("rac.settings", settings);
 }
 
+/** s with id as the main club, which is never also in "also show" */
+export const withHome = (s: Settings, id: string): Settings => ({ home: id, also: s.also.filter(x => x !== id) });
+/** s with id added to "also show", or taken out */
+export const withAlsoToggled = (s: Settings, id: string): Settings => ({ ...s, also: s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id] });
+
 /** save / unsave an event; returns whether it is saved now */
 export function toggleSaved(id: string): boolean {
   const saved = new Set(state.saved);
@@ -131,7 +137,7 @@ export const eventById = (id: string): Event | undefined => state.data.events.fi
 /** the main club first, then the others; only clubs that exist */
 export const myClubs = (): string[] => [state.settings.home, ...state.settings.also].filter(id => state.clubs[id]);
 /** a club by id, or a stand-in with the id as its name */
-export const club = (id: string): Club => state.clubs[id] ?? { id, name: id, short: id, color: "#d41367", logo: "", url: "", district: "", coords: null, photos: [], news: [], projects: [], instagram: [], links: {}, source: "", how: "", partners: [] };
+export const club = (id: string): Club => state.clubs[id] ?? { id, name: id, short: id, color: BRAND.cranberry, logo: "", url: "", district: "", coords: null, photos: [], news: [], projects: [], instagram: [], links: {}, source: "", how: "", partners: [] };
 /** a real Rotaract club: in a district, and not a pseudo-club ("source": international, or a Rotary district, which has a district too) */
 export const isRac = (c: Club): boolean => !!c.district && !c.source;
 export const nClubs = (): number => state.data.clubs.filter(isRac).length;

@@ -4,7 +4,7 @@ import { createContext, useContext, type MouseEvent } from "react";
 import { t } from "../i18n";
 import { club, toggleSaved } from "../lib/data";
 import { clubVars, cx } from "../lib/color";
-import { daysUntil, deadlineState, fmt, isPast, metaLine, placeShort, whenShort } from "../lib/dates";
+import { daysUntil, deadlineState, fmt, isPast, metaLine, placeShort, relDay, whenShort } from "../lib/dates";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
 import { Icon, type IconName } from "./Icon";
@@ -50,12 +50,11 @@ export function StarButton({ e }: { e: Event }) {
 
 /** the "next up" pane on the club screen and Home */
 export function NextUp({ e, label = t("next_event") }: { e: Event; label?: string }) {
-  const days = daysUntil(e);
   return (
     <a className="nx glass" href={href("event", e.id)} style={clubVars(club(e.clubs[0] ?? "").color)}>
       <div>
         <div className="k">{label}</div>
-        <div className="cd">{days === 0 ? t("today") : days === 1 ? t("tomorrow") : t("in_days", { n: days })}</div>
+        <div className="cd">{relDay(daysUntil(e))}</div>
         <h4>{e.title}</h4>
         <div className="m">{whenShort(e) + (e.location ? " · " + placeShort(e) : "")}</div>
       </div>

@@ -47,9 +47,17 @@ export async function guessClubs(clubs: Club[], lang: Lang = LANG): Promise<stri
   return LANG_CLUBS[lang] ?? [];
 }
 
+export type OS = "ios" | "android" | "desktop";
+/** the reader's system, from the user agent; an iPad asks for the desktop site and says MacIntel, but has touch */
+export function guessOS(): OS {
+  if (typeof navigator === "undefined") return "desktop";
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
+  return /Android/.test(ua) ? "android" : "desktop";
+}
+export const IOS = guessOS() === "ios";
+export const PHONE = guessOS() !== "desktop";
 /** Apple Maps on iOS (opens the app), Google Maps elsewhere */
-export const IOS = typeof navigator !== "undefined" && /iPhone|iPad|iPod/.test(navigator.userAgent);
-export const PHONE = IOS || (typeof navigator !== "undefined" && /Android/.test(navigator.userAgent));
 export const mapsUrl = (place: string, ios = IOS): string => (ios ? "https://maps.apple.com/?q=" : "https://www.google.com/maps/search/?api=1&query=") + encodeURIComponent(place);
 
 /** swisstopo's grey national map tiles (free, no key), for Leaflet: the Map screen and Rotary, districts & the world */

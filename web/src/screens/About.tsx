@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
 import { nClubs } from "../lib/data";
-import { vars } from "../lib/color";
+import { BRAND, vars } from "../lib/color";
 import type { Pillar } from "../lib/pillars";
 import { shareUrl } from "../lib/share";
 import { CtaBlock, Footer, HelpLinks, Icon, PillarPic, QaList, share, useData, useEventListener, useNav, useStickyHeads, useWash } from "../components";
@@ -87,7 +87,7 @@ function Stage({ phase }: { phase: Phase }) {
 
 export default function About(_props: ScreenProps) {
   const D = useData();
-  useWash("#0067c8", "#009739", "#d41367");
+  useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
   useStickyHeads();
   const track = useRef<HTMLDivElement>(null);
   const phase = usePhase(track);

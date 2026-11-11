@@ -9,6 +9,7 @@ import en, { type Messages } from "./web/src/i18n/en.ts";
 import de from "./web/src/i18n/de.ts";
 import fr from "./web/src/i18n/fr.ts";
 import it from "./web/src/i18n/it.ts";
+import { SHARE_PAGES, type SharePage } from "./web/src/lib/share.ts";
 
 const SITE = "https://neyxo.github.io/rotaract-events/";
 const PUBLIC = fileURLToPath(new URL("./public/", import.meta.url));
@@ -36,9 +37,9 @@ function devData(): Plugin {
 }
 
 // Share stubs for the static screens: s/<lang>/<page>.html, a tiny page with its own preview (og:*) that forwards into the app in that
-// language. lib/share.ts links to them; events and clubs have their own (e/<id>.html, c/<id>.html, written by polaris_feed.py).
+// language, one per lib/share.ts SHARE_PAGES, which links to them; events and clubs have their own (e/<id>.html, c/<id>.html, written by polaris_feed.py).
 type Pick = (m: Messages) => [string, string];
-export const SHARE_TEXT: Record<string, Pick> = {
+export const SHARE_TEXT: Record<SharePage, Pick> = {
   home: m => ["Rotaract Events", m.app_lead],
   discover: m => [m.discover_title, m.sp_all_text],
   calendar: m => [m.calendar, m.sp_all_text],
@@ -52,8 +53,8 @@ export const SHARE_TEXT: Record<string, Pick> = {
   intl: m => [m.intl.h, m.intl.lead],
 };
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-export function shareStub(lang: string, page: string, m: Messages): string {
-  const [title, desc] = SHARE_TEXT[page]!(m);
+export function shareStub(lang: string, page: SharePage, m: Messages): string {
+  const [title, desc] = SHARE_TEXT[page](m);
   const to = `../../?lang=${lang}#/${page === "home" ? "" : page}`;
   return `<!doctype html>
 <html lang="${lang}">
@@ -82,7 +83,7 @@ function shareStubs(): Plugin {
     apply: "build",
     generateBundle() {
       for (const [lang, m] of Object.entries({ en, de, fr, it }))
-        for (const page of Object.keys(SHARE_TEXT)) this.emitFile({ type: "asset", fileName: `s/${lang}/${page}.html`, source: shareStub(lang, page, m) });
+        for (const page of SHARE_PAGES) this.emitFile({ type: "asset", fileName: `s/${lang}/${page}.html`, source: shareStub(lang, page, m) });
     },
   };
 }

@@ -3,24 +3,22 @@ import { Fragment, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t, tx } from "../i18n";
 import { isRac } from "../lib/data";
-import { clubVars, vars } from "../lib/color";
+import { BRAND, clubVars, DISTRICT_IDS, DISTRICTS, vars } from "../lib/color";
 import { href } from "../lib/route";
 import { ClubMark, Footer, Icon, useData, useStickyHeads, useWash, type IconName } from "../components";
 
 // logos in static/img/fam (Rotary and RYLA from Wikimedia Commons, Interact from Commons, Rotex and Inner Wheel from their sites);
 // the icon stands in where there is none yet, or when the file fails to load
 const MARKS: { icon: IconName; color: string; logo: string }[] = [
-  { icon: "wheel", color: "#0067c8", logo: "img/fam/rotary.svg" },
-  { icon: "users", color: "#d41367", logo: "rotaract.svg" },
-  { icon: "book", color: "#009739", logo: "img/fam/interact.png" },
-  { icon: "plane", color: "#0067c8", logo: "img/fam/rotex.svg" },
-  { icon: "flag", color: "#d41367", logo: "img/fam/ryla.png" },
-  { icon: "rings", color: "#009739", logo: "img/fam/innerwheel.png" },
-  { icon: "heart", color: "#0067c8", logo: "" },  // no Rotary Foundation logo yet: the icon (a missing file is a 404 on every visit)
-  { icon: "pin", color: "#d41367", logo: "" },
+  { icon: "wheel", color: BRAND.azure, logo: "img/fam/rotary.svg" },
+  { icon: "users", color: BRAND.cranberry, logo: "rotaract.svg" },
+  { icon: "book", color: BRAND.green, logo: "img/fam/interact.png" },
+  { icon: "plane", color: BRAND.azure, logo: "img/fam/rotex.svg" },
+  { icon: "flag", color: BRAND.cranberry, logo: "img/fam/ryla.png" },
+  { icon: "rings", color: BRAND.green, logo: "img/fam/innerwheel.png" },
+  { icon: "heart", color: BRAND.azure, logo: "" },  // no Rotary Foundation logo yet: the icon (a missing file is a 404 on every visit)
+  { icon: "pin", color: BRAND.cranberry, logo: "" },
 ];
-const DISTRICTS = ["1980", "1990", "2000"] as const;
-const DISTRICT_KEY = { "1980": "d1980", "1990": "d1990", "2000": "d2000" } as const;
 
 function Mark({ icon, logo }: { icon: IconName; logo: string }) {
   const [failed, setFailed] = useState(false);
@@ -46,9 +44,9 @@ function Districts() {
   const D = useData();
   return (
     <>
-      {DISTRICTS.map(d => (
+      {DISTRICT_IDS.map(d => (
         <Fragment key={d}>
-          <h3 className="sh">{t(DISTRICT_KEY[d])}</h3>
+          <h3 className="sh">{t(DISTRICTS[d].key)}</h3>
           <div className="tiles">
             {D.data.clubs.filter(c => c.district === d && isRac(c)).map(c => (
               <a key={c.id} className="tile" href={href("club", c.id)} style={clubVars(c.color)}><ClubMark c={c} /><b>{c.short}</b></a>
@@ -61,7 +59,7 @@ function Districts() {
 }
 
 export default function Family(_props: ScreenProps) {
-  useWash("#0067c8", "#009739", "#d41367");
+  useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
   useStickyHeads();
   return (
     <main className="wrap fam">

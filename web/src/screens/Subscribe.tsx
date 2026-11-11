@@ -2,11 +2,10 @@
 // pseudo-clubs), questions.
 import { t, tx, type StrKey } from "../i18n";
 import { isPast } from "../lib/dates";
-import { clubVars } from "../lib/color";
-import { href } from "../lib/route";
 import type { Club } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, FeedLinks, Footer, QaList, useData } from "../components";
+import { FeedRow, Footer, QaList, useData } from "../components";
+import { DISTRICT_IDS, DISTRICTS } from "../lib/color";
 
 const PLATFORMS = [
   ["sp_ios", "sp_ios_s"],
@@ -15,27 +14,13 @@ const PLATFORMS = [
   ["sp_outlook", "sp_outlook_s"],
 ] as const;
 
-/** one row: the feed's name (a club links to its page) with its upcoming count, then Apple / Google / .ics */
-function FeedRow({ c, file, count }: { c: Club | { id?: undefined; name: string }; file: string; count: number }) {
-  return (
-    <div className="feed">
-      <div className="name" style={c.id ? clubVars(c.color) : undefined}>
-        {c.id ? <ClubMark c={c} /> : null}
-        {c.id ? <a href={href("club", c.id)}>{c.name}</a> : c.name}
-        <span className="meta">{t("n_upcoming", { n: count })}</span>
-      </div>
-      <FeedLinks file={file} />
-    </div>
-  );
-}
-
 /** a heading and its clubs' feeds, nothing when there are no clubs (a district without clubs, Rotary switched off) */
 function FeedGroup({ name, clubs, upcomingBy }: { name: string; clubs: Club[]; upcomingBy: Record<string, number> }) {
   if (!clubs.length) return null;
   return (
     <>
       <h3>{name}</h3>
-      {clubs.map(c => <FeedRow key={c.id} c={c} file={c.id + ".ics"} count={upcomingBy[c.id] || 0} />)}
+      {clubs.map(c => <FeedRow key={c.id} c={c} link count={upcomingBy[c.id] || 0} />)}
     </>
   );
 }
@@ -50,7 +35,7 @@ export default function Subscribe(_props: ScreenProps) {
     if (e.layer !== "rotary") total++;
     for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1;
   }
-  const districts: [string, StrKey][] = [["1980", "d1980"], ["1990", "d1990"], ["2000", "d2000"], ["", "national"]];
+  const districts: [string, StrKey][] = [...DISTRICT_IDS.map(d => [d, DISTRICTS[d].key] as [string, StrKey]), ["", "national"]];
   const inDistrict = (d: string) => D.data.clubs.filter(c => c.district === d && !c.source).sort((a, b) => a.name.localeCompare(b.name));
   const ofSource = (s: string) => D.data.clubs.filter(c => c.source === s);
   return (
@@ -71,7 +56,7 @@ export default function Subscribe(_props: ScreenProps) {
         <h2>{t("sp_all")}</h2>
         <p>{t("sp_all_text")}</p>
         <div className="feeds">
-          <FeedRow c={{ name: t("sp_all_feed") }} file="all.ics" count={total} />
+          <FeedRow name={t("sp_all_feed")} count={total} />
         </div>
       </section>
       <section className="card">

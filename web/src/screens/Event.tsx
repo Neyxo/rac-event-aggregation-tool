@@ -5,7 +5,7 @@ import type { ScreenProps } from "../App";
 import { t } from "../i18n";
 import { club, eventById } from "../lib/data";
 import { clubVars } from "../lib/color";
-import { dayN, fmt, isPast, lastDay, metaLine, sameDay } from "../lib/dates";
+import { dayN, fmt, isPast, metaLine, relDay, whenLong } from "../lib/dates";
 import { mapsUrl } from "../lib/geo";
 import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
@@ -27,17 +27,9 @@ function goLabel(e: Ev): string {
 // e/<id>.html: a small page with the event's link preview that forwards into the app
 const shareEvent = (e: Ev) => share({ title: e.title, text: `${e.title} · ${fmt.full.format(new Date(e.start))}${e.location ? " · " + e.location : ""}`, url: shareUrl({ event: e.id }) });
 
-function when(e: Ev): string {
-  const s = new Date(e.start);
-  const en = new Date(e.end);
-  if (e.allday) return fmt.full.format(s) + (sameDay(s, lastDay(e)) ? "" : " – " + fmt.full.format(lastDay(e)));
-  return fmt.full.format(s) + ", " + fmt.time.format(s) + (sameDay(s, en) ? "–" + fmt.time.format(en) : "");
-}
-
 function deadline(e: Ev): string {
   const n = dayN(e.deadline);
-  const rel = n === 0 ? t("today") : n === 1 ? t("tomorrow") : t("in_days", { n });
-  return fmt.full.format(new Date(e.deadline)) + (n >= 0 ? " · " + rel : "");
+  return fmt.full.format(new Date(e.deadline)) + (n >= 0 ? " · " + relDay(n) : "");
 }
 
 function Hero({ src }: { src: string }) {
@@ -78,7 +70,7 @@ function Facts({ e }: { e: Ev }) {
   return (
     <dl className="kv">
       <dt>{t("when")}</dt>
-      <dd>{when(e)}</dd>
+      <dd>{whenLong(e)}</dd>
       {e.location ? <dt>{t("where")}</dt> : null}
       {e.location ? <dd><a href={mapsUrl(e.location)} target="_blank" rel="noopener"><Icon name="pin" />{e.location}</a></dd> : null}
       {showDeadline ? <dt>{t("deadline_h")}</dt> : null}

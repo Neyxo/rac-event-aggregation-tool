@@ -5,7 +5,7 @@ import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
 import { t } from "../i18n";
 import { getData, loadData, setSettings } from "../lib/data";
-import { ClubChip, ClubChips, ClubTiles, CtaBlock, EventCard, NewIds, Footer, HelpLinks, NewsStrip, NextUp, Popup, QaList, Rich, Tabs, TopBar, Toast, toast } from ".";
+import { ClubChip, ClubChips, CtaBlock, EventCard, NewIds, Footer, HelpLinks, NewsStrip, NextUp, Popup, QaList, Rich, Tabs, TopBar, Toast, toast } from ".";
 
 beforeAll(async () => {
   vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, json: async () => structuredClone(fixture) })));
@@ -90,9 +90,9 @@ describe("event card", () => {
   });
   it("next up: countdown, title, time and place, picture", () => {
     at("2026-11-10T12:00", () => { render(<NextUp e={ev({ id: "n", start: "2026-11-11T20:00", end: "2026-11-11T22:00", location: "Luzern, X", image: "a.jpg" })} label="L" />); });
-    const a = link(/Tomorrow/);
+    const a = link(/tomorrow/);
     expect(a.getAttribute("href")).toBe("#/event/n");
-    for (const s of ["L", "Tomorrow", "n", "Wed 20:00–22:00 · Luzern"]) expect(within(a).getByText(s)).toBeTruthy();
+    for (const s of ["L", "tomorrow", "n", "Wed 20:00–22:00 · Luzern"]) expect(within(a).getByText(s)).toBeTruthy();
     expect(a.querySelector("img")?.getAttribute("referrerpolicy")).toBe("no-referrer");
   });
 });
@@ -110,17 +110,6 @@ describe("clubs", () => {
     render(<ClubChip id="bern" extra="main"><small>3 km</small></ClubChip>);
     const a = link("Rotaract Bern");
     expect(a.classList.contains("main")).toBe(true); expect(a.textContent).toBe("Bern3 km");
-  });
-  it("tiles: single is a radio group with None and no pseudo-clubs; multi is checkboxes without the excluded", () => {
-    render(<><ClubTiles single selected="bern" onPick={() => {}} /><ClubTiles selected={new Set(["bern"])} exclude={["luzern"]} onPick={() => {}} /></>);
-    const one = within(screen.getByRole("radiogroup")), radios = one.getAllByRole("radio");
-    expect(radios[0]!.textContent).toBe(t("none")); expect(radios[0]!.getAttribute("aria-checked")).toBe("false");
-    const bern = one.getByRole("radio", { checked: true });
-    expect(bern.textContent).toBe("Bern" + "D" + getData().clubs.bern!.district);
-    expect(radios.some(b => b.textContent?.includes("International"))).toBe(false);
-    const many = within(screen.getByRole("group")).getAllByRole("checkbox");
-    expect(many.length).toBeGreaterThan(0);
-    expect(many.map(b => b.querySelector("b")?.textContent)).not.toContain("Luzern");
   });
   it("chips: pressed state per club, limited to only", () => {
     render(<ClubChips selected={new Set(["bern"])} only={["bern", "international"]} onPick={() => {}} />);

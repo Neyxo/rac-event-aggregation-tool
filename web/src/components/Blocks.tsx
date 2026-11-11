@@ -2,7 +2,7 @@
 import { Component, Suspense, useEffect, useState, type ReactNode } from "react";
 import { t } from "../i18n";
 import { getData, LoadFailed, retryLoad } from "../lib/data";
-import { clubVars, vars } from "../lib/color";
+import { BRAND, clubVars, vars } from "../lib/color";
 import { fmt, isPast } from "../lib/dates";
 import { geocode, guessPosition, nearestClubs } from "../lib/geo";
 import { pillarFallback, type Pillar } from "../lib/pillars";
@@ -72,7 +72,7 @@ const In = ({ x }: { x: Inline }): ReactNode => x.map((p, i) => typeof p === "st
 /** a club's own text (lib/rich.ts format) */
 export function Rich({ text, color }: { text: string; color?: string }) {
   return (
-    <div className="rich" style={vars({ "--p": color || "#d41367" })}>
+    <div className="rich" style={vars({ "--p": color || BRAND.cranberry })}>
       {parseRich(text).map((b, i) => {
         switch (b.kind) {
           case "p": return <p key={i}><In x={b.text} /></p>;

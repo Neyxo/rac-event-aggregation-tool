@@ -1,10 +1,9 @@
 // About this app: what the app shows, what it can't, your data, questions. Static text, no events needed.
 import type { ScreenProps } from "../App";
 import { t, tx, type Pair } from "../i18n";
-import { vars } from "../lib/color";
+import { BRAND, BRAND3, vars } from "../lib/color";
 import { Footer, HelpLinks, Icon, QaList, useStickyHeads, useWash, type IconName } from "../components";
 
-const COL = ["#d41367", "#0067c8", "#009739"];
 const KNOW_IC: IconName[] = ["refresh", "ext", "offline", "belloff"];
 
 /** a tile: icon in the colour p, title, one line */
@@ -19,7 +18,7 @@ function Tile({ title, text, ic, p }: { title: string; text: string; ic: IconNam
 }
 
 export default function Public(_props: ScreenProps) {
-  useWash("#0067c8", "#009739", "#d41367");
+  useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
   useStickyHeads();
   const qa: Pair[] = [[t("pub_why_h"), t("pub_why")], ...tx("app_qa")];
   return (
@@ -28,15 +27,15 @@ export default function Public(_props: ScreenProps) {
       <p className="lead">{t("app_lead")}</p>
       <h2 className="sh lv1">{t("app_know_h")}</h2>
       <div className="tiles2" id="know">
-        {tx("app_know").map(([title, text], i) => <Tile key={i} title={title} text={text} ic={KNOW_IC[i] ?? "info"} p={COL[i % 3]!} />)}
+        {tx("app_know").map(([title, text], i) => <Tile key={i} title={title} text={text} ic={KNOW_IC[i] ?? "info"} p={BRAND3[i % 3]!} />)}
       </div>
-      <section className="box tint glass" style={vars({ "--p": "#d41367" })}>
+      <section className="box tint glass" style={vars({ "--p": BRAND.cranberry })}>
         <div className="bh"><div className="ic"><Icon name="eye" /></div><h2>{t("pub_h")}</h2></div>
         <p>{t("pub_lead")}</p>
         <ul>{tx("pub_no").map((s, i) => <li key={i}>{s}</li>)}</ul>
         <p>{t("pub_do")}</p>
       </section>
-      <section className="box tint glass" style={vars({ "--p": "#009739" })}>
+      <section className="box tint glass" style={vars({ "--p": BRAND.green })}>
         <div className="bh"><div className="ic"><Icon name="shield" /></div><h2>{t("app_data_h")}</h2></div>
         <ul className="yes">{tx("app_data").map((s, i) => <li key={i}>{s}</li>)}</ul>
       </section>

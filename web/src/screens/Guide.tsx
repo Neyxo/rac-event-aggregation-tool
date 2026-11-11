@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import type { ScreenProps } from "../App";
 import { t, tx } from "../i18n";
-import { clubVars, vars } from "../lib/color";
+import { BRAND3, clubVars, vars } from "../lib/color";
 import { fmt, isPast } from "../lib/dates";
 import { nClubs } from "../lib/data";
 import { href } from "../lib/route";
@@ -10,12 +10,11 @@ import { store } from "../lib/store";
 import type { Club, Event } from "../lib/types";
 import { Footer, HelpLinks, Icon, useData, useStickyHeads, useTitle, useWash } from "../components";
 
-const COL = ["#d41367", "#0067c8", "#009739"];
 
 /** one step: a link when it leads somewhere (another site in a new tab), a plain box when it doesn't */
 function Step({ n, title, text, to }: { n: number; title: string; text: string; to: string | undefined }) {
   const ext = !!to && /^http/.test(to);
-  const style = vars({ "--p": COL[(n - 1) % 3]! });
+  const style = vars({ "--p": BRAND3[(n - 1) % 3]! });
   const body = (
     <>
       <div className="ic">{String(n)}</div>
@@ -46,7 +45,7 @@ export default function Guide(_props: ScreenProps) {
   useEffect(() => { store.set("rac.guideSeen", true); }, []);
   const home: Club | undefined = D.settings.home ? D.clubs[D.settings.home] : undefined;
   // its first colour is the home club's
-  useWash(home ? home.color : COL[0], COL[1], COL[2]);
+  useWash(home ? home.color : BRAND3[0], BRAND3[1], BRAND3[2]);
   useStickyHeads();
   useTitle(nm.h);
   // each step leads somewhere: the club's Polaris site, Settings, Subscribe, the club's next event
@@ -63,7 +62,7 @@ export default function Guide(_props: ScreenProps) {
       </ol>
       <div className="facts">
         {nm.facts.map(([v, l], i) => (
-          <div key={i} className="glass" style={vars({ "--p": COL[i]! })}><b>{v.replace("{n}", String(nClubs()))}</b><span>{l}</span></div>
+          <div key={i} className="glass" style={vars({ "--p": BRAND3[i]! })}><b>{v.replace("{n}", String(nClubs()))}</b><span>{l}</span></div>
         ))}
       </div>
       <h2 className="sh lv1">{t("read_on")}</h2>

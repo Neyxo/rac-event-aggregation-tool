@@ -4,6 +4,7 @@ import type { ScreenProps } from "../App";
 import { LOCALE, t, tx } from "../i18n";
 import { fold } from "../lib/filters";
 import { Footer, HelpLinks, useStickyHeads, useTitle, useWash } from "../components";
+import { BRAND } from "../lib/color";
 
 /** the letter heading of a word: accents folded away ("Ö" files under O) */
 const initial = (w: string) => fold(w[0]).toUpperCase();
@@ -11,7 +12,7 @@ const initial = (w: string) => fold(w[0]).toUpperCase();
 export default function Words(_props: ScreenProps) {
   const nm = tx("nm");
   const [q, setQ] = useState("");
-  useWash("#009739", "#0067c8", "#d41367");
+  useWash(BRAND.green, BRAND.azure, BRAND.cranberry);
   useStickyHeads();
   useTitle(nm.words_h);
   const rows = nm.words.slice().sort((a, b) => a[0].localeCompare(b[0], LOCALE));

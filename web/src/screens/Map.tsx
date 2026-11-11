@@ -5,7 +5,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { ScreenProps } from "../App";
 import { nEvents, t } from "../i18n";
-import { onColor } from "../lib/color";
+import { BRAND, onColor } from "../lib/color";
 import { club } from "../lib/data";
 import { fmt, isPast } from "../lib/dates";
 import { SWISSTOPO_GREY } from "../lib/geo";
@@ -17,7 +17,7 @@ import { useData } from "../components";
 /** the dot: an HTML string, because Leaflet's divIcon takes markup */
 function dotHtml(e: Event): string {
   const c = club(e.clubs[0] ?? "");
-  const color = c.color || "#d41367";
+  const color = c.color || BRAND.cranberry;
   const logo = c.logo ? `<img src="${c.logo}" alt="">` : "";
   return `<span style="--c:${color};--on-c:${onColor(color)}">${logo}</span>`;
 }

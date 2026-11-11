@@ -2,10 +2,10 @@
 import type { Club, Coords, Event } from "./types";
 import { isPast } from "./dates";
 import { km } from "./geo";
+import { isDistrict } from "./color";
 
 export type View = "all" | "near" | "saved" | "past";
 export const VIEWS: View[] = ["all", "near", "saved", "past"];
-export const DISTRICT_IDS = ["1980", "1990", "2000"] as const;
 
 export interface Filters {
   q: string;
@@ -104,7 +104,7 @@ export function fromParams(p: URLSearchParams, isClub: (id: string) => boolean):
     ...emptyFilters(),
     q: p.get("q") || "", place: p.get("place") || "", r: p.get("r") || "",
     clubs: new Set((p.get("clubs") || "").split(",").filter(c => c && isClub(c))),
-    d: new Set((p.get("d") || "").split(",").filter(d => (DISTRICT_IDS as readonly string[]).includes(d))),
+    d: new Set((p.get("d") || "").split(",").filter(isDistrict)),
     view: view && VIEWS.includes(view) ? view : "all",
   };
 }

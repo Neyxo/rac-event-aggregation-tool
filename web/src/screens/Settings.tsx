@@ -1,16 +1,15 @@
 // Settings: clubs, Rotary layer, language, theme, install steps, share link, help links, developer mode.
 import { useEffect, useRef, useState } from "react";
 import { t, tx } from "../i18n";
-import { setRotary, setSettings } from "../lib/data";
+import { setRotary, setSettings, withAlsoToggled, withHome } from "../lib/data";
 import { anyDevFlag } from "../lib/dev";
+import { guessOS, type OS } from "../lib/geo";
 import { install, isInstalled } from "../lib/install";
 import { href } from "../lib/route";
 import { setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
-import { ClubChips, ClubLabel, Footer, Icon, LangSelect, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
+import { ClubChips, ClubLabel, copy, Footer, Icon, LangSelect, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
 import { useNav } from "../components/router";
-
-type OS = "ios" | "android" | "desktop";
 
 /** an Off / On segmented control (Rotary layer, developer mode) */
 function OnOff({ id, on, onPick }: { id?: string; on: boolean; onPick: (on: boolean) => void }) {
@@ -27,13 +26,6 @@ function Cur({ ids }: { ids: string[] }) {
   if (!ids.length) return <div className="cur"><span className="meta">{t("none")}</span></div>;
   return <div className="cur">{ids.map(c => <ClubLabel key={c} id={c} />)}</div>;
 }
-
-// an iPad asks for the desktop site and says MacIntel, but has touch
-const guessOS = (): OS => {
-  const ua = navigator.userAgent;
-  if (/iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) return "ios";
-  return /Android/.test(ua) ? "android" : "desktop";
-};
 
 /** installed: a note; Chrome's prompt available: one button; otherwise the steps per system, the reader's own first */
 function Install() {
@@ -78,13 +70,8 @@ export default function Settings(_props: ScreenProps) {
   const taps = useRef<number[]>([]);
   const s = D.settings;
 
-  // the main club is never also in "also show"
-  const pickHome = (id: string) => setSettings({ home: id, also: s.also.filter(x => x !== id) });
-  const pickAlso = (id: string) => setSettings({ ...s, also: s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id] });
-  const copy = async () => {
-    await navigator.clipboard.writeText(shareLink);
-    toast(t("copied"));
-  };
+  const pickHome = (id: string) => setSettings(withHome(s, id));
+  const pickAlso = (id: string) => setSettings(withAlsoToggled(s, id));
   // Developer mode, like on Android: ten quick taps on the "made by" line unlock the Developer section for good (rac.devUnlocked);
   // its switch (rac.dev) shows the developer link here and in the top bar
   const tap = () => {
@@ -133,7 +120,7 @@ export default function Settings(_props: ScreenProps) {
         </div>
         <div className="setrow col" id="install"><span>{t("inst_title")}</span><Install /></div>
         <div className="setrow col"><span>{t("share_title")}</span>
-          <div className="linkbox"><input type="text" readOnly value={shareLink} /><button type="button" onClick={copy}>{t("copy")}</button></div>
+          <div className="linkbox"><input type="text" readOnly value={shareLink} /><button type="button" onClick={() => void copy(shareLink)}>{t("copy")}</button></div>
         </div>
       </section>
       <section className="glass"><h2>{t("set_help_h")}</h2>

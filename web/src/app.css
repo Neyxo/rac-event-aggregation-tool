@@ -340,10 +340,7 @@ dialog.ob.full { width: 100%; max-width: none; height: 100dvh; max-height: none;
 .tile { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 6px 8px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface-2); font: inherit; color: var(--text); transition: transform .12s, border-color .15s, background .15s; }
 .tile img { width: 30px; height: 30px; object-fit: contain; } .tile .dot { width: 14px; height: 14px; border-radius: 99px; background: var(--c); }
 .tile b { font-size: .84rem; } .tile span { font-size: .66rem; color: var(--muted); }
-.tile[aria-checked=true] { border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--surface)); box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--c) 70%, transparent); }
-.tile.none[aria-checked=true] { border-color: var(--text); }
 .tile:active { transform: scale(.96); }
-.ob .tiles { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); max-height: 32vh; overflow: auto; }
 
 /* event page */
 .evpage { padding-top: 16px; }

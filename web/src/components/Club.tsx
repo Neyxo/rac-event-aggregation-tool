@@ -1,4 +1,4 @@
-// Clubs: the crest, a club as a plain value, the chip that opens the club, and the pickers (tiles, chips).
+// Clubs: the crest, a club as a plain value, the chip that opens the club, and the chip picker.
 import type { ReactNode } from "react";
 import { t } from "../i18n";
 import { club } from "../lib/data";
@@ -25,22 +25,6 @@ export function ClubChip({ id, extra = "", children }: { id: string; extra?: str
 
 type Pick = { onPick: (id: string) => void; exclude?: string[] } & ({ single: true; selected: string } | { single?: false; selected: Set<string> });
 const isOn = (p: Pick, id: string) => p.single ? p.selected === id : p.selected.has(id);
-
-/** club tiles (settings, onboarding): crest + name + district, single (radio, with "None") or multi (checkbox) */
-export function ClubTiles(p: Pick) {
-  const { single = false, exclude = [], onPick } = p;
-  const D = useData();
-  return (
-    <div className="tiles" role={single ? "radiogroup" : "group"}>
-      {single && <button className="tile none" type="button" role="radio" aria-checked={!p.selected} onClick={() => onPick("")}><b>{t("none")}</b></button>}
-      {D.data.clubs.filter(c => !exclude.includes(c.id) && !(single && c.source)).map(c => (  // a pseudo-club (international, a Rotary district) is never a main club
-        <button key={c.id} className="tile" type="button" style={clubVars(c.color)} role={single ? "radio" : "checkbox"} aria-checked={isOn(p, c.id)} onClick={() => onPick(c.id)}>
-          <ClubMark c={c} /><b>{c.short}</b><span>{c.district ? "D" + c.district : c.source ? "" : t("national")}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
 
 /** chip picker (flows, popups): wraps, no inner scrolling. only: limit to these ids. */
 export function ClubChips(p: Pick & { only?: string[] | null }) {
