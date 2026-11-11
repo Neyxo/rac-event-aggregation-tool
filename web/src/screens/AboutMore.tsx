@@ -4,11 +4,10 @@ import { useEffect, useRef } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
 import { isRac, nClubs } from "../lib/data";
+import { SWISSTOPO_GREY } from "../lib/geo";
 import type { Club, Coords } from "../lib/types";
 import { CtaBlock, Footer, HelpLinks, LoadError, PillarPic, useData, useWash } from "../components";
 
-// the same grey swisstopo map as the Map screen (not imported from there: that would pull Leaflet into the main bundle)
-const SWISSTOPO_GREY = "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg";
 const DISTRICT_COLOR: Record<string, string> = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
 // dots on major cities, illustrating the worldwide network
 const CITIES: Coords[] = [[47, 8], [51.5, -0.1], [40.7, -74], [34, -118], [19.4, -99], [-23.5, -46.6], [-34.6, -58.4], [30, 31.2], [-1.3, 36.8], [-26.2, 28], [6.5, 3.4], [28.6, 77.2], [19, 72.8], [1.3, 103.8], [35.7, 139.7], [37.6, 127], [31.2, 121.5], [-33.9, 151.2], [-37.8, 145], [41.9, 12.5], [48.9, 2.3], [52.5, 13.4], [55.8, 37.6], [-12, -77], [4.7, -74.1], [25.3, 55.3], [14.6, 121], [-6.2, 106.8], [13.8, 100.5], [45.4, -75.7]];

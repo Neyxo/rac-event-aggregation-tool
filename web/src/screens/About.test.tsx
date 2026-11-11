@@ -1,27 +1,24 @@
 // What is Rotaract?: the morph words with their pictures, the club count, the call to action only without a main club, the help links,
 // the questions, and the top-bar share button.
-import { useState, type ReactNode } from "react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { t } from "../i18n";
 import { parseHash } from "../lib/route";
 import { getData, isRac, loadData, setSettings } from "../lib/data";
-import { ExtraContext } from "../components/Chrome";
 import { Toast } from "../components";
-import About from "./About";
+import About, { ShareButton } from "./About";
 
 const route = parseHash("#/about");
 
-/** the bits of App this screen talks to: the top bar slot and the toast */
+/** the bits of App around this screen: its top-bar button (ROUTE_META extra) and the toast */
 function Host() {
-  const [extra, setExtra] = useState<ReactNode>(null);
   return (
-    <ExtraContext.Provider value={setExtra}>
-      <header>{extra}</header>
+    <>
+      <header><ShareButton /></header>
       <About route={route} />
       <Toast />
-    </ExtraContext.Provider>
+    </>
   );
 }
 
