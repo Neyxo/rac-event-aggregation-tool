@@ -115,9 +115,8 @@ export class DataBoundary extends Component<BoundaryProps, { failed: unknown; na
   override state: { failed: unknown; nav: number } = { failed: null, nav: -1 };
   // a new navigation (or the first): forget an earlier failure and let the data load again
   static getDerivedStateFromProps(p: BoundaryProps, s: { nav: number }) {
-    if (p.nav === s.nav) return null;
     retryLoad(p.nav);
-    return { failed: null, nav: p.nav };
+    return p.nav === s.nav ? null : { failed: null, nav: p.nav };
   }
   static getDerivedStateFromError(failed: unknown) { return { failed }; }
   override render() {

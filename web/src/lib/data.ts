@@ -2,9 +2,9 @@
 // the settings, the saved events, the Rotary layer. The state is private and never changed in place: the actions below replace it
 // and notify subscribers, and useData() / useSaved() (components/hooks) re-render every mounted component that reads it.
 import type { Club, Event, EventsJson, Settings } from "./types";
-import { store } from "./store";
-import { BRAND } from "./color";
+import { emitter, store } from "./store";
 import { devFlag } from "./dev";
+import { BRAND } from "./color";
 
 export interface AppData {
   /** events.json, with the Rotary layer merged in while it is switched on */
@@ -27,36 +27,18 @@ let state: AppData = {
 let raw: EventsJson | null = null;
 /** the state holds events.json (initData() has run) */
 export let loaded = false;
-export type LoadStatus = "loading" | "ready" | "error";
-let status: LoadStatus = "loading";
 /** why events.json could not be loaded: offline on a first visit, or the site is broken */
 export class LoadFailed extends Error {}
-let failure: LoadFailed | null = null;
-/** the navigation (components/router's nav id) the screens asking for the data belong to, and the one a failed load belonged to */
-let asking = 0, failedFor = -1;
-const listeners = new Set<() => void>();
+const changes = emitter();
 
 function commit(next: AppData): void {
   state = next;
-  listeners.forEach(f => f());
+  changes.emit();
 }
 
 /** the current state; components read it through useData() so they re-render when it changes */
 export const getData = (): AppData => state;
-/** where loading events.json stands; "error" stays until retryLoad() (a new screen) asks for another try */
-export const getStatus = (): LoadStatus => status;
-/** the error of the failed load (getStatus() is "error") */
-export const getFailure = (): LoadFailed => failure ?? new LoadFailed("events.json");
-/** a screen of navigation nav needs the data. After a failed load, a screen of a later navigation loads it again; the same one
- *  doesn't (React may build a screen's boundary anew while it renders it, which must not fetch again). */
-export function retryLoad(nav: number): void {
-  if (status === "error" && nav !== failedFor) status = "loading";
-  asking = nav;
-}
-export function subscribeData(f: () => void): () => void {
-  listeners.add(f);
-  return () => { listeners.delete(f); };
-}
+export const subscribeData = changes.subscribe;
 
 /** The Rotary layer (events Rotary clubs share with other clubs, one pseudo-club per district) has its own key in events.json and
  *  is only added when switched on in Settings: off, no screen ever sees it. Returns a new object; raw is not changed. */
@@ -80,12 +62,12 @@ export function initData(json: EventsJson): void {
   const clubs = Object.fromEntries(data.clubs.map(c => [c.id, c]));
   const settings = resolveSettings(clubs, store.get("rac.settings", null), !!devFlag("Guest"));
   loaded = true;
-  status = "ready";
   commit({ data, clubs, settings, saved: new Set(store.get("rac.saved", [])), rotary: json.rotary ?? { clubs: [], events: [] } });
 }
 
-let pending: Promise<AppData> | null = null;
-/** fetches events.json once per session (a failure is retried on the next call) and sets the state from it; rejects with LoadFailed */
+/** the load: its promise is where it stands (useData() reads it with use()); a failed one stays until retryLoad() drops it */
+let pending: Promise<AppData> | null = null, failed = false, lastNav = -1;
+/** fetches events.json once per session and sets the state from it; rejects with LoadFailed */
 export function loadData(): Promise<AppData> {
   pending ??= (async () => {
     const r = await fetch("events.json", { cache: "no-cache" });
@@ -93,13 +75,17 @@ export function loadData(): Promise<AppData> {
     initData(await r.json() as EventsJson);
     return state;
   })().catch((e: unknown) => {
-    pending = null;
-    status = "error";
-    failedFor = asking;
-    failure = e instanceof LoadFailed ? e : new LoadFailed("events.json: " + String(e), { cause: e });
-    throw failure;
+    failed = true;
+    throw e instanceof LoadFailed ? e : new LoadFailed("events.json: " + String(e), { cause: e });
   });
   return pending;
+}
+/** a screen of navigation nav (components/router's nav id) needs the data: after a failed load, the first screen of a later
+ *  navigation loads it again. Once per navigation: React may build a screen's boundary anew while it renders it, which must not fetch again. */
+export function retryLoad(nav: number): void {
+  if (nav === lastNav) return;
+  lastNav = nav;
+  if (failed) { failed = false; pending = null; }
 }
 
 /** the main club and the others to show; stored, except during the guest preview (a look at the app as a new visitor) */

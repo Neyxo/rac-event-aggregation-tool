@@ -1,6 +1,6 @@
 // Hooks every screen can use: the data, stored values, the colour wash, the morphing hero, the sticky headings.
 import { use, useEffect, useLayoutEffect, useMemo, useRef, useSyncExternalStore, type RefObject } from "react";
-import { getData, getFailure, getStatus, loadData, subscribeData, type AppData } from "../lib/data";
+import { getData, loadData, loaded, subscribeData, type AppData } from "../lib/data";
 import { getInstallPrompt, subscribeInstall, type InstallPrompt } from "../lib/install";
 import { store, type StoreKey, type StoreKeys } from "../lib/store";
 
@@ -9,11 +9,9 @@ import { store, type StoreKey, type StoreKeys } from "../lib/store";
  *  shows a skeleton instead); when it can't be loaded, it throws LoadFailed (the DataBoundary shows the offline note). So a screen
  *  never sees the data missing, and only renders once it is there. */
 export function useData(): AppData {
-  const D = useSyncExternalStore(subscribeData, getData);
-  const status = getStatus();
-  if (status === "error") throw getFailure();
-  if (status === "loading") use(loadData());
-  return D;
+  // once the data is in, not even use(): it suspends once for a promise React hasn't seen settle
+  if (!loaded) use(loadData());
+  return useSyncExternalStore(subscribeData, getData);
 }
 
 /** the browser's install prompt while it can be shown (lib/install's install() shows it), null otherwise */
