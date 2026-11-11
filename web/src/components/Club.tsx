@@ -1,10 +1,11 @@
 // Clubs: the crest, a club as a plain value, the chip that opens the club, and the pickers (tiles, chips).
 import type { ReactNode } from "react";
 import { t } from "../i18n";
-import { club, D } from "../lib/data";
+import { club } from "../lib/data";
 import { clubVars } from "../lib/color";
 import { href } from "../lib/route";
 import type { Club } from "../lib/types";
+import { useData } from "./hooks";
 
 /** the crest, or a dot in the club colour */
 export function ClubMark({ c }: { c: Club }) {
@@ -28,6 +29,7 @@ const isOn = (p: Pick, id: string) => p.single ? p.selected === id : p.selected.
 /** club tiles (settings, onboarding): crest + name + district, single (radio, with "None") or multi (checkbox) */
 export function ClubTiles(p: Pick) {
   const { single = false, exclude = [], onPick } = p;
+  const { D } = useData();
   return (
     <div className="tiles" role={single ? "radiogroup" : "group"}>
       {single && <button className="tile none" type="button" role="radio" aria-checked={!p.selected} onClick={() => onPick("")}><b>{t("none")}</b></button>}
@@ -43,6 +45,7 @@ export function ClubTiles(p: Pick) {
 /** chip picker (flows, popups): wraps, no inner scrolling. only: limit to these ids. */
 export function ClubChips(p: Pick & { only?: string[] | null }) {
   const { single = false, exclude = [], only = null, onPick } = p;
+  const { D } = useData();
   return (
     <div className="chips">
       {single && <button className="chip" type="button" aria-pressed={!p.selected} onClick={() => onPick("")}>{t("none")}</button>}

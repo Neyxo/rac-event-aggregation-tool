@@ -5,7 +5,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { parseHash } from "../lib/route";
-import { D, isRac, loadData } from "../lib/data";
+import { getData, isRac, loadData, setSettings } from "../lib/data";
 import { ExtraContext } from "../components/Chrome";
 import { Toast } from "../components";
 import About from "./About";
@@ -31,7 +31,7 @@ beforeAll(async () => {
 });
 afterEach(() => {
   cleanup();
-  D.settings.home = "";
+  setSettings({ ...getData().settings, home: "" });
 });
 
 describe("about", () => {
@@ -46,8 +46,8 @@ describe("about", () => {
     expect(main.querySelector("#words")!.className).toBe("words");
     expect(main.querySelector("#words .w:nth-child(3)")!.className).toBe("w on");
     expect(main.querySelector<HTMLElement>("#stage")!.style.getPropertyValue("--p")).toBe("#d41367");
-    const n = D.data.clubs.filter(isRac).length;
-    expect(main.querySelector("[data-t=ab_people_t]")!.textContent).toMatch(new RegExp("^" + n + " "));
+    const n = getData().data.clubs.filter(isRac).length;
+    expect([...main.querySelectorAll("p.lead")].find(p => p.textContent!.includes("clubs between"))!.textContent).toMatch(new RegExp("^" + n + " "));
     expect([...main.querySelectorAll("#more a.more")].map(a => a.getAttribute("href"))).toEqual(["#/guide", "#/words", "#/intl", "#/about-more", "#/family"]);
     expect(main.querySelectorAll("#qa details[name=qa]")).toHaveLength(5);
     expect(main.querySelector("#qa summary")!.textContent).toBe("Who can join?");
@@ -59,7 +59,7 @@ describe("about", () => {
     const guest = render(<Host />);
     expect(guest.container.querySelector("#cta .cta.new")).not.toBeNull();
     guest.unmount();
-    D.settings.home = "luzern";
+    setSettings({ ...getData().settings, home: "luzern" });
     const member = render(<Host />);
     expect(member.container.querySelector("#cta")!.children).toHaveLength(0);
   });

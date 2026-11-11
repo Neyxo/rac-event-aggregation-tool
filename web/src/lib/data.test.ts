@@ -56,7 +56,7 @@ describe("resolveSettings", () => {
 });
 
 describe("loadData", () => {
-  it("fetches once per session and fills D; migrates rac.prefs", async () => {
+  it("fetches once per session and sets the state; migrates rac.prefs", async () => {
     localStorage.setItem("rac.prefs", JSON.stringify({ clubs: ["bern", "luzern"] }));
     localStorage.setItem("rac.saved", JSON.stringify(["202811"]));
     const f = json(fixture); vi.stubGlobal("fetch", f);
@@ -64,25 +64,25 @@ describe("loadData", () => {
     await m.loadData(); await m.loadData();
     expect(f).toHaveBeenCalledTimes(1);
     expect(m.loaded).toBe(true);
-    expect(m.D.settings).toEqual({ home: "bern", also: ["luzern"] });
+    expect(m.getData().settings).toEqual({ home: "bern", also: ["luzern"] });
     expect(localStorage.getItem("rac.prefs")).toBeNull();
     expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "bern", also: ["luzern"] });
-    expect(m.D.saved.has("202811")).toBe(true);
+    expect(m.getData().saved.has("202811")).toBe(true);
     expect(m.myClubs()).toEqual(["bern", "luzern"]);
-    expect(m.D.clubs.rotary1980).toBeUndefined();
+    expect(m.getData().clubs.rotary1980).toBeUndefined();
   });
   it("Rotary layer on: districts are clubs, their events are in the lists", async () => {
     localStorage.setItem("rac.rotary", "true");
     vi.stubGlobal("fetch", json(fixture));
     const m = await fresh(); await m.loadData();
-    expect(m.D.clubs.rotary1980?.source).toBe("rotary");
-    expect(m.D.data.events.some(e => e.layer === "rotary")).toBe(true);
+    expect(m.getData().clubs.rotary1980?.source).toBe("rotary");
+    expect(m.getData().data.events.some(e => e.layer === "rotary")).toBe(true);
   });
   it("Rotary layer off: a shared link to a Rotary event still opens it, the lists never see it", async () => {
     vi.stubGlobal("fetch", json(fixture));
     const m = await fresh(); await m.loadData();
     const id = fixture.rotary!.events[0]!.id;
-    expect(m.D.data.events.some(e => e.id === id)).toBe(false);
+    expect(m.getData().data.events.some(e => e.id === id)).toBe(false);
     expect(m.eventById(id)?.layer).toBe("rotary");
     expect(m.eventById("nope")).toBeUndefined();
   });
@@ -99,8 +99,53 @@ describe("loadData", () => {
     vi.stubGlobal("fetch", json(fixture));
     const m = await fresh(); await m.loadData();
     expect(m.myClubs()).toEqual([]);
-    m.D.settings.home = "luzern"; m.saveSettings();  // not saved during the preview
+    m.setSettings({ home: "luzern", also: [] });  // not saved during the preview
     expect(JSON.parse(localStorage.getItem("rac.settings")!).home).toBe("bern");
+  });
+});
+
+describe("actions", () => {
+  it("replace the state (never change it in place) and notify subscribers", async () => {
+    vi.stubGlobal("fetch", json(fixture));
+    const m = await fresh(); await m.loadData();
+    const calls = vi.fn();
+    const off = m.subscribeData(calls);
+    const before = m.getData();
+    expect(m.toggleSaved("a")).toBe(true);
+    expect(m.getData()).not.toBe(before);
+    expect(before.saved.has("a")).toBe(false);
+    m.setSettings({ home: "bern", also: ["luzern"] });
+    expect(before.settings).toEqual({ home: "", also: [] });
+    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "bern", also: ["luzern"] });
+    expect(calls).toHaveBeenCalledTimes(2);
+    off();
+    m.toggleSaved("a");
+    expect(calls).toHaveBeenCalledTimes(2);
+  });
+  it("setRotary merges the layer in and out at once; a district in also-show counts only while it is on, and stays stored", async () => {
+    localStorage.setItem("rac.settings", JSON.stringify({ home: "bern", also: ["rotary1980", "luzern"] }));
+    vi.stubGlobal("fetch", json(fixture));
+    const m = await fresh(); await m.loadData();
+    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    m.setRotary(true);
+    expect(localStorage.getItem("rac.rotary")).toBe("true");
+    expect(m.getData().clubs.rotary1980?.source).toBe("rotary");
+    expect(m.getData().data.events.some(e => e.layer === "rotary")).toBe(true);
+    expect(m.myClubs()).toEqual(["bern", "rotary1980", "luzern"]);
+    m.setRotary(false);
+    expect(m.getData().clubs.rotary1980).toBeUndefined();
+    expect(m.getData().data.events.some(e => e.layer === "rotary")).toBe(false);
+    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    expect(JSON.parse(localStorage.getItem("rac.settings")!).also).toEqual(["rotary1980", "luzern"]);
+  });
+  it("setRotary before events.json is in only stores the switch; the load then uses it", async () => {
+    vi.stubGlobal("fetch", json(fixture));
+    const m = await fresh();
+    m.setRotary(true);
+    expect(m.loaded).toBe(false);
+    await m.loadData();
+    expect(m.getData().clubs.rotary1980).toBeDefined();
   });
 });
 

@@ -59,7 +59,7 @@ export interface ListCtx extends MatchCtx {
   page: "home" | "discover";
   /** my clubs (myClubs()) */
   mine: string[];
-  saved: Set<string>;
+  saved: ReadonlySet<string>;
   /** Home's next-up event, not repeated in the list */
   skip?: string;
 }
@@ -73,7 +73,7 @@ export interface ListResult {
   /** a guest's Home: "explore_near" when nearby events were found, else "home_soon"; null elsewhere */
   title: "explore_near" | "home_soon" | null;
 }
-/** the list as render() in app.js built it */
+/** the events a list shows for these filters, and what its title and summary line need */
 export function selectEvents(events: Event[], f: Filters, ctx: ListCtx): ListResult {
   let noLocation = 0; let matches: Event[] = [];
   const explore = ctx.page === "home" && !ctx.mine.length;

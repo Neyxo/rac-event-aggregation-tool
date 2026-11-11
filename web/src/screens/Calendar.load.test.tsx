@@ -28,10 +28,10 @@ describe("Calendar loading", () => {  // in this order: a failed load is retried
     vi.stubGlobal("fetch", vi.fn(() => new Promise(ok => { answer = () => ok({ ok: true, json: async () => structuredClone(fixture) }); })));
     render(<Calendar route={route} />);
     expect($("#mtitle")?.textContent).toBe("");
-    for (const s of ["#next", "#next", "#prev", '[data-scope="all"]', "#todayBtn"]) fireEvent.click($(s)!);
+    for (const s of ["#next", "#next", "#prev", "#scope button:nth-child(2)", "#todayBtn"]) fireEvent.click($(s)!);
     await act(async () => { answer(); });
     expect($("#mtitle")?.textContent).toBe(fmt.month.format(new Date(2026, 10, 1)));
-    expect($('[data-scope="mine"]')?.getAttribute("aria-pressed")).toBe("true");
+    expect($("#scope button:nth-child(1)")?.getAttribute("aria-pressed")).toBe("true");
     expect($("#sheet")?.className).toBe("sheet");
   });
 });

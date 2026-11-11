@@ -3,7 +3,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData, mergeRotary } from "../lib/data";
+import { loadData, setRotary } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { Toast } from "../components";
 import Subscribe from "./Subscribe";
@@ -38,9 +38,9 @@ const show = () => render(<><Subscribe route={route} /><Toast /></>);
 const base = location.href.replace(/[#?].*$/, "").replace(/[^/]*$/, "");
 
 describe("Subscribe", () => {
-  it("draws the four cards with the old data-t headings and the platform steps", () => {
+  it("draws the four cards with their headings and the platform steps", () => {
     show();
-    expect([...document.querySelectorAll("main.wrap#main > section.card > h2")].map(h => h.getAttribute("data-t"))).toEqual(["sub_title", "sp_all", "sp_club", "faq"]);
+    expect([...document.querySelectorAll("main.wrap#main > section.card > h2")].map(h => h.textContent)).toEqual(["Subscribe to a calendar", "Everything", "Per club", "Questions"]);
     expect(texts("#how > details > summary")).toEqual(["iPhone / iPad (Apple Calendar)", "Google Calendar", "Android (Samsung or other calendar apps)", "Outlook / Windows / Mac"]);
     expect([...document.querySelectorAll("#how > details")].map(d => d.querySelectorAll("ol > li").length)).toEqual([3, 3, 2, 2]);
     expect(document.querySelectorAll("#qa > details[name=qa] > summary").length).toBeGreaterThan(0);
@@ -69,12 +69,11 @@ describe("Subscribe", () => {
   });
 
   it("Rotary layer on: its district feeds under their own heading", () => {
-    const off = D.data;
-    D.data = mergeRotary(structuredClone(fixture), true);
+    act(() => { setRotary(true); });
     show();
     expect(texts("#feeds > h3").at(-1)).toBe("Rotary, by district");
     expect([...document.querySelectorAll("#feeds > .feed")].at(-1)?.querySelector(".l > a:last-child")?.getAttribute("href")).toBe(base + "rotary1980.ics");
-    D.data = off;
+    act(() => { setRotary(false); });
   });
 
   it("desktop: Google is a plain new-tab link", () => {

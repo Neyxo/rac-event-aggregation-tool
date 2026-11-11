@@ -2,7 +2,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { store } from "../lib/store";
 import Guide from "./Guide";
@@ -20,7 +20,7 @@ afterEach(() => {
   localStorage.clear();
   document.body.className = "";
   document.body.removeAttribute("style");
-  D.settings = { home: "", also: [] };
+  setSettings({ home: "", also: [] });
 });
 
 const show = () => render(<Guide route={parseHash("#/guide")} />);
@@ -49,7 +49,7 @@ describe("Guide", () => {
   });
 
   it("a member of Luzern: crest, the club's colour, its site in a new tab, Discover when it has nothing coming", () => {
-    D.settings = { home: "luzern", also: [] };
+    setSettings({ home: "luzern", also: [] });
     show();
     expect($("#hero").style.getPropertyValue("--c")).toBe("#0b5cad");
     expect($("#hero img").getAttribute("src")).toBe("crests/luzern.svg");

@@ -12,7 +12,7 @@ const KIND_IC: IconName[] = ["users", "flag", "pin", "wheel"];
 /** the dates: the international entry's upcoming events (or a line saying there are none), then the way to follow them */
 function Next() {
   const { ready, D } = useData();
-  // the old page left this empty until the data was there
+  // nothing until the data is there: no skeleton for a few lines
   if (!ready) return null;
   const x = tx("intl");
   const next = D.data.events.filter(e => e.clubs.includes("international") && !isPast(e));
@@ -51,9 +51,9 @@ export default function Intl(_props: ScreenProps) {
         <div className="bh" id="whyH"><div className="ic"><Icon name="heart" /></div><h2 id="whyT">{x.why_h}</h2></div>
         <ul className="yes" id="why">{x.why.map((s, i) => <li key={i}>{s}</li>)}</ul>
       </section>
-      <h2 className="sh lv1" data-t="faq">{t("faq")}</h2>
+      <h2 className="sh lv1">{t("faq")}</h2>
       <section className="box glass"><div className="qa" id="qa"><QaList items={x.qa} /></div></section>
-      <h2 className="sh lv1" data-t="read_on">{t("read_on")}</h2>
+      <h2 className="sh lv1">{t("read_on")}</h2>
       <div id="more"><HelpLinks keys={["world", "family", "guide"]} /></div>
       <div id="foot"><Footer /></div>
     </main>

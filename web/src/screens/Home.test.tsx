@@ -2,9 +2,9 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { eventById, getData, initData, loadData, setSettings, toggleSaved } from "../lib/data";
 import { parseHash } from "../lib/route";
-import { Toast, useRoute } from "../components";
+import { EventCard, Toast, useRoute } from "../components";
 import Home from "./Home";
 
 beforeAll(async () => {
@@ -21,7 +21,8 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-11T10:00"));
   history.replaceState(null, "", "/#/");
-  D.saved = new Set();
+  localStorage.clear();
+  initData(fixture);
 });
 afterEach(() => {
   cleanup();
@@ -39,7 +40,7 @@ const show = async () => {
 const ids = () => [...document.querySelectorAll("#results a.event")].map(a => a.id.slice(3));
 
 describe("Home, member", () => {
-  beforeEach(() => { D.settings = { home: "zuerich", also: ["luzern"] }; });
+  beforeEach(() => { setSettings({ home: "zuerich", also: ["luzern"] }); });
 
   it("greets, shows the next event, the panes, and lists the rest of my clubs' events plus the international ones", async () => {
     await show();
@@ -60,7 +61,7 @@ describe("Home, member", () => {
   });
 
   it("news since the last visit: new events get the tag, the line jumps to the list", async () => {
-    D.settings = { home: "zuerich", also: ["zurich-international"] };
+    setSettings({ home: "zuerich", also: ["zurich-international"] });
     localStorage.setItem("rac.seen", JSON.stringify({ at: Date.now() - 2 * 36e5, map: { "219091": "2026-11-11T19:00" } }));
     await show();
     expect(document.querySelector("a.news")?.getAttribute("href")).toBe("#results");
@@ -69,8 +70,9 @@ describe("Home, member", () => {
     expect(document.querySelector("#ev-222796 .st.new")).not.toBeNull();
     expect(document.querySelector("#ev-eu2069 .st.new")).toBeNull();
     expect(JSON.parse(localStorage.getItem("rac.seen")!).at).toBe(Date.now());
-    // the tags are Home's: the next screen's cards (Discover, a club) get none
-    expect(D.newIds.size).toBe(0);
+    // the tags are Home's: a card anywhere else (Discover, a club) gets none
+    const other = render(<EventCard e={eventById("222796")!} />).container;
+    expect(other.querySelector(".st.new")).toBeNull();
   });
 
   it("a star redraws the saved pane; the saved view lists saved events of any club", async () => {
@@ -78,7 +80,7 @@ describe("Home, member", () => {
     fireEvent.click(document.querySelector("#ev-eu2069 .star")!);
     expect([...document.querySelectorAll(".panes .pane:nth-child(2) a.r span")].map(s => s.textContent)).toEqual(["Pre-REM Satu Mare"]);
     expect(document.querySelector("#toast")?.textContent).toBe("Saved ★");
-    fireEvent.click(document.querySelector("#views [data-view=saved]")!);
+    fireEvent.click(document.querySelector("#views button:nth-child(2)")!);
     expect(ids()).toEqual(["eu2069"]);
     expect(location.hash).toBe("#/?view=saved");
     expect(document.querySelector("#clear")?.hasAttribute("hidden")).toBe(false);
@@ -90,23 +92,46 @@ describe("Home, member", () => {
   });
 });
 
+describe("Home follows the shared state", () => {
+  beforeEach(() => { setSettings({ home: "zuerich", also: ["luzern"] }); });
+
+  it("a star on a card mounted elsewhere updates Home's saved pane and the card's own star", async () => {
+    await show();
+    const pane = () => [...document.querySelectorAll(".panes .pane:nth-child(2) a.r span")].map(s => s.textContent);
+    expect(pane()).toEqual([]);
+    const elsewhere = render(<EventCard e={eventById("eu2069")!} />).container;
+    fireEvent.click(elsewhere.querySelector(".star")!);
+    expect(pane()).toEqual(["Pre-REM Satu Mare"]);
+    expect(document.querySelector("#results #ev-eu2069 .star")?.getAttribute("aria-pressed")).toBe("true");
+    expect(JSON.parse(localStorage.getItem("rac.saved")!)).toEqual(["eu2069"]);
+  });
+
+  it("changing the settings redraws Home: greeting chips, wash and next event follow the new main club", async () => {
+    await show();
+    expect(document.querySelector(".hello .chips a.main")?.getAttribute("href")).toBe("#/club/zuerich");
+    act(() => { setSettings({ home: "luzern", also: [] }); });
+    expect([...document.querySelectorAll(".hello .chips a")].map(a => a.getAttribute("href"))).toEqual(["#/club/luzern"]);
+    expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "luzern", also: [] });
+  });
+});
+
 describe("a new navigation to Home", () => {
   it("starts over from the URL, as a page load did (the Home tab from the saved view)", async () => {
-    D.settings = { home: "zuerich", also: ["luzern"] };
-    D.saved = new Set(["eu2069"]);
+    setSettings({ home: "zuerich", also: ["luzern"] });
+    toggleSaved("eu2069");
     await act(async () => { history.replaceState(null, "", "/#/?view=saved"); window.dispatchEvent(new HashChangeEvent("hashchange")); });
     const W = () => <Home route={useRoute()} />;
     render(<W />);
     await act(async () => {});
-    expect(document.querySelector("#views [aria-pressed=true]")?.getAttribute("data-view")).toBe("saved");
+    expect(document.querySelector("#views [aria-pressed=true]")?.textContent).toBe("Saved ★");
     await act(async () => { history.pushState(null, "", "#/"); window.dispatchEvent(new HashChangeEvent("hashchange")); });
-    expect(document.querySelector("#views [aria-pressed=true]")?.getAttribute("data-view")).toBe("all");
+    expect(document.querySelector("#views [aria-pressed=true]")?.textContent).toBe("Upcoming");
     expect(ids()).toEqual(["eu2069", "eu2067"]);
   });
 });
 
 describe("Home, guest", () => {
-  beforeEach(() => { D.settings = { home: "", also: [] }; });
+  beforeEach(() => { setSettings({ home: "", also: [] }); });
 
   it("explore mode: the invitation, the club finder, every Rotaract event", async () => {
     await show();
@@ -135,7 +160,7 @@ describe("Home, guest", () => {
 
 describe("welcome steps", () => {
   beforeEach(() => {
-    D.settings = { home: "", also: [] };
+    setSettings({ home: "", also: [] });
     vi.stubGlobal("fetch", vi.fn(async () => { throw new Error("offline"); }));  // no position: the guess is per language
   });
   afterEach(() => vi.unstubAllGlobals());
@@ -194,7 +219,7 @@ describe("welcome steps", () => {
     next();
     expect(dlg().querySelector(".credit")).not.toBeNull();
     next();
-    expect(D.settings).toEqual({ home: "bern", also: ["geneve-international", "luzern"] });
+    expect(getData().settings).toEqual({ home: "bern", also: ["geneve-international", "luzern"] });
     expect(document.querySelector(".hello .chips a.main")?.getAttribute("href")).toBe("#/club/bern");
   });
 

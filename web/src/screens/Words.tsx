@@ -16,14 +16,13 @@ export default function Words(_props: ScreenProps) {
   useTitle(nm.words_h);
   const rows = nm.words.slice().sort((a, b) => a[0].localeCompare(b[0], LOCALE));
   const needle = fold(q.trim());
-  // the old page matched against the row's textContent: word and meaning run together
+  // word and meaning are searched as one text, so a search can match either
   const shown = rows.map(([w, d]) => fold(w + d).includes(needle));
   const n = shown.filter(Boolean).length;
   return (
     <main className="wrap fam" id="main">
       <h1 id="h">{nm.words_h}</h1>
       <p className="lead" id="lead">{nm.words_sub}</p>
-      {/* uncontrolled, as before: no value attribute in the DOM */}
       <input className="wsearch" type="search" id="q" autoComplete="off" placeholder={nm.words_ph} aria-label={nm.words_ph} onChange={ev => setQ(ev.target.value)} />
       <dl className="gloss glass" id="gloss" hidden={!n}>
         {rows.map(([w, d], i) => {
@@ -35,7 +34,7 @@ export default function Words(_props: ScreenProps) {
         })}
       </dl>
       <p className="fine" id="none" hidden={!!n}>{nm.words_none}</p>
-      <h2 className="sh lv1" data-t="read_on">{t("read_on")}</h2>
+      <h2 className="sh lv1">{t("read_on")}</h2>
       <div id="more"><HelpLinks keys={["guide", "family"]} /></div>
       <div id="foot"><Footer /></div>
     </main>

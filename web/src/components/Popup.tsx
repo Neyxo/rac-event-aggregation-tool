@@ -1,5 +1,5 @@
 // A small popup with a title, some content and Done: <dialog class="ob"><div class="ob-in"><h2/>{content}<div class="nav"><span/><button/></div></div></dialog>.
-// Mount it to open it ({open && <Popup .../>}); it calls onClose when closed (Done, Esc). Rendered into body like the old one, so the
+// Mount it to open it ({open && <Popup .../>}); it calls onClose when closed (Done, Esc). Rendered into body, so the
 // CSS of where it was opened (.feed .l a ...) never reaches into it.
 import { useEffect, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";

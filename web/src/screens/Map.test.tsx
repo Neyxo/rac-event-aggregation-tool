@@ -3,7 +3,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { parseHash } from "../lib/route";
-import { loadData, D } from "../lib/data";
+import { getData, loadData } from "../lib/data";
 import { isPast } from "../lib/dates";
 import { nEvents } from "../i18n";
 import MapScreen from "./Map";
@@ -26,8 +26,8 @@ describe("map", () => {
     expect(main.querySelector("label")?.className).toBe("icon-btn mapopt");
     const label = main.querySelector("label")!;
     expect(label.querySelector("input#past[type=checkbox]")).not.toBeNull();
-    expect(label.querySelector("span[data-t=v_past]")?.textContent).toBe("Past");
-    const upcoming = D.data.events.filter(e => e.coords && !isPast(e)).length;
+    expect(label.querySelector("input#past + span")?.textContent).toBe("Past");
+    const upcoming = getData().data.events.filter(e => e.coords && !isPast(e)).length;
     await waitFor(() => expect(label.querySelector("#summary")?.textContent).toBe(nEvents(upcoming)));
     expect(label.textContent).toBe(" Past · " + nEvents(upcoming));
     expect(main.querySelectorAll(".mapdot").length).toBe(upcoming);
@@ -35,7 +35,7 @@ describe("map", () => {
 
   it("past shows every event with coordinates; markers carry the club colour and the popup links to the event", async () => {
     const { container } = render(<MapScreen route={route} />);
-    const all = D.data.events.filter(e => e.coords);
+    const all = getData().data.events.filter(e => e.coords);
     act(() => { fireEvent.click(container.querySelector("#past")!); });
     await waitFor(() => expect(container.querySelector("#summary")?.textContent).toBe(nEvents(all.length)));
     expect(container.querySelectorAll(".mapdot").length).toBe(all.length);
@@ -56,7 +56,7 @@ describe("map", () => {
     first.unmount();
     const { container } = render(<MapScreen route={route} />);  // remounted on the same entry, as after "back"
     expect(container.querySelector<HTMLInputElement>("#past")!.checked).toBe(true);
-    await waitFor(() => expect(container.querySelector("#summary")?.textContent).toBe(nEvents(D.data.events.filter(e => e.coords).length)));
+    await waitFor(() => expect(container.querySelector("#summary")?.textContent).toBe(nEvents(getData().data.events.filter(e => e.coords).length)));
     history.replaceState(null, "");
   });
 });

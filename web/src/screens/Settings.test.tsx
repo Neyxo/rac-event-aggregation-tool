@@ -2,7 +2,7 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { getData, loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { Toast } from "../components";
 import Settings from "./Settings";
@@ -20,7 +20,7 @@ beforeAll(async () => {
 afterEach(() => {
   cleanup();
   localStorage.clear();
-  D.settings = { home: "luzern", also: ["zuerich"] };
+  setSettings({ home: "luzern", also: ["zuerich"] });
 });
 
 const route = parseHash("#/settings");
@@ -30,7 +30,7 @@ const show = () => render(<><Settings route={route} /><Toast /></>);
 
 describe("Settings", () => {
   it("draws the sections in the old order with the chosen clubs", () => {
-    D.settings = { home: "luzern", also: ["zuerich"] };
+    setSettings({ home: "luzern", also: ["zuerich"] });
     show();
     expect(texts("main.wrap.settings > section.glass > h2")).toEqual(["Clubs", "App", "Help", "Developer"]);
     expect(texts("#homeCur .cl")).toEqual(["Luzern"]);
@@ -38,19 +38,18 @@ describe("Settings", () => {
     expect(document.querySelectorAll(".setrow.link > svg.chev")).toHaveLength(6);
     expect([...document.querySelectorAll("a.setrow")].map(a => a.getAttribute("href"))).toEqual(["#/subscribe", "./?welcome", "#/public", "#/dev"]);
     expect(($("#link") as HTMLInputElement).value).toBe(location.origin + location.pathname.replace(/[^/]*$/, ""));
-    expect($("#link")?.hasAttribute("value")).toBe(false);
     expect(($("#devSec") as HTMLElement).hidden).toBe(true);
   });
 
   it("shows None for an empty pick", () => {
-    D.settings = { home: "", also: [] };
+    setSettings({ home: "", also: [] });
     show();
     expect(texts("#homeCur > span.meta")).toEqual(["None"]);
     expect(texts("#alsoCur > span.meta")).toEqual(["None"]);
   });
 
   it("main club picker: single choice, drops it from also show, saves", () => {
-    D.settings = { home: "luzern", also: ["zuerich", "bern"] };
+    setSettings({ home: "luzern", also: ["zuerich", "bern"] });
     show();
     fireEvent.click($("#homeBtn")!);
     expect($("dialog.ob h2")?.textContent).toBe("Choose main club");
@@ -65,7 +64,7 @@ describe("Settings", () => {
   });
 
   it("also-show picker: toggles, never offers the main club", () => {
-    D.settings = { home: "luzern", also: [] };
+    setSettings({ home: "luzern", also: [] });
     show();
     fireEvent.click($("#alsoBtn")!);
     const chips = () => [...document.querySelectorAll<HTMLElement>("dialog .chip.club")];
@@ -76,26 +75,45 @@ describe("Settings", () => {
     expect(texts("#alsoCur > span.meta")).toEqual(["None"]);
   });
 
-  it("Rotary switch saves and reloads", () => {
+  it("Rotary switch applies at once, without a reload: the districts join the also-show picker and leave it again", () => {
     const reload = vi.fn();
     vi.stubGlobal("location", { ...location, reload, hash: "#/settings" });
     show();
-    expect($('#rotarySeg [data-k="off"]')?.getAttribute("aria-pressed")).toBe("true");
-    fireEvent.click($('#rotarySeg [data-k="on"]')!);
+    const offered = () => [...document.querySelectorAll("dialog .chip.club")].map(b => b.getAttribute("aria-label"));
+    fireEvent.click($("#alsoBtn")!);
+    expect(offered()).not.toContain("Rotary Distrikt 1980");
+    fireEvent.click($("dialog .nav .btn")!);
+    expect($("#rotarySeg button:nth-child(1)")?.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click($("#rotarySeg button:nth-child(2)")!);
     expect(localStorage.getItem("rac.rotary")).toBe("true");
-    expect(reload).toHaveBeenCalled();
+    expect($("#rotarySeg button:nth-child(2)")?.getAttribute("aria-pressed")).toBe("true");
+    fireEvent.click($("#alsoBtn")!);
+    expect(offered()).toContain("Rotary Distrikt 1980");
+    fireEvent.click($("dialog .nav .btn")!);
+    fireEvent.click($("#rotarySeg button:nth-child(1)")!);
+    expect(getData().clubs.rotary1980).toBeUndefined();
+    expect(reload).not.toHaveBeenCalled();
     vi.unstubAllGlobals();
   });
 
-  it("theme switch sets <html data-theme> and the pressed button", () => {
+  it("theme switch applies at once, without a reload, and is stored for the next start", () => {
+    const reload = vi.fn();
+    vi.stubGlobal("location", { ...location, reload, hash: "#/settings" });
     document.documentElement.dataset.theme = "light";
     show();
+    expect($("#themeSeg button:nth-child(1)")?.getAttribute("aria-pressed")).toBe("true");
     expect(texts("#themeSeg button")).toEqual(["Light", "Dark"]);
     expect($("#themeSeg button svg")).not.toBeNull();
-    fireEvent.click($('#themeSeg [data-k="dark"]')!);
+    fireEvent.click($("#themeSeg button:nth-child(2)")!);
     expect(document.documentElement.dataset.theme).toBe("dark");
-    expect($('#themeSeg [data-k="dark"]')?.getAttribute("aria-pressed")).toBe("true");
+    expect($("#themeSeg button:nth-child(2)")?.getAttribute("aria-pressed")).toBe("true");
     expect(localStorage.getItem("rac.theme")).toBe('"dark"');
+    expect(reload).not.toHaveBeenCalled();
+    fireEvent.click($("#themeSeg button:nth-child(1)")!);
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect($("#themeSeg button:nth-child(1)")?.getAttribute("aria-pressed")).toBe("true");
+    expect(localStorage.getItem("rac.theme")).toBe('"light"');
+    vi.unstubAllGlobals();
   });
 
   it("language: the shared segmented control", () => {
@@ -106,11 +124,11 @@ describe("Settings", () => {
   it("install steps: one tab per system, switching the steps", () => {
     show();
     const tabs = [...document.querySelectorAll("#install #installBody .seg[role=tablist] > button[role=tab]")];
-    expect(tabs.map(b => b.getAttribute("data-key"))).toEqual(["ios", "android", "desktop"]);
-    expect($("[data-key=desktop]")?.getAttribute("aria-selected")).toBe("true");  // jsdom is no phone
+    expect(tabs.map(b => b.textContent)).toEqual(["iPhone / iPad", "Android", "Computer"]);
+    expect(tabs[2]!.getAttribute("aria-selected")).toBe("true");  // jsdom is no phone
     const before = texts("ol.steps li");
-    fireEvent.click($("[data-key=ios]")!);
-    expect($("[data-key=ios]")?.getAttribute("aria-selected")).toBe("true");
+    fireEvent.click(tabs[0]!);
+    expect(tabs[0]!.getAttribute("aria-selected")).toBe("true");
     expect(texts("ol.steps li")).not.toEqual(before);
   });
 
@@ -132,10 +150,26 @@ describe("Settings", () => {
     expect(($("#devLink") as HTMLElement).hidden).toBe(false);
     expect(localStorage.getItem("rac.devUnlocked")).toBe("true");
     expect($("#toast")?.textContent).toBe("Developer mode is on");
-    fireEvent.click($('#devSeg [data-k="off"]')!);
+    fireEvent.click($("#devSeg button:nth-child(1)")!);
     expect(localStorage.getItem("rac.dev")).toBe("false");
     expect(($("#devLink") as HTMLElement).hidden).toBe(true);
     expect(($("#devSec") as HTMLElement).hidden).toBe(false);  // stays once unlocked
+  });
+
+  it("switching developer mode reloads only when it changes which preview switches apply", () => {
+    const reload = vi.fn();
+    vi.stubGlobal("location", { ...location, reload, hash: "#/settings" });
+    localStorage.setItem("rac.devUnlocked", "true");
+    localStorage.setItem("rac.dev", "true");
+    show();
+    fireEvent.click($("#devSeg button:nth-child(1)")!);  // off, no preview on: nothing changes
+    expect(reload).not.toHaveBeenCalled();
+    fireEvent.click($("#devSeg button:nth-child(2)")!);
+    localStorage.setItem("rac.devGuest", "true");  // the guest preview is on: turning developer mode off ends it
+    fireEvent.click($("#devSeg button:nth-child(1)")!);
+    expect(reload).toHaveBeenCalledTimes(1);
+    localStorage.removeItem("rac.devGuest");
+    vi.unstubAllGlobals();
   });
 
   it("slow taps don't unlock", () => {

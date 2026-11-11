@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
-import { D as data, freshNews } from "../lib/data";
+import { freshNews } from "../lib/data";
 import { clubVars } from "../lib/color";
 import { isPast } from "../lib/dates";
 import { href } from "../lib/route";
@@ -38,8 +38,9 @@ function ShareButton({ c }: { c: ClubT }) {
 
 /** "club.html?id=X" in clubs.toml is another club of this app: its chip; anything else is an outside site */
 function PartnerChip({ p }: { p: Partner }) {
+  const { D } = useData();
   const m = p.url.match(/^club\.html\?id=(.+)/);
-  if (m?.[1] && data.clubs[m[1]]) return <ClubChip id={m[1]} />;
+  if (m?.[1] && D.clubs[m[1]]) return <ClubChip id={m[1]} />;
   return <a className="chip club" href={m?.[1] ? href("club", m[1]) : p.url} target="_blank" rel="noopener" title={p.note || undefined}><Icon name="wheel" />{p.name}</a>;
 }
 

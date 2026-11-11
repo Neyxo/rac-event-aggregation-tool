@@ -67,10 +67,10 @@ export default function Family(_props: ScreenProps) {
   if (error) return <main className="wrap fam" id="main"><LoadError /></main>;
   return (
     <main className="wrap fam" id="main">
-      <h1 data-t="fam_h">{t("fam_h")}</h1>
-      <p className="lead" data-t="fam_lead">{t("fam_lead")}</p>
+      <h1>{t("fam_h")}</h1>
+      <p className="lead">{t("fam_lead")}</p>
       <Tiles />
-      <h2 className="sh lv1" data-t="fam_clubs">{t("fam_clubs")}</h2>
+      <h2 className="sh lv1">{t("fam_clubs")}</h2>
       <div id="dist">{ready && <Districts />}</div>
       <div id="foot">{ready && <Footer />}</div>
     </main>

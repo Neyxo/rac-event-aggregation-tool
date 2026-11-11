@@ -156,11 +156,11 @@ test.describe("member", () => {
 
   test("Settings: dark theme sticks", async ({ page }) => {
     await page.goto("./#/settings");
-    await page.locator("#themeSeg button[data-k='dark']").click();
+    await page.locator("#themeSeg").getByRole("button", { name: "Dark" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await expect(page.locator("#themeSeg button[data-k='dark']")).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#themeSeg").getByRole("button", { name: "Dark" })).toHaveAttribute("aria-pressed", "true");
   });
 
   test("Settings: the Rotary layer adds Rotary events to Discover", async ({ page }) => {
@@ -168,8 +168,8 @@ test.describe("member", () => {
     await expect(page.locator("main a.event").first()).toBeVisible();
     await expect(page.locator(`#ev-${ROTARY}`)).toHaveCount(0);
     await go(page, "#/settings");
-    await page.locator("#rotarySeg button[data-k='on']").click();
-    await expect(page.locator("#rotarySeg button[data-k='on']")).toHaveAttribute("aria-pressed", "true");  // after the reload
+    await page.locator("#rotarySeg").getByRole("button", { name: "On" }).click();
+    await expect(page.locator("#rotarySeg").getByRole("button", { name: "On" })).toHaveAttribute("aria-pressed", "true");  // after the reload
     await page.locator("#tabs a.tab", { hasText: "Discover" }).click();
     await expect(page.locator(`#ev-${ROTARY}`)).toBeVisible();
   });

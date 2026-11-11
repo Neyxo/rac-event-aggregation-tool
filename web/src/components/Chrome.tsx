@@ -8,7 +8,7 @@ import { Icon, type IconName } from "./Icon";
 import { useStored } from "./hooks";
 import { canGoBack } from "./router";
 
-/** what the top bar and tabs mark as current: the old chrome(active) values */
+/** what the top bar and tabs mark as current */
 export type Active = "home" | "discover" | "calendar" | "about" | "app" | "settings" | "dev" | null;
 
 function Hbtn({ name, to, label, on = false }: { name: IconName; to: string; label: string; on?: boolean }) {

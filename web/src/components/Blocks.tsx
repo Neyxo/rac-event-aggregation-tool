@@ -1,7 +1,7 @@
 // Bigger shared blocks: the call to action, news teasers, a club's rich text, the pillar pictures, the offline state.
 import { useEffect, useState, type ReactNode } from "react";
 import { t } from "../i18n";
-import { D } from "../lib/data";
+import { getData } from "../lib/data";
 import { clubVars, vars } from "../lib/color";
 import { fmt, isPast } from "../lib/dates";
 import { geocode, guessPosition, nearestClubs } from "../lib/geo";
@@ -11,10 +11,12 @@ import { href } from "../lib/route";
 import { here } from "../lib/store";
 import type { Coords, NewsItem } from "../lib/types";
 import { ClubChip, ClubMark } from "./Club";
+import { useData } from "./hooks";
 
 /** call to action: "your club" with its next event when a main club is set, "find your club" (town search, near me) otherwise.
  *  onPlace(coords) tells the screen where the visitor is once they typed a town or tapped "near me" (Home lists nearby events then). */
 export function CtaBlock({ onPlace }: { onPlace?: (pos: Coords) => void }) {
+  const { D } = useData();
   const home = D.settings.home ? D.clubs[D.settings.home] : undefined;
   const [q, setQ] = useState(""), [hint, setHint] = useState(""), [pos, setPos] = useState<Coords | null>(null);
   const show = (p: Coords) => { here.set(p); setPos(p); onPlace?.(p); };
@@ -87,7 +89,7 @@ export function PillarPic({ k, className }: { k: Pillar; className?: string }) {
   const [fallback, setFallback] = useState<string | null>(null);
   return (
     <img className={className} src={fallback ?? "img/" + k + ".jpg"} alt="" loading="lazy" referrerPolicy={fallback ? "no-referrer" : undefined}
-      onError={() => { const f = pillarFallback(D.data.events, k); if (f && !fallback) setFallback(f); }} />
+      onError={() => { const f = pillarFallback(getData().data.events, k); if (f && !fallback) setFallback(f); }} />
   );
 }
 

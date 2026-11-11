@@ -2,7 +2,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { getData, initData, loadData } from "../lib/data";
 import { t } from "../i18n";
 import { Toast } from "../components";
 import Event from "./Event";
@@ -17,7 +17,7 @@ beforeAll(async () => {
   vi.unstubAllGlobals();
 });
 afterAll(() => { vi.useRealTimers(); });
-afterEach(() => { cleanup(); localStorage.clear(); D.saved.clear(); });
+afterEach(() => { cleanup(); localStorage.clear(); initData(fixture); });
 
 describe("event screen", () => {
   it("an upcoming Polaris event: card, head, links, facts, more events", () => {
@@ -93,7 +93,7 @@ describe("event screen", () => {
     const star = container.querySelector(".head .star")!;
     fireEvent.click(star);
     expect(star.getAttribute("aria-pressed")).toBe("true");
-    expect(D.saved.has("219091")).toBe(true);
+    expect(getData().saved.has("219091")).toBe(true);
     expect(document.querySelector("#toast")?.textContent).toBe(t("saved"));
   });
 

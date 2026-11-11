@@ -45,7 +45,7 @@ export function keptSearch(search: string): string {
 }
 
 /** ?welcome (index.html?welcome, Settings' "run the welcome steps"): true once per page load, for Home's onboarding. Taking it also
- *  drops it from the URL (the old Home did that with its first replaceState), so a reload doesn't start the welcome steps again. */
+ *  drops it from the URL, so a reload doesn't start the welcome steps again. */
 let welcome = typeof location !== "undefined" && new URLSearchParams(location.search).has("welcome");
 export function takeWelcome(): boolean {
   const w = welcome; welcome = false;

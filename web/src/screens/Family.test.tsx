@@ -3,7 +3,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { parseHash } from "../lib/route";
-import { D, isRac, loadData } from "../lib/data";
+import { getData, isRac, loadData } from "../lib/data";
 import Family from "./Family";
 
 const route = parseHash("#/family");
@@ -27,7 +27,7 @@ describe("family", () => {
     expect(main.querySelector("h2.sh.lv1")!.textContent).toBe("The clubs");
     expect([...main.querySelectorAll("#dist > h3.sh")].map(h => h.textContent!.slice(0, 5))).toEqual(["D1980", "D1990", "D2000"]);
     const links = [...main.querySelectorAll("#dist .tiles a.tile")];
-    expect(links).toHaveLength(D.data.clubs.filter(c => c.district && isRac(c)).length);
+    expect(links).toHaveLength(getData().data.clubs.filter(c => c.district && isRac(c)).length);
     expect(main.querySelector("#dist a.tile[href='#/club/luzern'] b")!.textContent).toBe("Luzern");
     expect(main.querySelector("#foot footer")).not.toBeNull();
   });

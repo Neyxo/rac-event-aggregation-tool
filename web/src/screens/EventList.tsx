@@ -1,15 +1,15 @@
-// What Home and Discover share (the old app.js served both pages): the filter state and its URL, the view switch, the list head,
+// What Home and Discover share: the filter state and its URL, the view switch, the list head,
 // the event list with month headings, the stale banner and the footer. The filter logic itself is lib/filters.ts.
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { nEvents, t, type StrKey } from "../i18n";
-import { D } from "../lib/data";
+import { getData } from "../lib/data";
 import { fmt } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { activeCount, emptyFilters, fromParams, radiusOf, toParams, type Filters, type ListResult, type View } from "../lib/filters";
 import { geocode } from "../lib/geo";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
-import { EventCard, Footer, Skel, replaceQuery, toast } from "../components";
+import { EventCard, Footer, Skel, replaceQuery, toast, useData } from "../components";
 
 export type Page = "home" | "discover";
 
@@ -18,9 +18,9 @@ export interface FilterApi {
   live: Filters;
   /** the filters the list was last drawn with; null until the first draw (the list shows its skeleton until then) */
   shown: Filters | null;
-  /** the controls are set from the URL (the views get aria-pressed only then, like the old page) */
+  /** the controls are set from the URL (no view is pressed before: which one is not known yet) */
   inited: boolean;
-  /** the number on the Filters button, as of the last recount() (the old page only counted when it redrew the chips) */
+  /** the number on the Filters button, as of the last recount(): the chips, place and radius count; typing a search doesn't */
   count: number | null;
   recount(): void;
   /** the line under the place field */
@@ -39,8 +39,8 @@ export interface FilterApi {
   clear(): void;
 }
 
-/** The filters as app.js kept them: the controls change at once, but the list (and the URL) only follow when the old code called
- *  render(). So the controls (live) and the last drawn state (shown) are kept apart. init adjusts the filters read from the URL
+/** The controls change at once, but the list (and the URL) only follow on draw(): a place counts once it is geocoded, a search
+ *  150 ms after the last key. So the controls (live) and the last drawn state (shown) are kept apart. init adjusts the filters read from the URL
  *  (a guest's Home starts at the position found earlier in this tab). */
 export function useFilters(ready: boolean, query: URLSearchParams, page: Page, init: (f: Filters) => Filters = f => f): FilterApi {
   const [live, setLive] = useState<Filters>(emptyFilters);
@@ -122,7 +122,7 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
   // once events.json is there (club ids can be checked): the controls from the URL, the place geocoded, then the first draw
   useLayoutEffect(() => {
     if (!ready) return;
-    const f = init(fromParams(query, id => !!D.clubs[id]));
+    const f = init(fromParams(query, id => !!getData().clubs[id]));
     cur.current = f;
     setLive(f);
     setPlaceText(f.place);
@@ -147,33 +147,34 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
 
 /** "Last updated ..., may be out of date": events.json is more than 30 hours old */
 export function StaleBanner({ ready }: { ready: boolean }) {
+  const { D } = useData();
   const generated = new Date(D.data.generated);
   const stale = ready && (Date.now() - generated.getTime() > 30 * 3600e3 || !!devFlag("Stale"));
   return <div className="banner" id="stale" role="status" hidden={!stale}>{stale ? t("stale", { t: fmt.stamp.format(generated) }) : null}</div>;
 }
 
 /** the list title, the count line and Clear; sticks under the top bar */
-export function ListHead({ titleId, titleKey, title, summary, clear, onClear }: {
-  titleId?: string; titleKey: StrKey; title: string; summary: string; clear: boolean; onClear: () => void;
+export function ListHead({ titleId, title, summary, clear, onClear }: {
+  titleId?: string; title: string; summary: string; clear: boolean; onClear: () => void;
 }) {
   return (
     <div className="list-head sh lv1">
-      <h3 id={titleId} data-t={titleKey}>{title}</h3>
+      <h3 id={titleId}>{title}</h3>
       <div className="summary">
-        <span id="summary" aria-live="polite" data-t="loading">{summary}</span>
-        <button type="button" className="clear" id="clear" hidden={!clear} data-t="clear" onClick={onClear}>{t("clear")}</button>
+        <span id="summary" aria-live="polite">{summary}</span>
+        <button type="button" className="clear" id="clear" hidden={!clear} onClick={onClear}>{t("clear")}</button>
       </div>
     </div>
   );
 }
 
 const VIEW_KEY: Record<View, StrKey> = { all: "v_all", near: "v_near", saved: "v_saved", past: "v_past" };
-/** the view switch; pressed: the current view, undefined before the controls are set (the old page had no aria-pressed then) */
+/** the view switch; pressed: the current view, undefined before the controls are set from the URL (none pressed yet) */
 export function Views({ views, pressed, onPick }: { views: View[]; pressed?: View; onPick: (v: View) => void }) {
   return (
-    <div className="seg views glass" id="views" role="group" data-t-label="filters" aria-label={t("filters")}>
+    <div className="seg views glass" id="views" role="group" aria-label={t("filters")}>
       {views.map(v => (
-        <button key={v} type="button" data-view={v} data-t={VIEW_KEY[v]} aria-pressed={pressed ? pressed === v : undefined} onClick={() => onPick(v)}>{t(VIEW_KEY[v])}</button>
+        <button key={v} type="button" aria-pressed={pressed ? pressed === v : undefined} onClick={() => onPick(v)}>{t(VIEW_KEY[v])}</button>
       ))}
     </div>
   );
@@ -189,13 +190,13 @@ export function summaryText(res: ListResult, f: Filters): string {
 }
 
 /** the cards with a heading per month, in one flat run (the headings stick, each pushing the one before it out) */
-function MonthRun({ events, onStar }: { events: Event[]; onStar: () => void }) {
+function MonthRun({ events }: { events: Event[] }) {
   let month = "";
   return (
     <>
       {events.flatMap((e, i) => {
         const m = fmt.month.format(new Date(e.start));
-        const card = <EventCard key={e.id} e={e} i={i} onChange={onStar} />;
+        const card = <EventCard key={e.id} e={e} i={i} />;
         if (m === month) return [card];
         month = m;
         return [<h3 key={"m" + m} className="sh">{m}</h3>, card];
@@ -206,7 +207,7 @@ function MonthRun({ events, onStar }: { events: Event[]; onStar: () => void }) {
 
 /** the list: the skeleton until the first draw, "nothing matches" with a way out, or the cards; a guest's Home links to Discover
  *  when it shows only the first 12 */
-export function Results({ res, view, onClear, onStar }: { res: ListResult | null; view: View; onClear: () => void; onStar: () => void }) {
+export function Results({ res, view, onClear }: { res: ListResult | null; view: View; onClear: () => void }) {
   if (!res) return <div id="results" aria-busy="true"><Skel /><Skel /><Skel /></div>;
   return (
     <div id="results">
@@ -217,7 +218,7 @@ export function Results({ res, view, onClear, onStar }: { res: ListResult | null
           <button className="linkbtn" type="button" onClick={onClear}>{t("show_all")}</button>
         </div>
       )}
-      <MonthRun events={res.shown} onStar={onStar} />
+      <MonthRun events={res.shown} />
       {res.shown.length < res.matches.length ? <div className="links center"><a href={href("discover")}>{t("discover_cta")}</a></div> : null}
     </div>
   );
@@ -225,6 +226,7 @@ export function Results({ res, view, onClear, onStar }: { res: ListResult | null
 
 /** when the data was fetched, where registration happens, who made the app */
 export function Foot({ ready }: { ready: boolean }) {
+  const { D } = useData();
   if (!ready) return <div id="foot" />;
   return (
     <div id="foot">

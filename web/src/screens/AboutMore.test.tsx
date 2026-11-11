@@ -3,7 +3,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { parseHash } from "../lib/route";
-import { D, isRac, loadData } from "../lib/data";
+import { getData, isRac, loadData } from "../lib/data";
 import AboutMore from "./AboutMore";
 
 const route = parseHash("#/about-more");
@@ -24,8 +24,8 @@ describe("about-more", () => {
     expect(main.querySelector("h1")?.textContent).toBe("Rotary, districts & the world");
     expect(main.querySelector("#rotary img.bg")?.getAttribute("src")).toBe("img/help.jpg");
     expect(main.querySelector("#rotary .pane img.wheel")?.getAttribute("src")).toBe("rotaract.svg");
-    const n = D.data.clubs.filter(isRac).length;
-    expect(main.querySelector("[data-t=sp_dist]")?.textContent).toMatch(new RegExp("^" + n + " "));
+    const n = getData().data.clubs.filter(isRac).length;
+    expect(main.querySelector("#rotary + section b")?.textContent).toMatch(new RegExp("^" + n + " "));
     expect([...main.querySelectorAll("#leg span")].map(s => s.textContent)).toEqual(["D1980", "D1990", "D2000"]);
     expect([...main.querySelectorAll("#more a.more")].map(a => a.getAttribute("href"))).toEqual(["#/intl", "#/family", "#/guide"]);
     expect(main.querySelector("#cta .cta")).not.toBeNull();
@@ -35,7 +35,7 @@ describe("about-more", () => {
 
   it("puts a dot per Rotaract club on the Swiss map and the cities on the world map", async () => {
     const { container } = render(<AboutMore route={route} />);
-    const clubs = D.data.clubs.filter(c => c.coords && isRac(c)).length;
+    const clubs = getData().data.clubs.filter(c => c.coords && isRac(c)).length;
     await waitFor(() => expect(container.querySelectorAll("#swiss path.leaflet-interactive").length).toBe(clubs));
     expect(container.querySelectorAll("#world path.leaflet-interactive").length).toBe(30);
     expect(container.querySelector("#swiss .leaflet-control-zoom")).toBeNull();

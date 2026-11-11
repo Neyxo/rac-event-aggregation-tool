@@ -2,9 +2,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { initData, loadData } from "../lib/data";
 import { parseHash } from "../lib/route";
-import type { Club } from "../lib/types";
 import Intl from "./Intl";
 
 beforeAll(async () => {
@@ -40,16 +39,17 @@ describe("Intl", () => {
   });
 
   it("says so when nothing is announced, and leaves out the follow link without the international entry", () => {
-    const events = D.data.events, intl = D.clubs.international as Club;
-    D.data.events = events.filter(e => !e.clubs.includes("international"));
-    delete D.clubs.international;
+    initData({
+      ...fixture,
+      clubs: fixture.clubs.filter(c => c.id !== "international"),
+      events: fixture.events.filter(e => !e.clubs.includes("international")),
+    });
     try {
       show();
       expect(document.querySelector("#next > p.fine")!.textContent).toBe("No dates announced right now.");
       expect(document.querySelector("#next > a")).toBeNull();
     } finally {
-      D.data.events = events;
-      D.clubs.international = intl;
+      initData(fixture);
     }
   });
 });
