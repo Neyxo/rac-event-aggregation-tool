@@ -77,23 +77,14 @@ function Photos({ c, pastPics }: { c: ClubT; pastPics: { src: string; href: stri
 export default function Club({ route }: ScreenProps) {
   const D = useData();
   const c = D.clubs[route.params.id];
-  const head = useRef<HTMLDivElement>(null), hero = useRef<HTMLDivElement>(null), ph = useRef<HTMLSpanElement>(null);
+  const head = useRef<HTMLDivElement>(null), hero = useRef<HTMLDivElement>(null);
   const [sub, setSub] = useState(false);
   useWash(c?.color, c?.color, c?.color);
   useTitle(c?.name);
   useStickyHeads();
+  // at rest the subscribe pill sits below the name (inside the sticky box, overflowing); the block starts below it (app.css) and a
+  // placeholder in the button row keeps its place, so the icon buttons line up next to it
   useMorphHead(head, !!c);
-  // at rest the subscribe pill sits below the name (inside the sticky box, overflowing); the block starts below it and a placeholder
-  // in the button row keeps its place, so the icon buttons line up next to it
-  useLayoutEffect(() => {
-    const h = head.current, b = hero.current, p = ph.current, go = h?.querySelector<HTMLElement>(".go"), s = h?.querySelector(".sub");
-    if (!h || !b || !p || !go || !s) return;
-    const bt = Math.round(s.getBoundingClientRect().bottom - h.getBoundingClientRect().top + 12);
-    h.style.setProperty("--bt", bt + "px");
-    b.style.paddingTop = bt + "px";
-    p.style.width = go.offsetWidth + "px";
-    p.style.height = go.offsetHeight + "px";
-  }, [c]);
   // the colour block drifts up a touch faster than the page: a subtle parallax that shows off the frosting
   const drift = () => {
     if (hero.current && !matchMedia("(prefers-reduced-motion: reduce)").matches) hero.current.style.transform = `translateY(${-(scrollY * .12).toFixed(1)}px)`;
@@ -131,7 +122,7 @@ export default function Club({ route }: ScreenProps) {
       <div className="chero" ref={hero}>
         {c.logo ? <img className="big" src={c.logo} alt="" /> : null}
         <div className="btns">
-          <span className="ph" ref={ph} />
+          <span className="ph" />
           <IconLink name="globe" to={c.url} label={t("cp_site")} />
           {Object.entries(c.links || {}).map(([k, to]) => <IconLink key={k} name={isIcon(k) ? k : "globe"} to={to} label={k[0]!.toUpperCase() + k.slice(1)} />)}
           <ShareButton c={c} />

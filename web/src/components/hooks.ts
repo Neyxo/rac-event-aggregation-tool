@@ -41,11 +41,19 @@ export function useWash(...colors: (string | undefined | null | false)[]): void 
  *  Not scroll-bound: once the head has stuck for 24px it goes compact on its own; below 8px it comes back. Section headings stick under the
  *  compact hero while it is there (--stick). The screen renders, right before the head: <i className="sent" aria-hidden="true" />,
  *  and gives the head a static className that includes "morph" (React must not rewrite it: .on is toggled here). Pass ready=false while
- *  the head is not rendered yet. */
+ *  the head is not rendered yet.
+ *  The head is a fixed-height sticky box whose content overflows below it at rest, so nothing jumps while it sticks. Measured once, at
+ *  rest: --bt (on the head's parent, for the CSS of the head's .go and of what follows the head) is 12px below the head's content, where
+ *  its .go button sits at rest; the parent's .ph keeps that button's place in the row below. */
 export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): void {
   useLayoutEffect(() => {
-    const node = ref.current, sent = node?.previousElementSibling, bar = document.getElementById("top");
-    if (!ready || !node || !sent || !bar) return;
+    const node = ref.current, sent = node?.previousElementSibling, bar = document.getElementById("top"), parent = node?.parentElement;
+    if (!ready || !node || !sent || !bar || !parent) return;
+    const parts = [...node.children].filter(n => !n.matches(".go, .wm"));
+    const bt = Math.round(Math.max(...parts.map(n => n.getBoundingClientRect().bottom)) - node.getBoundingClientRect().top) + 12;
+    parent.style.setProperty("--bt", bt + "px");
+    const go = node.querySelector<HTMLElement>(".go"), ph = parent.querySelector<HTMLElement>(".ph");
+    if (go && ph) { ph.style.width = go.offsetWidth + "px"; ph.style.height = go.offsetHeight + "px"; }
     const root = document.documentElement, top = bar.offsetHeight;
     node.style.top = top + "px";
     let on = false;
@@ -56,7 +64,7 @@ export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): 
     };
     addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick);
     tick();
-    return () => { removeEventListener("scroll", tick); removeEventListener("resize", tick); root.style.setProperty("--stick", bar.offsetHeight + "px"); };
+    return () => { removeEventListener("scroll", tick); removeEventListener("resize", tick); root.style.removeProperty("--stick"); };
   }, [ref, ready]);
 }
 
@@ -66,7 +74,7 @@ export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): 
  *  measurement doesn't feed back on itself. The frost is one bar behind the whole stack (#frost, rendered by App) that only ever changes
  *  height, so a hand-over between headings never touches it; headings carry no frost of their own. */
 export function stickyHeads(): void {
-  const root = document.documentElement, s = parseFloat(getComputedStyle(root).getPropertyValue("--stick")) || 63;
+  const root = document.documentElement, s = parseFloat(getComputedStyle(root).getPropertyValue("--stick")) || 64;
   const hs = [...document.querySelectorAll<HTMLElement>(".sh")], lv1 = hs.filter(h => h.classList.contains("lv1"));
   const box = (h: HTMLElement) => { const r = h.getBoundingClientRect(), ty = parseFloat(h.style.getPropertyValue("--ty")) || 0; return { top: r.top - ty, bottom: r.bottom - ty }; };
   const at = (b: { top: number; bottom: number }, pos: number) => b.top <= pos + 1 && b.bottom > pos;  // at its stick line, and not scrolled off with its container

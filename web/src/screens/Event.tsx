@@ -1,6 +1,6 @@
 // The event screen: a frosted card on the lead club's colour wash, with a head that sticks and compacts as you
 // scroll, the facts, the description, then up to three more events of the same clubs.
-import { useLayoutEffect, useRef, type RefObject } from "react";
+import { useRef, type RefObject } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
 import { club, eventById } from "../lib/data";
@@ -41,7 +41,7 @@ function Hero({ src }: { src: string }) {
   );
 }
 
-/** className is static ("morph" included): useMorphHead toggles .on on it, and the measuring effect writes its style */
+/** className is static ("morph" included): useMorphHead toggles .on on it and writes its style */
 function Head({ e, headRef }: { e: Ev; headRef: RefObject<HTMLDivElement | null> }) {
   const D = useData();
   const lead = club(e.clubs[0] ?? "");
@@ -81,32 +81,9 @@ function Facts({ e }: { e: Ev }) {
   );
 }
 
-/** The head is a 64px sticky box whose content overflows onto the card at rest and compacts into the box as you scroll; its height
- *  never changes, so nothing below jumps. The register button is part of it: a pill in the action row at rest (.ph keeps its place
- *  there), the icon at the right once stuck. Measured once, right after the first draw. */
-function useHeadLayout(head: RefObject<HTMLDivElement | null>, links: RefObject<HTMLDivElement | null>, ph: RefObject<HTMLSpanElement | null>): void {
-  useLayoutEffect(() => {
-    const h = head.current;
-    const l = links.current;
-    const p = ph.current;
-    const go = h?.querySelector<HTMLElement>(".go");
-    if (!h || !l || !p || !go) return;
-    const parts = [...h.children].filter(n => !/\b(go|wm)\b/.test(n.className));
-    const cb = Math.round(Math.max(...parts.map(n => n.getBoundingClientRect().bottom)) - h.getBoundingClientRect().top);
-    h.style.setProperty("--bt", cb + 12 + "px");
-    l.style.marginTop = cb - 64 + "px";
-    p.style.width = go.offsetWidth + "px";
-    p.style.height = go.offsetHeight + "px";
-  }, []);
-}
-
 function Detail({ e }: { e: Ev }) {
   const D = useData();
   const head = useRef<HTMLDivElement>(null);
-  const links = useRef<HTMLDivElement>(null);
-  const ph = useRef<HTMLSpanElement>(null);
-  // measured before the morph hook can compact the head: the measurement is of the head at rest
-  useHeadLayout(head, links, ph);
   useMorphHead(head);
   useStickyHeads();
   const polaris = onPolaris(e);
@@ -117,8 +94,8 @@ function Detail({ e }: { e: Ev }) {
         {e.image ? <Hero src={e.image} /> : null}
         <i className="sent" aria-hidden="true" />
         <Head e={e} headRef={head} />
-        <div className="links" ref={links}>
-          <span className="ph" ref={ph} />
+        <div className="links">
+          <span className="ph" />
           {/* members-only: Polaris' calendar file needs a login; international events aren't on Polaris at all */}
           {e.members || !polaris ? null : <a href={e.url.replace("/agenda/show/", "/agenda/ical/")}><Icon name="calendar" />{t("add_cal")}</a>}
           <button type="button" className="linkbtn" onClick={() => void shareEvent(e)}><Icon name="share" />{t("share_event")}</button>

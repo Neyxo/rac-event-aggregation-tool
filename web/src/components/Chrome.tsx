@@ -18,13 +18,10 @@ function Hbtn({ name, to, label, on = false }: { name: IconName; to: string; lab
 }
 
 export function TopBar({ active, back = false, extra = null }: { active: Active; back?: boolean; extra?: ReactNode }) {
-  const ref = useRef<HTMLElement>(null);
   const dev = useStored("rac.dev", false);
   const preview = useSyncExternalStore(store.subscribe, anyDevFlag);
-  // sticky section headings start under the top bar
-  useLayoutEffect(() => { if (ref.current) document.documentElement.style.setProperty("--stick", ref.current.offsetHeight + "px"); });
   return (
-    <header id="top" ref={ref}>
+    <header id="top">
       <div className="wrap bar">
         <div className="lft">
           {back && <a className="hbtn" href={href("home")} aria-label={t("back")} onClick={ev => { if (canGoBack()) { ev.preventDefault(); history.back(); } }}><Icon name="back" /></a>}
