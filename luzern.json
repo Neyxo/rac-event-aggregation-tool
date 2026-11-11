@@ -6760,5 +6760,26 @@
    "LOCATION:Aregger Holzbau\\, Industriestrasse 46\\, 6034 Inwil",
    "CATEGORIES:Rotaract"
   ]
+ },
+ "223190": {
+  "detail": {
+   "description": "Erhalte einen spannenden Blick hinter die Kulissen der B. Braun Medical AG in Sempach. Nach einer kurzen Begrüssung gibt uns Reto Fleischlin in einer kompakten Präsentation einen Einblick in das Unternehmen und seine Geschichte. Anschliessend erwartet uns eine rund 1,5-stündige Werksführung direkt durch die Produktion.\n\nProgramm:\n\n18.00 Uhr: Eintreffen bei B. Braun in Sempach\n18.00 – ca. 18.20 Uhr: Firmenpräsentation durch Reto Fleischlin\nAnschliessend: Geführter Rundgang durch die Produktion (Dauer ca. 1,5 Stunden)\nca. 20.00 Uhr: Ende der Veranstaltung\nWichtige Hinweise zur Bekleidung:\nFür den Rundgang durch die Produktionsräume gelten aus Sicherheits- und Hygienegründen folgende Vorschriften:\n\nBitte trage flaches und geschlossenes Schuhwerk.\nKurze Hosen oder Röcke sind unter dem zur Verfügung gestellten Einwegmantel nicht zulässig",
+   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/IT8Y7vtl/6af479fb4578a.jpg?v=1.5.16",
+   "registration": "Anmeldung bis: Sonntag, 28. März 2027 um 07:35\n\nMaximale Anzahl Teilnehmer: 20"
+  },
+  "first_seen": "20261111T194208Z",
+  "modified": "20261111T194208Z",
+  "sequence": 0,
+  "status": "active",
+  "vevent": [
+   "UID:polaris-223190@rotary.ch",
+   "SUMMARY:Betriebsbesichtigung B. Braun",
+   "DESCRIPTION:Webseite: https://www.bbraun.ch/de.html\\nReferenten/innen: Rot. Reto Fleischlin",
+   "URL:https://rotaract-luzern.ch/de/agenda/show/223190",
+   "DTSTART;TZID=Europe/Zurich:20270405T180000",
+   "DTEND;TZID=Europe/Zurich:20270405T200000",
+   "LOCATION:B. Braun Medical AG\\, Seesatz 17\\, 6204 Sempach",
+   "CATEGORIES:Rotaract"
+  ]
  }
 }

@@ -801,21 +801,21 @@
   "detail": {
    "description": "Am Mittwoch den 11.11.2026 haben wir die Gelegenheit ein Konzert des Tonhallen-Orchesters in der Tonhalle Zürich zu besuchen. \n\nDargeboten wird Gustav Mahlers Sinfonie Nr. 6 a-Moll unter dem Dirigenten Paavo Järvi. \n\nWir bekommen die Möglichkeit zum Preis von CHF 20,- pro Person dabei zu sein. \n\nTreffpunkt ist am 11.11. (ausnahmsweise ein Mittwoch) um 19 Uhr im Foyer der Tonhalle in der Claridenstrasse 7, 8002 Zürich. Die zuvor reservierten Tickets können an der Billetkasse bezahlt werden. Konzertbeginn ist um 19:30 Uhr. \n\nWir freuen uns auf einen musikalischen Abend in der Tonhalle Zürich!\n\nDies ist eine öffentlich beworbene Veranstaltung bei der Fotoaufnahmen erstellt werden können.",
    "image": "",
-   "registration": "Anmeldung bis: Montag, 9. November 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000"
+   "registration": "Die Anmeldefrist ist abgelaufen"
   },
   "first_seen": "20261107T103915Z",
-  "modified": "20261107T103915Z",
-  "sequence": 0,
+  "modified": "20261111T194208Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-219091@rotary.ch",
    "SUMMARY:Informal: Konzert in der Tonhalle Zürich",
    "DESCRIPTION:Webseite: https://tonhalle-orchester.org/konzerte/kalender/paavo-jaervi-mit-mahler-2055210/tz/",
    "URL:https://rotaract-zuerich.ch/de/agenda/show/219091",
-   "DTSTART;TZID=Europe/Zurich:20261111T180000",
-   "DTEND;TZID=Europe/Zurich:20261111T213000",
+   "DTSTART;TZID=Europe/Zurich:20261111T190000",
    "LOCATION:Tonhalle Zürich\\, Claridenstrasse 7\\, 8002 Zürich",
-   "CATEGORIES:Rotaract"
+   "CATEGORIES:Rotaract",
+   "DTEND;TZID=Europe/Zurich:20261111T210000"
   ]
  },
  "219101": {
