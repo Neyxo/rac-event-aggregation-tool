@@ -208,7 +208,7 @@ describe("welcome steps", () => {
     click("Next");
     click("Next");
     expect(title().textContent).toBe("Clubs near you");
-    click("Rotaract Zurich International");
+    click("ZH Intl (Rotaract Zurich International)");
     click("Next");
     expect(title().textContent).toBe("Install as an app?");
     expect(href(inDlg().getByRole("link", { name: "Settings" }))).toBe("#/settings#install");

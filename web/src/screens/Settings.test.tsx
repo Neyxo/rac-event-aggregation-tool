@@ -84,7 +84,7 @@ describe("Settings", () => {
     const reload = vi.fn();
     vi.stubGlobal("location", { ...location, reload, hash: "#/settings" });
     show();
-    const district = () => within(dialog()).queryByRole("button", { name: "Rotary Distrikt 1980" });
+    const district = () => within(dialog()).queryByRole("button", { name: "Rotary 1980 (Rotary Distrikt 1980)" });
     fireEvent.click(button(/^Also show/));
     expect(district()).toBeNull();
     fireEvent.click(button("Done", dialog()));

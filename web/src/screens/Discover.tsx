@@ -6,7 +6,7 @@ import { club, myClubs } from "../lib/data";
 import { clubVars, DISTRICT_IDS, DISTRICTS } from "../lib/color";
 import { activeCount, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
-import { ClubChips, ClubMark, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
+import { ClubChips, clubLabel, ClubMark, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, type FilterApi } from "./EventList";
 
@@ -42,7 +42,7 @@ function ClubRow({ api }: { api: FilterApi }) {
       <button className="chip" type="button" aria-pressed={clubs.size === 0} onClick={() => change(api, { clubs: new Set() })}>{t("all")}</button>
       {[...clubs].map(id => {
         const c = club(id);
-        return <button key={id} className="chip club" type="button" style={clubVars(c.color)} aria-pressed="true" aria-label={c.name} onClick={() => toggle(id)}><ClubMark c={c} />{c.short}</button>;
+        return <button key={id} className="chip club" type="button" style={clubVars(c.color)} aria-pressed="true" aria-label={clubLabel(c)} onClick={() => toggle(id)}><ClubMark c={c} />{c.short}</button>;
       })}
       <button className="chip" type="button" onClick={() => setPicking(true)}>{t("pick_clubs")}</button>
       {picking && (

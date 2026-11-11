@@ -125,7 +125,7 @@ export function LangSelect() {
   return (
     <div className="seg" role="group" aria-label={t("language")}>
       {(Object.entries(LANGS) as [Lang, string][]).map(([k, v]) => (
-        <button key={k} type="button" title={v} lang={k} aria-label={v} aria-pressed={k === LANG} onClick={() => setLang(k)}>{k.toUpperCase()}</button>
+        <button key={k} type="button" title={v} lang={k} aria-label={`${k.toUpperCase()} (${v})`} aria-pressed={k === LANG} onClick={() => setLang(k)}>{k.toUpperCase()}</button>
       ))}
     </div>
   );

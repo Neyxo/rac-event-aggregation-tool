@@ -108,8 +108,8 @@ describe("clubs", () => {
   });
   it("club chip with a distance", () => {
     render(<ClubChip id="bern" extra="main"><small>3 km</small></ClubChip>);
-    const a = link("Rotaract Bern");
-    expect(a.classList.contains("main")).toBe(true); expect(a.textContent).toBe("Bern3 km");
+    const a = screen.getByRole("link", { name: /^Bern ?3 km$/ });  // the distance is part of the name; the full name is the tooltip
+    expect(a.classList.contains("main")).toBe(true); expect(a.textContent).toBe("Bern3 km"); expect(a.title).toBe("Rotaract Bern");
   });
   it("chips: pressed state per club, limited to only", () => {
     render(<ClubChips selected={new Set(["bern"])} only={["bern", "international"]} onPick={() => {}} />);

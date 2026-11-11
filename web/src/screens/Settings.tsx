@@ -119,7 +119,7 @@ export default function Settings(_props: ScreenProps) {
         </div>
         <div className="setrow col" id="install"><span>{t("inst_title")}</span><Install /></div>
         <div className="setrow col"><span>{t("share_title")}</span>
-          <div className="linkbox"><input type="text" readOnly value={shareLink} /><button type="button" onClick={() => void copy(shareLink)}>{t("copy")}</button></div>
+          <div className="linkbox"><input type="text" readOnly value={shareLink} aria-label={t("share_title")} /><button type="button" onClick={() => void copy(shareLink)}>{t("copy")}</button></div>
         </div>
       </section>
       <section className="glass"><h2>{t("set_help_h")}</h2>

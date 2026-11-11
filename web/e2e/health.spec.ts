@@ -9,13 +9,7 @@ const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#
 // What axe found when the check was added, as "<screen> <rule>": open work, not accepted. Fix one, delete its line; anything not
 // listed here fails the test.
 const KNOWN_A11Y = new Set<string>([
-  "#/ label-content-name-mismatch",
   "#/calendar label-content-name-mismatch",
-  "#/club/luzern label-content-name-mismatch",
-  "#/dev label-content-name-mismatch",
-  "#/discover label-content-name-mismatch",
-  "#/settings label",
-  "#/settings label-content-name-mismatch",
   "#/words definition-list",
 ]);
 

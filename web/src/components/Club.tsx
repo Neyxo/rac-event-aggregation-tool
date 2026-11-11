@@ -16,11 +16,14 @@ export function ClubLabel({ id }: { id: string }) {
   const c = club(id);
   return <span className="cl" style={clubVars(c.color)}><ClubMark c={c} />{c.short}</span>;
 }
+/** a chip's accessible name: the club's full name, after the short one the chip shows when that isn't in it as whole words (the name
+ *  must contain the visible text, so "click Sempach" by voice finds the chip of Rotaract Sempachersee) */
+export const clubLabel = (c: Club): string => ` ${c.name} `.includes(` ${c.short} `) ? c.name : `${c.short} (${c.name})`;
 /** the club chip: crest and name, always opens the club; the same on cards, the event screen, Home and in "we work with".
  *  extra: more classes ("main" on Home); children go after the name (<small>12 km</small>). */
 export function ClubChip({ id, extra = "", children }: { id: string; extra?: string; children?: ReactNode }) {
   const c = club(id);
-  return <a className={cx("chip club", extra)} href={href("club", id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}{children}</a>;
+  return <a className={cx("chip club", extra)} href={href("club", id)} style={clubVars(c.color)} {...(children ? { title: c.name } : { "aria-label": clubLabel(c) })}><ClubMark c={c} />{c.short}{children}</a>;
 }
 
 type Pick = { onPick: (id: string) => void; exclude?: string[] } & ({ single: true; selected: string } | { single?: false; selected: Set<string> });
@@ -34,7 +37,7 @@ export function ClubChips(p: Pick & { only?: string[] | null }) {
     <div className="chips">
       {single && <button className="chip" type="button" aria-pressed={!p.selected} onClick={() => onPick("")}>{t("none")}</button>}
       {D.data.clubs.filter(c => !exclude.includes(c.id) && !(only && !only.includes(c.id)) && !(single && c.source)).map(c => (
-        <button key={c.id} className="chip club" type="button" style={clubVars(c.color)} aria-pressed={isOn(p, c.id)} aria-label={c.name} onClick={() => onPick(c.id)}>
+        <button key={c.id} className="chip club" type="button" style={clubVars(c.color)} aria-pressed={isOn(p, c.id)} aria-label={clubLabel(c)} onClick={() => onPick(c.id)}>
           <ClubMark c={c} />{c.short}
         </button>
       ))}

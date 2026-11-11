@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { store, type StoreKey } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, Footer, toast, useData } from "../components";
+import { ClubMark, clubLabel, Footer, toast, useData } from "../components";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
 type Stat = Pick<Status, "clubs" | "failures"> & Partial<Omit<Status, "clubs" | "failures">>;
@@ -67,7 +67,7 @@ function Fold({ title, items }: { title: string; items: ReactNode[] }) {
 /** ClubChip for a club object: the Rotary districts are not among the clubs while their layer is off, and adding them there would
  *  leak them into the other screens */
 function Chip({ c }: { c: Club }) {
-  return <a className="chip club" href={href("club", c.id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}</a>;
+  return <a className="chip club" href={href("club", c.id)} style={clubVars(c.color)} aria-label={clubLabel(c)}><ClubMark c={c} />{c.short}</a>;
 }
 
 /** the Instagram line: from status.json when the run wrote it (older runs did not), else guessed from the pictures in the data */
