@@ -1,4 +1,4 @@
-// Settings draws the old settings.html DOM and keeps its behaviour: club pickers, Rotary / theme / developer switches, install steps.
+// Settings: club pickers, Rotary / theme / developer switches, install steps.
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
@@ -29,7 +29,7 @@ const texts = (s: string) => [...document.querySelectorAll(s)].map(n => n.textCo
 const show = () => render(<><Settings route={route} /><Toast /></>);
 
 describe("Settings", () => {
-  it("draws the sections in the old order with the chosen clubs", () => {
+  it("draws the sections in order with the chosen clubs", () => {
     setSettings({ home: "luzern", also: ["zuerich"] });
     show();
     expect(texts("main.wrap.settings > section.glass > h2")).toEqual(["Clubs", "App", "Help", "Developer"]);

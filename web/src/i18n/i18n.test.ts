@@ -45,7 +45,7 @@ describe("every language", () => {
     }
   });
   it("writes Swiss German (ss, never ß)", () => { expect(JSON.stringify(I18N.de)).not.toContain("ß"); });
-  it("translates the keys the old site left in English", () => {
+  it("translates the developer keys", () => {
     for (const l of ["de", "fr", "it"] as const) for (const k of ["dev_h", "dev_mode", "dev_page", "dev_on"] as const) expect(I18N[l][k]).not.toBe(I18N.en[k]);
   });
 });

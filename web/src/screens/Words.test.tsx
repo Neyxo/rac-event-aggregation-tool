@@ -1,4 +1,4 @@
-// Words draws the old words.html glossary: sorted words, a letter before each new initial, a search that filters as you type.
+// Words, the glossary: sorted words, a letter before each new initial, a search that filters as you type.
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { parseHash } from "../lib/route";

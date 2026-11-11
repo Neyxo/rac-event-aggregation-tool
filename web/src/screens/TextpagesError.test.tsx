@@ -1,5 +1,5 @@
-// events.json fails: guide and intl replace their whole main with the offline message, as the old pages did. The guide still counts as
-// seen and keeps its title but gets no wash (the old page painted it after the data); intl keeps its wash (painted before the data).
+// events.json fails: guide and intl replace their whole main with the offline message. The guide still counts as
+// seen and keeps its title but gets no wash; intl keeps its wash.
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { parseHash } from "../lib/route";

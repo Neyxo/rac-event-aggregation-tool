@@ -1,4 +1,4 @@
-// The event screen before the data is there: the old page's skeleton, then its offline box when events.json fails.
+// The event screen before the data is there: a skeleton, then its offline box when events.json fails.
 // A file of its own: the data module is loaded once per session, and here it must not be loaded yet.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";

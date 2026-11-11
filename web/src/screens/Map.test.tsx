@@ -18,7 +18,7 @@ beforeAll(async () => {
 afterEach(cleanup);
 
 describe("map", () => {
-  it("draws the old DOM: map box, then the past switch with the count", async () => {
+  it("draws the map box, then the past switch with the count", async () => {
     const { container } = render(<MapScreen route={route} />);
     const main = container.querySelector(":scope > main.mapwrap#main")!;
     expect([...main.children].map(n => n.tagName + "#" + n.id)).toEqual(["DIV#map", "LABEL#"]);
@@ -48,7 +48,7 @@ describe("map", () => {
     expect(pop.querySelector("b")?.textContent).toBe(e.title);
   });
 
-  it("past is kept in the history entry, so back/forward restores it (the old page's restored checkbox)", async () => {
+  it("past is kept in the history entry, so back/forward restores it", async () => {
     history.replaceState({ k: 7 }, "");
     const first = render(<MapScreen route={route} />);
     act(() => { fireEvent.click(first.container.querySelector("#past")!); });

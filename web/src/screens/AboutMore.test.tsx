@@ -16,10 +16,9 @@ beforeAll(async () => {
 afterEach(cleanup);
 
 describe("about-more", () => {
-  it("draws the sections in the old order", () => {
+  it("draws the sections in order", () => {
     const { container } = render(<AboutMore route={route} />);
     const main = container.querySelector(":scope > main.wrap.more")!;
-    expect(main.id).toBe("");  // the old page had no id on this main
     expect([...main.children].map(n => n.tagName + (n.id ? "#" + n.id : "") + "." + n.className)).toEqual(["H1.", "SECTION#rotary.vis", "SECTION.vis map", "SECTION.vis map", "DIV#more.", "DIV#cta.", "DIV#foot."]);
     expect(main.querySelector("h1")?.textContent).toBe("Rotary, districts & the world");
     expect(main.querySelector("#rotary img.bg")?.getAttribute("src")).toBe("img/help.jpg");

@@ -1,4 +1,4 @@
-// events.json fails: map and about-more replace their whole main with the offline message, as the old pages did (no Leaflet map left).
+// events.json fails: map and about-more replace their whole main with the offline message (no Leaflet map left).
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { parseHash } from "../lib/route";

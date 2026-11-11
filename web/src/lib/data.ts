@@ -48,28 +48,19 @@ export function mergeRotary(raw: EventsJson, on: boolean): EventsJson {
   return { ...raw, clubs: [...raw.clubs, ...rot.clubs], events: [...raw.events, ...rot.events].sort((a, b) => a.start.localeCompare(b.start)) };
 }
 
-/** rac.settings, or the older rac.prefs ({clubs: [...]}) turned into it; clubs that no longer exist are dropped.
- *  migrated: rac.prefs was there (the caller removes it and saves real). Guest preview: settings empty, in memory only; real is
- *  what gets saved, so a migration during the preview doesn't wipe the person's clubs. */
-export function resolveSettings(clubs: Readonly<Record<string, Club>>, stored: Settings | null, old: { clubs?: string[] } | null, guest: boolean): { settings: Settings; real: Settings; migrated: boolean } {
-  const s: Settings = stored ? { home: stored.home ?? "", also: [...(stored.also ?? [])] } : old?.clubs?.length ? { home: old.clubs[0]!, also: old.clubs.slice(1) } : { home: "", also: [] };
-  s.also = s.also.filter(id => clubs[id] && id !== s.home);
-  if (!clubs[s.home]) s.home = "";
-  return { settings: guest ? { home: "", also: [] } : s, real: s, migrated: !!old };
+/** rac.settings without the clubs that no longer exist; the guest preview starts with none */
+export function resolveSettings(clubs: Readonly<Record<string, Club>>, stored: Settings | null, guest: boolean): Settings {
+  if (guest || !stored) return { home: "", also: [] };
+  const home = clubs[stored.home] ? stored.home : "";
+  return { home, also: (stored.also ?? []).filter(id => clubs[id] && id !== home) };
 }
 
-/** The state for events.json and what this device stored: the Rotary switch, the saved events, the settings (rac.prefs migrated
- *  to rac.settings). loadData() calls it once; setRotary() again, so switching gives what a reload would. */
+/** The state for events.json and what this device stored: the Rotary switch, the saved events, the settings. loadData() calls it once; setRotary() again, so switching gives what a reload would. */
 export function initData(json: EventsJson): void {
   raw = json;
   const data = mergeRotary(json, store.get("rac.rotary", false));
   const clubs = Object.fromEntries(data.clubs.map(c => [c.id, c]));
-  const old = store.get("rac.prefs", null);
-  const { settings, real, migrated } = resolveSettings(clubs, store.get("rac.settings", null), old, !!devFlag("Guest"));
-  if (migrated) {
-    store.remove("rac.prefs");
-    store.set("rac.settings", real);
-  }
+  const settings = resolveSettings(clubs, store.get("rac.settings", null), !!devFlag("Guest"));
   loaded = true;
   commit({ data, clubs, settings, saved: new Set(store.get("rac.saved", [])), rotary: json.rotary ?? { clubs: [], events: [] } });
 }

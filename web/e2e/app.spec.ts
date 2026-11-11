@@ -193,7 +193,8 @@ test.describe("member", () => {
     await page.mouse.wheel(0, 200);
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(300);
     const y = await page.evaluate(() => scrollY);
-    await page.locator("main a.event").nth(20).click();
+    // a click right where it is: Playwright's click would first scroll the card back into view
+    await page.locator("main a.event").nth(20).evaluate((a: HTMLElement) => a.click());
     await expect(page.locator("body")).toHaveAttribute("data-page", "event");
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
     // the app's back button
@@ -227,26 +228,8 @@ test.describe("member", () => {
   });
 });
 
-test.describe("old links", () => {
+test.describe("share pages", () => {
   test.use({ storage: MEMBER });
-  for (const [from, hash, check] of [
-    [`event.html?id=${EVENT}`, `#/event/${EVENT}`, "Suppenmittag Wheel-Clubs Luzern-Sursee"],
-    ["club.html?id=luzern", "#/club/luzern", "Rotaract Luzern"],
-    [`index.html?event=${EVENT}`, `#/event/${EVENT}`, "Suppenmittag Wheel-Clubs Luzern-Sursee"],
-  ] as const) {
-    test(`${from} lands on ${hash}`, async ({ page }) => {
-      await page.goto(from);
-      await expect(page).toHaveURL(new RegExp(hash.replace(/[/?]/g, "\\$&") + "$"));
-      await expect(page.locator("main h1")).toHaveText(check);
-    });
-  }
-
-  test("discover.html?q=... lands on Discover with the search", async ({ page }) => {
-    await page.goto("discover.html?q=stamm");
-    await expect(page).toHaveURL(/#\/discover\?q=stamm$/);
-    await expect(page.locator("#q")).toHaveValue("stamm");
-  });
-
   test("s/de/about.html forwards to the about screen in German", async ({ page }) => {
     await page.goto("s/de/about.html");
     await expect(page).toHaveURL(/\?lang=de#\/about$/);

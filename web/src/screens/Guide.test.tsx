@@ -1,4 +1,4 @@
-// Guide draws the old guide.html with the fixture (clock: 2026-11-11 10:00): hero in the home club's colour, four steps, three facts.
+// Guide, with the fixture (clock: 2026-11-11 10:00): hero in the home club's colour, four steps, three facts.
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";

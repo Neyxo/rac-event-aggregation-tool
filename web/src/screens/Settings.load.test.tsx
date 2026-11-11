@@ -10,7 +10,7 @@ const $ = (s: string) => document.querySelector(s);
 const route = parseHash("#/settings");
 
 describe("Settings loading", () => {  // in this order: a failed load is retried, a pending one is not
-  it("events.json fails: <main> holds only the offline note, like the old page", async () => {
+  it("events.json fails: <main> holds only the offline note", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) })));
     await act(async () => { render(<Settings route={route} />); });
     const main = $("main.wrap.settings#main")!;

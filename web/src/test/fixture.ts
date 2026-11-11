@@ -51,7 +51,7 @@ export const fixture: EventsJson = {
     },
     {
      "name": "Rotaract Club Sempachersee",
-     "url": "club.html?id=sempachersee"
+     "url": "#/club/sempachersee"
     }
    ],
    "about": "Junge Leute aus der Region Luzern, die zusammen lernen, helfen und feiern. Gäste sind jederzeit willkommen."

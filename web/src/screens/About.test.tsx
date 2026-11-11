@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 describe("about", () => {
-  it("draws the morph, the people line, the links, the questions and the footer in the old order", () => {
+  it("draws the morph, the people line, the links, the questions and the footer in order", () => {
     const { container } = render(<Host />);
     const main = container.querySelector(":scope > main.wrap.about#main")!;
     expect([...main.querySelector("section.after")!.children].map(n => n.tagName + (n.id ? "#" + n.id : ""))).toEqual(["H2", "P", "DIV#cta", "H3", "DIV#more", "H3", "DIV#qa", "DIV#foot"]);

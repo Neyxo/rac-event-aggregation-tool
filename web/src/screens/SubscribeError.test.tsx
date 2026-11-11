@@ -1,4 +1,4 @@
-// events.json fails: subscribe's main holds only the offline message with its retry button, as the old page did.
+// events.json fails: subscribe's main holds only the offline message with its retry button.
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render, waitFor } from "@testing-library/react";
 import { parseHash } from "../lib/route";

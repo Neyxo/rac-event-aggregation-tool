@@ -18,7 +18,7 @@
 #              **bold**. A blank line ends a paragraph.
 #   partners = optional list of clubs this club works with, shown as links on the club page:
 #              partners = [{ name = "Rotary Club Luzern", url = "https://...", note = "Patenclub" }]
-#              Another club in this file: url = "club.html?id=<id>" (opens its club page in the app)
+#              Another club in this file: url = "#/club/<id>" (opens its club page in the app)
 #   source   = "international" marks the one entry that is not a Polaris site (see the end of this file);
 #              "rotary" marks a Rotary district: the events its Rotary clubs share with other clubs, read from the
 #              district site's lists only. A separate layer: off by default in the app, never in all.ics.
@@ -50,7 +50,7 @@ how = """
 partners = [
   { name = "Rotary eClub Zentralschweiz", url = "https://eclubzentralschweiz.rotary1980.ch" },
   { name = "Rotary Club Luzern Wasserturm", url = "https://luzern-wasserturm.rotary1980.ch" },
-  { name = "Rotaract Club Sempachersee", url = "club.html?id=sempachersee" },
+  { name = "Rotaract Club Sempachersee", url = "#/club/sempachersee" },
 ]
 photos = [
   "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/6a7b4874c4473.jpg",

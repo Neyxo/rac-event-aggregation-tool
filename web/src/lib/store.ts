@@ -20,8 +20,6 @@ export interface StoreKeys {
   "rac.devStale": boolean;
   /** "2026-12-24" or "" */
   "rac.devDate": string;
-  /** the format before rac.settings; migrated and removed by loadData() */
-  "rac.prefs": { clubs?: string[] };
 }
 export type StoreKey = keyof StoreKeys;
 
