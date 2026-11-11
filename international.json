@@ -78,11 +78,11 @@
    "registration": ""
   },
   "first_seen": "20261111T095123Z",
-  "modified": "20261111T095123Z",
-  "sequence": 0,
+  "modified": "20261111T212229Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
-   "UID:ri-convention-2027@rac-event-aggregation-tool",
+   "UID:ri-convention-2027@rotaract-events",
    "SUMMARY:Rotary International Convention 2027",
    "LOCATION:Fira Barcelona Gran Via\\, Barcelona\\, Spain",
    "URL:https://convention.rotary.org/en-us/about/faqs",
