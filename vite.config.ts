@@ -12,8 +12,10 @@ import it from "./web/src/i18n/it.ts";
 
 const SITE = "https://neyxo.github.io/rac-event-aggregation-tool/";
 const PUBLIC = fileURLToPath(new URL("./public/", import.meta.url));
+const FIXTURE = fileURLToPath(new URL("./web/e2e/fixture/", import.meta.url));
 
-// "npm run dev" shows real data: events.json and status.json from the Python output in public/, when it is there
+// "npm run dev" / "npm start" shows real data: events.json and status.json from the Python output in public/ when it is there,
+// otherwise the e2e test data, so the app runs without a Python build first
 function devData(): Plugin {
   return {
     name: "rac-dev-data",
@@ -21,9 +23,10 @@ function devData(): Plugin {
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         const name = (req.url ?? "").split("?")[0]!.replace(/^.*\//, "");
-        if ((name === "events.json" || name === "status.json") && existsSync(PUBLIC + name)) {
+        const file = [PUBLIC + name, FIXTURE + name].find(f => existsSync(f));
+        if ((name === "events.json" || name === "status.json") && file) {
           res.setHeader("Content-Type", "application/json");
-          res.end(readFileSync(PUBLIC + name));
+          res.end(readFileSync(file));
           return;
         }
         next();
