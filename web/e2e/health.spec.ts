@@ -10,24 +10,12 @@ const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#
 // listed here fails the test.
 const KNOWN_A11Y = new Set<string>([
   "#/ label-content-name-mismatch",
-  "#/about color-contrast",
-  "#/about-more color-contrast",
-  "#/calendar color-contrast",
   "#/calendar label-content-name-mismatch",
   "#/club/luzern label-content-name-mismatch",
-  "#/dev color-contrast",
   "#/dev label-content-name-mismatch",
-  "#/discover color-contrast",
   "#/discover label-content-name-mismatch",
-  "#/family color-contrast",
-  "#/guide color-contrast",
-  "#/intl color-contrast",
-  "#/map color-contrast",
-  "#/public color-contrast",
-  "#/settings color-contrast",
   "#/settings label",
   "#/settings label-content-name-mismatch",
-  "#/words color-contrast",
   "#/words definition-list",
 ]);
 

@@ -42,7 +42,7 @@ header { background: var(--surface); border-bottom: 1px solid var(--line); borde
 .hbtn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 40px; padding: 3px 5px; border: 0; border-radius: 10px; background: none; color: var(--muted); font-size: .68rem; font-weight: 600; line-height: 1.2; text-decoration: none; white-space: nowrap; transition: transform .12s, color .15s, background .15s; min-height: 40px; }
 .hbtn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .hbtn:hover { color: var(--accent); } .hbtn:active { transform: scale(.94); }
-.hbtn.on { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.hbtn.on { color: var(--accent-hover); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
 .brand img { height: 30px; width: auto; display: block; }
 :root[data-theme=dark] .brand img { filter: brightness(0) invert(1); }
@@ -74,7 +74,7 @@ body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
 .tabs-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 6; display: flex; justify-content: center; gap: 4px; padding: 6px 10px calc(6px + env(safe-area-inset-bottom)); background: var(--bar); backdrop-filter: var(--frost-3); -webkit-backdrop-filter: var(--frost-3); border-top: 1px solid var(--line); }
 .tab { flex: 1; max-width: 160px; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 4px; border-radius: 12px; text-decoration: none; color: var(--muted); font-size: .75rem; font-weight: 600; transition: transform .12s, color .15s, background .15s; }
 .tab svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.tab.on { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.tab.on { color: var(--accent-hover); background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .tab:active { transform: scale(.94); }
 .list-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin: 12px 2px 6px; }
 .list-head.sh { margin: 10px calc(50% - 50vw) 4px; padding: 3px calc(50vw - 50% + 2px) 2px; }
@@ -535,7 +535,7 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 /* developer page (dev.html): the Settings look, plus a status line, small counters, plain lists */
 .dev h3 { margin: 14px 0 4px; } .dev .links { margin: 10px 0 2px; } .dev .setrow .tools { margin: 0; justify-content: flex-end; }
 .devstate { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-weight: 600; } .devstate i { flex: 0 0 auto; width: 10px; height: 10px; border-radius: 50%; background: #009739; } .devstate.warn i { background: #e8a317; } .devstate.bad i { background: var(--danger); }
-.devok { margin: 6px 0; font-size: .9rem; color: #009739; } :root[data-theme=dark] .devok { color: #5fd08a; }
+.devok { margin: 6px 0; font-size: .9rem; color: #00843a; } :root[data-theme=dark] .devok { color: #5fd08a; }
 .devfail { margin: 8px 0; padding: 8px 10px; border-radius: 10px; background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); font-size: .78rem; white-space: pre-wrap; overflow-wrap: anywhere; }
 .devfacts { margin: 10px 0; --p: var(--accent); } .devfacts div { background: var(--surface-2); padding: 8px 4px; border-radius: 12px; }
 .devua { overflow-wrap: anywhere; font-size: .74rem; }
