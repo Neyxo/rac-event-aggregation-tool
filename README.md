@@ -9,6 +9,13 @@ Collects the events of every Rotaract club in Switzerland & Liechtenstein from t
 
 **https://neyxo.github.io/rotaract-events/**
 
+<p>
+  <img src="docs/screenshots/home.png" width="200" alt="Home: the next event of your clubs, deadlines, news">
+  <img src="docs/screenshots/discover.png" width="200" alt="Discover: all events with search and filters">
+  <img src="docs/screenshots/calendar.png" width="200" alt="Calendar: a month of your clubs' events">
+  <img src="docs/screenshots/event.png" width="200" alt="An event: when, where, register, add to calendar, share">
+</p>
+
 ## What you get
 
 - **The app**: Home (your clubs), Discover (everything, with filters and a map), a month calendar, a page per event and per club. German, French, Italian and English, light and dark, works offline with the last loaded events.
