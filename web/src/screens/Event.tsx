@@ -10,7 +10,7 @@ import { mapsUrl } from "../lib/geo";
 import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Event as Ev } from "../lib/types";
-import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, LoadError, Skel, StarButton, Status, share, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
+import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, StarButton, Status, share, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
 
 /** the Polaris page of the event; international events live on their organisers' sites instead */
 const onPolaris = (e: Ev) => e.url.includes("/agenda/show/");
@@ -51,7 +51,7 @@ function Hero({ src }: { src: string }) {
 
 /** className is static ("morph" included): useMorphHead toggles .on on it, and the measuring effect writes its style */
 function Head({ e, headRef }: { e: Ev; headRef: RefObject<HTMLDivElement | null> }) {
-  const { D } = useData();
+  const D = useData();
   const lead = club(e.clubs[0] ?? "");
   const label = goLabel(e);
   return (
@@ -109,7 +109,7 @@ function useHeadLayout(head: RefObject<HTMLDivElement | null>, links: RefObject<
 }
 
 function Detail({ e }: { e: Ev }) {
-  const { D } = useData();
+  const D = useData();
   const head = useRef<HTMLDivElement>(null);
   const links = useRef<HTMLDivElement>(null);
   const ph = useRef<HTMLSpanElement>(null);
@@ -145,14 +145,12 @@ function Detail({ e }: { e: Ev }) {
 }
 
 export default function Event({ route }: ScreenProps) {
-  const { ready, error } = useData();
+  useData();
   // eventById: a shared link to a Rotary event opens even with the Rotary layer off
-  const e = ready ? eventById(route.params.id ?? "") : undefined;
+  const e = eventById(route.params.id ?? "");
   const lead = e ? club(e.clubs[0] ?? "") : null;
   useWash(lead?.color, e && lead ? club(e.clubs[1] || lead.id).color : null, lead?.color);
   useTitle(e?.title);
-  if (error) return <main className="wrap evpage"><LoadError /></main>;
-  if (!ready) return <main className="wrap evpage"><Skel /></main>;
   if (!e || !lead) {
     return (
       <main className="wrap evpage">

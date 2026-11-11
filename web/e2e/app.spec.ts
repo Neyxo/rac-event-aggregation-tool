@@ -255,11 +255,23 @@ test.describe("share pages", () => {
 });
 
 test("a missing events.json shows the error state, and its button retries", async ({ page }) => {
-  let fail = true;
-  await page.route(/\/events\.json/, r => fail ? r.fulfill({ status: 404, body: "" }) : r.fallback());
-  await page.goto("./#/discover");
+  let fail = true, tries = 0;
+  const logged: string[] = [];
+  page.on("console", m => { if (m.type() === "error") logged.push(m.text()); });
+  await page.route(/\/events\.json/, r => { if (!fail) return r.fallback(); tries++; return r.fulfill({ status: 404, body: "" }); });
+  await page.goto("./#/");
   const err = page.locator("main .empty");
   await expect(err).toContainText("Couldn't load events. Are you online?");
+  // it stays: no retry loop while the screen is shown, and an expected state, not an error
+  await page.waitForTimeout(800);
+  expect(tries).toBe(1);
+  await expect(err).toBeVisible();
+  expect(logged.filter(t => !t.includes("404"))).toEqual([]);
+  // the next screen tries again
+  await page.locator("#tabs").getByRole("link", { name: "Discover" }).click();
+  await expect(page.locator("body")).toHaveAttribute("data-page", "discover");
+  await expect.poll(() => tries).toBe(2);
+  await expect(err).toBeVisible();
   fail = false;
   await err.getByRole("button", { name: "Refresh" }).click();
   await expect(page.locator("main a.event").first()).toBeVisible();

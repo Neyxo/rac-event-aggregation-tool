@@ -14,7 +14,7 @@ import { href, takeWelcome } from "../lib/route";
 import { here, store } from "../lib/store";
 import type { Event } from "../lib/types";
 import {
-  ClubChip, CtaBlock, HelpLinks, Icon, LoadError, NewIds, NewsStrip, NextUp, inPageLink, navigate, useData, useNav, useStickyHeads,
+  ClubChip, CtaBlock, HelpLinks, Icon, NewIds, NewsStrip, NextUp, inPageLink, navigate, useData, useNav, useStickyHeads,
   useStored, useWash,
 } from "../components";
 import type { ScreenProps } from "../App";
@@ -66,7 +66,7 @@ function News({ changes }: { changes: Changes }) {
 
 /** deadlines within three weeks, and the saved events (any club) */
 function Panes({ mineEv }: { mineEv: Event[] }) {
-  const { D } = useData();
+  const D = useData();
   const open = mineEv.filter(e => e.deadline && dayN(e.deadline) >= 0 && dayN(e.deadline) <= 21);
   const deadlines = open.sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 3);
   const saved = D.data.events.filter(e => !isPast(e) && D.saved.has(e.id)).slice(0, 3);
@@ -120,31 +120,28 @@ function ExploreBox({ onStart, onPlace }: { onStart: () => void; onPlace: (pos: 
 /** A new navigation to Home (its tab from #/?view=saved, back/forward) starts over from the URL; App only
  *  remounts a screen when the route name changes. */
 export default function Home({ route }: ScreenProps) {
-  // a filter link only redirects (to Discover), once: no new key for the navigation that redirect makes
   const id = useNav().id;
-  return <HomeScreen key={isFilterLink(route.query) ? "to-discover" : id} route={route} />;
+  // a shared link with filters is about all of Rotaract, not "my clubs": Discover has the UI for it. Redirected at once, without
+  // waiting for the data, and without drawing Home (which would count its events as seen).
+  const toDiscover = isFilterLink(route.query);
+  useLayoutEffect(() => { if (toDiscover) navigate(href("discover", null, route.query), { replace: true }); }, [toDiscover]);
+  return toDiscover ? null : <HomeScreen key={id} route={route} />;
 }
 
 function HomeScreen({ route }: ScreenProps) {
-  const { ready, error, D } = useData();
-  // a shared link with filters is about all of Rotaract, not "my clubs": Discover has the UI for it
-  const [toDiscover] = useState(() => isFilterLink(route.query));
-  const mine = ready ? myClubs() : [];
+  const D = useData();
+  const mine = myClubs();
   const member = mine.length > 0;
-  const api = useFilters(ready && !toDiscover, route.query, "home", f => member ? f : { ...f, center: here.get() });
+  const api = useFilters(route.query, "home", f => member ? f : { ...f, center: here.get() });
   const [obRun, setObRun] = useState(0);
   // a guest's list title is only decided in the "upcoming" view; the saved view keeps the last one, so it doesn't flip to a generic title
   const guestTitle = useRef<"v_all" | "explore_near" | "home_soon">("v_all");
   useStickyHeads();
 
-  useLayoutEffect(() => {
-    if (toDiscover) navigate(href("discover", null, route.query), { replace: true });
-  }, []);
   useEffect(() => {
-    if (!ready || toDiscover) return;
     const shared = [...route.query.keys()].some(k => k !== "lang" && k !== "welcome");
     if (takeWelcome() || (standalone() && !shared && !store.get("rac.onboarded", false))) setObRun(1);
-  }, [ready]);
+  }, []);
 
   // what changed since the last visit: computed once per set of clubs (store writes below would change the answer for a redraw)
   const mineKey = mine.join();
@@ -158,25 +155,22 @@ function HomeScreen({ route }: ScreenProps) {
   const cols = member ? [main, ...mine.filter(id => id !== main)] : [];
   useWash(...cols.slice(0, 3).map(id => club(id).color), member && "#d41367", member && "#0067c8");
 
-  if (error) {
-    return <><StaleBanner ready={false} /><main className="wrap" id="main"><LoadError /></main></>;
-  }
   const news = member ? mine.flatMap(id => freshNews(club(id))).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4) : [];
   const f = api.shown;
   const skip = member ? mineEv[0]?.id : undefined;
   const res = f ? selectEvents(D.data.events, f, { page: "home", mine, saved: D.saved, skip, scope: scopeClubs("home", mine), club }) : null;
   if (res?.title) guestTitle.current = res.title;
-  const title = !ready ? t("v_all") : member ? t("home_soon") : t(guestTitle.current);
+  const title = member ? t("home_soon") : t(guestTitle.current);
   // the new clubs are in the state already (setSettings re-rendered this screen); the list follows on the next draw
   const afterOb = () => api.draw();
   // the cards tag the events new since the last visit, here only: Discover, Calendar or a club screen tag nothing
   return (
     <NewIds.Provider value={changes?.newIds ?? NOTHING_NEW}>
-      <StaleBanner ready={ready} />
+      <StaleBanner />
       <main className="wrap" id="main">
         <div className="home">
-          {ready && changes ? <MemberBox cols={cols} mineEv={mineEv} changes={changes} /> : null}
-          {ready && !member ? <ExploreBox onStart={() => setObRun(n => n + 1)} onPlace={pos => api.update({ center: pos }, true)} /> : null}
+          {changes ? <MemberBox cols={cols} mineEv={mineEv} changes={changes} /> : null}
+          {!member ? <ExploreBox onStart={() => setObRun(n => n + 1)} onPlace={pos => api.update({ center: pos }, true)} /> : null}
         </div>
         {/* in the main flow next to the list title, not in a wrapper: the heading then stays stuck until the title pushes it */}
         {news.length ? <h3 className="sh hn">{t("news")}</h3> : null}
@@ -184,7 +178,7 @@ function HomeScreen({ route }: ScreenProps) {
         <ListHead titleId="listTitle" title={title} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
         <Views views={["all", "saved"]} pressed={api.inited ? api.live.view : undefined} onPick={api.setView} />
         <Results res={res} view={f?.view ?? "all"} onClear={api.clear} />
-        <Foot ready={ready} />
+        <Foot />
       </main>
       <Onboarding run={obRun} onFinish={afterOb} />
     </NewIds.Provider>

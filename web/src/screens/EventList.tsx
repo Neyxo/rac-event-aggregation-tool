@@ -39,7 +39,7 @@ export interface FilterApi {
 /** The controls change at once, but the list (and the URL) only follow on draw(): a place counts once it is geocoded, a search
  *  150 ms after the last key. So the controls (live) and the last drawn state (shown) are kept apart. init adjusts the filters read from the URL
  *  (a guest's Home starts at the position found earlier in this tab). */
-export function useFilters(ready: boolean, query: URLSearchParams, page: Page, init: (f: Filters) => Filters = f => f): FilterApi {
+export function useFilters(query: URLSearchParams, page: Page, init: (f: Filters) => Filters = f => f): FilterApi {
   const [live, setLive] = useState<Filters>(emptyFilters);
   const [shown, setShown] = useState<Filters | null>(null);
   const [inited, setInited] = useState(false);
@@ -113,9 +113,8 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
     setView("all");
   };
 
-  // once events.json is there (club ids can be checked): the controls from the URL, the place geocoded, then the first draw
+  // the controls from the URL, the place geocoded, then the first draw
   useLayoutEffect(() => {
-    if (!ready) return;
     const f = init(fromParams(query, id => !!getData().clubs[id]));
     cur.current = f;
     setLive(f);
@@ -126,7 +125,7 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
       if (cur.current.view === "near" && !cur.current.center) locate();
       else draw();
     })();
-  }, [ready]);
+  }, []);
   useEffect(() => () => clearTimeout(timer.current), []);
   // the URL follows every draw, so a reload or a shared link shows the same list
   useEffect(() => {
@@ -139,10 +138,10 @@ export function useFilters(ready: boolean, query: URLSearchParams, page: Page, i
 }
 
 /** "Last updated ..., may be out of date": events.json is more than 30 hours old */
-export function StaleBanner({ ready }: { ready: boolean }) {
-  const { D } = useData();
+export function StaleBanner() {
+  const D = useData();
   const generated = new Date(D.data.generated);
-  const stale = ready && (Date.now() - generated.getTime() > 30 * 3600e3 || !!devFlag("Stale"));
+  const stale = Date.now() - generated.getTime() > 30 * 3600e3 || !!devFlag("Stale");
   return <div className="banner" role="status" hidden={!stale}>{stale ? t("stale", { t: fmt.stamp.format(generated) }) : null}</div>;
 }
 
@@ -218,9 +217,8 @@ export function Results({ res, view, onClear }: { res: ListResult | null; view: 
 }
 
 /** when the data was fetched, where registration happens, who made the app */
-export function Foot({ ready }: { ready: boolean }) {
-  const { D } = useData();
-  if (!ready) return <div id="foot" />;
+export function Foot() {
+  const D = useData();
   return (
     <div id="foot">
       <div className="meta">

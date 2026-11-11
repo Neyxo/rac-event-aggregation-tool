@@ -7,7 +7,7 @@ import { install, isInstalled } from "../lib/install";
 import { href } from "../lib/route";
 import { setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
-import { ClubChips, ClubLabel, Footer, Icon, LangSelect, LoadError, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
+import { ClubChips, ClubLabel, Footer, Icon, LangSelect, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
 import { useNav } from "../components/router";
 
 type OS = "ios" | "android" | "desktop";
@@ -23,8 +23,7 @@ function OnOff({ id, on, onPick }: { id?: string; on: boolean; onPick: (on: bool
 }
 
 /** the chosen clubs of a row, or "none" */
-function Cur({ ids }: { ids: string[] | null }) {
-  if (!ids) return <div className="cur" />;  // before events.json the club names are unknown
+function Cur({ ids }: { ids: string[] }) {
   if (!ids.length) return <div className="cur"><span className="meta">{t("none")}</span></div>;
   return <div className="cur">{ids.map(c => <ClubLabel key={c} id={c} />)}</div>;
 }
@@ -60,7 +59,7 @@ function RowLink({ to, k, hidden }: { to: string; k: "subscribe_link" | "rerun" 
 }
 
 export default function Settings(_props: ScreenProps) {
-  const { ready, error, D } = useData();
+  const D = useData();
   const { pop } = useNav();
   const [picker, setPicker] = useState<"home" | "also" | null>(null);
   // anything but "dark" is light, as index.html's inline script reads it
@@ -105,22 +104,20 @@ export default function Settings(_props: ScreenProps) {
   }, []);
   // the app's address, without index.html or the route
   const shareLink = location.origin + location.pathname.replace(/[^/]*$/, "");
-  // events.json failed: the offline note in place of the screen (the club rows need the data)
-  if (error) return <main className="wrap settings"><LoadError /></main>;
 
   return (
     <main className="wrap settings">
       <h1>{t("settings")}</h1>
       <p className="lead">{t("set_hint")}</p>
       <section className="glass"><h2>{t("set_clubs_h")}</h2>
-        <button className="setrow link" type="button" onClick={() => ready && setPicker("home")}>
+        <button className="setrow link" type="button" onClick={() => setPicker("home")}>
           <span>{t("main_club")}</span>
-          <Cur ids={ready ? (s.home ? [s.home] : []) : null} />
+          <Cur ids={s.home ? [s.home] : []} />
           <Icon name="back" className="chev" />
         </button>
-        <button className="setrow link" type="button" onClick={() => ready && setPicker("also")}>
+        <button className="setrow link" type="button" onClick={() => setPicker("also")}>
           <span>{t("also_show")}</span>
-          <Cur ids={ready ? s.also : null} />
+          <Cur ids={s.also} />
           <Icon name="back" className="chev" />
         </button>
         <div className="setrow"><span>{t("rotary_show")}</span><OnOff id="rotarySeg" on={rotary} onPick={setRotary} /></div>

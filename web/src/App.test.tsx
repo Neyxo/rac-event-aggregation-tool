@@ -1,9 +1,18 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render, screen, within } from "@testing-library/react";
+import { fixture } from "./test/fixture";
 import { t } from "./i18n";
+import { loadData } from "./lib/data";
 import App from "./App";
 
 window.scrollTo = (() => {}) as typeof window.scrollTo;  // jsdom has no layout
+window.matchMedia ??= ((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+Element.prototype.scrollIntoView ??= function () {};
+beforeAll(async () => {
+  vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, json: async () => structuredClone(fixture) })));
+  await loadData();
+  vi.unstubAllGlobals();
+});
 afterEach(() => { cleanup(); location.hash = ""; });
 const go = async (h: string) => { await act(async () => { location.hash = h; window.dispatchEvent(new HashChangeEvent("hashchange")); }); };
 
