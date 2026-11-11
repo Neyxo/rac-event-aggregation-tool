@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Club as ClubT, Partner } from "../lib/types";
 import {
-  ClubChip, EventCard, Footer, GoogleLink, HelpLinks, Icon, ICON, LoadError, NewsStrip, NextUp, Popup, Rich, toast,
+  ClubChip, EventCard, FeedLinks, Footer, HelpLinks, Icon, ICON, LoadError, NewsStrip, NextUp, Popup, Rich, share,
   useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
 } from "../components";
 
@@ -24,16 +24,7 @@ function IconLink({ name, to, label }: { name: IconName; to: string; label: stri
 
 /** the club's own share page (c/<id>.html, with its own link preview), shared like an event */
 function ShareButton({ c }: { c: ClubT }) {
-  const share = async () => {
-    const url = shareUrl({ club: c.id });
-    if (navigator.share) {
-      try { await navigator.share({ title: c.name, url }); } catch { /* dismissed */ }
-      return;
-    }
-    await navigator.clipboard.writeText(url);
-    toast(t("copied"));
-  };
-  return <button className="btn glass ic" type="button" aria-label={t("share")} title={t("share")} onClick={() => void share()}><Icon name="share" /></button>;
+  return <button className="btn glass ic" type="button" aria-label={t("share")} title={t("share")} onClick={() => void share({ title: c.name, url: shareUrl({ club: c.id }) })}><Icon name="share" /></button>;
 }
 
 /** "#/club/X" in clubs.toml is another club of this app: its chip (a plain link while it is not loaded); anything else is an outside site */
@@ -62,12 +53,10 @@ function About({ c }: { c: ClubT }) {
 
 /** a bare webcal: link does nothing where no app handles it (Android, most Windows browsers): the same choices as the subscribe screen */
 function SubscribePopup({ c, onClose }: { c: ClubT; onClose: () => void }) {
-  const https = new URL(c.id + ".ics", location.href).href;
-  const webcal = https.replace(/^https?:/, "webcal:");
   return (
     <Popup title={t("cp_sub")} onClose={onClose}>
       <div className="feeds">
-        <div className="feed"><div className="l"><a href={webcal}>{t("apple")}</a><GoogleLink webcal={webcal} /><a href={https}>.ics</a></div></div>
+        <div className="feed"><FeedLinks file={c.id + ".ics"} /></div>
         <p className="meta"><a href={href("subscribe")}>{t("sub_title")}</a></p>
       </div>
     </Popup>

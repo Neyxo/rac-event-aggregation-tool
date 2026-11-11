@@ -7,7 +7,7 @@ import { nClubs } from "../lib/data";
 import { vars } from "../lib/color";
 import type { Pillar } from "../lib/pillars";
 import { shareUrl } from "../lib/share";
-import { CtaBlock, Footer, HelpLinks, Icon, LoadError, PillarPic, QaList, toast, useData, useEventListener, useNav, useStickyHeads, useTopBarExtra, useWash } from "../components";
+import { CtaBlock, Footer, HelpLinks, Icon, LoadError, PillarPic, QaList, share, useData, useEventListener, useNav, useStickyHeads, useTopBarExtra, useWash } from "../components";
 import { scrollTarget } from "../components/router";
 
 const PILLARS: { k: Pillar; color: string; word: string; text: string }[] = [
@@ -18,19 +18,9 @@ const PILLARS: { k: Pillar; color: string; word: string; text: string }[] = [
 const QA = [1, 2, 3, 4, 5] as const;
 const CLOSED_COLOR = "#d41367";
 
-async function share() {
-  const data = { title: t("ab_title"), text: t("ab_lead"), url: shareUrl("about") };
-  if (navigator.share) {
-    try { await navigator.share(data); } catch { /* dismissed */ }
-    return;
-  }
-  await navigator.clipboard.writeText(data.url);
-  toast(t("copied"));
-}
-
 function ShareButton() {
   return (
-    <button className="hbtn" type="button" title={t("ab_share")} onClick={() => void share()}>
+    <button className="hbtn" type="button" title={t("ab_share")} onClick={() => void share({ title: t("ab_title"), text: t("ab_lead"), url: shareUrl("about") })}>
       <Icon name="share" />
       <span>{t("share")}</span>
     </button>
