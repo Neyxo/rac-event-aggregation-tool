@@ -1,5 +1,5 @@
 // Calendar: the month fills the screen, no scrolling; tapping a day slides up a frosted sheet with that day's events.
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t, tx } from "../i18n";
 import type { Event } from "../lib/types";
@@ -83,19 +83,15 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
 }
 
 // A modal <dialog>: while open, focus is inside it and the screen behind can't be reached (not by Tab either); closed, it is gone
-// (display: none). It closes in two steps so it can slide away: "open" (the slide) goes first, the dialog itself 300 ms later,
-// which also hands the focus back to the tapped day. Escape (the dialog's cancel) and a tap on the dim area close it too.
+// (display: none). It slides in from its @starting-style (app.css). It closes in two steps so it can slide away: "open" (the slide)
+// goes first, the dialog itself 300 ms later, which also hands the focus back to the tapped day. (CSS alone could keep it shown while
+// it slides away only with transition-behavior on overlay, which Safari and Firefox lack: there it would vanish at once.)
+// Escape (the dialog's cancel) and a tap on the dim area close it too.
 function Sheet({ open, content, onClose }: { open: boolean; content: SheetContent | null; onClose: () => void }) {
   const dlg = useRef<HTMLDialogElement>(null), title = useRef<HTMLHeadingElement>(null), y0 = useRef<number | null>(null);
-  const [shown, setShown] = useState(false);
   useModal(dlg, open, { focus: title, closeAfter: 300 });  // 300: the .sheet-in transition
-  useEffect(() => {
-    if (!open) { setShown(false); return; }
-    const id = requestAnimationFrame(() => setShown(true));  // a frame after showing, so the slide-in transitions
-    return () => cancelAnimationFrame(id);
-  }, [open]);
   return (
-    <dialog className={cx("sheet", shown && "open")} id="sheet" aria-labelledby="sheetTitle" ref={dlg}
+    <dialog className={cx("sheet", open && "open")} id="sheet" aria-labelledby="sheetTitle" ref={dlg}
       onCancel={ev => { ev.preventDefault(); onClose(); }} onClick={ev => { if (ev.target === ev.currentTarget) onClose(); }}>
       <div className="sheet-in glass">
         {/* a swipe down on the handle closes the sheet */}

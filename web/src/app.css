@@ -235,6 +235,7 @@ dialog.sheet::backdrop { background: none; }
 .sheet-head h3:focus { outline: none; }  /* focused on open so a screen reader starts at the day; no ring on a heading */
 .sheet-in { width: 100%; max-width: 860px; margin: 0 auto; max-height: 78vh; border-radius: 22px 22px 0 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: var(--frost-3); -webkit-backdrop-filter: var(--frost-3); display: flex; flex-direction: column; transform: translateY(24px); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
 .sheet.open .sheet-in { transform: none; }
+@starting-style { .sheet.open { opacity: 0; } .sheet.open .sheet-in { transform: translateY(24px); } }  /* the slide in, from where it is shown */
 .sheet .handle { display: grid; place-items: center; padding: 8px 0 2px; } .sheet .handle i { width: 40px; height: 5px; border-radius: 99px; background: var(--line); }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 8px; } .sheet-head h3 { margin: 0; color: var(--text); text-transform: none; letter-spacing: 0; font-size: 1rem; }
 .sheet-body { overflow: auto; padding: 0 16px 16px; }
