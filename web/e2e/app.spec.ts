@@ -100,13 +100,28 @@ test.describe("member", () => {
     await expect(title).toHaveText("October 2026");
     await page.locator("#todayBtn").click();
     await expect(title).toHaveText("November 2026");
-    await page.locator("#grid button[aria-label^='Thursday, 19 November 2026']").click();
+    const day19 = page.locator("#grid button[aria-label^='Thursday, 19 November 2026']");
+    await day19.click();
     const sheet = page.locator("#sheet");
     await expect(sheet).toHaveClass(/open/);
     await expect(page.locator("#sheetTitle")).toContainText("19 November 2026");
+    await expect(page.locator("#sheetTitle")).toBeFocused();
     await expect(page.locator("#sheetBody")).toContainText("Suppenmittag Wheel-Clubs Luzern-Sursee");
+    // modal: Tab stays inside the sheet
+    for (let i = 0; i < 6; i++) {
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => !!document.activeElement?.closest("#sheet"))).toBe(true);
+    }
     await page.locator("#sheetClose").click();
     await expect(sheet).not.toHaveClass(/open/);
+    // closed: gone (its links can't be reached by Tab), and the focus is back on the day
+    await expect(sheet).toBeHidden();
+    await expect(day19).toBeFocused();
+    // Escape closes it too
+    await day19.click();
+    await expect(sheet).toHaveClass(/open/);
+    await page.keyboard.press("Escape");
+    await expect(sheet).toBeHidden();
   });
 
   test("Event: the star persists across a reload, share copies the e/<id>.html link", async ({ page }) => {

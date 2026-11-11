@@ -40,9 +40,15 @@ const day = (n: number, m = 10, y = 2026) => {
   return screen.getByRole("button", { name: x => x.startsWith(label) });
 };
 const titles = (b: HTMLElement) => [...b.querySelectorAll(".ch")].map(s => s.getAttribute("title"));
-/** the sheet: its own element (the backdrop) for the class that slides it in and the backdrop click */
-const sheet = () => document.querySelector<HTMLElement>(".sheet")!;
-const isOpen = () => sheet().classList.contains("open");
+// jsdom has no showModal / close
+HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) { this.open = true; };
+HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) { this.open = false; this.dispatchEvent(new Event("close")); };
+/** the sheet: a modal dialog, which is also the dim area around the sheet itself (a tap there closes it) */
+const sheet = () => document.querySelector<HTMLDialogElement>("dialog.sheet")!;
+/** shown, and not on its way out: the dialog stays open for the 300 ms slide-out after the slide class is gone */
+const isOpen = () => sheet().open && day(11).getAttribute("aria-pressed") === "true";
+/** the slide-in (next frame) and the slide-out (300 ms) */
+const settle = () => act(() => { vi.advanceTimersByTime(400); });
 /** the links of the event cards in the sheet (each card also links its clubs) */
 const sheetLinks = () => within(sheet()).queryAllByRole("link", { hidden: true }).map(a => a.getAttribute("href")).filter(h => h?.startsWith(href("event", "")));
 
@@ -107,24 +113,31 @@ describe("calendar", () => {
     fireEvent.click(button(t("next_month")));
     fireEvent.click(button(t("today")));
     expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 10, 1)));
-    expect(sheet().getAttribute("aria-hidden")).toBe("true");
+    expect(sheet().open).toBe(false);
   });
 
-  it("a day opens the frosted sheet with its events; close, backdrop, Escape and a swipe down close it", () => {
+  it("a day opens the sheet as a modal dialog with its events; close, backdrop, Escape and a swipe down close it", () => {
+    vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout", "requestAnimationFrame", "cancelAnimationFrame"] });
+    vi.setSystemTime(new Date("2026-11-11T10:00"));
     show();
     const s = sheet();
-    expect(s.getAttribute("aria-hidden")).toBe("true");
+    expect(s.open).toBe(false);
     fireEvent.click(day(11));
     expect(isOpen()).toBe(true);
-    expect(s.getAttribute("aria-hidden")).toBe("false");
+    expect(document.activeElement).toBe(screen.getByRole("heading", { level: 3 }));  // a screen reader starts at the day
+    expect(s.getAttribute("aria-labelledby")).toBe(screen.getByRole("heading", { level: 3 }).id);
+    settle();
+    expect(s.classList.contains("open")).toBe(true);  // slid in
     expect(sheetLinks()).toEqual([href("event", "219091")]);
-    expect(day(11).getAttribute("aria-pressed")).toBe("true");
 
     fireEvent.click(button(t("close")));
-    expect(isOpen()).toBe(false);
     expect(day(11).getAttribute("aria-pressed")).toBe("false");
-    // the content stays while the sheet slides away
+    // it slides away first, with its content, and only then closes
+    expect(s.classList.contains("open")).toBe(false);
+    expect(s.open).toBe(true);
     expect(sheetLinks()).toEqual([href("event", "219091")]);
+    settle();
+    expect(s.open).toBe(false);
 
     fireEvent.click(day(11));
     fireEvent.click(s.querySelector(".sheet-in")!);
@@ -133,7 +146,9 @@ describe("calendar", () => {
     expect(isOpen()).toBe(false);
 
     fireEvent.click(day(11));
-    fireEvent.keyDown(window, { key: "Escape" });
+    const esc = new Event("cancel", { cancelable: true });  // what the browser sends on Escape
+    fireEvent(s, esc);
+    expect(esc.defaultPrevented).toBe(true);  // the slide-out runs instead of the browser closing it at once
     expect(isOpen()).toBe(false);
 
     fireEvent.click(day(11));
