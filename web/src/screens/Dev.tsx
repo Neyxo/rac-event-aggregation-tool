@@ -11,6 +11,7 @@ import { store, type StoreKey } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
 import { ClubMark, clubLabel, Footer, toast, useData } from "../components";
+import { version } from "../../../package.json";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
 type Stat = Pick<Status, "clubs" | "failures"> & Partial<Omit<Status, "clubs" | "failures">>;
@@ -22,7 +23,8 @@ interface Device {
 }
 type PreviewKey = Extract<StoreKey, "rac.devGuest" | "rac.devNew" | "rac.devStale">;
 
-const ALL_RUNS = "https://github.com/Neyxo/rotaract-events/actions/workflows/feeds.yml";
+const REPO = "https://github.com/Neyxo/rotaract-events";
+const ALL_RUNS = `${REPO}/actions/workflows/feeds.yml`;
 // a reload, not a re-render: the switches are read once at start (pretend date, guest settings in loadData)
 const reload = () => location.reload();
 
@@ -100,6 +102,8 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
   return (
     <>
       <p className={cx("devstate", level)}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
+      {/* the version is package.json's at build time; a build between two releases carries the last one's number plus its commit */}
+      <p className="meta">{`Version ${version}` + (st.commit ? `, built from commit ${st.commit}` : "") + ` · ${import.meta.env.MODE} build`}</p>
       <p className="meta">{`Next scheduled run about ${fmt.stamp.format(nextRun())} (GitHub often starts it late).` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
@@ -118,6 +122,7 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
       <div className="links">
         {st.run ? <Link label="This run's log" to={st.run} /> : null}
         <Link label="All runs" to={ALL_RUNS} />
+        <Link label="Releases" to={`${REPO}/releases`} />
         <Link label="status.json" to="status.json" />
         <Link label="events.json" to="events.json" />
         <Link label="Map" to={href("map")} />

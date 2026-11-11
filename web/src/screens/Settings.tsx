@@ -10,6 +10,7 @@ import { setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
 import { ClubChips, ClubLabel, copy, Footer, Icon, LangSelect, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
 import { useNav } from "../components/router";
+import { version } from "../../../package.json";
 
 /** an Off / On segmented control (Rotary layer, developer mode) */
 function OnOff({ id, on, onPick }: { id?: string; on: boolean; onPick: (on: boolean) => void }) {
@@ -134,7 +135,7 @@ export default function Settings(_props: ScreenProps) {
         <div className="setrow"><span>{t("dev_mode")}</span><OnOff on={dev} onPick={pickDev} /></div>
         <RowLink to={href("dev")} k="dev_page" hidden={!dev} />
       </section>
-      <div id="foot"><Footer onClick={tap} /></div>
+      <div id="foot"><Footer onClick={tap} /><p className="meta">{`v${version}`}</p></div>
       {picker === "home" && (
         <Popup title={t("pick_main")} onClose={() => setPicker(null)}>
           <ClubChips single selected={s.home} onPick={pickHome} />
