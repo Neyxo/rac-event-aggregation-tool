@@ -395,7 +395,7 @@ assert polaris_feed.sync_rotary({**rc[1], "lang": "de"}, dist2, NOW, "T3", skip,
 polaris_feed.get, polaris_feed.time.sleep, polaris_feed.listed_events, polaris_feed.fetch_event = real
 
 # --- Instagram layer: off without credentials, one Business Discovery call per club with a link, the token never printed or returned
-import contextlib, io, tempfile
+import contextlib, io, json, tempfile
 from pathlib import Path
 from polaris_feed import fetch_instagram, instagram_user, parse_instagram
 assert instagram_user("https://www.instagram.com/racluzern/") == "racluzern" and instagram_user("https://instagram.com/rac.bern_1?hl=de") == "rac.bern_1"
@@ -423,11 +423,17 @@ def fake_download(url, path):
     return url != "https://cdn/v.jpg"  # one picture too big / unreachable
 with tempfile.TemporaryDirectory() as tmp:
     for token, user in (("", ""), (None, None), (SECRET, ""), ("", "178"), (" ", "178")):
-        assert fetch_instagram(ig_clubs, Path(tmp), token, user, fake_fetch, fake_download) == {} and not calls, "no credentials: no calls"
-    log = io.StringIO()
+        r = polaris_feed.new_report()
+        assert fetch_instagram(ig_clubs, Path(tmp), token, user, fake_fetch, fake_download, r) == {} and not calls, "no credentials: no calls"
+        assert r["instagram"] == {"state": "off", "note": "the INSTAGRAM_TOKEN or INSTAGRAM_USER_ID secret is not set", "clubs": {}}
+    log, r = io.StringIO(), polaris_feed.new_report()
     with contextlib.redirect_stdout(log):
-        assert fetch_instagram(ig_clubs, Path(tmp), SECRET, "17x", fake_fetch, fake_download) == {} and not calls, "bad user id: no calls"
-        ig = fetch_instagram(ig_clubs, Path(tmp), SECRET + "\n", "178", fake_fetch, fake_download)
+        assert fetch_instagram(ig_clubs, Path(tmp), SECRET, "17x", fake_fetch, fake_download, r) == {} and not calls, "bad user id: no calls"
+        assert r["instagram"]["state"] == "error" and "numeric" in r["instagram"]["note"]
+        r = polaris_feed.new_report()
+        ig = fetch_instagram(ig_clubs, Path(tmp), SECRET + "\n", "178", fake_fetch, fake_download, r)
+    assert r["instagram"]["state"] == "on" and r["instagram"]["clubs"]["luzern"] == 7 and r["instagram"]["clubs"]["zug"].startswith("Graph error 100 (OAuthException)")
+    assert SECRET not in json.dumps(r), "the token never reaches status.json"
     assert len(calls) == 2 and calls[0].startswith("https://graph.facebook.com/v27.0/178?fields=business_discovery.username%28racluzern%29"), calls
     assert list(ig) == ["luzern"] and len(ig["luzern"]) == 7, "a failing club is left out, a failed download drops that post"
     assert ig["luzern"][0] == {"url": "https://www.instagram.com/p/A/", "image": "ig/luzern/11.jpg", "caption": posts[0]["caption"], "date": "2026-10-31"}
@@ -435,10 +441,14 @@ with tempfile.TemporaryDirectory() as tmp:
     assert "zug instagram: Graph error 100" in log.getvalue() and SECRET not in log.getvalue() + str(ig), log.getvalue()
     calls.clear()
     with contextlib.redirect_stdout(log):
-        assert fetch_instagram(ig_clubs, Path(tmp), SECRET, "178", lambda u: calls.append(u) or {"error": {"code": 190}}, fake_download) == {}
+        r = polaris_feed.new_report()
+        assert fetch_instagram(ig_clubs, Path(tmp), SECRET, "178", lambda u: calls.append(u) or {"error": {"code": 190}}, fake_download, r) == {}
+        assert r["instagram"]["state"] == "error" and "INSTAGRAM_TOKEN" in r["instagram"]["note"]
         def boom(url):
             raise RuntimeError("failed: " + url)
-        assert fetch_instagram(ig_clubs, Path(tmp), SECRET, "178", boom, fake_download) == {}, "an exception never fails the run"
+        r = polaris_feed.new_report()
+        assert fetch_instagram(ig_clubs, Path(tmp), SECRET, "178", boom, fake_download, r) == {}, "an exception never fails the run"
+        assert SECRET not in json.dumps(r) and r["instagram"]["clubs"]["luzern"].startswith("failed: "), r
     assert len(calls) == 1 and "token is expired or invalid" in log.getvalue() and SECRET not in log.getvalue(), "expired token: one call, one clear warning"
 assert site_data(clubs, histories, NOW, cache)["clubs"][0]["instagram"] == [], "no Instagram posts by default"
 assert site_data(clubs, histories, NOW, cache, None, None, ig)["clubs"][0]["instagram"] == ig["luzern"]
@@ -460,7 +470,7 @@ def run_main(tmp, listed, fetched):
     polaris_feed.listed_events = lambda club, backfill=False: listed[club["id"]]
     polaris_feed.fetch_event = lambda club, i, item=None: fetched.get(i)
     polaris_feed.fetch_detail = lambda club, i: {"image": "", "description": "", "registration": ""}
-    polaris_feed.fetch_news = lambda club, page="news": []
+    polaris_feed.fetch_news = lambda club, page="news": [] if club["id"] != "z" or page == "news" else (_ for _ in ()).throw(OSError("HTTP 500"))
     polaris_feed.get = lambda url, attempts=3: (_ for _ in ()).throw(OSError("offline"))  # the geocoder
     sys.argv, log = ["x", str(tmp / "clubs.toml"), str(tmp / "out"), str(tmp / "data")], io.StringIO()
     with contextlib.redirect_stdout(log):
@@ -495,6 +505,7 @@ with tempfile.TemporaryDirectory() as tmp:
     alive = {i: r["vevent"] for c in "xyz" for i, r in future(c, 4).items() if i[1] in "01"}
     code, st, log = run_main(tmp, {c: {f"{c}{k}": item for k in range(2)} for c in "xyz"}, alive)
     assert code == 1 and any("would cancel 6 of 12" in f for f in st["failures"]), st
+    assert st["instagram"] == {"state": "off", "note": "the INSTAGRAM_TOKEN or INSTAGRAM_USER_ID secret is not set", "clubs": {}} and st["notes"] == ["z projects: HTTP 500 (kept the last list)"], st["notes"]
     assert {c: (tmp / "data" / f"{c}.json").read_text() for c in "xyz"} == stored, "refused: nothing written to data/"
     assert not (tmp / "data" / "news.json").exists() and "STATUS:CANCELLED" not in (tmp / "out" / "x.ics").read_text(), "the last histories are published"
     assert (tmp / "out" / "index.html").read_text() == "app" and not (tmp / "out" / "e" / "stale.html").exists(), "dist/ copied, stale share pages gone"
