@@ -223,9 +223,10 @@ h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color:
 .calwrap .grid { flex: 1; display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: auto repeat(var(--rows, 5), 1fr); gap: 3px; min-height: 0; }
 .calwrap .day { min-height: 0; }
 .calwrap .day .ch { font-size: .6rem; }
-.sheet { position: fixed; inset: 0; z-index: 7; background: rgba(20,16,30,.35); display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s; }
+/* the sheet ends where the bottom tabs begin: under them its last card (or its only one) could not be reached */
+.sheet { position: fixed; inset: 0 0 var(--tabs, calc(64px + env(safe-area-inset-bottom))) 0; z-index: 7; background: rgba(20,16,30,.35); display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s; }
 .sheet.open { opacity: 1; pointer-events: auto; }
-.sheet-in { width: 100%; max-width: 860px; margin: 0 auto; max-height: 78vh; border-radius: 22px 22px 0 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: var(--frost-3); -webkit-backdrop-filter: var(--frost-3); display: flex; flex-direction: column; transform: translateY(24px); transition: transform .3s cubic-bezier(.2, .8, .2, 1); padding-bottom: env(safe-area-inset-bottom); }
+.sheet-in { width: 100%; max-width: 860px; margin: 0 auto; max-height: 78vh; border-radius: 22px 22px 0 0; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: var(--frost-3); -webkit-backdrop-filter: var(--frost-3); display: flex; flex-direction: column; transform: translateY(24px); transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
 .sheet.open .sheet-in { transform: none; }
 .sheet .handle { display: grid; place-items: center; padding: 8px 0 2px; } .sheet .handle i { width: 40px; height: 5px; border-radius: 99px; background: var(--line); }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 8px; } .sheet-head h3 { margin: 0; color: var(--text); text-transform: none; letter-spacing: 0; font-size: 1rem; }
@@ -249,11 +250,21 @@ h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color:
 .ch::before { content: ""; position: absolute; right: -2px; bottom: -8px; width: 44%; aspect-ratio: 1; background: var(--crest) center/contain no-repeat; opacity: .2; transform: rotate(-8deg); pointer-events: none; }
 .ch i { position: relative; font-style: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; hyphens: auto; }
 .more { font-size: .68rem; color: var(--muted); }
+.ch[hidden], .more[hidden] { display: none; }
+/* on a phone an event is its title on the club's tint, the crest behind it, cut at the edge (no "…"), with the least padding everywhere.
+   fit() in calendar.js gives each day as many title lines per event (--l: 3, 2 or 1) as still let all its events fit */
 @media (max-width: 600px) {
-  .grid { gap: 3px; } .day { padding: 3px; } .day .n { font-size: .7rem; }
-  .day { flex-direction: row; flex-wrap: wrap; align-content: flex-start; gap: 3px; } .day .n { width: 100%; }
-  .day .ch { width: 9px; height: 9px; padding: 0; border-radius: 50%; background: var(--c); } :root[data-theme=dark] .day .ch { background: color-mix(in srgb, var(--c) 70%, #fff); } .day .ch i, .day .ch::before { display: none; }
-  .day .more { font-size: .6rem; line-height: 9px; }
+  .calwrap { padding: 6px 3px; } .grid { gap: 2px; } .day { padding: 2px; gap: 1px; border-radius: 6px; } .day .n { font-size: .7rem; padding-left: 2px; }
+  .day .ch { flex: 0 0 auto; font-size: .6rem; line-height: 1.2; padding: 1px 2px; border-radius: 3px; }
+  .day .ch i { display: block; max-height: calc(var(--l, 1) * 1.2em); }
+  .day .more { font-size: .56rem; line-height: 1; padding-left: 2px; }
+}
+/* really small phones (iPhone 5 size): no room for words, so one round mark per event with the club's crest on its tint */
+@media (max-width: 352px) {
+  .day { flex-direction: row; flex-wrap: wrap; align-content: flex-start; gap: 2px; } .day .n { width: 100%; }
+  .day .ch { width: 16px; height: 16px; padding: 0; border-radius: 50%; } .day .ch i { display: none; }
+  .day .ch::before { inset: 3px; width: auto; opacity: 1; transform: none; }
+  .day .more { line-height: 16px; padding: 0; }
 }
 
 /* sections, feeds, dialogs, toast */
