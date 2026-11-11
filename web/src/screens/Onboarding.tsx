@@ -160,7 +160,7 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
 }
 
 /** The welcome dialog. It stays mounted, so its content stays while it closes; run > 0 (re)starts it. */
-export function Onboarding({ run, onFinish }: { run: number; onFinish: () => void }) {
+export function Onboarding({ run }: { run: number }) {
   const D = useData();
   const dlg = useRef<HTMLDialogElement>(null);
   const h2 = useRef<HTMLHeadingElement>(null);
@@ -174,7 +174,6 @@ export function Onboarding({ run, onFinish }: { run: number; onFinish: () => voi
     setSettings(s);
     store.set("rac.onboarded", true);
     setOb(o => o && { ...o, done: true });
-    onFinish();
     const mine = myClubs();
     if (mine.length) toast(t("ob_showing", { clubs: mine.map(id => club(id).short).join(", ") }));
   };

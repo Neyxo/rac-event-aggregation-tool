@@ -1,11 +1,11 @@
 // What Home and Discover share: the filter state and its URL, the view switch, the list head,
 // the event list with month headings, the stale banner and the footer. The filter logic itself is lib/filters.ts.
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { nEvents, t, type StrKey } from "../i18n";
 import { getData } from "../lib/data";
 import { fmt } from "../lib/dates";
 import { devFlag } from "../lib/dev";
-import { emptyFilters, fromParams, radiusOf, toParams, type Filters, type ListResult, type View } from "../lib/filters";
+import { fromParams, radiusOf, toParams, type Filters, type ListResult, type View } from "../lib/filters";
 import { geocode } from "../lib/geo";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
@@ -16,10 +16,9 @@ export type Page = "home" | "discover";
 export interface FilterApi {
   /** the controls: chips, district, place, radius, the pressed view, the place it was geocoded to */
   live: Filters;
-  /** the filters the list was last drawn with; null until the first draw (the list shows its skeleton until then) */
+  /** what the list shows: the URL's filters, around the place they were drawn at; null while a place from the URL is still being
+   *  geocoded or the device position looked up (the list shows its skeleton instead of everything for a moment) */
   shown: Filters | null;
-  /** the controls are set from the URL (no view is pressed before: which one is not known yet) */
-  inited: boolean;
   /** the line under the place field */
   hint: string;
   /** the place field as typed; it only counts once committed (change event) */
@@ -36,31 +35,45 @@ export interface FilterApi {
   clear(): void;
 }
 
-/** The controls change at once, but the list (and the URL) only follow on draw(): a place counts once it is geocoded, a search
- *  150 ms after the last key. So the controls (live) and the last drawn state (shown) are kept apart. init adjusts the filters read from the URL
- *  (a guest's Home starts at the position found earlier in this tab). */
+/** The list follows the URL (#/discover?q=...&view=...), so a reload or a shared link shows the same list. The controls (live) change
+ *  at once, but the list only follows on draw(), which writes them to the URL: a place counts once it is geocoded, a search 150 ms
+ *  after the last key. Where the list is centred (a geocoded place, the device position) is not in the URL: draw() keeps it.
+ *  Set up once per navigation (Home and Discover remount on one): the controls start from the URL; init adjusts them (a guest's Home
+ *  starts at the position found earlier in this tab). */
 export function useFilters(query: URLSearchParams, page: Page, init: (f: Filters) => Filters = f => f): FilterApi {
-  const [live, setLive] = useState<Filters>(emptyFilters);
-  const [shown, setShown] = useState<Filters | null>(null);
-  const [inited, setInited] = useState(false);
+  const isClub = (id: string) => !!getData().clubs[id];
+  const [live, setLive] = useState(() => init(fromParams(query, isClub)));
+  const [at, setAt] = useState<Pick<Filters, "center" | "centerLabel">>(() => ({ center: live.center, centerLabel: live.centerLabel }));
+  const [waiting, setWaiting] = useState(() => !!live.place || (live.view === "near" && !live.center));
   const [hint, setHint] = useState("");
-  const [placeText, setPlaceText] = useState("");
+  const [placeText, setPlaceText] = useState(live.place);
   // the latest controls, for handlers that change several things in a row (state would still hold the old ones)
   const cur = useRef(live);
   const timer = useRef(0);
+  // a geocode or a position that answers after the screen is gone (another screen, or this one remounted for a new navigation) must
+  // not write its filters into that screen's URL
+  const alive = useRef(true);
 
-  const update = (patch: Partial<Filters>, draw = false) => {
+  const draw = () => {
+    if (!alive.current) return;
+    const f = cur.current;
+    setAt({ center: f.center, centerLabel: f.centerLabel });
+    setWaiting(false);
+    const q = toParams(f);
+    if (q.toString() !== (location.hash.split("?")[1] ?? "")) replaceQuery(q);
+  };
+  const update = (patch: Partial<Filters>, redraw = false) => {
     const next = { ...cur.current, ...patch };
     cur.current = next;
     setLive(next);
-    if (draw) setShown(next);
+    if (redraw) draw();
   };
-  // a copy, so drawing the same filters again still redraws (the Home after the welcome steps)
-  const draw = () => setShown({ ...cur.current });
 
   const locate = () => {
     if (!navigator.geolocation) {
       toast(t("loc_none"));
+      // a "near me" link on a device that can't say where it is: the list would wait forever
+      if (cur.current.view === "near") setView("all");
       return;
     }
     setHint(t("locating"));
@@ -113,28 +126,19 @@ export function useFilters(query: URLSearchParams, page: Page, init: (f: Filters
     setView("all");
   };
 
-  // the controls from the URL, the place geocoded, then the first draw
-  useLayoutEffect(() => {
-    const f = init(fromParams(query, id => !!getData().clubs[id]));
-    cur.current = f;
-    setLive(f);
-    setPlaceText(f.place);
-    setInited(true);
+  // the place from the URL geocoded, or the position looked up for "near me"; then the first draw, which also tidies the URL (unknown
+  // clubs dropped)
+  useEffect(() => {
+    alive.current = true;
     void (async () => {
-      if (f.place) await setPlace(f.place);
+      if (cur.current.place) await setPlace(cur.current.place);
       if (cur.current.view === "near" && !cur.current.center) locate();
       else draw();
     })();
+    return () => { alive.current = false; clearTimeout(timer.current); };
   }, []);
-  useEffect(() => () => clearTimeout(timer.current), []);
-  // the URL follows every draw, so a reload or a shared link shows the same list
-  useEffect(() => {
-    if (!shown) return;
-    const q = toParams(shown);
-    if (q.toString() !== (location.hash.split("?")[1] ?? "")) replaceQuery(q);
-  }, [shown]);
-
-  return { live, shown, inited, hint, placeText, setPlaceText, setQ, update, draw, setView, locate, setPlace, clear };
+  const shown = waiting ? null : { ...fromParams(query, isClub), ...at };
+  return { live, shown, hint, placeText, setPlaceText, setQ, update, draw, setView, locate, setPlace, clear };
 }
 
 /** "Last updated ..., may be out of date": events.json is more than 30 hours old */
@@ -161,12 +165,12 @@ export function ListHead({ titleId, title, summary, clear, onClear }: {
 }
 
 const VIEW_KEY: Record<View, StrKey> = { all: "v_all", near: "v_near", saved: "v_saved", past: "v_past" };
-/** the view switch; pressed: the current view, undefined before the controls are set from the URL (none pressed yet) */
-export function Views({ views, pressed, onPick }: { views: View[]; pressed?: View; onPick: (v: View) => void }) {
+/** the view switch; pressed: the current view */
+export function Views({ views, pressed, onPick }: { views: View[]; pressed: View; onPick: (v: View) => void }) {
   return (
     <div className="seg views glass" role="group" aria-label={t("filters")}>
       {views.map(v => (
-        <button key={v} type="button" aria-pressed={pressed ? pressed === v : undefined} onClick={() => onPick(v)}>{t(VIEW_KEY[v])}</button>
+        <button key={v} type="button" aria-pressed={pressed === v} onClick={() => onPick(v)}>{t(VIEW_KEY[v])}</button>
       ))}
     </div>
   );

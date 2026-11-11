@@ -97,7 +97,7 @@ function FilterBar({ api }: { api: FilterApi }) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" /></svg>
         </a>
       </div>
-      <Views views={["all", "near", "saved", "past"]} pressed={api.inited ? api.live.view : undefined} onPick={api.setView} />
+      <Views views={["all", "near", "saved", "past"]} pressed={api.live.view} onPick={api.setView} />
       <div className="panel glass" id="panel" hidden={!open}>
         <div className="row" id="districts" role="group" aria-label={t("district")}><DistrictRow api={api} /></div>
         <div className="row" id="clubs" role="group" aria-label={t("clubs")}><ClubRow api={api} /></div>
