@@ -2,6 +2,7 @@
 // (home · discover · calendar). App renders both from the route table; a screen adds a button to the top bar with useTopBarExtra().
 import { createContext, useContext, useLayoutEffect, useRef, type ReactNode } from "react";
 import { t } from "../i18n";
+import { cx } from "../lib/color";
 import { anyDevFlag } from "../lib/dev";
 import { href } from "../lib/route";
 import { Icon, type IconName } from "./Icon";
@@ -12,7 +13,7 @@ import { canGoBack } from "./router";
 export type Active = "home" | "discover" | "calendar" | "about" | "app" | "settings" | "dev" | null;
 
 function Hbtn({ name, to, label, on = false }: { name: IconName; to: string; label: string; on?: boolean }) {
-  return <a className={"hbtn" + (on ? " on" : "")} href={to} aria-label={label} title={label}><Icon name={name} /><span>{label}</span></a>;
+  return <a className={cx("hbtn", on && "on")} href={to} aria-label={label} title={label}><Icon name={name} /><span>{label}</span></a>;
 }
 
 export function TopBar({ active, back = false, extra = null }: { active: Active; back?: boolean; extra?: ReactNode }) {
@@ -49,7 +50,7 @@ export function Tabs({ active }: { active: Active }) {
   return (
     <nav className="tabs-bar" id="tabs" aria-label="Main" ref={ref}>
       {TABS.map(([k, to]) => (
-        <a key={k} className={"tab" + (active === k ? " on" : "")} href={to} aria-current={active === k ? "page" : undefined}><Icon name={k} /><span>{t(k)}</span></a>
+        <a key={k} className={cx("tab", active === k && "on")} href={to} aria-current={active === k ? "page" : undefined}><Icon name={k} /><span>{t(k)}</span></a>
       ))}
     </nav>
   );

@@ -1,6 +1,7 @@
 // The toast at the bottom: one line, gone after 2.2 s; with an action button it stays until replaced.
 // toast() works from anywhere (event handlers, lib callers); <Toast/> is rendered once by App.
 import { useSyncExternalStore } from "react";
+import { cx } from "../lib/color";
 
 export interface ToastAction { label: string; fn: () => void }
 interface State { msg: string; action: ToastAction | null; show: boolean }
@@ -19,7 +20,7 @@ export const useToast = () => toast;
 export function Toast() {
   const s = useSyncExternalStore(f => { listeners.add(f); return () => { listeners.delete(f); }; }, () => state);
   return (
-    <div className={"toast" + (s.show ? " show" : "")} id="toast" role="status">
+    <div className={cx("toast", s.show && "show")} id="toast" role="status">
       {s.msg}{s.action && <button type="button" onClick={s.action.fn}>{s.action.label}</button>}
     </div>
   );
