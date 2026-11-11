@@ -25,7 +25,7 @@ python3 polaris_feed.py        # updates data/, writes feeds + site (dist/ inclu
 python3 -m http.server -d public 8000
 ```
 
-Then open http://localhost:8000. Node 24, Python 3.11+ (no Python dependencies). The app is React + TypeScript in `web/`, built with Vite. While working on it, `npm run dev` serves it with the real data from `public/` (run `polaris_feed.py` once first).
+Then open http://localhost:8000. Node 24, Python 3.11+ (no Python dependencies). The app is React + TypeScript in `web/`, built with Vite. To work on the app, `npm ci` and `npm start` are enough: it serves the app with live reload, with the real data from `public/` if `polaris_feed.py` has run, otherwise with the test data.
 
 The event history lives on the `data` branch; check it out once with `git worktree add data data`.
 
