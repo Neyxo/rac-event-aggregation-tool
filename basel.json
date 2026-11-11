@@ -461,27 +461,6 @@
    "CATEGORIES:Rotaract"
   ]
  },
- "219866": {
-  "detail": {
-   "description": "",
-   "image": "",
-   "registration": "Die Anmeldefrist ist abgelaufen"
-  },
-  "first_seen": "20261107T103915Z",
-  "modified": "20261107T103915Z",
-  "sequence": 0,
-  "status": "active",
-  "vevent": [
-   "UID:polaris-219866@rotary.ch",
-   "SUMMARY:Bowling Day - open to interested parties",
-   "DESCRIPTION:Webseite: https://shop.vandermerwe.ch/",
-   "URL:https://rcbaselinternational.ch/de/agenda/show/219866",
-   "DTSTART;TZID=Europe/Zurich:20261020T190000",
-   "DTEND;TZID=Europe/Zurich:20261020T200000",
-   "LOCATION:Van der Merwe Center (Allschwil)",
-   "CATEGORIES:Rotary"
-  ]
- },
  "219914": {
   "detail": {
    "description": "Wir kommen zusammen, um aktuelle Themen zu besprechen, Ideen auszutauschen und die nächsten Schritte im Club gemeinsam zu gestalten.",
