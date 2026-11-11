@@ -188,11 +188,31 @@ assert "old-cancelled" not in ids and "ancient" not in ids and "c" in ids, "same
 assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
 assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"
 
-# --- share page: HTML-safe, carries picture + redirect
+# --- share pages: HTML-safe, in the lead club's language, absolute picture/URL, redirect into the app
 pg = share_page({"id": "1", "title": 'Stamm "<Test>"', "start": "2026-12-10T19:00", "allday": False, "location": "Luzern",
                  "description": "A & B\n\nC", "image": "https://x.ch/a.png?v=1"}, "Rotaract Luzern")
 assert 'content="Stamm &quot;&lt;Test&gt;&quot; · 10.12.2026 19:00"' in pg and "<Test>" not in pg.split("<title>")[1].split("</title>")[0]
-assert 'og:image" content="https://x.ch/a.png?v=1"' in pg and 'url=../event.html?id=1' in pg and "Rotaract Luzern · Luzern. A &amp; B C" in pg
+assert 'og:image" content="https://x.ch/a.png?v=1"' in pg and "Rotaract Luzern · Luzern. A &amp; B C" in pg and '<html lang="de">' in pg
+assert 'url=../#/event/1"' in pg and 'location.replace("../#/event/1")' in pg and '<a href="../#/event/1">' in pg
+for tag in ('og:url" content="https://neyxo.github.io/rac-event-aggregation-tool/e/1.html"', 'og:site_name" content="Rotaract Events"', 'twitter:card"',
+            'name="description"', 'rel="canonical" href="https://neyxo.github.io/rac-event-aggregation-tool/e/1.html"', 'og:type"'):
+    assert tag in pg, tag
+en = share_page({"id": "2", "title": "Xmas", "start": "2026-12-12T09:00", "allday": False, "location": "", "description": "", "image": "", "members": True}, "RAC ZI", "en")
+assert '<html lang="en">' in en and "Xmas · Saturday, December 12, 2026, 09:00" in en and 'content="RAC ZI · members only."' in en, en
+assert 'og:image" content="https://neyxo.github.io/rac-event-aggregation-tool/screenshot-wide.png"' in en, "no picture: the site's"
+fr = share_page({"id": "3", "title": "Gala", "start": "2027-02-20T00:00", "allday": True, "location": "", "description": "", "image": "", "members": True}, "RAC GE", "fr")
+assert "Gala · 20.02.2027<" in fr and "RAC GE · réservé aux membres." in fr
+evs = [{"id": "p", "clubs": ["luzern"], "start": "2026-10-01T19:00", "end": "2026-10-01T21:00", "cancelled": False, "image": "https://x/old.jpg"},
+       {"id": "q", "clubs": ["luzern"], "start": "2026-10-20T19:00", "end": "2026-10-20T21:00", "cancelled": False, "image": "https://x/new.jpg"},
+       {"id": "u", "clubs": ["bern", "luzern"], "start": "2026-12-01T19:00", "end": "2026-12-01T21:00", "cancelled": False, "image": "https://x/up.jpg"},
+       {"id": "v", "clubs": ["luzern"], "start": "2026-12-02T19:00", "end": "2026-12-02T21:00", "cancelled": True, "image": ""}]
+cp = polaris_feed.club_share_page({"id": "luzern", "name": "Rotaract <Luzern>", "lang": "de", "city": "Luzern"}, evs, NOW)
+assert "<title>Rotaract &lt;Luzern&gt;</title>" in cp and 'content="Anlässe, News und wie man mitmacht · Luzern · 1 kommender Anlass"' in cp, cp
+assert 'og:image" content="https://x/new.jpg"' in cp and 'location.replace("../#/club/luzern")' in cp and "c/luzern.html" in cp, "newest past picture"
+cp = polaris_feed.club_share_page({"id": "luzern", "name": "L", "lang": "it", "about": "Ciao.", "photos": ["https://x/p.jpg"]}, evs, NOW)
+assert 'content="Ciao. · 1 evento in programma"' in cp and 'og:image" content="https://x/p.jpg"' in cp and '<html lang="it">' in cp
+cp = polaris_feed.club_share_page({"id": "zi", "name": "ZI", "lang": "en", "city": "Zürich"}, evs, NOW)
+assert 'content="Events, news and how to join · Zürich · 0 upcoming events"' in cp and "screenshot-wide.png" in cp
 
 long = {"x": {"status": "active", "vevent": event("x", "20261210T190000", "ä" * 100), "sequence": 0, "modified": "T"}}
 cal = build_calendar({"name": "Test", "lang": "de"}, long, NOW)
@@ -242,6 +262,27 @@ assert "DTEND;TZID=Europe/Zurich:20261119T210000" in stub_vevent("1", {**item, "
 allday = stub_vevent("1", {**item, "when": "samedi 20 février 2027"})
 assert "DTSTART;VALUE=DATE:20270220" in allday and "DTEND;VALUE=DATE:20270221" in allday, allday
 assert stub_vevent("1", {**item, "when": ""}) is None, "unreadable date: skipped, as before"
+# list dates as Polaris writes them (real strings from the de/fr/it/en agenda lists), English month-before-day included
+for when, start, end in [
+        ("Saturday, December 12, 2026 09:00 - Friday, December 18, 2026 18:00", "20261212T090000", "20261218T180000"),  # zurich-international
+        ("Sunday, November 22, 2026 11:00-13:00", "20261122T110000", "20261122T130000"),
+        ("Monday, June 29, 2026 19:00", "20260629T190000", "20260629T210000"),
+        ("Friday, December 11, 2026 7:30\u202fPM", "20261211T193000", "20261211T213000"),  # 12h, in case a site writes it
+        ("Friday, December 11, 2026 7:30pm - 11:00pm", "20261211T193000", "20261211T230000"),
+        ("Friday, December 11, 2026 12:00 Amsterdam", "20261211T120000", "20261211T140000"),  # "am" of a word is no am
+        ("Mittwoch, 29. April 2026 18:00 - Sonntag, 3. Mai 2026 10:00", "20260429T180000", "20260503T100000"),
+        ("venerdì 27 marzo 2026 10:00 - domenica 29 marzo 2026 19:00", "20260327T100000", "20260329T190000"),
+        ("mercredi 16 décembre 2026 18:00-20:00", "20261216T180000", "20261216T200000")]:
+    s = stub_vevent("1", {**item, "when": when})
+    assert s and f"DTSTART;TZID=Europe/Zurich:{start}" in s and f"DTEND;TZID=Europe/Zurich:{end}" in s, (when, s)
+assert "DTEND;VALUE=DATE:20261213" in stub_vevent("1", {**item, "when": "Saturday, December 12, 2026"}), "English all-day"
+# a list whose markup changed (event links, but neither title nor date readable) raises instead of reading blanks
+try:
+    parse_list(LIST.replace("<h2>", "<h3>").replace("<small", "<div"))
+    raise AssertionError("a changed list layout must raise")
+except RuntimeError as e:
+    assert "layout seems to have changed" in str(e), e
+assert parse_list("<html><ul></ul><p>Keine Anlässe</p></html>") == {}, "an empty list is not a layout change"
 mo = {"m": {"status": "active", "vevent": stub, "sequence": 0, "modified": "T"}}
 assert sync({}, ["m"], {"m": stub}.get, NOW, "T") == [], "a stub goes through the sync like any event"
 assert "SUMMARY:Skitag\\, Melchsee-Frutt (nur für Mitglieder)" in unfold(build_calendar({"name": "Test", "lang": "de"}, mo, NOW))
@@ -316,11 +357,41 @@ assert dist["7"]["status"] == "active" and dist["7"]["sequence"] == 0, "started 
 assert dist["8"]["status"] == "cancelled", "still ahead and off the list: cancelled"
 assert dist["218599"]["detail"]["organiser"] == dist["218600"]["detail"]["organiser"] == "rotary-baden.ch" and names == {}, "unreadable club site: the host, not cached"
 assert [a for a in asked if "/agenda" not in a[0]] == [("https://rotary-baden.ch/de/", 1)], "one lookup per host and run, without retries"
-polaris_feed.listed_events, polaris_feed.fetch_event = lambda club, backfill=False: {}, lambda club, i, item=None: None
-mem = {"7": {"status": "active", "vevent": stub_vevent("7", started), "sequence": 0, "modified": "T"},
-       "8": {"status": "active", "vevent": stub_vevent("8", {**started, "when": "Sonntag, 8. November 2026 11:30"}), "sequence": 0, "modified": "T"}}
+# listed_events reads the list items only: a link in some teaser text (here another club's event) is not one
+TEASER = LIST.replace("Lust auf Schnee &amp; Sonne? ...", 'Anmeldung: <a href="https://bern.rotaract.ch/de/agenda/show/202042">hier</a>')
+polaris_feed.get = lambda url, attempts=3: TEASER if url.endswith("page=1") else TEASER.replace("218599", "218600")
+assert sorted(real[2]({**rc[0], "lang": "de"})) == ["218599", "218600"], "202042 is a teaser link, not a list item"
+polaris_feed.get = fake_get
+polaris_feed.listed_events, polaris_feed.fetch_event = lambda club, backfill=False: {"9": item}, lambda club, i, item=None: None
+own = {**started, "url": "https://rotaract-luzern.ch/de/agenda/show/7"}
+mem = {"7": {"status": "active", "vevent": stub_vevent("7", own), "sequence": 0, "modified": "T"},
+       "8": {"status": "active", "vevent": stub_vevent("8", {**own, "when": "Sonntag, 8. November 2026 11:30"}), "sequence": 0, "modified": "T"}}
 assert polaris_feed.sync_polaris(rc[0], mem, NOW, "T2") == []
 assert mem["7"]["status"] == "active" and mem["8"]["status"] == "cancelled", "members-only: the same rule, by the start"
+# another site's event that a teaser link brought into this history: dropped while live, never cancelled; frozen history stays
+stray = [l.replace("rotary-baden.ch", "rcbaselinternational.ch") for l in dist["7"]["vevent"]]
+old_stray = [l.replace("20261107", "20260901") for l in stray]
+polaris_feed.fetch_event = lambda club, i, item=None: stray if i == "7" else stub_vevent(i, item)  # its own page still exists
+mem = {"7": {"status": "active", "vevent": stray, "sequence": 0, "modified": "T"}, "6": {"status": "active", "vevent": old_stray, "sequence": 0, "modified": "T", "detail": {}},
+       "9": {"status": "active", "vevent": stub_vevent("9", item), "sequence": 0, "modified": "T", "detail": {}}}
+assert polaris_feed.sync_polaris(rc[0], mem, NOW, "T2") == []
+assert "7" not in mem and mem["6"]["vevent"] == old_stray and mem["9"]["status"] == "active", mem.keys()
+polaris_feed.fetch_event = lambda club, i, item=None: None
+# list items whose date can't be read are counted per club
+rep = polaris_feed.new_report()
+polaris_feed.listed_events = lambda club, backfill=False: {"9": {**item, "when": "soon"}, "10": item}
+assert polaris_feed.sync_polaris(rc[0], {}, NOW, "T2", rep) == [] and rep["unreadable"] == {"luzern": 1} and "luzern: 1 agenda list item" in rep["warnings"][0], rep
+# an empty list while upcoming events are known: a warning, nothing cancelled (Polaris clubs and Rotary districts alike)
+rep, polaris_feed.listed_events = polaris_feed.new_report(), lambda club, backfill=False: {}
+kept = {"8": {"status": "active", "vevent": stub_vevent("8", {**started, "when": "Sonntag, 8. November 2026 11:30"}), "sequence": 0, "modified": "T"}}
+before = copy.deepcopy(kept)
+assert polaris_feed.sync_polaris(rc[0], kept, NOW, "T2", rep) == [] and kept == before and "list is empty but 1 upcoming" in rep["warnings"][0], rep
+assert polaris_feed.sync_polaris(rc[0], {}, NOW, "T2", rep) == [] and len(rep["warnings"]) == 1, "nothing known: an empty list is fine"
+polaris_feed.get = lambda url, attempts=3: "<html><ul></ul></html>"
+rep, dist2 = polaris_feed.new_report(), copy.deepcopy(dist)
+dist2["8"]["status"] = "active"
+before = copy.deepcopy(dist2)
+assert polaris_feed.sync_rotary({**rc[1], "lang": "de"}, dist2, NOW, "T3", skip, {}, rep) == [] and dist2 == before and "rotary1980: the agenda list is empty" in rep["warnings"][0]
 polaris_feed.get, polaris_feed.time.sleep, polaris_feed.listed_events, polaris_feed.fetch_event = real
 
 # --- Instagram layer: off without credentials, one Business Discovery call per club with a link, the token never printed or returned
@@ -371,4 +442,81 @@ with tempfile.TemporaryDirectory() as tmp:
     assert len(calls) == 1 and "token is expired or invalid" in log.getvalue() and SECRET not in log.getvalue(), "expired token: one call, one clear warning"
 assert site_data(clubs, histories, NOW, cache)["clubs"][0]["instagram"] == [], "no Instagram posts by default"
 assert site_data(clubs, histories, NOW, cache, None, None, ig)["clubs"][0]["instagram"] == ig["luzern"]
+
+# --- the run-wide brake: more than max(5, 30%) of all upcoming events cancelled in one run
+up = lambda n, status="active": {f"e{k}": {"status": status, "vevent": event(f"e{k}", "20261201T190000"), "sequence": 0, "modified": "T"} for k in range(n)}
+cut = lambda h, n: {i: {**r, "status": "cancelled"} if k < n else r for k, (i, r) in enumerate(h.items())}
+b = {"x": up(4), "y": up(4), "z": up(4)}
+assert polaris_feed.global_brake(b, {c: cut(h, 2) for c, h in b.items()}, NOW).startswith("this run would cancel 6 of 12"), "2 of 4 per club passes each club's brake"
+assert polaris_feed.global_brake(b, {"x": cut(b["x"], 2), "y": cut(b["y"], 2), "z": cut(b["z"], 1)}, NOW) == "", "5 is the floor"
+b = {f"c{n}": up(10) for n in range(5)}
+assert polaris_feed.global_brake(b, {c: cut(h, 3) for c, h in b.items()}, NOW) == "" and polaris_feed.global_brake(b, {**b, "c0": cut(b["c0"], 16)}, NOW) == ""
+assert polaris_feed.global_brake(b, {c: cut(h, 4) for c, h in b.items()}, NOW), "20 of 50 is over 30%"
+assert polaris_feed.global_brake({"x": up(9, "cancelled")}, {"x": up(9, "cancelled")}, NOW) == "", "already cancelled events don't count"
+
+# --- a whole run (main) against faked Polaris in a temp dir: dist/ copied, data/ written or left alone, warnings, share pages
+import json, sys
+def run_main(tmp, listed, fetched):
+    polaris_feed.listed_events = lambda club, backfill=False: listed[club["id"]]
+    polaris_feed.fetch_event = lambda club, i, item=None: fetched.get(i)
+    polaris_feed.fetch_detail = lambda club, i: {"image": "", "description": "", "registration": ""}
+    polaris_feed.fetch_news = lambda club, page="news": []
+    polaris_feed.get = lambda url, attempts=3: (_ for _ in ()).throw(OSError("offline"))  # the geocoder
+    sys.argv, log = ["x", str(tmp / "clubs.toml"), str(tmp / "out"), str(tmp / "data")], io.StringIO()
+    with contextlib.redirect_stdout(log):
+        try:
+            polaris_feed.main()
+        except SystemExit as e:
+            code = e.code
+    return code, json.loads((tmp / "out" / "status.json").read_text()), log.getvalue()
+saved = polaris_feed.__file__, polaris_feed.get, polaris_feed.listed_events, polaris_feed.fetch_event, polaris_feed.fetch_detail, polaris_feed.fetch_news, polaris_feed.time.sleep
+polaris_feed.time.sleep = lambda s: None
+with tempfile.TemporaryDirectory() as tmp:
+    tmp = Path(tmp)
+    polaris_feed.__file__ = str(tmp / "polaris_feed.py")
+    (tmp / "clubs.toml").write_text("".join(f'[[clubs]]\nid = "{c}"\nname = "RAC {c}"\nbase_url = "https://{c}.ch"\nlang = "{l}"\ncity = "X"\n'
+                                            for c, l in (("x", "de"), ("y", "en"), ("z", "fr"))))
+    sys.argv = ["x", str(tmp / "clubs.toml"), str(tmp / "out"), str(tmp / "data")]
+    try:
+        polaris_feed.main()
+        raise AssertionError("no dist/: stop before any request")
+    except SystemExit as e:
+        assert "npm ci && npm run build" in str(e.code), e.code
+    (tmp / "dist").mkdir()
+    (tmp / "dist" / "index.html").write_text("app")
+    (tmp / "data").mkdir()
+    future = lambda c, n: {f"{c}{k}": {"status": "active", "vevent": event(f"{c}{k}", f"2030010{k + 1}T190000"), "sequence": 0, "modified": "T"} for k in range(n)}
+    for c in "xyz":
+        (tmp / "data" / f"{c}.json").write_text(json.dumps(future(c, 4)))
+    stored = {c: (tmp / "data" / f"{c}.json").read_text() for c in "xyz"}
+    (tmp / "out" / "e").mkdir(parents=True)
+    (tmp / "out" / "e" / "stale.html").write_text("old")
+    # each club loses 2 of its 4 upcoming events (its own brake lets that pass); 6 of 12 overall: the run is refused
+    alive = {i: r["vevent"] for c in "xyz" for i, r in future(c, 4).items() if i[1] in "01"}
+    code, st, log = run_main(tmp, {c: {f"{c}{k}": item for k in range(2)} for c in "xyz"}, alive)
+    assert code == 1 and any("would cancel 6 of 12" in f for f in st["failures"]), st
+    assert {c: (tmp / "data" / f"{c}.json").read_text() for c in "xyz"} == stored, "refused: nothing written to data/"
+    assert not (tmp / "data" / "news.json").exists() and "STATUS:CANCELLED" not in (tmp / "out" / "x.ics").read_text(), "the last histories are published"
+    assert (tmp / "out" / "index.html").read_text() == "app" and not (tmp / "out" / "e" / "stale.html").exists(), "dist/ copied, stale share pages gone"
+    assert (tmp / "out" / "e" / "x0.html").exists() and '<html lang="en">' in (tmp / "out" / "e" / "y0.html").read_text() and (tmp / "out" / "c" / "z.html").exists()
+    # a normal run: x lists nothing (kept, warned), y loses everything upcoming but one unreadable item, z unchanged
+    listed = {"x": {}, "y": {"y9": {**item, "when": "someday"}}, "z": {f"z{k}": item for k in range(4)}}
+    alive = {i: r["vevent"] for i, r in future("z", 4).items()} | {"y0": future("y", 1)["y0"]["vevent"]}
+    code, st, log = run_main(tmp, listed, alive)
+    assert code == 1 and len(st["failures"]) == 1 and "3 of 4" in st["failures"][0], "y's own brake (3 of 4): only y keeps its history"
+    listed["y"]["y0"] = item
+    alive = {i: r["vevent"] for i, r in future("z", 4).items()}
+    (tmp / "data" / "y.json").write_text(json.dumps(future("y", 1)))
+    code, st, log = run_main(tmp, listed, alive)
+    assert code == 0 and st["failures"] == [], st
+    assert json.loads((tmp / "data" / "y.json").read_text())["y0"]["status"] == "cancelled"
+    assert json.loads((tmp / "data" / "x.json").read_text()) == json.loads(stored["x"]), "empty list: x's upcoming events kept"
+    assert st["unreadable"] == {"y": 1} and "::warning::y: 1 agenda list item" in log, (st, log)
+    assert any("x: the agenda list is empty but 4" in w for w in st["warnings"]) and any(w == "y: had upcoming events, now lists none" for w in st["warnings"]), st
+    assert not any("no upcoming events at all" in w for w in st["warnings"])
+    for c in "xz":
+        (tmp / "data" / f"{c}.json").write_text("{}")
+    code, st, log = run_main(tmp, {"x": {}, "y": {}, "z": {}}, {})
+    assert "the site would publish no upcoming events at all" in st["warnings"] and "::warning::the site would publish no upcoming" in log, st
+polaris_feed.__file__, polaris_feed.get, polaris_feed.listed_events, polaris_feed.fetch_event, polaris_feed.fetch_detail, polaris_feed.fetch_news, polaris_feed.time.sleep = saved
 print("ok")

@@ -11,6 +11,7 @@ the feed from that history:
 
 Usage: python3 polaris_feed.py [clubs.toml] [out_dir] [data_dir]
 """
+import copy
 import datetime as dt
 import html
 import json
@@ -37,7 +38,11 @@ REFRESH_PAST = dt.timedelta(days=30)  # events that ended earlier are frozen: ne
 PUBLISH_PAST = dt.timedelta(days=730)  # feeds and site go back this far; data/ keeps the full history
 CANCELLED = {"de": "Abgesagt", "fr": "Annulé", "it": "Annullato"}
 MEMBERS_ONLY = "X-MEMBERS-ONLY:TRUE"  # marks a VEVENT built from the agenda list because the event itself needs a login
-MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci"}
+MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci", "en": "members only"}
+SITE_URL = "https://neyxo.github.io/rac-event-aggregation-tool/"  # share pages need absolute og:image / og:url
+DEFAULT_IMAGE = SITE_URL + "screenshot-wide.png"
+# Run-wide brake: refuse the whole run when it would cancel more than this many of all upcoming events (see global_brake)
+GLOBAL_CANCEL_MIN, GLOBAL_CANCEL_RATIO = 5, 0.3
 IG_API = "https://graph.facebook.com/v27.0"  # Instagram API with Facebook Login (Business Discovery)
 IG_POSTS = 8
 IG_MAX_BYTES = 1_500_000  # a picture bigger than this is skipped
@@ -97,6 +102,10 @@ def parse_list(page):
             "url": html.unescape(link.group(1)), "title": grab(r"<h2>(.*?)</h2>"), "when": grab(r"<small[^>]*>(.*?)</small>"),
             "teaser": grab(r'ct-media-description">(.*?)</p>'), "location": grab(r'fa-map-marker-alt"></i>(.*?)</span>'),
             "registration": grab(r'fa-calendar-alt"></i>(.*?)</span>'), "image": html.unescape(image.group(1)) if image else ""})
+    # Event links but not one title or date read: Polaris changed its markup. Raising keeps the club's last good history
+    # instead of syncing a list of blanks (members-only events would all look unreadable and get dropped).
+    if "/agenda/show/" in page and not any(i["title"] or i["when"] for i in items.values()):
+        raise RuntimeError("the agenda list layout seems to have changed: event links found, but no title or date could be read")
     return items
 
 
@@ -111,11 +120,12 @@ def listed_events(club, backfill=False):
         # robots.txt disallows `limit=`, so page through instead.
         for n in range(1, MAX_PAGES + 1):
             page = get(f"{url}{f}&page={n}")
+            # Only the list items, keyed by their own title link: an /agenda/show/ link in some teaser text
+            # ("Anmeldung hier: .../agenda/show/202042") is often another club's event and not on this agenda.
             found = parse_list(page)
-            new = [i for i in dict.fromkeys(re.findall(r"/agenda/show/(\d+)", page)) if i not in items]
-            if not new:
+            if not found.keys() - items.keys():  # past the last page Polaris repeats it
                 break
-            items.update({i: found.get(i) for i in new})
+            items = found | items
     return items
 
 
@@ -125,12 +135,15 @@ def ics_esc(text):
 
 def stub_vevent(event_id, item, members=True):
     """VEVENT built from what the public agenda list shows: a members-only event, or (members=False) a Rotary event. None if its date can't be read."""
-    # ponytail: day-before-month dates only (de/fr/it, the languages in clubs.toml); an English list date is skipped as before
-    low = item["when"].lower()
-    days = [dt.datetime(int(y), MONTHS[m], int(d)) for d, m, y in re.findall(r"(\d{1,2})\.?\s+([a-zäéû]+)\s+(20\d\d)", low) if m in MONTHS]
+    low = item["when"].lower().replace(" ", " ")
+    # de/fr/it write "Samstag, 20. Februar 2027", "samedi 20 février 2027"; en writes "Saturday, December 12, 2026"
+    days = [dt.datetime(int(y1 or y2), MONTHS[m1 or m2], int(d1 or d2)) for d1, m1, y1, m2, d2, y2
+            in re.findall(r"(\d{1,2})\.?\s+([a-zäéû]+)\s+(20\d\d)|([a-z]+)\s+(\d{1,2}),?\s+(20\d\d)", low) if (m1 or m2) in MONTHS]
     if not days:
         return None
-    times = [dt.timedelta(hours=int(h), minutes=int(m)) for h, m in re.findall(r"\b(\d{1,2}):(\d{2})\b", low)]
+    # Polaris writes 24h times in every language seen so far ("09:00 - Friday, ... 18:00"); am/pm is read in case a site uses it
+    times = [dt.timedelta(hours=int(h) % 12 + (12 if ap == "pm" else 0) if ap else int(h), minutes=int(m))
+             for h, m, ap in re.findall(r"\b(\d{1,2}):(\d{2})(?:\s*(am|pm)\b|\b)", low)]
     if times:
         start, end = days[0] + times[0], days[-1] + times[-1]
         if end <= start:  # no end time on the list
@@ -224,7 +237,7 @@ def deadline(text):
     if not (month and year and day):
         return ""
     hour, minute = 23, 59
-    tm = re.search(r"(\d{1,2}):(\d{2})\s*(am|pm)?", low)
+    tm = re.search(r"(\d{1,2}):(\d{2})\s*(am|pm)?\b", low)
     if tm:
         hour, minute = int(tm.group(1)) % 12 + (12 if tm.group(3) == "pm" else 0) if tm.group(3) else int(tm.group(1)), int(tm.group(2))
     try:
@@ -587,31 +600,81 @@ def site_data(clubs, histories, now, cache, news=None, projects=None, instagram=
     }
 
 
-def share_page(e, club_names):
-    """Tiny page per event so a shared link shows title + picture in WhatsApp etc., then opens the app on that event."""
-    esc = html.escape
-    desc = esc(" ".join(e["description"].split())[:200])
-    when = dt.datetime.fromisoformat(e["start"]).strftime("%d.%m.%Y" if e["allday"] else "%d.%m.%Y %H:%M")
-    image = f'<meta property="og:image" content="{esc(e["image"])}">\n' if e["image"] else ""
+CLUB_LINE = {"de": "Anlässe, News und wie man mitmacht", "fr": "Événements, actualités et comment nous rejoindre",
+             "it": "Eventi, notizie e come unirsi", "en": "Events, news and how to join"}
+UPCOMING = {"de": ("{} kommender Anlass", "{} kommende Anlässe"), "fr": ("{} événement à venir", "{} événements à venir"),
+            "it": ("{} evento in programma", "{} eventi in programma"), "en": ("{} upcoming event", "{} upcoming events")}
+
+
+def share_html(lang, title, desc, image, path, target):
+    """A link-preview page (WhatsApp, iMessage, Slack...) at SITE_URL + path that sends a browser on to the app route `target`."""
+    esc, url = html.escape, SITE_URL + path
+    js = json.dumps(target).replace("<", "\\u003c")
     return f"""<!doctype html>
-<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(e["title"])}</title>
+<html lang="{esc(lang)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(title)}</title>
+<meta name="description" content="{esc(desc)}">
+<link rel="canonical" href="{esc(url)}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="{esc(e["title"])} · {when}">
-<meta property="og:description" content="{esc(club_names)}{' · ' + esc(e['location']) if e['location'] else ''}. {desc}">
-{image}<meta name="twitter:card" content="summary_large_image">
-<meta http-equiv="refresh" content="0; url=../event.html?id={esc(e["id"])}">
-</head><body><p><a href="../event.html?id={esc(e["id"])}">{esc(e["title"])}</a></p></body></html>
+<meta property="og:site_name" content="Rotaract Events">
+<meta property="og:title" content="{esc(title)}">
+<meta property="og:description" content="{esc(desc)}">
+<meta property="og:image" content="{esc(urllib.parse.urljoin(SITE_URL, image or DEFAULT_IMAGE))}">
+<meta property="og:url" content="{esc(url)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta http-equiv="refresh" content="0; url={esc(target)}">
+<script>location.replace({js})</script>
+</head><body><p><a href="{esc(target)}">{esc(title)}</a></p></body></html>
 """
 
 
-def write_status(out, site, histories, failures, stamp):
+def when_text(e, lang):
+    d = dt.datetime.fromisoformat(e["start"])
+    if lang == "en":
+        day = f"{d:%A}, {d:%B} {d.day}, {d.year}"  # %A/%B: Python's default C locale, so always English
+        return day if e["allday"] else f"{day}, {d:%H:%M}"
+    return d.strftime("%d.%m.%Y" if e["allday"] else "%d.%m.%Y %H:%M")
+
+
+def share_page(e, club_names, lang="de"):
+    """e/<id>.html: a shared event link shows title, date and picture in the lead club's language, then opens the app on it."""
+    head = " · ".join(filter(None, [club_names, e["location"], MEMBERS.get(lang, MEMBERS["en"]) if e.get("members") else ""]))
+    desc = f"{head}. {' '.join(e['description'].split())[:200]}".strip()
+    return share_html(lang, f"{e['title']} · {when_text(e, lang)}", desc, e["image"], f"e/{e['id']}.html", f"../#/event/{e['id']}")
+
+
+def club_share_page(c, events, now):
+    """c/<id>.html: the club's name, about sentence (or a short line) with its number of upcoming events, and a picture."""
+    lang, today = c.get("lang", "de"), now.isoformat(timespec="minutes")
+    mine = [e for e in events if c["id"] in e["clubs"]]
+    n = sum(not e["cancelled"] and e["end"] >= today for e in mine)
+    one, many = UPCOMING.get(lang, UPCOMING["en"])
+    desc = " · ".join(filter(None, [c.get("about") or CLUB_LINE.get(lang, CLUB_LINE["en"]), "" if c.get("about") else c.get("city", ""),
+                                    (one if n == 1 else many).format(n)]))
+    past = [e for e in mine if e["image"] and e["start"] < today]
+    image = (c.get("photos") or [""])[0] or (max(past, key=lambda e: e["start"])["image"] if past else "")
+    return share_html(lang, c["name"], desc, image, f"c/{c['id']}.html", f"../#/club/{c['id']}")
+
+
+def global_brake(before, after, now):
+    """Refusal message if the whole run would cancel more than max(5, 30%) of all upcoming events, else ''.
+    The per-club brake misses a Polaris change that empties each club a little at a time; this one sees the sum."""
+    pool = [(c, i) for c, h in before.items() for i in upcoming(h, now)]
+    lost = sum(after.get(c, {}).get(i, {}).get("status") == "cancelled" for c, i in pool)
+    if lost > max(GLOBAL_CANCEL_MIN, GLOBAL_CANCEL_RATIO * len(pool)):
+        return f"this run would cancel {lost} of {len(pool)} upcoming events across all clubs; refused, nothing written to data/, check Polaris"
+    return ""
+
+
+def write_status(out, site, histories, failures, stamp, report=None):
+    report = new_report() if report is None else report
     clubs = {}
     for cid, h in histories.items():
         clubs[cid] = {"events": len(h), "cancelled": sum(r["status"] == "cancelled" for r in h.values()),
                       "without_detail": sum("detail" not in r and r["status"] == "active" for r in h.values())}
     status = {"generated": stamp, "events": len(site["events"]), "rotary_events": len(site["rotary"]["events"]), "with_image": sum(bool(e["image"]) for e in site["events"]),
               "without_location": sum(e["coords"] is None for e in site["events"]), "clubs": clubs, "failures": failures,
+              "warnings": report["warnings"], "unreadable": report["unreadable"],
               # for the developer page: which commit built this and where the run's log is (empty outside GitHub Actions)
               "commit": os.environ.get("GITHUB_SHA", "")[:7],
               "run": "{GITHUB_SERVER_URL}/{GITHUB_REPOSITORY}/actions/runs/{GITHUB_RUN_ID}".format(**os.environ) if os.environ.get("GITHUB_RUN_ID") else ""}
@@ -653,8 +716,32 @@ def organiser(host, names):
     return names[host]
 
 
-def sync_rotary(club, history, now, stamp, skip, names):
+def new_report():
+    """What a run tells status.json besides failures: warnings, and per club the list items whose date can't be read."""
+    return {"warnings": [], "unreadable": {}}
+
+
+def upcoming(history, now):
+    return [i for i, r in history.items() if r["status"] == "active" and prop(r["vevent"], "DTEND") >= now]
+
+
+def check_list(club, items, history, now, report):
+    """Notes list items without a readable date. True when the list is empty although the history still has upcoming
+    events: more likely a Polaris glitch than a club cancelling everything, so the caller leaves the club as it is."""
+    bad = sum(stub_vevent(i, item) is None for i, item in items.items())
+    if bad:
+        report["unreadable"][club["id"]] = bad
+        report["warnings"].append(f"{club['id']}: {bad} agenda list item(s) without a readable date (members-only ones are left out)")
+    if not items and (n := len(upcoming(history, now))):
+        # ponytail: a really emptied agenda is only cancelled once the list shows events again (or by hand in data/)
+        report["warnings"].append(f"{club['id']}: the agenda list is empty but {n} upcoming event(s) are known; nothing cancelled this run")
+        return True
+    return False
+
+
+def sync_rotary(club, history, now, stamp, skip, names, report=None):
     """A Rotary district: its own agenda plus the events its clubs share with other clubs, each built from its list item only."""
+    report = new_report() if report is None else report
     # ponytail: list pages only (a handful of requests per district instead of one per event), so the description is the
     # list's teaser and an event without an end time on the list gets the default duration; fetch the event pages if that falls short
     items = {}
@@ -665,6 +752,8 @@ def sync_rotary(club, history, now, stamp, skip, names):
             if not found.keys() - items.keys():  # past the last page Polaris repeats it
                 break
             items = found | items
+    if check_list(club, items, history, now, report):  # the raw lists: Polaris' own notices alone don't make them "not empty"
+        return []
     items = rotary_items(items, skip)
 
     def fetch(i):
@@ -683,8 +772,23 @@ def sync_rotary(club, history, now, stamp, skip, names):
     return errors
 
 
-def sync_polaris(club, history, now, stamp):
+def event_host(vevent):
+    """Host of a VEVENT's URL (Polaris: the organising club's site), or None."""
+    return next((urllib.parse.urlsplit(l[4:]).hostname for l in vevent if l.startswith("URL:")), None)
+
+
+def sync_polaris(club, history, now, stamp, report=None):
+    report = new_report() if report is None else report
     listed = listed_events(club, backfill=not history and club.get("backfill", False))
+    if check_list(club, listed, history, now, report):
+        return []
+    # Another site's event that is not on this list came in through a teaser link (listed_events used to read every
+    # /agenda/show/ link). Its own page still exists, so the sync would keep it active forever: it leaves this history
+    # instead, and is never cancelled (it is someone else's real event). Frozen history is left as it is.
+    host = urllib.parse.urlsplit(club["base_url"]).hostname
+    for i in [i for i, r in history.items() if i not in listed and event_host(r["vevent"]) not in (host, None)
+              and prop(r["vevent"], "DTEND") >= now - REFRESH_PAST]:
+        del history[i]
 
     def fetch(i):
         ev, rec = fetch_event(club, i, listed.get(i)), history.get(i)
@@ -712,13 +816,21 @@ def sync_polaris(club, history, now, stamp):
 def main():
     args = sys.argv[1:] + [None] * 3
     config, out, data = Path(args[0] or "clubs.toml"), Path(args[1] or "public"), Path(args[2] or "data")
+    dist = Path(__file__).with_name("dist")  # the built web app (Vite)
+    if not (dist / "index.html").is_file():
+        sys.exit(f"{dist} has no built web app: run \"npm ci && npm run build\" first")
     out.mkdir(exist_ok=True)
     data.mkdir(exist_ok=True)
+    # The app first: everything written below (events.json, status.json, feeds) wins over a same-named file in dist/.
+    # Share pages of earlier runs go, so an event or club that left doesn't keep a stale preview.
+    for sub in ("e", "c"):
+        shutil.rmtree(out / sub, ignore_errors=True)
+    shutil.copytree(dist, out, dirs_exist_ok=True)
     now = dt.datetime.now(TZ).replace(tzinfo=None)
     stamp = dt.datetime.now(dt.UTC).strftime("%Y%m%dT%H%M%SZ")
     conf = tomllib.loads(config.read_text())
     clubs = conf["clubs"]
-    failures, histories = [], {}
+    failures, histories, before, synced, report = [], {}, {}, set(), new_report()
     news_path = data / "news.json"
     news = json.loads(news_path.read_text()) if news_path.exists() else {}
     projects_path = data / "projects.json"
@@ -727,28 +839,41 @@ def main():
     names = json.loads(names_path.read_text()) if names_path.exists() else {}
     for club in clubs:
         path = data / f"{club['id']}.json"
-        history = json.loads(path.read_text()) if path.exists() else {}
+        before[club["id"]] = json.loads(path.read_text()) if path.exists() else {}
+        history = copy.deepcopy(before[club["id"]])
         try:
             # "international" is not a Polaris site: Rotaract Europe's API plus the hand-entered events
             if club.get("source") == "international":
                 errors = sync_international(history, conf.get("events", []), now, stamp)
             elif club.get("source") == "rotary":
-                errors = sync_rotary(club, history, now, stamp, skip_hosts(clubs), names)
+                errors = sync_rotary(club, history, now, stamp, skip_hosts(clubs), names, report)
             else:
-                errors = sync_polaris(club, history, now, stamp)
-            path.write_text(json.dumps(history, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+                errors = sync_polaris(club, history, now, stamp, report)
+            synced.add(club["id"])
             failures += [f"{club['id']} {e}" for e in errors]
         except Exception as e:
             # Keep the last good history; the feed below is built from it.
             failures.append(f"{club['id']}: {e}")
-            history = json.loads(path.read_text()) if path.exists() else {}
+            history = before[club["id"]]
         histories[club["id"]] = history
+        if upcoming(before[club["id"]], now) and not upcoming(history, now):
+            report["warnings"].append(f"{club['id']}: had upcoming events, now lists none")
         for page, lists in (("news", news), ("projects", projects)):
             try:
                 if not club.get("source"):
                     lists[club["id"]] = fetch_news(club, page)
             except Exception as e:
                 print(f"{club['id']} {page}: {e} (keeping the last list)")  # teasers only, not worth failing the run
+
+    # Nothing reached data/ yet: a run that would cancel too much overall is dropped whole, every club keeps its last history.
+    if brake := global_brake(before, histories, now):
+        failures.append(brake)
+        histories = before
+    else:
+        for cid in synced:
+            (data / f"{cid}.json").write_text(json.dumps(histories[cid], indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+    for club in clubs:
+        history = histories[club["id"]]
         (out / f"{club['id']}.ics").write_text(build_calendar(club, history, now), newline="")
         cancelled = sum(r["status"] == "cancelled" for r in history.values())
         print(f"{club['id']}: {len(history)} events in history ({cancelled} cancelled)")
@@ -759,21 +884,29 @@ def main():
     (out / "all.ics").write_text(build_calendar(everyone, merged, now), newline="")
     cache_path = data / "geocode.json"
     cache = json.loads(cache_path.read_text()) if cache_path.exists() else {}
-    news_path.write_text(json.dumps(news, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
-    projects_path.write_text(json.dumps(projects, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
-    names_path.write_text(json.dumps(names, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
     instagram = fetch_instagram(clubs, out, os.environ.get("INSTAGRAM_TOKEN"), os.environ.get("INSTAGRAM_USER_ID"))
     site = site_data(clubs, histories, now, cache, news, projects, instagram)
-    cache_path.write_text(json.dumps(cache, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
+    if not brake:
+        for path, value in ((news_path, news), (projects_path, projects), (names_path, names), (cache_path, cache)):
+            path.write_text(json.dumps(value, indent=1, ensure_ascii=False, sort_keys=True) + "\n")
     (out / "events.json").write_text(json.dumps(site, ensure_ascii=False, separators=(",", ":")))
-    shutil.copytree(Path(__file__).with_name("site"), out, dirs_exist_ok=True)
+    if not any(not e["cancelled"] and e["end"] >= now.isoformat(timespec="minutes") for e in site["events"]):
+        report["warnings"].append("the site would publish no upcoming events at all")
     by_id = {c["id"]: c for c in clubs}
-    (out / "e").mkdir(exist_ok=True)
+    for sub in ("e", "c"):
+        (out / sub).mkdir(exist_ok=True)
     for e in site["events"] + site["rotary"]["events"]:
-        (out / "e" / f"{e['id']}.html").write_text(share_page(e, " & ".join(by_id[c]["name"] if c in by_id else c for c in e["clubs"])))
-    write_status(out, site, histories, failures, stamp)
+        lead = by_id.get(e["clubs"][0], {})  # international events: "en"; Rotary events: their district's lang
+        names_text = " & ".join(by_id[c]["name"] if c in by_id else c for c in e["clubs"])
+        (out / "e" / f"{e['id']}.html").write_text(share_page(e, names_text, lead.get("lang", "de")))
+    for c in clubs:
+        if c.get("source") != "rotary":
+            (out / "c" / f"{c['id']}.html").write_text(club_share_page(c, site["events"], now))
+    write_status(out, site, histories, failures, stamp, report)
     print(f"site: {len(site['events'])} events (+ {len(site['rotary']['events'])} Rotary), {sum(e['coords'] is None for e in site['events'])} without location")
 
+    for w in report["warnings"]:
+        print(f"::warning::{w}")
     for f in failures:
         print(f"::error::{f}")
     sys.exit(1 if failures else 0)
