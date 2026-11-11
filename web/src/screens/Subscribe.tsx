@@ -6,7 +6,7 @@ import { clubVars } from "../lib/color";
 import { href } from "../lib/route";
 import type { Club } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, Footer, GoogleLink, LoadError, QaList, useData } from "../components";
+import { ClubMark, FeedLinks, Footer, LoadError, QaList, useData } from "../components";
 
 const PLATFORMS = [
   ["sp_ios", "sp_ios_s"],
@@ -17,9 +17,6 @@ const PLATFORMS = [
 
 /** one row: the feed's name (a club links to its page) with its upcoming count, then Apple / Google / .ics */
 function FeedRow({ c, file, count }: { c: Club | { id?: undefined; name: string }; file: string; count: number }) {
-  // absolute, because calendar apps get the link without this page around it; webcal: makes Apple and Outlook subscribe
-  const https = new URL(file, location.href).href;
-  const webcal = https.replace(/^https?:/, "webcal:");
   return (
     <div className="feed">
       <div className="name" style={c.id ? clubVars(c.color) : undefined}>
@@ -27,11 +24,7 @@ function FeedRow({ c, file, count }: { c: Club | { id?: undefined; name: string 
         {c.id ? <a href={href("club", c.id)}>{c.name}</a> : c.name}
         <span className="meta">{t("n_upcoming", { n: count })}</span>
       </div>
-      <div className="l">
-        <a href={webcal}>{t("apple")}</a>
-        <GoogleLink webcal={webcal} />
-        <a href={https}>.ics</a>
-      </div>
+      <FeedLinks file={file} />
     </div>
   );
 }

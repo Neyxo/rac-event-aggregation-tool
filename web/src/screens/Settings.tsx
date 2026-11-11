@@ -3,14 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { t, tx } from "../i18n";
 import { setRotary, setSettings } from "../lib/data";
 import { anyDevFlag } from "../lib/dev";
+import { install, isInstalled } from "../lib/install";
 import { href } from "../lib/route";
 import { setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
-import { ClubChips, ClubLabel, Footer, Icon, LangSelect, LoadError, Popup, toast, useData, useEventListener, useStored } from "../components";
+import { ClubChips, ClubLabel, Footer, Icon, LangSelect, LoadError, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
 import { useNav } from "../components/router";
 
-/** the Chrome install prompt; not in TypeScript's DOM types */
-interface InstallPrompt extends Event { prompt(): Promise<void>; userChoice: Promise<unknown> }
 type OS = "ios" | "android" | "desktop";
 
 /** an Off / On segmented control (Rotary layer, developer mode) */
@@ -30,7 +29,6 @@ function Cur({ ids }: { ids: string[] | null }) {
   return <div className="cur">{ids.map(c => <ClubLabel key={c} id={c} />)}</div>;
 }
 
-const standalone = () => matchMedia("(display-mode: standalone)").matches || !!(navigator as { standalone?: boolean }).standalone;
 // an iPad asks for the desktop site and says MacIntel, but has touch
 const guessOS = (): OS => {
   const ua = navigator.userAgent;
@@ -40,17 +38,10 @@ const guessOS = (): OS => {
 
 /** installed: a note; Chrome's prompt available: one button; otherwise the steps per system, the reader's own first */
 function Install() {
-  const [prompt, setPrompt] = useState<InstallPrompt | null>(null);
+  const prompt = useInstallPrompt();
   const [os, setOS] = useState<OS>(guessOS);
-  useEventListener("beforeinstallprompt", e => { e.preventDefault(); setPrompt(e as InstallPrompt); });
-  if (standalone()) return <div id="installBody"><p className="meta">{t("inst_done")}</p></div>;
-  if (prompt) {
-    const install = async () => {
-      await prompt.prompt();
-      await prompt.userChoice;
-    };
-    return <div id="installBody"><button className="linkbtn primary" type="button" onClick={install}>{t("inst_btn")}</button></div>;
-  }
+  if (isInstalled()) return <div id="installBody"><p className="meta">{t("inst_done")}</p></div>;
+  if (prompt) return <div id="installBody"><button className="linkbtn primary" type="button" onClick={() => void install()}>{t("inst_btn")}</button></div>;
   return (
     <div id="installBody">
       <div className="seg" role="tablist">

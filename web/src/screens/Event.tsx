@@ -10,7 +10,7 @@ import { mapsUrl } from "../lib/geo";
 import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Event as Ev } from "../lib/types";
-import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, LoadError, Skel, StarButton, Status, toast, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
+import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, LoadError, Skel, StarButton, Status, share, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
 
 /** the Polaris page of the event; international events live on their organisers' sites instead */
 const onPolaris = (e: Ev) => e.url.includes("/agenda/show/");
@@ -24,21 +24,8 @@ function goLabel(e: Ev): string {
   return onPolaris(e) ? t("open_polaris") : t("details");
 }
 
-async function share(e: Ev): Promise<void> {
-  // e/<id>.html: a small page with the event's link preview that forwards into the app
-  const url = shareUrl({ event: e.id });
-  const text = `${e.title} · ${fmt.full.format(new Date(e.start))}${e.location ? " · " + e.location : ""}`;
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: e.title, text, url });
-    } catch {
-      // cancelled by the user
-    }
-    return;
-  }
-  await navigator.clipboard.writeText(url);
-  toast(t("copied"));
-}
+// e/<id>.html: a small page with the event's link preview that forwards into the app
+const shareEvent = (e: Ev) => share({ title: e.title, text: `${e.title} · ${fmt.full.format(new Date(e.start))}${e.location ? " · " + e.location : ""}`, url: shareUrl({ event: e.id }) });
 
 function when(e: Ev): string {
   const s = new Date(e.start);
@@ -142,7 +129,7 @@ function Detail({ e }: { e: Ev }) {
           <span className="ph" ref={ph} />
           {/* members-only: Polaris' calendar file needs a login; international events aren't on Polaris at all */}
           {e.members || !polaris ? null : <a href={e.url.replace("/agenda/show/", "/agenda/ical/")}><Icon name="calendar" />{t("add_cal")}</a>}
-          <button type="button" className="linkbtn" onClick={() => void share(e)}><Icon name="share" />{t("share_event")}</button>
+          <button type="button" className="linkbtn" onClick={() => void shareEvent(e)}><Icon name="share" />{t("share_event")}</button>
         </div>
         <Facts e={e} />
         {e.description || polaris ? <p className="desc">{e.description || t("no_desc")}</p> : null}

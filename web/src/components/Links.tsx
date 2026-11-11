@@ -53,15 +53,36 @@ export function QaList({ items, name = "qa" }: { items: Pair[]; name?: string })
   return <>{items.map(([q, a], i) => <details key={i} name={name}><summary>{q}</summary><p>{a}</p></details>)}</>;
 }
 
+/** Share through the system's share sheet; where there is none, copy the link and say so. Returns true when it copied. */
+export async function share(data: { title: string; text?: string; url: string }): Promise<boolean> {
+  if (navigator.share) {
+    try { await navigator.share(data); } catch { /* dismissed */ }
+    return false;
+  }
+  await navigator.clipboard.writeText(data.url);
+  toast(t("copied"));
+  return true;
+}
+
+/** a calendar feed's address: absolute, because calendar apps get the link without this page around it; webcal: makes Apple and
+ *  Outlook subscribe */
+export function feedUrls(file: string): { https: string; webcal: string } {
+  const https = new URL(file, location.href).href;
+  return { https, webcal: https.replace(/^https?:/, "webcal:") };
+}
+
+/** a feed's three ways in: Apple (webcal:), Google, the .ics file */
+export function FeedLinks({ file }: { file: string }) {
+  const { https, webcal } = feedUrls(file);
+  return <div className="l"><a href={webcal}>{t("apple")}</a><GoogleLink webcal={webcal} /><a href={https}>.ics</a></div>;
+}
+
 /** Google's phone apps can't subscribe to a calendar, only a computer browser can. So on a phone the Google link explains that and
  *  offers to send the link to a computer instead of opening a dead end. */
 export function GoogleLink({ webcal }: { webcal: string }) {
   const url = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal);
   const [open, setOpen] = useState(false);
-  const send = async () => {
-    if (navigator.share) { try { await navigator.share({ title: t("sp_google"), url }); } catch { /* dismissed */ } }
-    else { await navigator.clipboard.writeText(url); setOpen(false); toast(t("copied")); }
-  };
+  const send = async () => { if (await share({ title: t("sp_google"), url })) setOpen(false); };
   return (
     <>
       <a href={url} target="_blank" rel="noopener" onClick={PHONE ? ev => { ev.preventDefault(); setOpen(true); } : undefined}>{t("google")}</a>
@@ -69,7 +90,7 @@ export function GoogleLink({ webcal }: { webcal: string }) {
         <Popup title={t("sp_google")} onClose={() => setOpen(false)}>
           <div>
             <p>{t("sp_g_phone")}</p>
-            <div className="links"><button className="primary" type="button" onClick={send}>{t("sp_g_send")}</button></div>
+            <div className="links"><button className="primary" type="button" onClick={() => void send()}>{t("sp_g_send")}</button></div>
             {IOS ? <p>{t("sp_g_ios")} <a href={webcal}>{t("apple")}</a></p> : null}
           </div>
         </Popup>

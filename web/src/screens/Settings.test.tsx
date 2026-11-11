@@ -2,6 +2,7 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
+import { t } from "../i18n";
 import { getData, loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { Toast } from "../components";
@@ -135,6 +136,26 @@ describe("Settings", () => {
     fireEvent.click(tabs[0]!);
     expect(tabs[0]!.getAttribute("aria-selected")).toBe("true");
     expect(steps()).not.toEqual(before);
+  });
+
+  it("install: the browser's prompt, caught before Settings was opened, is one button; dismissed, the steps come back", async () => {
+    const ev = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), { prompt: vi.fn(async () => {}), userChoice: Promise.resolve({ outcome: "dismissed" }) });
+    dispatchEvent(ev);  // fires early, on whatever screen the app opened on
+    expect(ev.defaultPrevented).toBe(true);
+    show();
+    expect(screen.queryAllByRole("tab")).toHaveLength(0);
+    await act(async () => { fireEvent.click(button("Install app")); });
+    expect(ev.prompt).toHaveBeenCalledOnce();
+    expect(screen.getAllByRole("tab")).toHaveLength(3);
+  });
+
+  it("install (after the one above: installed stays for the session): the prompt accepted, Settings says it is installed instead of showing the steps", async () => {
+    const ev = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), { prompt: vi.fn(async () => {}), userChoice: Promise.resolve({ outcome: "accepted" }) });
+    dispatchEvent(ev);
+    show();
+    await act(async () => { fireEvent.click(button("Install app")); });
+    expect(screen.queryAllByRole("tab")).toHaveLength(0);
+    expect(document.getElementById("installBody")!.textContent).toBe(t("inst_done"));
   });
 
   it("copies the share link", async () => {
