@@ -55,6 +55,7 @@ function chrome(active, { back = false, extra = null } = {}) {
   document.documentElement.style.setProperty("--stick", top.offsetHeight + "px");  // sticky section headings start under the top bar
   if (!frostBar) { frostBar = el("div", { id: "frost", "aria-hidden": "true" }); document.body.prepend(frostBar); }
   const tabs = $("tabs");
+  if (tabs) requestAnimationFrame(() => document.documentElement.style.setProperty("--tabs", tabs.offsetHeight + "px"));  // the calendar's day sheet ends above the tabs
   if (tabs) tabs.replaceChildren(...[["home", "./"], ["discover", "discover.html"], ["calendar", "calendar.html"]].map(([k, href]) => el("a", { class: "tab" + (active === k ? " on" : ""), href, "aria-current": active === k ? "page" : null }, icon(k), el("span", {}, t(k)))));
 }
 function qaList(items, name = "qa") { return items.map(([q, a]) => el("details", { name }, el("summary", {}, q), el("p", {}, a))); }

@@ -18,12 +18,24 @@ function render() {
     const evs = byDay[d.toDateString()] || [];
     const cell = el("button", { type: "button", class: "day" + (d.getMonth() !== m.getMonth() ? " other" : "") + (sameDay(d, now) ? " today" : ""), "aria-pressed": String(!!C.day && sameDay(d, C.day)), "aria-label": fmt.full.format(d) + ", " + t("n_on_day", { n: evs.length }) },
       el("span", { class: "n" }, d.getDate()),
-      ...evs.slice(0, 3).map(e => el("span", { class: "ch", style: clubStyle(e.clubs[0]) + `;--crest:url("${club(e.clubs[0]).logo}")`, title: e.title }, el("i", {}, e.title))),
-      evs.length > 3 ? el("span", { class: "more" }, `+${evs.length - 3}`) : null);
+      ...evs.map(e => el("span", { class: "ch", style: clubStyle(e.clubs[0]) + `;--crest:url("${club(e.clubs[0]).logo}")`, title: e.title }, el("i", {}, e.title))),
+      el("span", { class: "more", hidden: "" }));
     cell.addEventListener("click", () => openDay(d, byDay[d.toDateString()] || []));
     grid.append(cell);
   }
+  fit();
 }
+// every event is in its cell. A day first gets as many title lines per event as it has room for (three, two, one: a tall phone shows more
+// of each title, an iPhone SE one line); only then are events hidden from the end, with their number ("+2")
+function fit() {
+  for (const cell of document.querySelectorAll("#grid .day")) {
+    const chips = [...cell.querySelectorAll(".ch")], more = cell.querySelector(".more");
+    for (const c of chips) c.hidden = false; more.hidden = true;
+    for (const l of [3, 2, 1]) { cell.style.setProperty("--l", l); if (cell.scrollHeight <= cell.clientHeight + 1) break; }
+    for (let n = 1; n <= chips.length && cell.scrollHeight > cell.clientHeight + 1; n++) { chips[chips.length - n].hidden = true; more.hidden = false; more.textContent = "+" + n; }
+  }
+}
+addEventListener("resize", fit);
 function openDay(d, evs) {
   C.day = d; render();
   const sheet = $("sheet"), body = $("sheetBody");
