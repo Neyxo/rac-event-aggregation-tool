@@ -22,7 +22,7 @@ interface Device {
 }
 type PreviewKey = Extract<StoreKey, "rac.devGuest" | "rac.devNew" | "rac.devStale">;
 
-const ALL_RUNS = "https://github.com/Neyxo/rac-event-aggregation-tool/actions/workflows/feeds.yml";
+const ALL_RUNS = "https://github.com/Neyxo/rotaract-events/actions/workflows/feeds.yml";
 // a reload, not a re-render: the switches are read once at start (pretend date, guest settings in loadData)
 const reload = () => location.reload();
 

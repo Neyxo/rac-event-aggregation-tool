@@ -25,7 +25,7 @@ describe("Public", () => {
     }
     screen.getByRole("heading", { name: "Questions" });
     expect(screen.getByRole("link", { name: new RegExp(t("sub_title")) }).getAttribute("href")).toBe("#/subscribe");
-    expect(screen.getByRole("link", { name: t("source") }).getAttribute("href")).toBe("https://github.com/Neyxo/rac-event-aggregation-tool");
+    expect(screen.getByRole("link", { name: t("source") }).getAttribute("href")).toBe("https://github.com/Neyxo/rotaract-events");
     expect(screen.getByRole("link", { name: t("report") }).getAttribute("target")).toBe("_blank");
   });
 

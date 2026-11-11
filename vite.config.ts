@@ -10,7 +10,7 @@ import de from "./web/src/i18n/de.ts";
 import fr from "./web/src/i18n/fr.ts";
 import it from "./web/src/i18n/it.ts";
 
-const SITE = "https://neyxo.github.io/rac-event-aggregation-tool/";
+const SITE = "https://neyxo.github.io/rotaract-events/";
 const PUBLIC = fileURLToPath(new URL("./public/", import.meta.url));
 const FIXTURE = fileURLToPath(new URL("./web/e2e/fixture/", import.meta.url));
 

@@ -1,5 +1,5 @@
 {
-  "name": "rac-event-aggregation-tool",
+  "name": "rotaract-events",
   "private": true,
   "type": "module",
   "scripts": {

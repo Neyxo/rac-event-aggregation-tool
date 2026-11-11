@@ -2,14 +2,14 @@
 
 Collects the events of every Rotaract club in Switzerland & Liechtenstein from their Polaris sites and publishes them as an installable web app and as calendar feeds you can subscribe to.
 
-**https://neyxo.github.io/rac-event-aggregation-tool/**
+**https://neyxo.github.io/rotaract-events/**
 
 ## What you get
 
 - **The app**: Home (your clubs), Discover (everything, with filters and a map), a month calendar, a page per event and per club. German, French, Italian and English, light and dark, works offline with the last loaded events.
 - **Calendar feeds**, refreshed every 6 hours:
-  - one per club: `webcal://neyxo.github.io/rac-event-aggregation-tool/<club-id>.ics` (ids in `clubs.toml`)
-  - all clubs: `webcal://neyxo.github.io/rac-event-aggregation-tool/all.ics`
+  - one per club: `webcal://neyxo.github.io/rotaract-events/<club-id>.ics` (ids in `clubs.toml`)
+  - all clubs: `webcal://neyxo.github.io/rotaract-events/all.ics`
 - **Extra layers**: international events (REM, EUCO, the Convention), and Rotary clubs' shared events, which are off until switched on in Settings.
 
 Members-only events appear with what the public agenda list shows and are marked "Members only"; details and registration stay on Polaris. Nothing about you leaves your device.

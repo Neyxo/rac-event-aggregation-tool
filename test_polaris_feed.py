@@ -194,12 +194,12 @@ pg = share_page({"id": "1", "title": 'Stamm "<Test>"', "start": "2026-12-10T19:0
 assert 'content="Stamm &quot;&lt;Test&gt;&quot; · 10.12.2026 19:00"' in pg and "<Test>" not in pg.split("<title>")[1].split("</title>")[0]
 assert 'og:image" content="https://x.ch/a.png?v=1"' in pg and "Rotaract Luzern · Luzern. A &amp; B C" in pg and '<html lang="de">' in pg
 assert 'url=../#/event/1"' in pg and 'location.replace("../#/event/1")' in pg and '<a href="../#/event/1">' in pg
-for tag in ('og:url" content="https://neyxo.github.io/rac-event-aggregation-tool/e/1.html"', 'og:site_name" content="Rotaract Events"', 'twitter:card"',
-            'name="description"', 'rel="canonical" href="https://neyxo.github.io/rac-event-aggregation-tool/e/1.html"', 'og:type"'):
+for tag in ('og:url" content="https://neyxo.github.io/rotaract-events/e/1.html"', 'og:site_name" content="Rotaract Events"', 'twitter:card"',
+            'name="description"', 'rel="canonical" href="https://neyxo.github.io/rotaract-events/e/1.html"', 'og:type"'):
     assert tag in pg, tag
 en = share_page({"id": "2", "title": "Xmas", "start": "2026-12-12T09:00", "allday": False, "location": "", "description": "", "image": "", "members": True}, "RAC ZI", "en")
 assert '<html lang="en">' in en and "Xmas · Saturday, December 12, 2026, 09:00" in en and 'content="RAC ZI · members only."' in en, en
-assert 'og:image" content="https://neyxo.github.io/rac-event-aggregation-tool/screenshot-wide.png"' in en, "no picture: the site's"
+assert 'og:image" content="https://neyxo.github.io/rotaract-events/screenshot-wide.png"' in en, "no picture: the site's"
 fr = share_page({"id": "3", "title": "Gala", "start": "2027-02-20T00:00", "allday": True, "location": "", "description": "", "image": "", "members": True}, "RAC GE", "fr")
 assert "Gala · 20.02.2027<" in fr and "RAC GE · réservé aux membres." in fr
 evs = [{"id": "p", "clubs": ["luzern"], "start": "2026-10-01T19:00", "end": "2026-10-01T21:00", "cancelled": False, "image": "https://x/old.jpg"},

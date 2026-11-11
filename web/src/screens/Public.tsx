@@ -46,7 +46,7 @@ export default function Public(_props: ScreenProps) {
       <p className="fine"><b>{t("cred_h")}</b>{" · "}<span>{t("cred")}</span></p>
       <p className="fine">
         <b>{t("wrong_h")}</b>{" "}<span>{t("wrong")}</span>{" "}
-        <a href="https://github.com/Neyxo/rac-event-aggregation-tool/issues" target="_blank" rel="noopener">{t("report")}</a>
+        <a href="https://github.com/Neyxo/rotaract-events/issues" target="_blank" rel="noopener">{t("report")}</a>
       </p>
       <div id="foot"><Footer source /></div>
     </main>

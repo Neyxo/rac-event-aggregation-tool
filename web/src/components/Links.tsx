@@ -43,7 +43,7 @@ export function Footer({ source = false, onClick }: { source?: boolean; onClick?
   return (
     <footer onClick={onClick}>
       {t("made_by")}{source ? " · " : null}
-      {source && <a href="https://github.com/Neyxo/rac-event-aggregation-tool" target="_blank" rel="noopener">{t("source")}</a>}
+      {source && <a href="https://github.com/Neyxo/rotaract-events" target="_blank" rel="noopener">{t("source")}</a>}
     </footer>
   );
 }

@@ -106,11 +106,11 @@ describe("route", () => {
 });
 
 describe("share", () => {
-  const base = "https://neyxo.github.io/rac-event-aggregation-tool/?lang=de#/event/1";
+  const base = "https://neyxo.github.io/rotaract-events/?lang=de#/event/1";
   it("events, clubs and static screens", () => {
-    expect(shareUrl({ event: "179501" }, base)).toBe("https://neyxo.github.io/rac-event-aggregation-tool/e/179501.html");
-    expect(shareUrl({ club: "bern" }, base)).toBe("https://neyxo.github.io/rac-event-aggregation-tool/c/bern.html");
-    expect(shareUrl("about", base, "fr")).toBe("https://neyxo.github.io/rac-event-aggregation-tool/s/fr/about.html");
+    expect(shareUrl({ event: "179501" }, base)).toBe("https://neyxo.github.io/rotaract-events/e/179501.html");
+    expect(shareUrl({ club: "bern" }, base)).toBe("https://neyxo.github.io/rotaract-events/c/bern.html");
+    expect(shareUrl("about", base, "fr")).toBe("https://neyxo.github.io/rotaract-events/s/fr/about.html");
   });
 });
 

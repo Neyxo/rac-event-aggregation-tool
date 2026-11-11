@@ -27,7 +27,7 @@ import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-USER_AGENT = "rac-event-aggregation-tool (+https://github.com/Neyxo/rac-event-aggregation-tool)"
+USER_AGENT = "rotaract-events (+https://github.com/Neyxo/rotaract-events)"
 MAX_PAGES = 20
 DEFAULT_DURATION = dt.timedelta(hours=2)
 TZ = ZoneInfo("Europe/Zurich")
@@ -39,7 +39,7 @@ PUBLISH_PAST = dt.timedelta(days=730)  # feeds and site go back this far; data/ 
 CANCELLED = {"de": "Abgesagt", "fr": "Annulé", "it": "Annullato"}
 MEMBERS_ONLY = "X-MEMBERS-ONLY:TRUE"  # marks a VEVENT built from the agenda list because the event itself needs a login
 MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci", "en": "members only"}
-SITE_URL = "https://neyxo.github.io/rac-event-aggregation-tool/"  # share pages need absolute og:image / og:url
+SITE_URL = "https://neyxo.github.io/rotaract-events/"  # share pages need absolute og:image / og:url
 DEFAULT_IMAGE = SITE_URL + "screenshot-wide.png"
 # Run-wide brake: refuse the whole run when it would cancel more than this many of all upcoming events (see global_brake)
 GLOBAL_CANCEL_MIN, GLOBAL_CANCEL_RATIO = 5, 0.3
@@ -192,7 +192,7 @@ def manual_event(m):
     """An event entered by hand in clubs.toml ([[events]]: id, title, url, start, optional end/location/description/image) -> (VEVENT lines, detail)."""
     fields = {"SUMMARY": m["title"], "DESCRIPTION": m.get("description", ""), "LOCATION": m.get("location", "")}
     when = [f"DTSTART;VALUE=DATE:{m['start']:%Y%m%d}", f"DTEND;VALUE=DATE:{m.get('end', m['start']) + dt.timedelta(days=1):%Y%m%d}"]
-    vevent = [f"UID:{m['id']}@rac-event-aggregation-tool", *(f"{k}:{ics_esc(v)}" for k, v in fields.items() if v), f"URL:{m['url']}", *when]
+    vevent = [f"UID:{m['id']}@rotaract-events", *(f"{k}:{ics_esc(v)}" for k, v in fields.items() if v), f"URL:{m['url']}", *when]
     return vevent, {"image": m.get("image", ""), "description": "", "registration": ""}
 
 
@@ -489,7 +489,7 @@ def build_calendar(club, history, now):
     lines = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
-        "PRODID:-//rac-event-aggregation-tool//EN",
+        "PRODID:-//rotaract-events//EN",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
         f"X-WR-CALNAME:{club['name']}",
