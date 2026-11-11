@@ -1,5 +1,5 @@
 // Calendar: the month fills the screen, no scrolling; tapping a day slides up a frosted sheet with that day's events.
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t, tx } from "../i18n";
 import type { Event } from "../lib/types";
@@ -7,7 +7,7 @@ import { byDay, calendarEvents, monthGrid } from "../lib/calendar";
 import { fmt, sameDay, startOfDay } from "../lib/dates";
 import { club, myClubs } from "../lib/data";
 import { clubVars, vars } from "../lib/color";
-import { EventCard, LoadError, useData } from "../components";
+import { EventCard, LoadError, useData, useEventListener } from "../components";
 
 type Scope = "mine" | "all";
 /** what the sheet shows; kept after closing so the content stays while it slides away */
@@ -75,11 +75,7 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
     const id = requestAnimationFrame(() => { if (ref.current) fit(ref.current); });
     return () => cancelAnimationFrame(id);
   });
-  useEffect(() => {
-    const onResize = () => { if (ref.current) fit(ref.current); };
-    addEventListener("resize", onResize);
-    return () => removeEventListener("resize", onResize);
-  }, []);
+  useEventListener("resize", () => { if (ref.current) fit(ref.current); });
   return (
     <div className="grid" id="grid" role="grid" style={vars({ "--rows": g.cells / 7 })} ref={ref}>
       {tx("dow").map(d => <div key={d} className="dow" role="columnheader">{d}</div>)}
@@ -143,11 +139,7 @@ export default function Calendar(_props: ScreenProps) {
     if (evs.length) openDay(startOfDay(n), evs);
   };
 
-  useEffect(() => {
-    const onKey = (ev: KeyboardEvent) => { if (ev.key === "Escape") setDay(null); };
-    addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
-  }, []);
+  useEventListener("keydown", ev => { if (ev.key === "Escape") setDay(null); });
 
   return (
     <>

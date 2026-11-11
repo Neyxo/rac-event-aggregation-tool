@@ -11,7 +11,7 @@ import { shareUrl } from "../lib/share";
 import type { Club as ClubT, Partner } from "../lib/types";
 import {
   ClubChip, EventCard, Footer, GoogleLink, HelpLinks, Icon, ICON, LoadError, NewsStrip, NextUp, Popup, Rich, toast,
-  useData, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
+  useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
 } from "../components";
 
 const DISTRICT = { "1980": "d1980", "1990": "d1990", "2000": "d2000" } as const;
@@ -107,14 +107,11 @@ export default function Club({ route }: ScreenProps) {
     p.style.height = go.offsetHeight + "px";
   }, [c]);
   // the colour block drifts up a touch faster than the page: a subtle parallax that shows off the frosting
-  useLayoutEffect(() => {
-    const b = hero.current;
-    if (!b || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const drift = () => { b.style.transform = `translateY(${-(scrollY * .12).toFixed(1)}px)`; };
-    addEventListener("scroll", drift, { passive: true });
-    drift();
-    return () => removeEventListener("scroll", drift);
-  }, [c]);
+  const drift = () => {
+    if (hero.current && !matchMedia("(prefers-reduced-motion: reduce)").matches) hero.current.style.transform = `translateY(${-(scrollY * .12).toFixed(1)}px)`;
+  };
+  useEventListener("scroll", drift);
+  useLayoutEffect(drift, [c]);
 
   if (error) return <main className="wrap clubpage" id="main"><LoadError /></main>;
   if (!ready) return <main className="wrap clubpage" id="main" />;

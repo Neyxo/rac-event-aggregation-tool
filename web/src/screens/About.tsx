@@ -7,7 +7,7 @@ import { nClubs } from "../lib/data";
 import { vars } from "../lib/color";
 import type { Pillar } from "../lib/pillars";
 import { shareUrl } from "../lib/share";
-import { CtaBlock, Footer, HelpLinks, Icon, LoadError, PillarPic, QaList, toast, useData, useNav, useStickyHeads, useTopBarExtra, useWash } from "../components";
+import { CtaBlock, Footer, HelpLinks, Icon, LoadError, PillarPic, QaList, toast, useData, useEventListener, useNav, useStickyHeads, useTopBarExtra, useWash } from "../components";
 import { scrollTarget } from "../components/router";
 
 const PILLARS: { k: Pillar; color: string; word: string; text: string }[] = [
@@ -44,32 +44,27 @@ interface Phase { cur: number; all: boolean }
 function usePhase(track: RefObject<HTMLDivElement | null>, ready: boolean): Phase {
   const [phase, setPhase] = useState<Phase>({ cur: -2, all: false });
   const nav = useNav(), readyAtMount = useRef(ready);
+  /** y: the scroll position to measure at (default: the current one) */
+  const measure = (y?: number) => {
+    const tr = track.current;
+    if (!ready || !tr) return;
+    const range = tr.offsetHeight - innerHeight, top = tr.getBoundingClientRect().top;
+    const p = range > 0 ? Math.min(1, Math.max(0, (y === undefined ? -top : y - (top + scrollY)) / range)) : 1;
+    const raw = p * 4 - 1;
+    setPhase(ph => {
+      const next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > ph.cur ? -0.08 : 0.08))));
+      return next === ph.cur ? ph : { cur: next, all: false };
+    });
+  };
+  useEventListener("scroll", () => measure());
+  useEventListener("resize", () => measure());
   useLayoutEffect(() => {
     if (!ready) return;
-    /** y: the scroll position to measure at (default: the current one) */
-    const onScroll = (y?: number) => {
-      const tr = track.current;
-      if (!tr) return;
-      const range = tr.offsetHeight - innerHeight, top = tr.getBoundingClientRect().top;
-      const p = range > 0 ? Math.min(1, Math.max(0, (y === undefined ? -top : y - (top + scrollY)) / range)) : 1;
-      const raw = p * 4 - 1;
-      setPhase(ph => {
-        const next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > ph.cur ? -0.08 : 0.08))));
-        return next === ph.cur ? ph : { cur: next, all: false };
-      });
-    };
-    const tick = () => onScroll();
-    addEventListener("scroll", tick, { passive: true });
-    addEventListener("resize", tick);
     // mounted with the data at hand (navigated here): this runs before App scrolls to the top (or back to where it was), so measure at
     // that position, not at the previous screen's, or a word flashes open and closes again
-    onScroll(readyAtMount.current ? scrollTarget(nav) : undefined);
+    measure(readyAtMount.current ? scrollTarget(nav) : undefined);
     // reduced motion: everything open at first (no scroll-driven reveal); the next phase change takes over again
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPhase(ph => ({ ...ph, all: true }));
-    return () => {
-      removeEventListener("scroll", tick);
-      removeEventListener("resize", tick);
-    };
   }, [ready]);
   return phase;
 }

@@ -6,7 +6,7 @@ import { anyDevFlag } from "../lib/dev";
 import { href } from "../lib/route";
 import { setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
-import { ClubChips, ClubLabel, Footer, Icon, LangSelect, LoadError, Popup, toast, useData, useStored } from "../components";
+import { ClubChips, ClubLabel, Footer, Icon, LangSelect, LoadError, Popup, toast, useData, useEventListener, useStored } from "../components";
 import { useNav } from "../components/router";
 
 /** the Chrome install prompt; not in TypeScript's DOM types */
@@ -42,11 +42,7 @@ const guessOS = (): OS => {
 function Install() {
   const [prompt, setPrompt] = useState<InstallPrompt | null>(null);
   const [os, setOS] = useState<OS>(guessOS);
-  useEffect(() => {
-    const on = (e: Event) => { e.preventDefault(); setPrompt(e as InstallPrompt); };
-    addEventListener("beforeinstallprompt", on);
-    return () => removeEventListener("beforeinstallprompt", on);
-  }, []);
+  useEventListener("beforeinstallprompt", e => { e.preventDefault(); setPrompt(e as InstallPrompt); });
   if (standalone()) return <div id="installBody"><p className="meta">{t("inst_done")}</p></div>;
   if (prompt) {
     const install = async () => {
