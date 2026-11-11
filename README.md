@@ -17,12 +17,15 @@ Members-only events appear with what the public agenda list shows and are marked
 ## Run locally
 
 ```bash
+npm ci
+npm test
+npm run build                  # the web app, into dist/
 python3 test_polaris_feed.py
-python3 polaris_feed.py        # updates data/, writes feeds + site to public/
+python3 polaris_feed.py        # updates data/, writes feeds + site (dist/ included) to public/
 python3 -m http.server -d public 8000
 ```
 
-Then open http://localhost:8000. Python 3.11+, no dependencies. The site is plain HTML/CSS/JS in `site/`, no build step.
+Then open http://localhost:8000. Node 24, Python 3.11+ (no Python dependencies). The app is React + TypeScript in `web/`, built with Vite. While working on it, `npm run dev` serves it with the real data from `public/` (run `polaris_feed.py` once first).
 
 The event history lives on the `data` branch; check it out once with `git worktree add data data`.
 
@@ -36,7 +39,7 @@ GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions)
 
 ## More detail
 
-- [The site](docs/site.md): pages, navigation, what is stored on the device
+- [The site](docs/site.md): the app, routes, languages, share pages, what is stored on the device
 - [How events are tracked](docs/tracking.md): updates, cancellations, safety brake, locations
 - [Layers](docs/layers.md): members-only events, international events, Rotary events, Instagram pictures
 - [Design rules](docs/design.md): buttons, chips, status, cards, frosted glass
