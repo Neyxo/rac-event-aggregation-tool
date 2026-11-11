@@ -41,7 +41,7 @@ addEventListener("DOMContentLoaded", async () => {
   if (home) $("hero").style.cssText = clubStyle(home.id);
   fill($("hero"), home && home.logo ? el("img", { src: home.logo, alt: "" }) : el("div", { class: "wave" }, "👋"), el("h1", {}, home ? nm.hi.replace("{club}", home.name) : nm.hi0), el("p", {}, nm.lead));
   // each step leads somewhere: the club's Polaris site, Settings, Subscribe, the club's next event
-  const next = D.data.events.find(e => !isPast(e) && !e.cancelled && (!home || e.clubs.includes(home.id)));
+  const next = D.data.events.find(e => !isPast(e) && !e.cancelled && e.layer !== "rotary" && (!home || e.clubs.includes(home.id)));
   const to = [home && home.url, "settings.html", "subscribe.html", next ? "event.html?id=" + next.id : "discover.html"];
   $("steps").append(...nm.steps.map(([title, text], i) => { const href = to[i];
     return el("li", {}, el(href ? "a" : "div", { class: "step glass", href, target: /^http/.test(href) ? "_blank" : null, rel: /^http/.test(href) ? "noopener" : null, style: "--p:" + COL[i % 3] },

@@ -25,7 +25,7 @@ en: {
   g_desktop: ["Open this page in Chrome or Edge.", "Click the install icon at the right end of the address bar (a screen with an arrow).", "Click \"Install\". Or simply bookmark the page."],
   share_title: "Share with others", share_text: "Anyone with the link can use it right away in their browser, no installation needed.", copy: "Copy", copied: "Link copied", rerun: "Show the welcome steps again",
   share_app: "All Rotaract events in Switzerland & Liechtenstein",
-  updated: "Updated {t}", members_only: "Members-only events aren't shown · Registration happens on Polaris", made_by: "Made by Jean-Michel Carrel for Rotaract Club Luzern", source: "Source & data on GitHub",
+  updated: "Updated {t}", made_by: "Made by Jean-Michel Carrel for Rotaract Club Luzern", source: "Source & data on GitHub",
   ob_welcome: "Welcome 👋", ob_q: "Which clubs are you interested in?", ob_pre: "We pre-selected the nearest ones from your approximate location (no location access needed).", ob_pick: "Pick one or more, or keep all.",
   all_clubs: "All clubs", next: "Next", skip: "Skip", not_now: "Not now", done: "Done",
   ob_sub: "Subscribe to the calendar?", ob_sub_text: "Events then appear in your phone's calendar and stay up to date by themselves.", ob_or: "Or everything at once:", all_feed: "All Rotaract events in CH & LI (every club)", ob_help: "Step-by-step help: ", ob_help_link: "subscribe page",
@@ -68,7 +68,7 @@ de: {
   g_desktop: ["Diese Seite in Chrome oder Edge öffnen.", "Rechts in der Adressleiste auf das Installieren-Symbol klicken (Bildschirm mit Pfeil).", "«Installieren» klicken. Oder die Seite einfach als Lesezeichen speichern."],
   share_title: "Mit anderen teilen", share_text: "Wer den Link hat, kann die Seite sofort im Browser nutzen, ohne Installation.", copy: "Kopieren", copied: "Link kopiert", rerun: "Willkommensschritte nochmals anzeigen",
   share_app: "Alle Rotaract-Anlässe der Schweiz & Liechtensteins",
-  updated: "Aktualisiert {t}", members_only: "Anlässe nur für Mitglieder werden nicht angezeigt · Anmeldung auf Polaris", made_by: "Von Jean-Michel Carrel für den Rotaract Club Luzern", source: "Quellcode & Daten auf GitHub",
+  updated: "Aktualisiert {t}", made_by: "Von Jean-Michel Carrel für den Rotaract Club Luzern", source: "Quellcode & Daten auf GitHub",
   ob_welcome: "Willkommen 👋", ob_q: "Welche Clubs interessieren dich?", ob_pre: "Die nächsten haben wir anhand deines ungefähren Standorts vorausgewählt (ohne Standortfreigabe).", ob_pick: "Wähle einen oder mehrere, oder behalte alle.",
   all_clubs: "Alle Clubs", next: "Weiter", skip: "Überspringen", not_now: "Jetzt nicht", done: "Fertig",
   ob_sub: "Kalender abonnieren?", ob_sub_text: "Die Anlässe erscheinen dann im Kalender deines Handys und bleiben von selbst aktuell.", ob_or: "Oder alles auf einmal:", all_feed: "Alle Rotaract-Anlässe CH & LI (alle Clubs)", ob_help: "Schritt-für-Schritt-Anleitung: ", ob_help_link: "Abo-Seite",
@@ -109,7 +109,7 @@ fr: {
   g_desktop: ["Ouvrez cette page dans Chrome ou Edge.", "Cliquez sur l'icône d'installation à droite de la barre d'adresse (un écran avec une flèche).", "Cliquez sur « Installer ». Ou ajoutez simplement la page aux favoris."],
   share_title: "Partager", share_text: "Toute personne ayant le lien peut l'utiliser tout de suite dans son navigateur, sans installation.", copy: "Copier", copied: "Lien copié", rerun: "Revoir les étapes de bienvenue",
   share_app: "Tous les événements Rotaract de Suisse & du Liechtenstein",
-  updated: "Mis à jour {t}", members_only: "Les événements réservés aux membres ne sont pas affichés · Inscription sur Polaris", made_by: "Par Jean-Michel Carrel pour le Rotaract Club Luzern", source: "Code source & données sur GitHub",
+  updated: "Mis à jour {t}", made_by: "Par Jean-Michel Carrel pour le Rotaract Club Luzern", source: "Code source & données sur GitHub",
   ob_welcome: "Bienvenue 👋", ob_q: "Quels clubs vous intéressent ?", ob_pre: "Nous avons présélectionné les plus proches d'après votre position approximative (sans accès à la localisation).", ob_pick: "Choisissez-en un ou plusieurs, ou gardez tout.",
   all_clubs: "Tous les clubs", next: "Suivant", skip: "Passer", not_now: "Pas maintenant", done: "Terminé",
   ob_sub: "S'abonner au calendrier ?", ob_sub_text: "Les événements apparaissent alors dans le calendrier de votre téléphone et restent à jour tout seuls.", ob_or: "Ou tout d'un coup :", all_feed: "Tous les événements Rotaract CH & LI (tous les clubs)", ob_help: "Aide pas à pas : ", ob_help_link: "page d'abonnement",
@@ -150,7 +150,7 @@ it: {
   g_desktop: ["Apri questa pagina in Chrome o Edge.", "Clicca l'icona di installazione a destra nella barra degli indirizzi (uno schermo con una freccia).", "Clicca «Installa». Oppure aggiungi la pagina ai preferiti."],
   share_title: "Condividi con altri", share_text: "Chi ha il link può usarla subito nel browser, senza installare nulla.", copy: "Copia", copied: "Link copiato", rerun: "Mostra di nuovo i passi di benvenuto",
   share_app: "Tutti gli eventi Rotaract di Svizzera e Liechtenstein",
-  updated: "Aggiornato {t}", members_only: "Gli eventi riservati ai soci non sono mostrati · Iscrizione su Polaris", made_by: "Di Jean-Michel Carrel per il Rotaract Club Luzern", source: "Codice e dati su GitHub",
+  updated: "Aggiornato {t}", made_by: "Di Jean-Michel Carrel per il Rotaract Club Luzern", source: "Codice e dati su GitHub",
   ob_welcome: "Benvenuto 👋", ob_q: "Quali club ti interessano?", ob_pre: "Abbiamo preselezionato i più vicini in base alla tua posizione approssimativa (senza accesso alla posizione).", ob_pick: "Scegline uno o più, oppure tienili tutti.",
   all_clubs: "Tutti i club", next: "Avanti", skip: "Salta", not_now: "Non ora", done: "Fatto",
   ob_sub: "Abbonarti al calendario?", ob_sub_text: "Gli eventi compaiono poi nel calendario del tuo telefono e restano aggiornati da soli.", ob_or: "Oppure tutto insieme:", all_feed: "Tutti gli eventi Rotaract CH & LI (tutti i club)", ob_help: "Guida passo per passo: ", ob_help_link: "pagina abbonamenti",
@@ -192,17 +192,19 @@ function applyI18n(root = document) {
   for (const n of root.querySelectorAll("[data-t-label]")) n.setAttribute("aria-label", t(n.dataset.tLabel));
   for (const n of root.querySelectorAll("[data-t-title]")) n.title = t(n.dataset.tTitle);
 }
+// the language as a segmented control: four short choices, no native menu that opens somewhere else on screen
 function langSelect() {
-  const s = document.createElement("select");
-  s.className = "lang"; s.setAttribute("aria-label", t("language"));
-  for (const [k, v] of Object.entries(LANGS)) { const o = document.createElement("option"); o.value = k; o.textContent = k.toUpperCase(); o.title = v; s.append(o); }
-  s.value = LANG;
-  s.addEventListener("change", () => { try { localStorage.setItem("rac.lang", JSON.stringify(s.value)); } catch {} const u = new URL(location.href); u.searchParams.delete("lang"); location.href = u.href; });
-  return s;
+  const g = document.createElement("div"); g.className = "seg"; g.setAttribute("role", "group"); g.setAttribute("aria-label", t("language"));
+  for (const [k, v] of Object.entries(LANGS)) {
+    const b = document.createElement("button"); b.type = "button"; b.textContent = k.toUpperCase(); b.title = v; b.lang = k; b.setAttribute("aria-label", v); b.setAttribute("aria-pressed", String(k === LANG));
+    b.addEventListener("click", () => { try { localStorage.setItem("rac.lang", JSON.stringify(k)); } catch {} const u = new URL(location.href); u.searchParams.delete("lang"); location.href = u.href; });
+    g.append(b);
+  }
+  return g;
 }
 
 // settings, scope, about page
-Object.assign(I18N.en, {
+Object.assign(I18N.en, { new_tag: "NEW",
   info: "This app", settings: "Settings", my_clubs: "My clubs", everything: "Everything", main_club: "Main club", also_show: "Also show", none: "None",
   set_hint: "Your main club and the clubs you also follow make up the \"My clubs\" view. Searching and filtering never changes this.",
   theme_light: "Light", theme_dark: "Dark", change: "Change", home_banner: "Your clubs", no_home: "No main club chosen yet",
@@ -217,7 +219,7 @@ Object.assign(I18N.en, {
   ab_find: "Find a club near you", ab_find_ph: "Your town or postcode", ab_find_btn: "Search", ab_nearest: "Nearest clubs", ab_join: "Not sure which club? Write to the national team at join.rotaract.ch.",
   ab_share: "Share this page", ab_events_cta: "See all events",
 });
-Object.assign(I18N.de, {
+Object.assign(I18N.de, { new_tag: "NEU",
   info: "Die App", settings: "Einstellungen", my_clubs: "Meine Clubs", everything: "Alles", main_club: "Hauptclub", also_show: "Auch anzeigen", none: "Keiner",
   set_hint: "Dein Hauptclub und die Clubs, denen du auch folgst, bilden die Ansicht «Meine Clubs». Suchen und Filtern ändert das nie.",
   theme_light: "Hell", theme_dark: "Dunkel", change: "Ändern", home_banner: "Deine Clubs", no_home: "Noch kein Hauptclub gewählt",
@@ -232,7 +234,7 @@ Object.assign(I18N.de, {
   ab_find: "Finde einen Club in deiner Nähe", ab_find_ph: "Dein Ort oder deine PLZ", ab_find_btn: "Suchen", ab_nearest: "Nächste Clubs", ab_join: "Unsicher, welcher Club? Schreib dem nationalen Team auf join.rotaract.ch.",
   ab_share: "Diese Seite teilen", ab_events_cta: "Alle Anlässe ansehen",
 });
-Object.assign(I18N.fr, {
+Object.assign(I18N.fr, { new_tag: "NOUVEAU",
   info: "L'app", settings: "Réglages", my_clubs: "Mes clubs", everything: "Tout", main_club: "Club principal", also_show: "Afficher aussi", none: "Aucun",
   set_hint: "Votre club principal et les clubs que vous suivez forment la vue « Mes clubs ». Chercher et filtrer ne change jamais cela.",
   theme_light: "Clair", theme_dark: "Sombre", change: "Modifier", home_banner: "Vos clubs", no_home: "Aucun club principal choisi",
@@ -247,7 +249,7 @@ Object.assign(I18N.fr, {
   ab_find: "Trouver un club près de chez vous", ab_find_ph: "Votre localité ou NPA", ab_find_btn: "Chercher", ab_nearest: "Clubs les plus proches", ab_join: "Pas sûr du club ? Écrivez à l'équipe nationale sur join.rotaract.ch.",
   ab_share: "Partager cette page", ab_events_cta: "Voir tous les événements",
 });
-Object.assign(I18N.it, {
+Object.assign(I18N.it, { new_tag: "NUOVO",
   info: "L'app", settings: "Impostazioni", my_clubs: "I miei club", everything: "Tutto", main_club: "Club principale", also_show: "Mostra anche", none: "Nessuno",
   set_hint: "Il tuo club principale e i club che segui formano la vista «I miei club». Cercare e filtrare non la cambia mai.",
   theme_light: "Chiaro", theme_dark: "Scuro", change: "Modifica", home_banner: "I tuoi club", no_home: "Nessun club principale scelto",
@@ -583,3 +585,87 @@ I18N.en.nm.words.push(["Rotaract", "Rotary's clubs for young adults from 18."], 
 I18N.de.nm.words.push(["Rotaract", "Rotarys Clubs für junge Erwachsene ab 18."], ["Rotary", "Die weltweite Serviceorganisation, zu der Rotaract gehört."], ["Rotaracter", "Mitglied eines Rotaract Clubs."], ["Rotarier", "Mitglied eines Rotary Clubs."], ["Präsident", "Leitet den Club für ein Rotaract-Jahr."], ["Past President", "Präsident oder Präsidentin des letzten Jahres. Bleibt oft beratend im Vorstand."], ["Sekretär", "Führt Protokoll, Mitgliederliste und die Post des Clubs."], ["Kassier", "Kümmert sich um das Geld des Clubs und die Mitgliederbeiträge."], ["Generalversammlung (GV)", "Das jährliche Treffen, an dem die Mitglieder den Vorstand wählen und die Rechnung abnehmen."], ["Mitgliederbeitrag", "Was jedes Mitglied dem Club pro Jahr bezahlt."], ["Rotaract-Jahr", "Vom 1. Juli bis 30. Juni. Mit ihm wechselt der Vorstand."], ["Service", "Gutes für andere tun. Der Kern von Rotary und Rotaract."], ["Service Above Self", "Rotarys Motto: selbstloses Dienen."], ["Fellowship", "Die Freundschaft unter Mitgliedern, im Club und weltweit."], ["Fundraising", "Geld sammeln für einen guten Zweck."], ["Kontaktclub", "Ein Partner-Rotaract-Club im Ausland, auch Twin Club genannt."], ["MDIO", "Multi-District Information Organisation. Der nationale Dachverband der Rotaract Clubs."], ["ERIC", "European Rotaract Information Centre. Der europäische Dachverband."], ["EUCO", "European Convention. Das grosse jährliche Treffen von Rotaract in Europa."], ["REM", "Rotaract European Meeting. Ein Wochenende, an dem sich europäische Rotaracter treffen."], ["Convention", "Das jährliche Welttreffen von Rotary International."], ["Distriktskonferenz", "Das jährliche Treffen eines Distrikts."], ["PETS", "Presidents-elect Training Seminar. Bereitet die Präsidien des nächsten Jahres vor."], ["Paul Harris", "Gründete Rotary 1905 in Chicago."], ["Paul Harris Fellow", "Auszeichnung für eine Spende von 1000 US-Dollar an die Rotary Foundation."], ["Jugendaustausch", "Rotarys Schüleraustausch für Jugendliche."], ["World Rotaract Week", "Die Woche um den 13. März, den Gründungstag von Rotaract 1968."], ["Pin", "Das kleine Abzeichen, das Mitglieder tragen."], ["Wimpel", "Eine kleine Clubfahne, die Clubs bei Besuchen austauschen."], ["Schwerpunktbereiche", "Die sieben Themen, auf die sich Rotary konzentriert."]);
 I18N.fr.nm.words.push(["Rotaract", "Les clubs du Rotary pour les jeunes adultes dès 18 ans."], ["Rotary", "L'organisation de service mondiale dont le Rotaract fait partie."], ["Rotaractien", "Membre d'un club Rotaract."], ["Rotarien", "Membre d'un Rotary club."], ["Président", "Dirige le club pendant une année Rotaract."], ["Past-président", "Le président ou la présidente de l'année précédente. Reste souvent au comité comme conseil."], ["Secrétaire", "Tient les procès-verbaux, la liste des membres et le courrier du club."], ["Trésorier", "S'occupe de l'argent du club et des cotisations."], ["Assemblée générale (AG)", "La réunion annuelle où les membres élisent le comité et approuvent les comptes."], ["Cotisation", "Ce que chaque membre verse au club par année."], ["Année Rotaract", "Du 1er juillet au 30 juin. Le comité change avec elle."], ["Service", "Faire le bien pour les autres. Le cœur du Rotary et du Rotaract."], ["Servir d'abord", "La devise du Rotary (Service Above Self)."], ["Fellowship", "L'amitié entre membres, dans le club et dans le monde."], ["Collecte de fonds", "Récolter de l'argent pour une bonne cause."], ["Club contact", "Un club Rotaract partenaire à l'étranger, aussi appelé twin club."], ["MDIO", "Multi-District Information Organisation. L'organisation faîtière nationale des clubs Rotaract."], ["ERIC", "European Rotaract Information Centre. L'organisation faîtière européenne."], ["EUCO", "European Convention. La grande rencontre annuelle du Rotaract en Europe."], ["REM", "Rotaract European Meeting. Un week-end où les Rotaractiens européens se rencontrent."], ["Convention", "La rencontre mondiale annuelle du Rotary International."], ["Conférence de district", "La rencontre annuelle d'un district."], ["PETS", "Presidents-elect training seminar. Prépare les présidents de l'année suivante."], ["Paul Harris", "A fondé le Rotary à Chicago en 1905."], ["Paul Harris Fellow", "Distinction pour un don de 1000 dollars US à la Fondation Rotary."], ["Échange de jeunes", "L'échange scolaire du Rotary pour les adolescents."], ["World Rotaract Week", "La semaine autour du 13 mars, jour de la fondation du Rotaract en 1968."], ["Pin's", "Le petit insigne que portent les membres."], ["Fanion", "Un petit drapeau de club, échangé lors des visites entre clubs."], ["Axes stratégiques", "Les sept causes sur lesquelles le Rotary se concentre."]);
 I18N.it.nm.words.push(["Rotaract", "I club del Rotary per giovani adulti dai 18 anni."], ["Rotary", "L'organizzazione di servizio mondiale di cui il Rotaract fa parte."], ["Rotaractiano", "Socio di un Rotaract club."], ["Rotariano", "Socio di un Rotary club."], ["Presidente", "Guida il club per un anno Rotaract."], ["Past President", "Il o la presidente dell'anno precedente. Spesso resta nel comitato come consigliere."], ["Segretario", "Tiene i verbali, l'elenco dei soci e la corrispondenza del club."], ["Tesoriere", "Si occupa del denaro del club e delle quote sociali."], ["Assemblea generale", "La riunione annuale in cui i soci eleggono il comitato e approvano i conti."], ["Quota sociale", "Ciò che ogni socio versa al club ogni anno."], ["Anno Rotaract", "Dal 1° luglio al 30 giugno. Con esso cambia il comitato."], ["Service", "Fare del bene per gli altri. Il cuore del Rotary e del Rotaract."], ["Servire al di sopra di ogni interesse personale", "Il motto del Rotary (Service Above Self)."], ["Fellowship", "L'amicizia tra soci, nel club e nel mondo."], ["Raccolta fondi", "Raccogliere denaro per una buona causa."], ["Club contatto", "Un Rotaract club partner all'estero, detto anche twin club."], ["MDIO", "Multi-District Information Organisation. L'organizzazione mantello nazionale dei Rotaract club."], ["ERIC", "European Rotaract Information Centre. L'organizzazione mantello europea."], ["EUCO", "European Convention. Il grande incontro annuale del Rotaract in Europa."], ["REM", "Rotaract European Meeting. Un fine settimana in cui i rotaractiani europei si incontrano."], ["Convention", "L'incontro mondiale annuale del Rotary International."], ["Congresso distrettuale", "L'incontro annuale di un distretto."], ["PETS", "Presidents-elect training seminar. Prepara i presidenti dell'anno successivo."], ["Paul Harris", "Fondò il Rotary a Chicago nel 1905."], ["Paul Harris Fellow", "Riconoscimento per una donazione di 1000 dollari USA alla Fondazione Rotary."], ["Scambio giovani", "Lo scambio scolastico del Rotary per adolescenti."], ["World Rotaract Week", "La settimana attorno al 13 marzo, giorno di fondazione del Rotaract nel 1968."], ["Spilla", "Il piccolo distintivo che portano i soci."], ["Gagliardetto", "Una piccola bandiera del club, scambiata durante le visite tra club."], ["Aree d'intervento", "Le sette cause su cui il Rotary si concentra."]);
+
+// club page extras and the international events explainer (intl.html)
+Object.assign(I18N.en, { cp_about: "About this club", cp_join: "How to join", cp_partners: "We work with", foot_polaris: "Registration happens on Polaris", intl: {
+  h: "International events", sub: "REM, EUCO and friends in every country",
+  lead: "Rotaract doesn't stop at the border. Several times a year, Rotaractors from all over Europe and beyond meet for a long weekend of workshops, service and parties. Anyone in a club can go.",
+  kinds_h: "The big ones", kinds: [
+    ["REM", "Rotaract European Meeting. Twice a year, a long weekend in a different European city, hosted by the local clubs."],
+    ["EUCO", "The European Convention. Once a year in spring, several days, in a different country each time."],
+    ["Pre- and post-trips", "Short trips to nearby cities right before and after a REM, organised by clubs in the region."],
+    ["Rotary Convention", "Once a year, somewhere in the world: the meeting of the whole Rotary family, open to Rotaractors."]],
+  next_h: "Coming up", none: "No dates announced right now.",
+  follow: "Follow international events", follow_sub: "Add them to your clubs or subscribe to the calendar",
+  why_h: "Why go", why: ["You meet Rotaractors from many countries in a single weekend.", "Workshops and talks you won't get in your own club.", "Friends to visit, and to host, all over Europe.", "You bring ideas for projects back to your club."],
+  qa: [["Who can go?", "Any Rotaract member. You don't need an office in your club, and plenty of people travel alone or with one or two friends."],
+    ["How do I register?", "On the organiser's website, linked from each event here. Places are limited, so register soon after registration opens."],
+    ["What does it cost?", "Each event sets its own price, usually a package with the programme and meals. Travel comes on top. Ask your club whether it supports members who go."],
+    ["Which language?", "English."],
+    ["Where do these dates come from?", "From Rotaract Europe's own calendar, checked every six hours. Other international events are added by hand."]] } });
+Object.assign(I18N.de, { cp_about: "Über den Club", cp_join: "So wirst du Mitglied", cp_partners: "Wir arbeiten zusammen mit", foot_polaris: "Anmeldung auf Polaris", intl: {
+  h: "Internationale Anlässe", sub: "REM, EUCO und Freunde in jedem Land",
+  lead: "Rotaract hört nicht an der Grenze auf. Mehrmals im Jahr treffen sich Rotaracter aus ganz Europa und darüber hinaus für ein langes Wochenende mit Workshops, Service und Partys. Mitkommen kann jedes Clubmitglied.",
+  kinds_h: "Die Grossen", kinds: [
+    ["REM", "Rotaract European Meeting. Zweimal im Jahr ein langes Wochenende in einer anderen europäischen Stadt, organisiert von den Clubs vor Ort."],
+    ["EUCO", "Die European Convention. Einmal im Jahr im Frühling, mehrere Tage, jedes Mal in einem anderen Land."],
+    ["Pre- und Post-Trips", "Kurze Reisen in Städte in der Nähe, direkt vor und nach einem REM, organisiert von Clubs der Region."],
+    ["Rotary Convention", "Einmal im Jahr irgendwo auf der Welt: das Treffen der ganzen Rotary-Familie, offen für Rotaract."]],
+  next_h: "Demnächst", none: "Im Moment sind keine Daten angekündigt.",
+  follow: "Internationalen Anlässen folgen", follow_sub: "Zu deinen Clubs hinzufügen oder den Kalender abonnieren",
+  why_h: "Warum hingehen", why: ["Du triffst an einem Wochenende Rotaracter aus vielen Ländern.", "Workshops und Vorträge, die es im eigenen Club nicht gibt.", "Freunde in ganz Europa, die du besuchen und bei dir aufnehmen kannst.", "Du bringst Projektideen in deinen Club zurück."],
+  qa: [["Wer kann mitkommen?", "Jedes Rotaract-Mitglied. Du brauchst kein Amt im Club, und viele reisen allein oder mit ein, zwei Freunden."],
+    ["Wie melde ich mich an?", "Auf der Website der Organisatoren, verlinkt bei jedem Anlass hier. Die Plätze sind begrenzt, melde dich also bald nach Anmeldestart an."],
+    ["Was kostet es?", "Jeder Anlass hat seinen eigenen Preis, meist ein Paket mit Programm und Verpflegung. Die Reise kommt dazu. Frag in deinem Club, ob er Mitglieder unterstützt, die hinfahren."],
+    ["Welche Sprache?", "Englisch."],
+    ["Woher kommen diese Daten?", "Aus dem Kalender von Rotaract Europe, alle sechs Stunden geprüft. Weitere internationale Anlässe werden von Hand ergänzt."]] } });
+Object.assign(I18N.fr, { cp_about: "À propos du club", cp_join: "Comment nous rejoindre", cp_partners: "Nous travaillons avec", foot_polaris: "Inscription sur Polaris", intl: {
+  h: "Événements internationaux", sub: "REM, EUCO et des amis dans chaque pays",
+  lead: "Le Rotaract ne s'arrête pas à la frontière. Plusieurs fois par an, des Rotaractiens de toute l'Europe et d'ailleurs se retrouvent pour un long week-end d'ateliers, de service et de fêtes. Tout membre d'un club peut y aller.",
+  kinds_h: "Les grands rendez-vous", kinds: [
+    ["REM", "Rotaract European Meeting. Deux fois par an, un long week-end dans une autre ville européenne, organisé par les clubs locaux."],
+    ["EUCO", "La European Convention. Une fois par an au printemps, plusieurs jours, chaque fois dans un autre pays."],
+    ["Pré-REM et post-REM", "De courts voyages dans des villes voisines, juste avant et après un REM, organisés par des clubs de la région."],
+    ["Convention du Rotary", "Une fois par an, quelque part dans le monde : la rencontre de toute la famille du Rotary, ouverte aux Rotaractiens."]],
+  next_h: "À venir", none: "Aucune date annoncée pour le moment.",
+  follow: "Suivre les événements internationaux", follow_sub: "Les ajouter à vos clubs ou s'abonner au calendrier",
+  why_h: "Pourquoi y aller", why: ["Vous rencontrez des Rotaractiens de nombreux pays en un seul week-end.", "Des ateliers et des conférences que votre club n'offre pas.", "Des amis à qui rendre visite, et à accueillir, dans toute l'Europe.", "Vous rapportez des idées de projets à votre club."],
+  qa: [["Qui peut y aller ?", "Tout membre du Rotaract. Pas besoin d'une fonction dans votre club, et beaucoup voyagent seuls ou avec un ou deux amis."],
+    ["Comment s'inscrire ?", "Sur le site des organisateurs, dont le lien figure sur chaque événement ici. Les places sont limitées : inscrivez-vous peu après l'ouverture."],
+    ["Combien ça coûte ?", "Chaque événement fixe son prix, en général un forfait avec le programme et les repas. Le voyage s'y ajoute. Demandez à votre club s'il soutient les membres qui y vont."],
+    ["Quelle langue ?", "L'anglais."],
+    ["D'où viennent ces dates ?", "Du calendrier de Rotaract Europe, vérifié toutes les six heures. Les autres événements internationaux sont ajoutés à la main."]] } });
+Object.assign(I18N.it, { cp_about: "Il club in breve", cp_join: "Come entrare", cp_partners: "Collaboriamo con", foot_polaris: "Iscrizione su Polaris", intl: {
+  h: "Eventi internazionali", sub: "REM, EUCO e amici in ogni paese",
+  lead: "Il Rotaract non si ferma al confine. Più volte all'anno, rotaractiani da tutta Europa e oltre si incontrano per un lungo fine settimana di workshop, service e feste. Può partecipare ogni socio di un club.",
+  kinds_h: "I grandi appuntamenti", kinds: [
+    ["REM", "Rotaract European Meeting. Due volte all'anno, un lungo fine settimana in una città europea diversa, organizzato dai club locali."],
+    ["EUCO", "La European Convention. Una volta all'anno in primavera, più giorni, ogni volta in un paese diverso."],
+    ["Pre-REM e post-REM", "Brevi viaggi in città vicine, subito prima e dopo un REM, organizzati dai club della regione."],
+    ["Convention del Rotary", "Una volta all'anno, da qualche parte nel mondo: l'incontro di tutta la famiglia del Rotary, aperto ai rotaractiani."]],
+  next_h: "In arrivo", none: "Al momento non ci sono date annunciate.",
+  follow: "Segui gli eventi internazionali", follow_sub: "Aggiungili ai tuoi club o abbonati al calendario",
+  why_h: "Perché andarci", why: ["Incontri rotaractiani di molti paesi in un solo fine settimana.", "Workshop e conferenze che nel tuo club non trovi.", "Amici da andare a trovare, e da ospitare, in tutta Europa.", "Porti idee per progetti nel tuo club."],
+  qa: [["Chi può partecipare?", "Ogni socio del Rotaract. Non serve una carica nel club, e molti viaggiano da soli o con uno o due amici."],
+    ["Come mi iscrivo?", "Sul sito degli organizzatori: trovi il link in ogni evento qui. I posti sono limitati: iscriviti presto dopo l'apertura."],
+    ["Quanto costa?", "Ogni evento ha il suo prezzo, di solito un pacchetto con programma e pasti. Il viaggio è a parte. Chiedi al tuo club se sostiene i soci che partecipano."],
+    ["Che lingua?", "Inglese."],
+    ["Da dove vengono queste date?", "Dal calendario di Rotaract Europe, controllato ogni sei ore. Altri eventi internazionali sono aggiunti a mano."]] } });
+// club page: the club's projects
+Object.assign(I18N.en, { projects: "Projects" });
+Object.assign(I18N.de, { projects: "Projekte" });
+Object.assign(I18N.fr, { projects: "Projets" });
+Object.assign(I18N.it, { projects: "Progetti" });
+// the Rotary layer: events Rotary clubs share with other clubs, off unless switched on in Settings
+Object.assign(I18N.en, { rotary_show: "Show Rotary events", rotary_hint: "Events Rotary clubs share with other clubs, per district. Off by default so Rotaract events stay in front.", on: "On", off: "Off",
+  open_rotary: "Open on the club's site", rotary_feeds: "Rotary, by district",
+  rotary_note: "This is a Rotary club's event that it shares with other clubs. Details and registration are on the club's own site. If in doubt, ask the club before you come along." });
+Object.assign(I18N.de, { rotary_show: "Rotary-Anlässe anzeigen", rotary_hint: "Anlässe, die Rotary Clubs mit anderen Clubs teilen, pro Distrikt. Standardmässig aus, damit Rotaract-Anlässe im Vordergrund bleiben.", on: "Ein", off: "Aus",
+  open_rotary: "Auf der Website des Clubs öffnen", rotary_feeds: "Rotary, nach Distrikt",
+  rotary_note: "Dies ist ein Anlass eines Rotary Clubs, den er mit anderen Clubs teilt. Details und Anmeldung gibt es auf der Website des Clubs. Frag im Zweifel beim Club nach, bevor du hingehst." });
+Object.assign(I18N.fr, { rotary_show: "Afficher les événements du Rotary", rotary_hint: "Les événements que les Rotary clubs partagent avec d'autres clubs, par district. Désactivé par défaut pour que les événements Rotaract restent au premier plan.", on: "Oui", off: "Non",
+  open_rotary: "Ouvrir sur le site du club", rotary_feeds: "Rotary, par district",
+  rotary_note: "Cet événement est organisé par un Rotary club, qui le partage avec d'autres clubs. Les détails et l'inscription se trouvent sur le site du club. En cas de doute, contactez le club avant de venir." });
+Object.assign(I18N.it, { rotary_show: "Mostra gli eventi del Rotary", rotary_hint: "Gli eventi che i Rotary club condividono con altri club, per distretto. Disattivati per impostazione predefinita, così gli eventi Rotaract restano in primo piano.", on: "Sì", off: "No",
+  open_rotary: "Apri sul sito del club", rotary_feeds: "Rotary, per distretto",
+  rotary_note: "Questo evento è organizzato da un Rotary club, che lo condivide con altri club. Dettagli e iscrizione sono sul sito del club. In caso di dubbio, contatta il club prima di andarci." });

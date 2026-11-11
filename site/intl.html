@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>International events · Rotaract Events</title>
+<meta name="description" content="REM, EUCO and other international Rotaract events: what they are, who can go and what is coming up.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = JSON.parse(localStorage.getItem("rac.theme")) === "dark" ? "dark" : "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+<script src="i18n.js"></script>
+<script src="common.js" defer></script>
+</head>
+<body data-page="intl">
+<header id="top"></header>
+<main class="wrap fam" id="main">
+  <h1 id="h"></h1>
+  <p class="lead" id="lead"></p>
+  <h2 class="sh lv1" id="kindsH"></h2>
+  <div class="tiles2" id="kinds"></div>
+  <h2 class="sh lv1" id="nextH"></h2>
+  <div id="next"></div>
+  <section class="box tint glass" style="--p:#d41367">
+    <div class="bh" id="whyH"><h2 id="whyT"></h2></div>
+    <ul class="yes" id="why"></ul>
+  </section>
+  <h2 class="sh lv1" data-t="faq"></h2>
+  <section class="box glass"><div class="qa" id="qa"></div></section>
+  <h2 class="sh lv1" data-t="read_on"></h2>
+  <div id="more"></div>
+  <div id="foot"></div>
+</main>
+<nav class="tabs-bar" id="tabs" aria-label="Main"></nav>
+<div class="toast" id="toast" role="status"></div>
+<script defer>
+addEventListener("DOMContentLoaded", async () => {
+  applyI18n(); chrome("about", { back: true }); wash("#d41367", "#0067c8", "#009739");
+  const x = t("intl"), COL = ["#d41367", "#0067c8", "#009739"], IC = ["users", "flag", "pin", "wheel"];
+  document.title = x.h + " · Rotaract Events";
+  $("h").textContent = x.h; $("lead").textContent = x.lead; $("kindsH").textContent = x.kinds_h; $("nextH").textContent = x.next_h; $("whyT").textContent = x.why_h;
+  $("kinds").append(...x.kinds.map(([title, text], i) => el("div", { class: "ft glass", style: "--p:" + COL[i % 3] }, el("div", { class: "ic" }, icon(IC[i])), el("b", {}, title), el("span", {}, text))));
+  $("whyH").prepend(el("div", { class: "ic" }, icon("heart")));
+  $("why").append(...x.why.map(s => el("li", {}, s)));
+  $("qa").append(...qaList(x.qa));
+  $("more").append(...helpLinks("world", "family", "guide"));
+  $("foot").append(footer());
+  // the dates themselves: the international entry's upcoming events, and the way to follow them
+  await loadData();
+  const next = D.data.events.filter(e => e.clubs.includes("international") && !isPast(e));
+  $("next").append(...(next.length ? next.map((e, i) => eventCard(e, i)) : [el("p", { class: "fine" }, x.none)]),
+    D.clubs.international ? moreLink("club.html?id=international", x.follow, x.follow_sub, "calendar", "#d41367") : "");
+});
+</script>
+</body>
+</html>

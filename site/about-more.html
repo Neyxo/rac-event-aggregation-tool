@@ -33,14 +33,14 @@ addEventListener("DOMContentLoaded", async () => {
   applyI18n(); chrome("about", { back: true }); wash("#0067c8", "#009739", "#d41367");
   await loadData();
   document.querySelector("[data-t=sp_dist]").textContent = t("sp_dist", { n: nClubs() });
-  $("more").append(...helpLinks("family", "guide")); $("cta").append(ctaBlock()); $("foot").append(footer());
+  $("more").append(...helpLinks("intl", "family", "guide")); $("cta").append(ctaBlock()); $("foot").append(footer());
   document.querySelector("#rotary .bg").replaceWith(Object.assign(pillarPic("help"), { className: "bg" }));  // a club photo, not a cropped event poster
   const dc = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
   $("leg").append(...Object.entries(dc).map(([d, c]) => el("span", { style: "color:" + c }, "D" + d)));
   const opts = { zoomControl: false, attributionControl: false, dragging: false, scrollWheelZoom: false, touchZoom: false, doubleClickZoom: false, keyboard: false };
   const m1 = LEAFLET.map("swiss", opts);
   LEAFLET.tileLayer("https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg", { maxZoom: 18 }).addTo(m1);
-  const pts = D.data.clubs.filter(c => c.coords && c.district);
+  const pts = D.data.clubs.filter(c => c.coords && isRac(c));
   for (const c of pts) LEAFLET.circleMarker(c.coords, { radius: 7, color: "#fff", weight: 2, fillColor: dc[c.district], fillOpacity: 1 }).addTo(m1).bindTooltip(c.name);
   m1.fitBounds(pts.map(c => c.coords), { paddingTopLeft: [24, 24], paddingBottomRight: [24, 150] });  // the pane covers the bottom
   const m2 = LEAFLET.map("world", opts).setView([22, 10], 1);

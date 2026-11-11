@@ -49,7 +49,7 @@ addEventListener("DOMContentLoaded", async () => {
   await loadData();
   document.querySelector("[data-t=ab_people_t]").textContent = t("ab_people_t", { n: nClubs() });
   if (!D.clubs[D.settings.home]) $("cta").append(ctaBlock());
-  $("more").append(...helpLinks("guide", "words", "world", "family"));
+  $("more").append(...helpLinks("guide", "words", "intl", "world", "family"));
   $("foot").append(footer());
   const words = $("words");
   PIL.forEach(([k, col], i) => words.append(el("div", { class: "w", style: `--p:${col}` }, el("div", { class: "word" }, t("ab_" + k) + "."),
