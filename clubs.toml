@@ -7,10 +7,10 @@
 #   short    = label on the club chips in the app
 #   color    = club colour in the app: the dominant tint of its crest (change freely)
 #   logo     = crest shown in the app: the canton's coat of arms, or the city's for city clubs
-#              (site/crests/, from Wikimedia Commons; Swiss/LI official coats of arms are public domain)
+#              (web/static/crests/, from Wikimedia Commons; Swiss/LI official coats of arms are public domain)
 #   photos   = optional list of picture URLs for the strip on the club page (otherwise: pictures of past events)
 #   instagram, linkedin = optional profile links, shown as buttons on the club page. With the Instagram secrets set
-#              (README "Instagram pictures"), the club's latest Instagram pictures also replace the picture strip.
+#              (docs/layers.md, "Instagram pictures"), the club's latest Instagram pictures also replace the picture strip.
 #   district = Rotary district: 1980 central/north-west, 1990 west, 2000 east; empty = national
 #   about    = optional one sentence that introduces the club, shown in "About this club" on the club page
 #   how      = optional "how to join" text, in the club's own language, opened from a button on the club page. Plain text
@@ -18,6 +18,7 @@
 #              **bold**. A blank line ends a paragraph.
 #   partners = optional list of clubs this club works with, shown as links on the club page:
 #              partners = [{ name = "Rotary Club Luzern", url = "https://...", note = "Patenclub" }]
+#              Another club in this file: url = "club.html?id=<id>" (opens its club page in the app)
 #   source   = "international" marks the one entry that is not a Polaris site (see the end of this file);
 #              "rotary" marks a Rotary district: the events its Rotary clubs share with other clubs, read from the
 #              district site's lists only. A separate layer: off by default in the app, never in all.ics.
@@ -68,6 +69,18 @@ name = "Rotaract Sempachersee"
 base_url = "https://rotaract-sempachersee.ch"
 lang = "de"
 city = "Sursee"
+instagram = "https://www.instagram.com/rac.sempachersee/"
+partners = [
+  { name = "Rotary Club Sempachersee", url = "http://www.rc-sempachersee.ch", note = "Patenclub" },
+  { name = "Rotary Club Sursee", url = "http://www.rc-sursee.ch/", note = "Patenclub" },
+  { name = "Rotary Club Willisau", url = "https://willisau.rotary1980.ch/de/", note = "Patenclub" },
+]
+photos = [
+  "https://rotaract-sempachersee.ch/media/cache/cloudtec_block_image_medium/649ee576dc63a.jpg",
+  "https://rotaract-sempachersee.ch/media/cache/cloudtec_block_image_full/6aadab2631bc3.png",
+  "https://rotaract-sempachersee.ch/media/cache/cloudtec_block_image_full/6aafa5f502f38.png",
+  "https://rotaract-sempachersee.ch/media/cache/cloudtec_block_image_medium/6ad907b485b46.JPG",
+]
 
 [[clubs]]
 id = "bern"
@@ -79,6 +92,17 @@ name = "Rotaract Bern"
 base_url = "https://bern.rotaract.ch"
 lang = "de"
 city = "Bern"
+instagram = "https://www.instagram.com/rotaractclubbern/"
+linkedin = "https://www.linkedin.com/company/rotaract-club-of-bern/"
+about = "Junge Leute in Bern, die zusammen lernen, helfen und feiern: Vorträge, eigene Sozialprojekte und Feste. Als Gruppierung an der Uni Bern registriert."
+partners = [
+  { name = "Rotary Club Bern Bubenberg", url = "https://bern-bubenberg.rotary1990.ch", note = "Patenclub" },
+  { name = "Rotaract Berlin", url = "https://www.hauptstadtclub.de/", note = "Kontaktclub" },
+]
+photos = [
+  "https://bern.rotaract.ch/media/cache/cloudtec_block_image_medium/6a2b211fbc392.jpg",
+  "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/PzKoajvU/67b8b3e2bb087.jpg",
+]
 
 [[clubs]]
 id = "basel"
@@ -90,6 +114,12 @@ name = "Rotaract Basel"
 base_url = "https://rotaract-basel.ch"
 lang = "de"
 city = "Basel"
+instagram = "https://www.instagram.com/rotaractbasel/"
+about = "Junge Leute aus Basel, die Spass-Anlässe mit Sozialprojekten verbinden. Alle Mitglieder gestalten den Club mit."
+partners = [
+  { name = "Rotary Club Dreiländereck", url = "https://www.rc-dreilaendereck.ch/", note = "Partnerclub" },
+  { name = "Rotary Club Basel-Riehen", url = "https://basel-riehen-rotary.ch", note = "Patenclub (bei der Gründung 1993)" },
+]
 
 [[clubs]]
 id = "baden"
@@ -101,6 +131,20 @@ name = "Rotaract Baden"
 base_url = "https://baden.rotaract.ch"
 lang = "de"
 city = "Baden"
+instagram = "https://www.instagram.com/rotaractclubbaden/"
+about = "Junge Leute aus der Region Baden, die zusammen lernen, helfen und feiern. Interessierte sind am monatlichen Stamm willkommen."
+partners = [
+  { name = "Rotary Club Baden", url = "http://www.rotary-baden.ch/", note = "Patenclub" },
+  { name = "Rotary Club Baden-Rohrdorferberg", url = "http://baden-rohrdorferberg.rotary1980.ch/", note = "Patenclub" },
+  { name = "Rotary Club Wettingen", url = "http://www.rc-wettingen.ch/", note = "Patenclub" },
+  { name = "Rotary Club Wettingen-Heitersberg", url = "http://wettingen-heitersberg.rotary1980.ch/", note = "Patenclub" },
+]
+photos = [
+  "https://baden.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/1YQPVh3V/69df37a9da964.jpg?v=1.5.16",
+  "https://baden.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/sNFKg8io/68e3f770db141.jpeg?v=1.5.16",
+  "https://baden.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/RkOXLV9b/6a522d0d9957c.jpeg?v=1.5.16",
+  "https://baden.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/83QPePkO/685baa3b69a4b.jpeg?v=1.5.16",
+]
 
 [[clubs]]
 id = "solothurn"
@@ -112,6 +156,19 @@ name = "Rotaract Solothurn"
 base_url = "https://rotaract-solothurn.ch"
 lang = "de"
 city = "Solothurn"
+about = "Junge Leute aus der Region zwischen Olten, Grenchen und dem Seeland, die zusammen lernen, helfen und feiern. Wir treffen uns am letzten Freitag des Monats."
+partners = [
+  { name = "Rotary Club Grenchen", url = "https://grenchen.rotary1980.ch/de/", note = "Patenclub" },
+  { name = "Rotary Club Solothurn", url = "https://rotary-solothurn.ch/de/", note = "Patenclub" },
+  { name = "Rotary Club Solothurn-Land", url = "https://solothurn-land.rotary1980.ch/de/", note = "Patenclub" },
+  { name = "Rotary Club Balsthal", url = "https://balsthal.rotary1980.ch/de/", note = "Patenclub" },
+]
+photos = [
+  "https://rotaract-solothurn.ch/media/cache/cloudtec_block_image_medium/819aa0eec1009d8930c899f6915d72459a3efbc61610379149.jpg",
+  "https://rotaract-solothurn.ch/media/cache/rotary_website_content_detail_image/24921fabf6b4c5e0f7ad7a0f16271806ca2334f01610379138.jpg",
+  "https://rotaract-solothurn.ch/media/cache/rotary_website_content_detail_image/32f31e07dc17dfc5d479db87b367e4bb0d8a24e71610379149.jpg",
+  "https://rotaract-solothurn.ch/media/cache/cloudtec_block_image_full/6658b8f22e221.JPG",
+]
 
 [[clubs]]
 id = "zuerich"
@@ -123,6 +180,9 @@ name = "Rotaract Zürich"
 base_url = "https://rotaract-zuerich.ch"
 lang = "de"
 city = "Zürich"
+instagram = "https://www.instagram.com/raczurich/"
+linkedin = "https://www.linkedin.com/company/rotaract-zurich"
+about = "Der älteste Rotaract Club der Schweiz, gegründet 1977: rund 40 junge Leute aus vielen Berufen, mit Vorträgen, geselligen Treffen und Projekten wie «Flying Croissant» gegen Foodwaste."
 
 [[clubs]]
 id = "zurich-international"
@@ -134,6 +194,11 @@ name = "Rotaract Zurich International"
 base_url = "https://zurich-international.rotaract.ch"
 lang = "en"
 city = "Zürich"
+instagram = "https://www.instagram.com/rotaractzurichint/"
+about = "Zurich's first English-speaking Rotaract club: people aged 18 to 30 from many backgrounds who learn, help and celebrate together."
+partners = [
+  { name = "Rotary Club Zurich International", url = "https://zurich-international.rotary2000.ch/en/", note = "Sponsor club" },
+]
 
 [[clubs]]
 id = "winterthur"
@@ -145,6 +210,11 @@ name = "Rotaract Winterthur"
 base_url = "https://winterthur.rotaract.ch"
 lang = "de"
 city = "Winterthur"
+instagram = "https://www.instagram.com/rac_winterthur/"
+about = "Ein vielseitiger Club wie die Stadt selbst: Vorträge, Einsätze für andere und gesellige Anlässe."
+photos = [
+  "https://winterthur.rotaract.ch/media/cache/cloudtec_block_image_medium/672e27cce79d9.jpeg",
+]
 
 [[clubs]]
 id = "stgallen"
@@ -156,6 +226,19 @@ name = "Rotaract St. Gallen"
 base_url = "https://rotaract-stgallen.ch"
 lang = "de"
 city = "St. Gallen"
+instagram = "https://www.instagram.com/rotaractstgallen/"
+linkedin = "https://www.linkedin.com/company/rotaract-club-st-gallen"
+about = "Junge Erwachsene aus der Region St. Gallen, seit 1993 aktiv mit Blutspendeaktionen, Besichtigungen und internationalen Anlässen. Neue Gesichter sind willkommen."
+partners = [
+  { name = "Rotary Club St. Gallen", url = "https://rotarysg.ch/", note = "Patenclub" },
+  { name = "Rotary Club St. Gallen-Freudenberg", url = "https://rotaryfreudenberg.ch/", note = "Patenclub" },
+]
+photos = [
+  "https://rotaract-stgallen.ch/media/cache/rotary_website_content_grid_images/rc/0mEQn55d/651a800a50b4d.jpg?v=1.5.16",
+  "https://rotaract-stgallen.ch/media/cache/rotary_website_content_grid_images/rc/X9ZPo7uz/654641c427b25.jpg?v=1.5.16",
+  "https://rotaract-stgallen.ch/media/cache/rotary_website_content_grid_images/rc/nsXlJRfH/638506fd59897.jpg?v=1.5.16",
+  "https://rotaract-stgallen.ch/media/cache/rotary_website_content_grid_images/rc/r19ipUOS/6565ec4f0f2ef.jpeg?v=1.5.16",
+]
 
 [[clubs]]
 id = "chur-herrschaft"
@@ -167,6 +250,10 @@ name = "Rotaract Chur-Herrschaft"
 base_url = "https://chur-herrschaft.rotaract.ch"
 lang = "de"
 city = "Chur"
+about = "Junge Leute von 18 bis 30 aus der Region Chur, die zusammen lernen, helfen und feiern und sich in gemeinnützigen Projekten engagieren."
+partners = [
+  { name = "Rotary Club Chur-Herrschaft", url = "https://rotary-chur-herrschaft.ch/", note = "Patenclub" },
+]
 
 [[clubs]]
 id = "liechtenstein"
@@ -178,6 +265,18 @@ name = "Rotaract Liechtenstein"
 base_url = "https://rotaract.li"
 lang = "de"
 city = "Vaduz"
+instagram = "https://www.instagram.com/rotaract.li/"
+about = "Der erste Rotaract Club Liechtensteins: rund 20 Studierende, Lernende und junge Berufsleute aus fünf Ländern, die sich meist am Montagabend treffen."
+partners = [
+  { name = "Rotary Club Liechtenstein", url = "https://liechtenstein.rotary2000.ch/de/" },
+  { name = "Rotary Club Liechtenstein-Eschnerberg", url = "https://liechtenstein-eschnerberg.rotary2000.ch/de/" },
+]
+photos = [
+  "https://rotaract.li/media/cache/rotary_website_content_grid_images/rc/ecc7h1O7/648d8637e4885.jpeg",
+  "https://rotaract.li/media/cache/rotary_website_content_grid_images/rc/m3IV68hy/63a35991313f3.jpg",
+  "https://rotaract.li/media/cache/rotary_website_content_grid_images/rc/COlemsO0/635447cff08ea.jpg",
+  "https://rotaract.li/media/cache/rotary_website_content_grid_images/rc/7PZhcJni/6354444a0001b.jpg",
+]
 
 [[clubs]]
 id = "fribourg"
@@ -189,6 +288,16 @@ name = "Rotaract Fribourg"
 base_url = "https://fribourg.rotaract.ch"
 lang = "fr"
 city = "Fribourg"
+instagram = "https://www.instagram.com/rotaract_fribourg/"
+about = "Le Rotaract Club Fribourg-Freiburg, fondé en 2015 et parrainé par le Rotary Club Fribourg-Cité."
+partners = [
+  { name = "Rotary Club Fribourg-Cité", url = "https://fribourg-cite.rotary1990.ch", note = "Club parrain" },
+]
+photos = [
+  "https://fribourg.rotaract.ch/media/cache/cloudtec_block_image_full/689f410349118.jpeg",
+  "https://fribourg.rotaract.ch/media/cache/rotary_website_content_detail_image/689f4178787d2.jpeg",
+  "https://fribourg.rotaract.ch/media/cache/rotary_website_content_detail_image/a3d8ead4309ea490456e1128460638462fcd93361610379160.jpg",
+]
 
 [[clubs]]
 id = "geneve-international"
@@ -200,6 +309,18 @@ name = "Rotaract Genève International"
 base_url = "https://geneve-international.rotaract.ch"
 lang = "fr"
 city = "Genève"
+instagram = "https://www.instagram.com/rotaractgeneveinternational/"
+linkedin = "https://www.linkedin.com/company/rotaractgeneveinternational/"
+about = "Des jeunes à Genève qui cherchent des solutions aux grands défis du monde, développent leur leadership et rencontrent des personnes de toutes cultures. Le club travaille en anglais."
+partners = [
+  { name = "Rotary Club Genève International", url = "https://rc-geneve-international.org/en/", note = "Club parrain" },
+]
+photos = [
+  "https://geneve-international.rotaract.ch/media/cache/rotary_website_photo_gallery_preview/61a8a5075101b.jpg",
+  "https://geneve-international.rotaract.ch/media/cache/rotary_website_photo_gallery_preview/6151861d36a05.jpeg",
+  "https://geneve-international.rotaract.ch/media/cache/rotary_website_photo_gallery_preview/610d3c9727a8e.jpg",
+  "https://geneve-international.rotaract.ch/media/cache/rotary_website_photo_gallery_preview/610d068320e11.jpg",
+]
 
 [[clubs]]
 id = "ticino"
@@ -211,6 +332,21 @@ name = "Rotaract Ticino"
 base_url = "https://rotaract-ticino.ch"
 lang = "it"
 city = "Lugano"
+instagram = "https://www.instagram.com/rotaract_ticino/"
+about = "Giovani tra i 18 e i 30 anni che si impegnano di persona per aiutare il prossimo, crescere e stringere amicizie, anche a livello internazionale."
+partners = [
+  { name = "Rotary Club Lugano", url = "http://lugano.rotary1980.ch" },
+  { name = "Rotary Club Lugano Lago", url = "http://lugano-lago.rotary1980.ch" },
+  { name = "Rotary Club Bellinzona", url = "https://rotarybellinzona.ch/it/" },
+  { name = "Rotary Club Mendrisiotto", url = "https://rotary-mendrisiotto.ch/it/" },
+  { name = "Rotary Club Locarno", url = "https://rotarylocarno.ch/it/" },
+]
+photos = [
+  "https://rotaract-ticino.ch/media/cache/rotary_website_content_grid_images/rc/1hG1kOb2/3d8091a54ffd242cbc6fe527352df45ce46f33b11610379157.jpg?v=1.5.16",
+  "https://rotaract-ticino.ch/media/cache/rotary_website_content_grid_images/rc/CRxbuH3P/8e22d731127977eb2858f68dd93f084560a83cef1610379157.jpg?v=1.5.16",
+  "https://rotaract-ticino.ch/media/cache/rotary_website_content_grid_images/rc/KlcnMBNE/97851463be307dd41cf24118aedd3d3a0430bfab1610379159.jpg?v=1.5.16",
+  "https://rotaract-ticino.ch/media/cache/rotary_website_content_grid_images/rc/OblS7LMB/0e5e31067bb59af18ceb4c021073a839066cfe331610379157.jpg?v=1.5.16",
+]
 
 [[clubs]]
 id = "schweiz"
@@ -223,6 +359,9 @@ base_url = "https://rotaract.ch"
 lang = "de"
 city = "Bern"
 
+instagram = "https://www.instagram.com/rotaractswitzerland/"
+linkedin = "https://www.linkedin.com/company/rotaract-switzerland-liechtenstein/"
+about = "Das nationale Komitee der Rotaract Clubs in der Schweiz und in Liechtenstein."
 
 # International events: Rotaract Europe's calendar (REM, EUCO, pre- and post-trips), read from its site's own events API,
 # plus the [[events]] below. Shown like a club, so people can follow it and subscribe to international.ics.
