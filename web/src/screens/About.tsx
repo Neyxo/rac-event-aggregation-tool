@@ -64,7 +64,7 @@ function usePhase(track: RefObject<HTMLDivElement | null>, ready: boolean): Phas
     // mounted with the data at hand (navigated here): this runs before App scrolls to the top (or back to where it was), so measure at
     // that position, not at the previous screen's, or a word flashes open and closes again
     onScroll(readyAtMount.current ? scrollTarget(nav) : undefined);
-    // as the old page: everything open at first, the next phase change takes over again
+    // reduced motion: everything open at first (no scroll-driven reveal); the next phase change takes over again
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPhase(ph => ({ ...ph, all: true }));
     return () => {
       removeEventListener("scroll", tick);
@@ -95,7 +95,7 @@ function Stage({ ready, phase }: { ready: boolean; phase: Phase }) {
           </div>
         ))}
       </div>
-      <div className="hint" aria-hidden="true"><span data-t="scroll">{t("scroll")}</span><i>⌄</i></div>
+      <div className="hint" aria-hidden="true"><span>{t("scroll")}</span><i>⌄</i></div>
     </div>
   );
 }
@@ -107,7 +107,7 @@ export default function About(_props: ScreenProps) {
   useStickyHeads();
   const track = useRef<HTMLDivElement>(null);
   const phase = usePhase(track, ready);
-  // the old page replaced the whole main with the offline note
+  // events.json failed: the offline note in place of the screen
   if (error) return <main className="wrap about" id="main"><LoadError /></main>;
   return (
     <main className="wrap about" id="main">
@@ -115,12 +115,12 @@ export default function About(_props: ScreenProps) {
         <Stage ready={ready} phase={phase} />
       </div>
       <section className="after">
-        <h2 data-t="ab_people">{t("ab_people")}</h2>
-        <p className="lead" data-t="ab_people_t">{ready ? t("ab_people_t", { n: nClubs() }) : t("ab_people_t")}</p>
+        <h2>{t("ab_people")}</h2>
+        <p className="lead">{ready ? t("ab_people_t", { n: nClubs() }) : t("ab_people_t")}</p>
         <div id="cta">{ready && !D.clubs[D.settings.home] && <CtaBlock />}</div>
-        <h3 className="sh" data-t="read_on">{t("read_on")}</h3>
+        <h3 className="sh">{t("read_on")}</h3>
         <div id="more">{ready && <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />}</div>
-        <h3 className="sh" data-t="faq">{t("faq")}</h3>
+        <h3 className="sh">{t("faq")}</h3>
         <div className="qa" id="qa"><QaList items={QA.map(i => [t(`ab_q${i}`), t(`ab_a${i}`)])} /></div>
         <div id="foot">{ready && <Footer />}</div>
       </section>

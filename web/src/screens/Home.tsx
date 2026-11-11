@@ -1,9 +1,9 @@
-// Home (old index.html + app.js): for a member, a personal overview (greeting, next event, what changed, deadlines, saved) above the
+// Home: for a member, a personal overview (greeting, next event, what changed, deadlines, saved) above the
 // upcoming events of their clubs; for a guest, "explore mode" (an invitation, the club finder, events near them). The welcome steps
 // (onboarding dialog) open from ?welcome, from "Get started", or on the first start of the installed app.
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { t } from "../i18n";
-import { club, D, freshNews, isRac, myClubs, saveSettings } from "../lib/data";
+import { club, freshNews, isRac, myClubs, setSettings } from "../lib/data";
 import { clubVars, vars } from "../lib/color";
 import { dayN, isPast } from "../lib/dates";
 import { devFlag } from "../lib/dev";
@@ -15,8 +15,8 @@ import { href, takeWelcome } from "../lib/route";
 import { here, store } from "../lib/store";
 import type { Club, Event, Settings } from "../lib/types";
 import {
-  ClubChip, ClubChips, ClubMark, CtaBlock, GoogleLink, HelpLinks, Icon, LoadError, NewsStrip, NextUp, PillarPic,
-  inPageLink, navigate, toast, useData, useNav, useRerender, useStickyHeads, useStored, useWash,
+  ClubChip, ClubChips, ClubMark, CtaBlock, GoogleLink, HelpLinks, Icon, LoadError, NewIds, NewsStrip, NextUp, PillarPic,
+  inPageLink, navigate, toast, useData, useNav, useStickyHeads, useStored, useWash,
 } from "../components";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views } from "./EventList";
@@ -33,7 +33,8 @@ if (typeof window !== "undefined") {
 const standalone = () => matchMedia("(display-mode: standalone)").matches || !!(navigator as { standalone?: boolean }).standalone;
 
 /** my clubs' upcoming events */
-const mineEvents = (mine: string[]): Event[] => D.data.events.filter(e => e.clubs.some(c => mine.includes(c)) && !isPast(e));
+const mineEvents = (events: Event[], mine: string[]): Event[] => events.filter(e => e.clubs.some(c => mine.includes(c)) && !isPast(e));
+const NOTHING_NEW: ReadonlySet<string> = new Set();
 const dLabel = (n: number) => n === 0 ? t("today") : n === 1 ? t("tomorrow") : t("d_short", { n });
 
 // ---------- the member overview
@@ -76,6 +77,7 @@ function News({ changes }: { changes: Changes }) {
 
 /** deadlines within three weeks, and the saved events (any club) */
 function Panes({ mineEv }: { mineEv: Event[] }) {
+  const { D } = useData();
   const open = mineEv.filter(e => e.deadline && dayN(e.deadline) >= 0 && dayN(e.deadline) <= 21);
   const deadlines = open.sort((a, b) => a.deadline.localeCompare(b.deadline)).slice(0, 3);
   const saved = D.data.events.filter(e => !isPast(e) && D.saved.has(e.id)).slice(0, 3);
@@ -196,6 +198,7 @@ function Slide({ step, title }: { step: number; title: ReactNode }) {
 /** One step of the welcome. A member: welcome, clubs, calendar, install (4). A guest: welcome, three slides, clubs near, install (6). */
 function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void; finish: (s: Settings) => void; h2: RefObject<HTMLHeadingElement | null> }) {
   const { s, member, step, guess } = ob;
+  const { D } = useData();
   const toggleAlso = (id: string) => set({ s: { ...s, also: s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id] } });
   const title = (text: string) => <h2 id="obTitle" tabIndex={-1} ref={h2}>{text}</h2>;
   if (step === 0) {
@@ -281,15 +284,16 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
   );
 }
 
-/** The welcome dialog. It is always in the page (as in the old HTML); run > 0 (re)starts it. Its content stays after it closed. */
+/** The welcome dialog. It stays mounted, so its content stays while it closes; run > 0 (re)starts it. */
 function Onboarding({ run, onFinish }: { run: number; onFinish: () => void }) {
+  const { D } = useData();
   const dlg = useRef<HTMLDialogElement>(null);
   const h2 = useRef<HTMLHeadingElement>(null);
   const [ob, setOb] = useState<Ob | null>(null);
   useEffect(() => {
     if (run) setOb({ s: { home: D.settings.home, also: [...D.settings.also] }, member: null, step: 0, guess: [] });
   }, [run]);
-  // every step (and every chip tap, as before) puts the focus on the title, so a screen reader reads where it is
+  // every step (and every chip tap) puts the focus on the title, so a screen reader reads where it is
   useEffect(() => {
     const d = dlg.current;
     if (!ob || !d || ob.done) return;
@@ -297,8 +301,7 @@ function Onboarding({ run, onFinish }: { run: number; onFinish: () => void }) {
     h2.current?.focus();
   }, [ob]);
   const finish = (s: Settings) => {
-    D.settings = s;
-    saveSettings();
+    setSettings(s);
     store.set("rac.onboarded", true);
     setOb(o => o && { ...o, done: true });
     dlg.current?.close();
@@ -325,7 +328,7 @@ function Bar({ n, step }: { n: number; step: number }) {
 
 // ---------- the screen
 
-/** A new navigation to Home (its tab from #/?view=saved, back/forward) starts over from the URL, as loading index.html did; App only
+/** A new navigation to Home (its tab from #/?view=saved, back/forward) starts over from the URL; App only
  *  remounts a screen when the route name changes. */
 export default function Home({ route }: ScreenProps) {
   // a filter link only redirects (to Discover), once: no new key for the navigation that redirect makes
@@ -334,15 +337,14 @@ export default function Home({ route }: ScreenProps) {
 }
 
 function HomeScreen({ route }: ScreenProps) {
-  const { ready, error } = useData();
-  const rerender = useRerender();
+  const { ready, error, D } = useData();
   // a shared link with filters is about all of Rotaract, not "my clubs": Discover has the UI for it
   const [toDiscover] = useState(() => isFilterLink(route.query));
   const mine = ready ? myClubs() : [];
   const member = mine.length > 0;
   const api = useFilters(ready && !toDiscover, route.query, "home", f => member ? f : { ...f, center: here.get() });
   const [obRun, setObRun] = useState(0);
-  // a guest's list title is only decided in the "upcoming" view; the saved view keeps the last one (as the old page did)
+  // a guest's list title is only decided in the "upcoming" view; the saved view keeps the last one, so it doesn't flip to a generic title
   const guestTitle = useRef<"v_all" | "explore_near" | "home_soon">("v_all");
   useStickyHeads();
 
@@ -357,23 +359,18 @@ function HomeScreen({ route }: ScreenProps) {
 
   // what changed since the last visit: computed once per set of clubs (store writes below would change the answer for a redraw)
   const mineKey = mine.join();
-  const changes = useMemo(() => member ? whatChanged(mineEvents(mine), store.get("rac.seen", null), store.get("rac.seenPrev", null), Date.now(), !!devFlag("New")) : null, [mineKey]);
+  const changes = useMemo(() => member ? whatChanged(mineEvents(D.data.events, mine), store.get("rac.seen", null), store.get("rac.seenPrev", null), Date.now(), !!devFlag("New")) : null, [mineKey]);
   useEffect(() => {
     if (changes?.seenPrev) store.set("rac.seenPrev", changes.seenPrev);
     if (changes?.seen) store.set("rac.seen", changes.seen);
   }, [changes]);
-  // the cards read it for their NEW tag; set before they render, and emptied once they are in the DOM, so the cards of the next screen
-  // (Discover, Calendar, a club) have no tag, as on the old pages
-  D.newIds = changes?.newIds ?? new Set();
-  useLayoutEffect(() => { D.newIds = new Set(); });
-
-  const mineEv = member ? mineEvents(mine) : [];
+  const mineEv = member ? mineEvents(D.data.events, mine) : [];
   const main = D.settings.home || mine[0] || "";
   const cols = member ? [main, ...mine.filter(id => id !== main)] : [];
   useWash(...cols.slice(0, 3).map(id => club(id).color), member && "#d41367", member && "#0067c8");
 
   if (error) {
-    return <><StaleBanner ready={false} /><main className="wrap" id="main"><LoadError /></main><Onboarding run={0} onFinish={rerender} /></>;
+    return <><StaleBanner ready={false} /><main className="wrap" id="main"><LoadError /></main></>;
   }
   const news = member ? mine.flatMap(id => freshNews(club(id))).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4) : [];
   const f = api.shown;
@@ -381,12 +378,11 @@ function HomeScreen({ route }: ScreenProps) {
   const res = f ? selectEvents(D.data.events, f, { page: "home", mine, saved: D.saved, skip, scope: scopeClubs("home", mine), club }) : null;
   if (res?.title) guestTitle.current = res.title;
   const title = !ready ? t("v_all") : member ? t("home_soon") : t(guestTitle.current);
-  const afterOb = () => {
-    rerender();
-    api.draw();
-  };
+  // the new clubs are in the state already (setSettings re-rendered this screen); the list follows on the next draw
+  const afterOb = () => api.draw();
+  // the cards tag the events new since the last visit, here only: Discover, Calendar or a club screen tag nothing
   return (
-    <>
+    <NewIds.Provider value={changes?.newIds ?? NOTHING_NEW}>
       <StaleBanner ready={ready} />
       <main className="wrap" id="main">
         <div className="home" id="home">
@@ -396,12 +392,12 @@ function HomeScreen({ route }: ScreenProps) {
         {/* in the main flow next to the list title, not in a wrapper: the heading then stays stuck until the title pushes it */}
         {news.length ? <h3 className="sh hn">{t("news")}</h3> : null}
         {news.length ? <NewsStrip items={news} className="strip teasers hn" /> : null}
-        <ListHead titleId="listTitle" titleKey="v_all" title={title} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
+        <ListHead titleId="listTitle" title={title} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
         <Views views={["all", "saved"]} pressed={api.inited ? api.live.view : undefined} onPick={api.setView} />
-        <Results res={res} view={f?.view ?? "all"} onClear={api.clear} onStar={rerender} />
+        <Results res={res} view={f?.view ?? "all"} onClear={api.clear} />
         <Foot ready={ready} />
       </main>
       <Onboarding run={obRun} onFinish={afterOb} />
-    </>
+    </NewIds.Provider>
   );
 }

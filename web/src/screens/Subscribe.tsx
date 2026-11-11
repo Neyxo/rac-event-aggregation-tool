@@ -1,5 +1,5 @@
-// Subscribe (old subscribe.html): how to subscribe per platform, the all-clubs feed, one feed per club (by district, then the
-// international and Rotary pseudo-clubs), questions. data-t attributes are kept from the old page so the DOM stays identical.
+// Subscribe: how to subscribe per platform, the all-clubs feed, one feed per club (by district, then the international and Rotary
+// pseudo-clubs), questions.
 import { t, tx, type StrKey } from "../i18n";
 import { isPast } from "../lib/dates";
 import { clubVars } from "../lib/color";
@@ -64,8 +64,8 @@ export default function Subscribe(_props: ScreenProps) {
   return (
     <main className="wrap" id="main">
       <section className="card">
-        <h2 data-t="sub_title">{t("sub_title")}</h2>
-        <p data-t="sp_intro">{t("sp_intro")}</p>
+        <h2>{t("sub_title")}</h2>
+        <p>{t("sp_intro")}</p>
         <div className="how" id="how">
           {PLATFORMS.map(([h, steps]) => (
             <details key={h}>
@@ -76,15 +76,15 @@ export default function Subscribe(_props: ScreenProps) {
         </div>
       </section>
       <section className="card" id="all">
-        <h2 data-t="sp_all">{t("sp_all")}</h2>
-        <p data-t="sp_all_text">{t("sp_all_text")}</p>
+        <h2>{t("sp_all")}</h2>
+        <p>{t("sp_all_text")}</p>
         <div className="feeds" id="feedAll">
           {ready && <FeedRow c={{ name: t("sp_all_feed") }} file="all.ics" count={total} />}
         </div>
       </section>
       <section className="card">
-        <h2 data-t="sp_club">{t("sp_club")}</h2>
-        <p data-t="sp_club_text">{t("sp_club_text")}</p>
+        <h2>{t("sp_club")}</h2>
+        <p>{t("sp_club_text")}</p>
         <div className="feeds" id="feeds">
           {ready && districts.map(([d, k]) => <FeedGroup key={d} name={t(k)} clubs={inDistrict(d)} upcomingBy={upcomingBy} />)}
           {ready && <FeedGroup name={tx("intl").h} clubs={ofSource("international")} upcomingBy={upcomingBy} />}
@@ -93,7 +93,7 @@ export default function Subscribe(_props: ScreenProps) {
         </div>
       </section>
       <section className="card">
-        <h2 data-t="faq">{t("faq")}</h2>
+        <h2>{t("faq")}</h2>
         <div className="qa" id="qa"><QaList items={tx("sub_qa")} /></div>
       </section>
       <div id="foot">{ready && <Footer />}</div>

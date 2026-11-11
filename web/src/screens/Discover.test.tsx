@@ -2,7 +2,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { initData, loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { useRoute } from "../components";
 import Discover from "./Discover";
@@ -17,8 +17,9 @@ beforeAll(async () => {
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-11T10:00"));
-  D.saved = new Set();
-  D.settings = { home: "luzern", also: [] };
+  localStorage.clear();
+  initData(fixture);
+  setSettings({ home: "luzern", also: [] });
 });
 afterEach(() => {
   cleanup();
@@ -46,7 +47,6 @@ describe("Discover", () => {
     expect($("#fcount").hidden).toBe(true);
     expect($("#fcount").textContent).toBe("0");
     expect([...document.querySelectorAll("#views button")].map(b => b.getAttribute("aria-pressed"))).toEqual(["true", "false", "false", "false"]);
-    expect(document.querySelector("dialog#ob .ob-in#obBody")).not.toBeNull();
     expect($("#foot .meta a").getAttribute("href")).toBe("#/public");
   });
 
@@ -127,13 +127,13 @@ describe("Discover", () => {
     const getCurrentPosition = vi.fn((ok: PositionCallback) => ok({ coords: { latitude: 47.05, longitude: 8.3 } } as GeolocationPosition));
     vi.stubGlobal("navigator", { ...navigator, geolocation: { getCurrentPosition } });
     await show();
-    fireEvent.click($("#views [data-view=near]"));
+    fireEvent.click($("#views button:nth-child(2)"));
     expect(getCurrentPosition).toHaveBeenCalled();
     expect($("#placeHint").textContent).toBe("📍 Your location");
     expect($("#summary").textContent).toContain("within 25 km of you");
-    fireEvent.click($("#views [data-view=saved]"));
+    fireEvent.click($("#views button:nth-child(3)"));
     expect($("#results .empty").textContent).toContain("Nothing saved yet.");
-    fireEvent.click($("#views [data-view=past]"));
+    fireEvent.click($("#views button:nth-child(4)"));
     expect(ids()).toEqual(["179502", "179501"]);  // Luzern's, most recent first
     expect(location.hash).toBe("#/discover?r=25&view=past");
   });

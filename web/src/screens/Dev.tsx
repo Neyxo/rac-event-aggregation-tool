@@ -1,6 +1,5 @@
-// The developer screen (old dev.html): reached from the Dev button in the top bar once developer mode is on (Settings, ten taps on
-// "made by"). English only, like the old page. Every text node is one template string: the old page built each text in one piece,
-// and React would otherwise split "a" + {b} into several text nodes.
+// The developer screen: reached from the Dev button in the top bar once developer mode is on (Settings, ten taps on "made by").
+// English only: it is for the people who run the app.
 import { useEffect, useState, type ReactNode } from "react";
 import { I18N } from "../i18n";
 import { club } from "../lib/data";
@@ -65,8 +64,8 @@ function Fold({ title, items }: { title: string; items: ReactNode[] }) {
   if (!items.length) return <p className="devok">{`✓ ${title}: none`}</p>;
   return <details><summary>{`${title} (${items.length})`}</summary><div className="devlist">{items}</div></details>;
 }
-/** ClubChip for a club object: the Rotary districts are not in D.clubs while their layer is off, and putting them there (as the old
- *  page did) would leak into the other screens of this one-page app */
+/** ClubChip for a club object: the Rotary districts are not among the clubs while their layer is off, and adding them there would
+ *  leak them into the other screens */
 function Chip({ c }: { c: Club }) {
   return <a className="chip club " href={href("club", c.id)} style={clubVars(c.color)} aria-label={c.name}><ClubMark c={c} />{c.short}</a>;
 }
@@ -280,9 +279,9 @@ export default function Dev(_props: ScreenProps) {
   const own = D.data.events.filter(e => e.layer !== "rotary");
   const up = own.filter(e => !isPast(e));
   const rot = D.rotary;
-  // the old page filled everything after events.json and status.json; the same order, so nothing jumps
+  // the sections fill once both events.json and status.json are in, so nothing jumps
   const go = ready && st;
-  // events.json failed: the old loadData() replaced everything in main with the offline message
+  // events.json failed: the offline note in place of the screen
   if (error) return <main className="wrap settings dev" id="main"><LoadError /></main>;
   return (
     <main className="wrap settings dev" id="main">

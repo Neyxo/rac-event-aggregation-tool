@@ -1,4 +1,4 @@
-// UI strings. The language is picked once per page load, like pickLang() in the old i18n.js:
+// UI strings. The language is picked once per page load:
 // ?lang=, then the saved choice (rac.lang), then the device language, English otherwise.
 import en, { type Messages, type Pair } from "./en";
 import de from "./de";
@@ -40,7 +40,7 @@ export function tx<K extends DataKey>(key: K): Messages[K] { return M[key]; }
 
 export function nEvents(n: number): string { return n === 1 ? t("one_event") : t("n_events", { n }); }
 
-/** Saves the choice and reloads without ?lang= (the language is read once per load, like before). */
+/** Saves the choice and reloads without ?lang= (the language is read once per load: every module reads its texts at start). */
 export function setLang(l: Lang): void {
   try { localStorage.setItem("rac.lang", JSON.stringify(l)); } catch { /* private mode */ }
   const u = new URL(location.href); u.searchParams.delete("lang");

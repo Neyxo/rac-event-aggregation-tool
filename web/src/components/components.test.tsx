@@ -3,8 +3,8 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
-import { D, loadData } from "../lib/data";
-import { ClubChip, ClubChips, ClubTiles, CtaBlock, EventCard, Footer, HelpLinks, NewsStrip, NextUp, Popup, QaList, Rich, Tabs, TopBar, Toast, toast } from ".";
+import { getData, loadData, setSettings } from "../lib/data";
+import { ClubChip, ClubChips, ClubTiles, CtaBlock, EventCard, NewIds, Footer, HelpLinks, NewsStrip, NextUp, Popup, QaList, Rich, Tabs, TopBar, Toast, toast } from ".";
 
 beforeAll(async () => {
   vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, json: async () => structuredClone(fixture) })));
@@ -52,13 +52,16 @@ describe("event card", () => {
     expect(a.querySelector(".side .star")?.getAttribute("aria-pressed")).toBe("false");
     expect(a.querySelector(".side img.thumb")?.getAttribute("referrerpolicy")).toBe("no-referrer");
   });
-  it("the star saves and says so", () => {
-    render(<><EventCard e={ev({ id: "s" })} /><Toast /></>);
-    const star = document.querySelector(".star")!;
-    fireEvent.click(star);
-    expect(star.getAttribute("aria-pressed")).toBe("true");
-    expect(D.saved.has("s")).toBe(true);
+  it("the star saves and says so; every star of the event follows", () => {
+    render(<><EventCard e={ev({ id: "s" })} /><EventCard e={ev({ id: "s" })} /><Toast /></>);
+    const [star, twin] = [...document.querySelectorAll(".star")];
+    fireEvent.click(star!);
+    expect(star!.getAttribute("aria-pressed")).toBe("true");
+    expect(twin!.getAttribute("aria-pressed")).toBe("true");
+    expect(getData().saved.has("s")).toBe(true);
     expect(document.querySelector("#toast")?.className).toBe("toast show");
+    fireEvent.click(twin!);
+    expect(star!.getAttribute("aria-pressed")).toBe("false");
   });
 });
 
@@ -67,9 +70,9 @@ const kids = (n: Element | null | undefined) => [...(n?.children ?? [])].map(c =
 describe("structure", () => {
   it("event card", () => {
     vi.useFakeTimers(); vi.setSystemTime(new Date("2026-11-10T12:00"));
-    D.newIds = new Set(["c"]);
-    const { container } = render(<EventCard e={ev({ id: "c", clubs: ["luzern"], cancelled: true, image: "p.jpg", organiser: "RC X", location: "Bern, Hotel" })} i={3} />);
-    vi.useRealTimers(); D.newIds = new Set();
+    const card = <EventCard e={ev({ id: "c", clubs: ["luzern"], cancelled: true, image: "p.jpg", organiser: "RC X", location: "Bern, Hotel" })} i={3} />;
+    const { container } = render(<NewIds.Provider value={new Set(["c"])}>{card}</NewIds.Provider>);
+    vi.useRealTimers();
     const a = container.querySelector(":scope > a.event.cancelled")!;
     expect(kids(a)).toEqual(["img.wm", "div.date.glass", "div.body", "div.side"]);
     expect(a.querySelector(":scope > img.wm")?.getAttribute("aria-hidden")).toBe("true");
@@ -115,14 +118,14 @@ describe("structure", () => {
   });
   it("call to action", () => {
     vi.useFakeTimers(); vi.setSystemTime(new Date("2026-11-10T12:00"));
-    D.settings = { home: "luzern", also: [] };
+    setSettings({ home: "luzern", also: [] });
     const { container, unmount } = render(<CtaBlock />);
     vi.useRealTimers();
     const c = container.querySelector(":scope > div.cta.glass")!;
     expect(kids(c)).toEqual(["div.k", "div.rc"]);
     expect(kids(c.querySelector(".rc"))).toEqual(["img", "div", "a.go"]);
     expect(kids(c.querySelector(".rc > div"))).toEqual(["b", "span"]);
-    unmount(); D.settings = { home: "", also: [] };
+    unmount(); setSettings({ home: "", also: [] });
     const g = render(<CtaBlock />).container.querySelector(":scope > div.cta.glass.new")!;
     expect(kids(g)).toEqual(["div.k", "div.find", "div.hint", "div.near"]);
     expect(kids(g.querySelector(".find"))).toEqual(["input.in", "button.go"]);
@@ -155,7 +158,7 @@ describe("structure", () => {
     expect(one!.firstElementChild?.getAttribute("aria-checked")).toBe("false");
     expect(kids(one!.firstElementChild)).toEqual(["b"]);
     const bern = one!.querySelector('[aria-checked="true"]')!;
-    expect(bern.getAttribute("role")).toBe("radio"); expect(kids(bern)).toEqual(["img", "b", "span"]); expect(bern.querySelector("span")?.textContent).toBe("D" + D.clubs.bern!.district);
+    expect(bern.getAttribute("role")).toBe("radio"); expect(kids(bern)).toEqual(["img", "b", "span"]); expect(bern.querySelector("span")?.textContent).toBe("D" + getData().clubs.bern!.district);
     expect([...one!.querySelectorAll(".tile")].some(b => b.textContent?.includes("International"))).toBe(false);
     expect(many!.querySelector(".tile")?.getAttribute("role")).toBe("checkbox");
     expect([...many!.querySelectorAll(".tile b")].map(b => b.textContent)).not.toContain("Luzern");
@@ -201,16 +204,16 @@ describe("blocks", () => {
     expect(container.querySelector(".rich ul.pts li span")?.textContent).toBe("one");
   });
   it("call to action for a guest", () => {
-    D.settings = { home: "", also: [] };
+    setSettings({ home: "", also: [] });
     const { container } = render(<CtaBlock />);
     expect(container.querySelector(".cta.glass.new .find input.in")).not.toBeNull();
     expect(container.querySelector(".near button.linkbtn")?.textContent).toMatch(/^📍 /);
   });
   it("call to action with a main club", () => {
-    D.settings = { home: "bern", also: [] };
+    setSettings({ home: "bern", also: [] });
     const { container } = render(<CtaBlock />);
     expect(container.querySelector(".cta.glass .rc b")?.textContent).toBe("Rotaract Bern");
-    D.settings = { home: "", also: [] };
+    setSettings({ home: "", also: [] });
   });
   it("popup renders into body with title and Done", () => {
     const close = vi.fn();

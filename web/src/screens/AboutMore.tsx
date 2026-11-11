@@ -47,25 +47,25 @@ export default function AboutMore(_props: ScreenProps) {
     return drawMaps(swiss.current!, world.current!, D.data.clubs);
   }, [ready]);
 
-  // the old page replaced the whole of main
+  // events.json failed: the offline note in place of the screen (the maps need the clubs)
   if (error) return <main className="wrap more"><LoadError /></main>;
   return (
     <main className="wrap more">
-      <h1 data-t="ab_more">{t("ab_more")}</h1>
+      <h1>{t("ab_more")}</h1>
       <section className="vis" id="rotary">
         {/* a club photo, not a cropped event poster */}
         {ready ? <PillarPic k="help" className="bg" /> : <img className="bg" alt="" referrerPolicy="no-referrer" />}
         <div className="pane">
           <img className="wheel" src="rotaract.svg" alt="Rotaract" />
-          <b data-t="sp_rotary">{t("sp_rotary")}</b>
-          <span data-t="sp_rotary_t">{t("sp_rotary_t")}</span>
+          <b>{t("sp_rotary")}</b>
+          <span>{t("sp_rotary_t")}</span>
         </div>
       </section>
       <section className="vis map">
         <div className="bg" id="swiss" ref={swiss} />
         <div className="pane">
-          <b data-t="sp_dist">{ready ? t("sp_dist", { n: nClubs() }) : t("sp_dist")}</b>
-          <span data-t="sp_dist_t">{t("sp_dist_t")}</span>
+          <b>{ready ? t("sp_dist", { n: nClubs() }) : t("sp_dist")}</b>
+          <span>{t("sp_dist_t")}</span>
           <div className="leg" id="leg">
             {ready && Object.entries(DISTRICT_COLOR).map(([d, c]) => <span key={d} style={{ color: c }}>{"D" + d}</span>)}
           </div>
@@ -74,8 +74,8 @@ export default function AboutMore(_props: ScreenProps) {
       <section className="vis map">
         <div className="bg" id="world" ref={world} />
         <div className="pane">
-          <b data-t="sp_world">{t("sp_world")}</b>
-          <span data-t="sp_world_t">{t("sp_world_t")}</span>
+          <b>{t("sp_world")}</b>
+          <span>{t("sp_world_t")}</span>
         </div>
       </section>
       <div id="more">{ready && <HelpLinks keys={["intl", "family", "guide"]} />}</div>

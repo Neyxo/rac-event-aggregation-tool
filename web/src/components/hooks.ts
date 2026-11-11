@@ -1,17 +1,22 @@
 // Hooks every screen can use: the data, stored values, the colour wash, the morphing hero, the sticky headings.
-import { useEffect, useLayoutEffect, useMemo, useReducer, useState, useSyncExternalStore, type RefObject } from "react";
-import { D, loadData, loaded, type AppData } from "../lib/data";
+import { useEffect, useLayoutEffect, useMemo, useState, useSyncExternalStore, type RefObject } from "react";
+import { getData, loadData, loaded, subscribeData, type AppData } from "../lib/data";
 import { store, type StoreKey, type StoreKeys } from "../lib/store";
 
-/** events.json, loaded once per session. Synchronous once loaded (no skeleton flash on back/forward).
+/** events.json and what the app derives from it (lib/data's state), loaded once per session. Synchronous once loaded (no skeleton
+ *  flash on back/forward). Re-renders whenever an action (setSettings, toggleSaved, setRotary) changes the state.
  *  Render <Skel/> while !ready and <LoadError/> on error (offline on a first visit, or the site is broken). */
 export function useData(): { ready: boolean; error: boolean; D: AppData } {
-  const [state, set] = useState<"loading" | "ready" | "error">(loaded ? "ready" : "loading");
-  useEffect(() => { if (!loaded) loadData().then(() => set("ready"), () => set("error")); }, []);
-  return { ready: state === "ready", error: state === "error", D };
+  const D = useSyncExternalStore(subscribeData, getData);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(loaded ? "ready" : "loading");
+  useEffect(() => {
+    if (status !== "ready") loadData().then(() => setStatus("ready"), () => setStatus("error"));
+  }, []);
+  return { ready: status === "ready", error: status === "error", D };
 }
-/** re-render after changing D (settings, saved events): const rerender = useRerender(); ... rerender() */
-export const useRerender = (): (() => void) => useReducer((x: number) => x + 1, 0)[1] as () => void;
+
+/** whether an event is saved; re-renders this component only when that changes (a star toggled anywhere) */
+export const useSaved = (id: string): boolean => useSyncExternalStore(subscribeData, () => getData().saved.has(id));
 
 /** a localStorage value that re-renders when store.set()/remove() changes it */
 export function useStored<K extends StoreKey, T>(k: K, d: T): StoreKeys[K] | T {

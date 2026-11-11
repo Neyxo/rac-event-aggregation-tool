@@ -4,13 +4,19 @@ import { useLayoutEffect } from "react";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
-import { D, loadData } from "../lib/data";
+import type { Event } from "../lib/types";
+import { getData, initData, loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { fmt } from "../lib/dates";
 import { t } from "../i18n";
 import Calendar from "./Calendar";
 
-const events = structuredClone(fixture.events);
+/** the fixture with more events, keeping the settings */
+const addEvents = (...more: Event[]) => {
+  const settings = getData().settings;
+  initData({ ...fixture, events: [...fixture.events, ...more] });
+  setSettings(settings);
+};
 beforeAll(async () => {
   vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, json: async () => structuredClone(fixture) })));
   await loadData();
@@ -19,8 +25,8 @@ beforeAll(async () => {
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date("2026-11-11T10:00"));
-  D.settings = { home: "luzern", also: ["zuerich"] };
-  D.data.events = structuredClone(events);
+  initData(fixture);
+  setSettings({ home: "luzern", also: ["zuerich"] });
 });
 afterEach(() => { cleanup(); vi.useRealTimers(); });
 
@@ -63,7 +69,7 @@ describe("calendar", () => {
     expect(mine!.getAttribute("aria-pressed")).toBe("false");
     expect(titles(day(c, 7))).toEqual(["Essen für Alle Volunteering 28.11"]);
     cleanup();
-    D.settings = { home: "", also: [] };
+    setSettings({ home: "", also: [] });
     const g = show();
     expect(g.querySelector("#scope")?.hasAttribute("hidden")).toBe(true);
     expect(titles(day(g, 7))).toEqual(["Essen für Alle Volunteering 28.11"]);
@@ -137,8 +143,8 @@ describe("calendar", () => {
   });
 
   it("multi-day and all-day events are on every day they touch", () => {
-    D.settings = { home: "", also: [] };
-    D.data.events.push(ev({ id: "m", title: "Weekend", start: "2026-11-20T18:00", end: "2026-11-22T12:00" }));
+    setSettings({ home: "", also: [] });
+    addEvents(ev({ id: "m", title: "Weekend", start: "2026-11-20T18:00", end: "2026-11-22T12:00" }));
     const c = show();
     expect([20, 21, 22, 23].map(n => titles(day(c, n)).includes("Weekend"))).toEqual([true, true, true, false]);
     fireEvent.click(c.querySelector("#next")!);
@@ -169,8 +175,8 @@ describe("fit", () => {
   });
 
   it("gives a day 3, 2, 1 title lines, then hides events from the end with +n; again on resize", () => {
-    D.settings = { home: "", also: [] };
-    for (const id of ["a", "b", "c"]) D.data.events.push(ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" }));
+    setSettings({ home: "", also: [] });
+    addEvents(...["a", "b", "c"].map(id => ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" })));
     const c = show();
     const cell = day(c, 19);
     const more = cell.querySelector<HTMLElement>(".more")!;
@@ -194,8 +200,8 @@ describe("fit", () => {
   });
 
   it("fits again once App has made body the full-height calpage column (its layout effect runs after the screen's)", async () => {
-    D.settings = { home: "", also: [] };
-    for (const id of ["a", "b", "c"]) D.data.events.push(ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" }));
+    setSettings({ home: "", also: [] });
+    addEvents(...["a", "b", "c"].map(id => ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" })));
     const tall = H;
     Object.defineProperty(HTMLElement.prototype, "clientHeight", { configurable: true, get(this: HTMLElement) { return this.classList.contains("day") ? (document.body.classList.contains("calpage") ? 70 : tall) : 0; } });
     function Shell() {  // as App: the body class in a parent layout effect

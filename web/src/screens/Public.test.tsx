@@ -19,10 +19,10 @@ describe("Public", () => {
     expect(all("#pubH > .ic > svg, #dataH > .ic > svg")).toHaveLength(2);
     expect(all("#no > li").length).toBeGreaterThan(2);
     expect(all("#data > li").length).toBeGreaterThan(2);
-    expect(all("h2.sh.lv1").map(h => h.dataset.t)).toEqual(["app_know_h", "faq"]);
+    expect(all("h2.sh.lv1").map(h => h.textContent)).toEqual(["Good to know", "Questions"]);
     expect(all("#more > a.more")[0]!.getAttribute("href")).toBe("#/subscribe");
     expect(all("#foot footer a")[0]!.getAttribute("href")).toBe("https://github.com/Neyxo/rac-event-aggregation-tool");
-    expect(all("p.fine a[data-t=report]")[0]!.getAttribute("target")).toBe("_blank");
+    expect(all("p.fine a")[0]!.getAttribute("target")).toBe("_blank");
   });
 
   it("puts the why-scrape answer first in the questions, all in one accordion", () => {

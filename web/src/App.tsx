@@ -1,6 +1,6 @@
 /*
- * The app shell: one page, hash routes (#/, #/discover?..., #/event/<id> ...), the same DOM and class names as the multi-page site it replaced, so
- * app.css (copied unchanged, plus #root { display: contents }) draws it exactly as before.
+ * The app shell: one page, hash routes (#/, #/discover?..., #/event/<id> ...). #root is display: contents (app.css), so header#top,
+ * the screen's main and nav#tabs are styled as children of body.
  *
  * Rendered here, in body order: #frost, the skip link (home/discover/calendar), header#top (TopBar), the screen, nav#tabs (Tabs), #toast.
  * Per route (ROUTE_META below) App sets body[data-page], the body classes calpage / frosted, the default document.title, the active
@@ -12,10 +12,11 @@
  * - Render what sits between </header> and <nav>: usually <main className="..." id="main">, plus siblings such as the stale banner
  *   before main, the calendar sheet or the onboarding <dialog>.
  *   No wrapper elements: app.css has child selectors. Never render header, nav, #frost or #toast: App does.
- * - Data: const { ready, error, D } = useData(); render <Skel/>s until ready, <LoadError/> on error.
+ * - Data: const { ready, error, D } = useData(); render <Skel/>s until ready, <LoadError/> on error. D is a read-only snapshot:
  *   D.data.events / D.data.clubs / D.clubs / D.settings / D.saved, with myClubs(), club(id), isRac(), nClubs(), eventById(id) (keeps
- *   the shared-link exception for a Rotary event), saveSettings(), toggleSaved() from lib/data. After changing D call useRerender()'s
- *   function. Status for the dev screen: fetch("status.json") yourself (types: lib/types Status).
+ *   the shared-link exception for a Rotary event) from lib/data. Change it only through lib/data's actions: setSettings(s),
+ *   toggleSaved(id), setRotary(on); every component that called useData() (or useSaved(id) for one star) re-renders.
+ *   Cards tag NEW only below <NewIds.Provider> (Home). Status for the dev screen: fetch("status.json") yourself (types: lib/types Status).
  * - Logic is in lib/ (dates, filters, calendar, changes, geo, rich, pillars, color, share, route) with tests; reuse it, don't re-port.
  * - Text: t("key", vars) for strings, tx("key") for lists/pairs/nm/intl, nEvents(n), LANG, LOCALE (i18n/index.ts). A key built at
  *   run time needs a literal type: t(`ab_${k}` as const) with k a union, or a lookup table.
@@ -27,7 +28,8 @@
  *   useTitle(text) for a title of its own; useStored(key, default) for a localStorage value that re-renders; useTopBarExtra(node) for a
  *   top-bar button (About's share). toast(msg, action?) from components/Toast; <Popup title onClose> for a popup.
  * - Share buttons: shareUrl({ event: id }), shareUrl({ club: id }) or shareUrl("about") (lib/share).
- * - Settings: setTheme() (lib/store), setLang() (i18n) and the Rotary switch reload the page as before (location.reload()).
+ * - Settings: setTheme() (lib/store) and setRotary() (lib/data) apply at once; setLang() (i18n) reloads the page (every text is
+ *   read once, at start).
  * - Map and AboutMore use Leaflet from npm: import L from "leaflet" and "leaflet/dist/leaflet.css" inside the screen (Map is lazy-loaded
  *   here, so Leaflet is only fetched there; AboutMore should import("leaflet") in an effect for the same reason).
  * - Home: takeWelcome() (lib/route) is true once when the app was opened with ?welcome.
@@ -59,13 +61,13 @@ const MapScreen = lazy(() => import("./screens/Map"));  // Leaflet only loads he
 export interface ScreenProps { route: Route }
 interface Meta {
   screen: ComponentType<ScreenProps>;
-  /** body[data-page], as on the old pages */
+  /** body[data-page] */
   page: string;
-  /** body classes of the old page ("calpage": the screen is one flex column, no page scroll) */
+  /** body classes ("calpage": the screen is one flex column, no page scroll) */
   cls?: "calpage" | "frosted";
   active: Active;
   back?: boolean;
-  /** the old page's <title>; a screen with a title of its own calls useTitle() */
+  /** the default <title>; a screen with a title of its own calls useTitle() */
   title: string;
   /** the "skip to content" link (the list pages had it) */
   skip?: boolean;

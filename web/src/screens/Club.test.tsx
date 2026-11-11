@@ -2,8 +2,9 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { D, loadData } from "../lib/data";
+import { getData, initData, loadData } from "../lib/data";
 import { parseHash } from "../lib/route";
+import type { Club as ClubT, EventsJson } from "../lib/types";
 import { Toast } from "../components";
 import Club from "./Club";
 
@@ -22,6 +23,8 @@ beforeAll(async () => {
 afterAll(() => { vi.useRealTimers(); });
 afterEach(() => { cleanup(); document.body.className = ""; document.body.removeAttribute("style"); });
 
+/** the fixture with Luzern changed */
+const withLuzern = (patch: Partial<ClubT>): EventsJson => ({ ...fixture, clubs: fixture.clubs.map(c => c.id === "luzern" ? { ...c, ...patch } : c) });
 const show = (id: string) => render(<><Club route={parseHash("#/club/" + id)} /><Toast /></>);
 
 describe("club screen", () => {
@@ -58,14 +61,13 @@ describe("club screen", () => {
   });
 
   it("a partner that is a club of this app is its club chip", () => {
-    const c = D.clubs.luzern!, before = c.partners;
-    c.partners = [{ name: "Bern", url: "club.html?id=bern" }];
+    initData(withLuzern({ partners: [{ name: "Bern", url: "club.html?id=bern" }] }));
     const { container } = show("luzern");
     const chip = container.querySelector(".with a.chip.club")!;
     expect(chip.getAttribute("href")).toBe("#/club/bern");
     expect(chip.getAttribute("aria-label")).toBe("Rotaract Bern");
     expect(chip.hasAttribute("target")).toBe(false);
-    c.partners = before;
+    initData(fixture);
   });
 
   it("How to join opens the club's text in a popup; Done closes it", () => {
@@ -126,21 +128,20 @@ describe("club screen", () => {
   });
 
   it("Instagram posts replace the photos strip when the club has them", () => {
-    const c = D.clubs.luzern!, before = c.instagram;
-    c.instagram = [{ url: "https://instagram.com/p/1", image: "https://x.invalid/1.jpg", caption: "Eins" }];
+    initData(withLuzern({ instagram: [{ url: "https://instagram.com/p/1", image: "https://x.invalid/1.jpg", caption: "Eins" }] }));
     try {
       const { container } = show("luzern");
       const a = [...container.querySelectorAll(".strip.pics a")];
       expect(a.map(x => [x.getAttribute("href"), x.getAttribute("target"), x.getAttribute("title")])).toEqual([["https://instagram.com/p/1", "_blank", "Eins"]]);
       expect(a[0]!.querySelector("img")?.getAttribute("alt")).toBe("Eins");
-    } finally { c.instagram = before; }
+    } finally { initData(fixture); }
   });
 
   it("an unknown id lists the clubs", () => {
     const { container } = show("nope");
     const main = container.querySelector("main#main")!;
     expect(main.querySelector("h1")?.textContent).toBe("Clubs");
-    expect([...main.querySelectorAll("p > a")].map(a => a.getAttribute("href"))).toEqual(D.data.clubs.map(c => "#/club/" + c.id));
+    expect([...main.querySelectorAll("p > a")].map(a => a.getAttribute("href"))).toEqual(getData().data.clubs.map(c => "#/club/" + c.id));
     expect(document.body.classList.contains("wash")).toBe(false);
   });
 });

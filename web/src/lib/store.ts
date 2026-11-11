@@ -1,5 +1,5 @@
-// localStorage, JSON-encoded, never throwing (private mode, blocked storage): the same keys and formats as the old site,
-// so people keep their clubs and settings. set() and remove() notify subscribers (useStored() re-renders on them).
+// localStorage, JSON-encoded, never throwing (private mode, blocked storage). Keys and formats never change: people's clubs,
+// saved events and settings are in them. set() and remove() notify subscribers (useStored() re-renders on them).
 import type { Seen, Settings } from "./types";
 
 export interface StoreKeys {
@@ -47,6 +47,7 @@ export const here = {
   set(c: [number, number]): void { try { sessionStorage.setItem("rac.here", JSON.stringify(c)); } catch { /* storage off */ } },
 };
 
+/** applies at once (app.css keys on <html data-theme>) and is kept for the next start (index.html's inline script reads rac.theme) */
 export function setTheme(next: "light" | "dark"): void {
   store.set("rac.theme", next);
   if (typeof document !== "undefined") document.documentElement.dataset.theme = next;

@@ -45,7 +45,7 @@ export default function Guide(_props: ScreenProps) {
   // Home stops pointing here once it has been opened
   useEffect(() => { store.set("rac.guideSeen", true); }, []);
   const home: Club | undefined = ready && D.settings.home ? D.clubs[D.settings.home] : undefined;
-  // the old page painted the wash only once the data (and so the home club) was known
+  // the wash waits for the data: its first colour is the home club's, and a late switch would flash
   useWash(ready && (home ? home.color : COL[0]), ready && COL[1], ready && COL[2]);
   useStickyHeads();
   useTitle(nm.h);
@@ -67,7 +67,7 @@ export default function Guide(_props: ScreenProps) {
           <div key={i} className="glass" style={vars({ "--p": COL[i]! })}><b>{v.replace("{n}", String(nClubs()))}</b><span>{l}</span></div>
         ))}
       </div>
-      <h2 className="sh lv1" data-t="read_on">{t("read_on")}</h2>
+      <h2 className="sh lv1">{t("read_on")}</h2>
       <div id="more"><HelpLinks keys={["words", "family", "world"]} /></div>
       <div id="foot"><Footer /></div>
     </main>

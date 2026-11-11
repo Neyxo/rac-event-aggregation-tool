@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, type RefObject } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
-import { club, D, eventById } from "../lib/data";
+import { club, eventById } from "../lib/data";
 import { clubVars } from "../lib/color";
 import { dayN, fmt, isPast, lastDay, metaLine, sameDay } from "../lib/dates";
 import { mapsUrl } from "../lib/geo";
@@ -64,6 +64,7 @@ function Hero({ src }: { src: string }) {
 
 /** className is static ("morph" included): useMorphHead toggles .on on it, and the measuring effect writes its style */
 function Head({ e, headRef }: { e: Ev; headRef: RefObject<HTMLDivElement | null> }) {
+  const { D } = useData();
   const lead = club(e.clubs[0] ?? "");
   const label = goLabel(e);
   return (
@@ -103,7 +104,7 @@ function Facts({ e }: { e: Ev }) {
 
 /** The head is a 64px sticky box whose content overflows onto the card at rest and compacts into the box as you scroll; its height
  *  never changes, so nothing below jumps. The register button is part of it: a pill in the action row at rest (.ph keeps its place
- *  there), the icon at the right once stuck. Measured once, like the old page did right after drawing. */
+ *  there), the icon at the right once stuck. Measured once, right after the first draw. */
 function useHeadLayout(head: RefObject<HTMLDivElement | null>, links: RefObject<HTMLDivElement | null>, ph: RefObject<HTMLSpanElement | null>): void {
   useLayoutEffect(() => {
     const h = head.current;
@@ -121,6 +122,7 @@ function useHeadLayout(head: RefObject<HTMLDivElement | null>, links: RefObject<
 }
 
 function Detail({ e }: { e: Ev }) {
+  const { D } = useData();
   const head = useRef<HTMLDivElement>(null);
   const links = useRef<HTMLDivElement>(null);
   const ph = useRef<HTMLSpanElement>(null);

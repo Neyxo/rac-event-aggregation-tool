@@ -38,13 +38,13 @@ function popupLink(e: Event): HTMLElement {
 
 export default function MapScreen(_props: ScreenProps) {
   const { ready, error, D } = useData();
-  // kept in the history entry, so back/forward brings it back like the old page's restored checkbox
+  // kept in the history entry, so back/forward brings it back as a browser restores a form field
   const [past, setPast] = useState(() => !!(history.state as { past?: boolean } | null)?.past);
   const [count, setCount] = useState<number | null>(null);
   const box = useRef<HTMLDivElement>(null);
   const layer = useRef<L.LayerGroup | null>(null);
 
-  // the map is up (and its tiles loading) before the events arrive, as on the old page
+  // the map is up (and its tiles loading) before the events arrive
   useEffect(() => {
     if (error) return;
     // Switzerland & Liechtenstein, no zooming out to space
@@ -71,7 +71,7 @@ export default function MapScreen(_props: ScreenProps) {
     setCount(n);
   }, [ready, past]);
 
-  // the old page replaced the whole of main, map included
+  // events.json failed: the offline note in place of the screen, map included
   if (error) return <main className="mapwrap" id="main"><LoadError /></main>;
   return (
     <main className="mapwrap" id="main">
@@ -79,7 +79,7 @@ export default function MapScreen(_props: ScreenProps) {
       <label className="icon-btn mapopt">
         <input type="checkbox" id="past" checked={past} onChange={ev => { setPast(ev.target.checked); history.replaceState({ ...(history.state as object | null), past: ev.target.checked }, ""); }} />
         {" "}
-        <span data-t="v_past">{t("v_past")}</span>
+        <span>{t("v_past")}</span>
         {" · "}
         <span id="summary">{count === null ? "" : nEvents(count)}</span>
       </label>
