@@ -1,0 +1,1371 @@
+{
+ "generated": "2026-11-11T01:58",
+ "clubs": [
+  {
+   "id": "luzern",
+   "name": "Rotaract Luzern",
+   "short": "Luzern",
+   "url": "https://rotaract-luzern.ch",
+   "color": "#0b5cad",
+   "logo": "crests/luzern.svg",
+   "district": "1980",
+   "coords": [
+    47.05473,
+    8.30089
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://rotaract-luzern.ch/de/content/news/show/29657",
+     "title": "Interkultureller Austausch im Kaukasus: Rotaractors auf Mission in Armenien",
+     "date": "2026-08-01",
+     "image": ""
+    },
+    {
+     "url": "https://rotaract-luzern.ch/de/content/news/show/25218",
+     "title": "Programm 2024",
+     "date": "2024-08-29",
+     "image": ""
+    }
+   ],
+   "projects": [],
+   "instagram": [],
+   "links": {
+    "instagram": "https://www.instagram.com/racluzern/"
+   },
+   "source": "",
+   "how": "## In drei Schritten dabei\n1. Schreib uns: Melde dich bei luzern@rotaract.ch und frag, ob du an einen Anlass kommen kannst.\n2. Komm vorbei: Als Gast kostet das nichts und verpflichtet zu nichts. Wir möchten dich an **zwei bis drei Anlässen** kennenlernen, mehr geht immer.\n3. Werde Mitglied: Aufgenommen wird an der **GV im Sommer** oder an der **Mini-GV im Januar**.\n\n## Gut zu wissen\n- Jährlicher Mitgliederbeitrag\n- Du organisierst **einen Anlass pro Jahr**\n- Nach ein bis zwei Jahren übernimmst du für ein Jahr **ein Amt im Vorstand**\n",
+   "partners": [
+    {
+     "name": "Rotary eClub Zentralschweiz",
+     "url": "https://eclubzentralschweiz.rotary1980.ch"
+    },
+    {
+     "name": "Rotary Club Luzern Wasserturm",
+     "url": "https://luzern-wasserturm.rotary1980.ch"
+    },
+    {
+     "name": "Rotaract Club Sempachersee",
+     "url": "club.html?id=sempachersee"
+    }
+   ],
+   "about": "Junge Leute aus der Region Luzern, die zusammen lernen, helfen und feiern. Gäste sind jederzeit willkommen."
+  },
+  {
+   "id": "sempachersee",
+   "name": "Rotaract Sempachersee",
+   "short": "Sempach",
+   "url": "https://rotaract-sempachersee.ch",
+   "color": "#c1121f",
+   "logo": "crests/sempachersee.svg",
+   "district": "1980",
+   "coords": [
+    47.1782,
+    8.10303
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://rotaract-sempachersee.ch/de/content/news/show/30131",
+     "title": "Besichtigung - Haus des Holzes, Sursee",
+     "date": "2026-10-18",
+     "image": ""
+    },
+    {
+     "url": "https://rotaract-sempachersee.ch/de/content/news/show/29932",
+     "title": "Rheinschwimmen in Basel",
+     "date": "2026-08-09",
+     "image": ""
+    }
+   ],
+   "projects": [],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "bern",
+   "name": "Rotaract Bern",
+   "short": "Bern",
+   "url": "https://bern.rotaract.ch",
+   "color": "#e3141a",
+   "logo": "crests/bern.svg",
+   "district": "1990",
+   "coords": [
+    46.95456,
+    7.42068
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://bern.rotaract.ch/de/content/news/show/27588",
+     "title": "FAQ Aufnahmeverfahren und Clubleben Rotaract Club Bern",
+     "date": "2025-07-01",
+     "image": ""
+    },
+    {
+     "url": "https://bern.rotaract.ch/de/content/news/show/26482",
+     "title": "Generalversammlung mit Neuaufnahmen",
+     "date": "2025-02-21",
+     "image": ""
+    }
+   ],
+   "projects": [
+    {
+     "url": "https://bern.rotaract.ch/de/content/projects/show/3203",
+     "title": "Unterstützung des ROKJ Bern",
+     "date": "2025-08-31",
+     "image": ""
+    }
+   ],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "basel",
+   "name": "Rotaract Basel",
+   "short": "Basel",
+   "url": "https://rotaract-basel.ch",
+   "color": "#2a2a2e",
+   "logo": "crests/basel.svg",
+   "district": "1980",
+   "coords": [
+    47.55455,
+    7.59027
+   ],
+   "photos": [],
+   "news": [],
+   "projects": [],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "baden",
+   "name": "Rotaract Baden",
+   "short": "Baden",
+   "url": "https://baden.rotaract.ch",
+   "color": "#d42e2e",
+   "logo": "crests/baden.svg",
+   "district": "1980",
+   "coords": [
+    47.47017,
+    8.29215
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://baden.rotaract.ch/de/content/news/show/29484",
+     "title": "Clean Up Day 7.0",
+     "date": "2026-05-30",
+     "image": ""
+    },
+    {
+     "url": "https://baden.rotaract.ch/de/content/news/show/29485",
+     "title": "Rotary Sponsorenlauf 2026",
+     "date": "2026-05-09",
+     "image": ""
+    }
+   ],
+   "projects": [
+    {
+     "url": "https://baden.rotaract.ch/de/content/projects/show/2278",
+     "title": "Badener Adventsmarkt",
+     "date": "2021-11-27",
+     "image": ""
+    }
+   ],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "zuerich",
+   "name": "Rotaract Zürich",
+   "short": "Zürich",
+   "url": "https://rotaract-zuerich.ch",
+   "color": "#1f78d1",
+   "logo": "crests/zuerich.svg",
+   "district": "2000",
+   "coords": [
+    47.37721,
+    8.52731
+   ],
+   "photos": [],
+   "news": [],
+   "projects": [],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "zurich-international",
+   "name": "Rotaract Zurich International",
+   "short": "ZH Intl",
+   "url": "https://zurich-international.rotaract.ch",
+   "color": "#1d4f9a",
+   "logo": "crests/zurich-international.svg",
+   "district": "2000",
+   "coords": [
+    47.37721,
+    8.52731
+   ],
+   "photos": [],
+   "news": [],
+   "projects": [
+    {
+     "url": "https://zurich-international.rotaract.ch/en/content/projects/show/3466",
+     "title": "Volunteering with Essen für Alle",
+     "date": "2026-11-01",
+     "image": ""
+    }
+   ],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "stgallen",
+   "name": "Rotaract St. Gallen",
+   "short": "St. Gallen",
+   "url": "https://rotaract-stgallen.ch",
+   "color": "#009640",
+   "logo": "crests/stgallen.svg",
+   "district": "2000",
+   "coords": [
+    47.42358,
+    9.38851
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://rotaract-stgallen.ch/de/content/news/show/28682",
+     "title": "Besuch der District Governorin",
+     "date": "2026-02-26",
+     "image": ""
+    },
+    {
+     "url": "https://rotaract-stgallen.ch/de/content/news/show/28007",
+     "title": "Rotaract-Stamm bei ProTable St. Gallen",
+     "date": "2025-10-16",
+     "image": ""
+    }
+   ],
+   "projects": [
+    {
+     "url": "https://rotaract-stgallen.ch/de/content/projects/show/2904",
+     "title": "Spieleabend im Pflegeheim St. Otmar",
+     "date": "2024-04-25",
+     "image": ""
+    }
+   ],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "liechtenstein",
+   "name": "Rotaract Liechtenstein",
+   "short": "LI",
+   "url": "https://rotaract.li",
+   "color": "#002b7f",
+   "logo": "crests/liechtenstein.svg",
+   "district": "2000",
+   "coords": [
+    47.14278,
+    9.52022
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://rotaract.li/de/content/news/show/22287",
+     "title": "Summer Wine Tasting",
+     "date": "2023-06-14",
+     "image": ""
+    },
+    {
+     "url": "https://rotaract.li/de/content/news/show/21422",
+     "title": "Vortrag: Die Rolle von \"big data\" in der Versicherungsbranche",
+     "date": "2023-02-08",
+     "image": ""
+    }
+   ],
+   "projects": [],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "geneve-international",
+   "name": "Rotaract Genève International",
+   "short": "GE Intl",
+   "url": "https://geneve-international.rotaract.ch",
+   "color": "#d9a300",
+   "logo": "crests/geneve-international.svg",
+   "district": "1990",
+   "coords": [
+    46.20456,
+    6.14246
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://geneve-international.rotaract.ch/fr/content/news/show/22511",
+     "title": "Greetings for the new Rotary Year!",
+     "date": "2023-07-06",
+     "image": ""
+    },
+    {
+     "url": "https://geneve-international.rotaract.ch/fr/content/news/show/22042",
+     "title": "New partnership with Rotary Club Genève Palais Wilson",
+     "date": "2023-05-11",
+     "image": ""
+    }
+   ],
+   "projects": [
+    {
+     "url": "https://geneve-international.rotaract.ch/fr/content/projects/show/2593",
+     "title": "Compétition de réduction de plastique 2023",
+     "date": "2022-12-02",
+     "image": ""
+    }
+   ],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "ticino",
+   "name": "Rotaract Ticino",
+   "short": "Ticino",
+   "url": "https://rotaract-ticino.ch",
+   "color": "#0066b3",
+   "logo": "crests/ticino.svg",
+   "district": "2000",
+   "coords": [
+    46.02943,
+    8.98888
+   ],
+   "photos": [],
+   "news": [
+    {
+     "url": "https://rotaract-ticino.ch/it/content/news/show/18676",
+     "title": "Comunicato Stampa Concorso Rotary Giovani Artisti",
+     "date": "2022-03-09",
+     "image": ""
+    },
+    {
+     "url": "https://rotaract-ticino.ch/it/content/news/show/18664",
+     "title": "Uniti per l'Ucraina",
+     "date": "2022-03-07",
+     "image": ""
+    }
+   ],
+   "projects": [
+    {
+     "url": "https://rotaract-ticino.ch/it/content/projects/show/2316",
+     "title": "Progetto Giovani artisti",
+     "date": "2021-12-01",
+     "image": ""
+    }
+   ],
+   "instagram": [],
+   "links": {},
+   "source": "",
+   "how": "",
+   "partners": [],
+   "about": ""
+  },
+  {
+   "id": "international",
+   "name": "Rotaract International",
+   "short": "International",
+   "url": "https://rotaracteurope.eu",
+   "color": "#d41367",
+   "logo": "rotaract.svg",
+   "district": "",
+   "coords": null,
+   "photos": [],
+   "news": [],
+   "projects": [],
+   "instagram": [],
+   "links": {},
+   "source": "international",
+   "how": "",
+   "partners": [],
+   "about": ""
+  }
+ ],
+ "events": [
+  {
+   "id": "219082",
+   "clubs": [
+    "zuerich"
+   ],
+   "title": "Informal: Minigolf beim Dolder",
+   "start": "2026-09-01T18:00",
+   "end": "2026-09-01T20:00",
+   "allday": false,
+   "location": "Dolder Eis & Bad AG Adlisbergstrasse 36 CH – 8044 Zürich",
+   "coords": [
+    47.37721,
+    8.52731
+   ],
+   "url": "https://rotaract-zuerich.ch/de/agenda/show/219082",
+   "description": "Wir treffen uns am 01.09.2026 zum Sommer-Informal zum Minigolf beim Dolder (Adlisberstrasse 36, 8044 Zürich, beim Dolder-Bad). \n\nDiese Veranstaltung beginnt ausnahmsweise schon um 18 Uhr, da die Anlage bereits um 20 Uhr schliesst. Die Kosten betragen CHF 8 .- pro Person. \n\nAnfahrt: via Dolderbahn (im Anschluss Fussweg ca. 5 min), Parkplätze vor Ort gegen Gebühr. \n\nDies ist ein öffentlich beworbenes Event. Es können Fotos erstellt werden.",
+   "image": "",
+   "registration": "Die Anmeldefrist ist abgelaufen",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "218290",
+   "clubs": [
+    "luzern"
+   ],
+   "title": "Dienstags-Stamm",
+   "start": "2026-09-01T18:30",
+   "end": "2026-09-01T21:00",
+   "allday": false,
+   "location": "tba",
+   "coords": [
+    47.47972,
+    8.32765
+   ],
+   "url": "https://rotaract-luzern.ch/de/agenda/show/218290",
+   "description": "Jeden 1. Dienstag im Monat möchten wir als Stamm zusammenkommen und gemeinsam einen netten Abend verbringen.\n\nDa es kein vordefiniertes Programm gibt, sind alle Vorschläge bzgl. Gestaltung des Abends willkommen.",
+   "image": "",
+   "registration": "Die Anmeldefrist ist abgelaufen",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "214827",
+   "clubs": [
+    "bern"
+   ],
+   "title": "19. Berner Leaderanlass",
+   "start": "2026-09-03T17:30",
+   "end": "2026-09-03T19:45",
+   "allday": false,
+   "location": "Champions Lounge BSC YB (Stadion Wankdorf)",
+   "coords": [
+    46.95456,
+    7.42068
+   ],
+   "url": "https://bern.rotaract.ch/de/agenda/show/214827",
+   "description": "19. Berner Leaderanlass\n\nSpannende Keynotes, hochkarätige Debatten und Kontakte, die bleiben. Beim diesjährigen Berner Leaderanlass im Wankdorf diskutieren prominente Köpfe aus Wirtschaft und Politik über die Themen, die uns morgen bewegen. Wir nutzen den Abend, um über den eigenen Tellerrand zu blicken und uns beim anschliessenden Apéro mit anderen jungen Berner Führungskräften zu vernetzen.\n\n📅 Datum: Donnerstag, 3. September 2026\n🕓 Zeit: 17:30 – 19:45 Uhr\n📍 Ort: Champions Lounge BSC YB (Stadion Wankdorf)\n\nRegistrierung / Anmeldung: Melde dich für diesen Anlass bitte direkt auf der Website des Veranstalters an: https://www.leaderanlass.ch/de/anmeldung",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "210608",
+   "clubs": [
+    "basel"
+   ],
+   "title": "Service Club Treffen Liestal",
+   "start": "2026-09-03T18:00",
+   "end": "2026-09-03T20:00",
+   "allday": false,
+   "location": "Siebe Dupf Kellerei AG Kasernenstrasse 25 4410 Liestal",
+   "coords": [
+    47.55455,
+    7.59027
+   ],
+   "url": "https://rotaract-basel.ch/de/agenda/show/210608",
+   "description": "Es treffen sich auch in diesem Jahr wieder alle aktiven Service Clubs von Liestal für einen gemeinsamen Austausch. Bei einem gemütlichen Apero hat man Zeit, die anderen Clubs, ihre Strukturen und Aktivitäten kennenzulernen, Kontakte zu knüpfen und allfällige Kooperationen zu planen.",
+   "image": "",
+   "registration": "Die Anmeldefrist ist abgelaufen",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219188",
+   "clubs": [
+    "zuerich"
+   ],
+   "title": "Wie man das Alphabet zeichnet",
+   "start": "2026-09-08T19:00",
+   "end": "2026-09-08T22:00",
+   "allday": false,
+   "location": "Chiffon, Hirschengraben 36, 8001 Zürich",
+   "coords": [
+    47.37254,
+    8.54769
+   ],
+   "url": "https://rotaract-zuerich.ch/de/agenda/show/219188",
+   "description": "Ein «a» kann auf tausend Arten falsch sein. Céline Odermatt und Melanie Hofmann entscheiden, welche davon die richtige ist. Bei der Zürcher Foundry «Lineto» erwecken sie Worte zum Leben. Sie erzählen, was es alles braucht, bis eine Schrift entsteht.\n\nACHTUNG: Der Anlass findet im Restaurant Chiffon statt.\n\nEs werden Fotos gemacht, die veröffentlicht werden können. Der Vortrag wird auf Deutsch und Englisch gehalten.",
+   "image": "",
+   "registration": "Die Anmeldefrist ist abgelaufen",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219914",
+   "clubs": [
+    "basel"
+   ],
+   "title": "Regelmeeting September",
+   "start": "2026-09-08T19:30",
+   "end": "2026-09-08T21:00",
+   "allday": false,
+   "location": "Heubergkeller, Heuberg 26, 4051 Basel, Switzerland",
+   "coords": [
+    47.55616,
+    7.58619
+   ],
+   "url": "https://rotaract-basel.ch/de/agenda/show/219914",
+   "description": "Wir kommen zusammen, um aktuelle Themen zu besprechen, Ideen auszutauschen und die nächsten Schritte im Club gemeinsam zu gestalten.",
+   "image": "",
+   "registration": "Die Anmeldefrist ist abgelaufen",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219888",
+   "clubs": [
+    "sempachersee"
+   ],
+   "title": "Anlass mit RAC Luzern - Besichtigung: Holzingenieur-Büro von Pirmin Jung",
+   "start": "2026-10-16T18:00",
+   "end": "2026-10-16T20:00",
+   "allday": false,
+   "location": "Haus des Holzes, Centralstrasse 34, 6210 Sursee",
+   "coords": [
+    47.17868,
+    8.08603
+   ],
+   "url": "https://rotaract-sempachersee.ch/de/agenda/show/219888",
+   "description": "Infos zum Event:\n\nDer Rotaract Club Luzern lädt uns ein, gemeinsam einen Blick in das Holzingenieur-Büro von Pirmin Jung zu werfen. Es ist eines der weltweit führenden Holzingenieurbüros und mittlerweile an neun Standorten in der Schweiz und Deutschland tätig.\n\nWir dürfen einen spannenden Vortrag von Pirmin Jung über sein Unternehmen sowie das Bürogebäude „Haus des Holzes” geniessen und anschliessend an einer Führung durch die Räumlichkeiten teilnehmen.\n\nAnschliessend gehen wir gemeinsam in der Stadt Sursee etwas trinken oder essen.\n\nTreffpunkt: 18:00 vor dem Eingang des Haus des Holzes in Sursee, gut erreichbar mit dem ÖV.\n\nAnmeldung via Webseite vom RAC Luzern: https://rotaract-luzern.ch/de/agenda/show/219875\n\nAnmeldeschluss: Montag 12. Oktober.\n\nWir freuen uns über die Einladung und danken Cédric Aregger vom Rotaract Luzern für die Organisation des Events.",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "221606",
+   "clubs": [
+    "liechtenstein"
+   ],
+   "title": "Autobahn Rockn Roll",
+   "start": "2026-11-03T19:00",
+   "end": "2026-11-03T22:00",
+   "allday": false,
+   "location": "tdb",
+   "coords": [
+    47.34963,
+    7.65176
+   ],
+   "url": "https://rotaract.li/de/agenda/show/221606",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": true,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "221607",
+   "clubs": [
+    "liechtenstein"
+   ],
+   "title": "Stammtisch",
+   "start": "2026-11-09T19:00",
+   "end": "2026-11-09T22:00",
+   "allday": false,
+   "location": "tbd",
+   "coords": [
+    46.94818,
+    9.52404
+   ],
+   "url": "https://rotaract.li/de/agenda/show/221607",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": true,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219091",
+   "clubs": [
+    "zuerich"
+   ],
+   "title": "Informal: Konzert in der Tonhalle Zürich",
+   "start": "2026-11-11T18:00",
+   "end": "2026-11-11T21:30",
+   "allday": false,
+   "location": "Tonhalle Zürich, Claridenstrasse 7, 8002 Zürich",
+   "coords": [
+    47.36615,
+    8.538
+   ],
+   "url": "https://rotaract-zuerich.ch/de/agenda/show/219091",
+   "description": "Am Mittwoch den 11.11.2026 haben wir die Gelegenheit ein Konzert des Tonhallen-Orchesters in der Tonhalle Zürich zu besuchen. \n\nDargeboten wird Gustav Mahlers Sinfonie Nr. 6 a-Moll unter dem Dirigenten Paavo Järvi. \n\nWir bekommen die Möglichkeit zum Preis von CHF 20,- pro Person dabei zu sein. \n\nTreffpunkt ist am 11.11. (ausnahmsweise ein Mittwoch) um 19 Uhr im Foyer der Tonhalle in der Claridenstrasse 7, 8002 Zürich. Die zuvor reservierten Tickets können an der Billetkasse bezahlt werden. Konzertbeginn ist um 19:30 Uhr. \n\nWir freuen uns auf einen musikalischen Abend in der Tonhalle Zürich!\n\nDies ist eine öffentlich beworbene Veranstaltung bei der Fotoaufnahmen erstellt werden können.",
+   "image": "",
+   "registration": "Anmeldung bis: Montag, 9. November 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-11-09T18:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "222523",
+   "clubs": [
+    "geneve-international"
+   ],
+   "title": "Club Meeting & EGA| “From Lab to Patient: The Fight to Develop a Cancer Treatment in Challenging Times“",
+   "start": "2026-11-11T19:00",
+   "end": "2026-11-11T21:00",
+   "allday": false,
+   "location": "Beau-Rivage Genève, Quai du Mont-Blanc 13, 1201 Genève",
+   "coords": [
+    46.21022,
+    6.15452
+   ],
+   "url": "https://geneve-international.rotaract.ch/fr/agenda/show/222523",
+   "description": "Site internet: https://www.beau-rivage.com/fr/\nConférencier(s): Hesham Ismail Hamed",
+   "image": "",
+   "registration": "La date limite d'inscription est dépassée",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "221805",
+   "clubs": [
+    "ticino"
+   ],
+   "title": "Come sta il Ticino a tavola?",
+   "start": "2026-11-11T19:15",
+   "end": "2026-11-11T22:00",
+   "allday": false,
+   "location": "Hotel Ristorante Unione, Via Henri Guisan 1, 6500 Bellinzona",
+   "coords": [
+    46.19472,
+    9.02415
+   ],
+   "url": "https://rotaract-ticino.ch/it/agenda/show/221805",
+   "description": "Come sta il Ticino a Tavola? Si sente la concorrenza di oltre confine? Siamo davvero un cantone a vocazione turistica anche nel settore della ristorazione?\n\nDomande ricorrenti a cui cercherà di dare risposta Gabriele Beltrami, Direttore di GastroTicino. GastroTicino è la più grande associazione padronale dell'industria esercenziale e alberghiera del Canton Ticino e coinvolge infatti gli esercenti animati da spirito corporativo operanti in Ticino, raggruppandone a livello cantonale oltre 1'350.\n\nQuesta serata è organizzata dal Rotary Bellinzona.\n\nL'appuntamento è per mercoledì 11 novembre alle ore 19:15 presso il l'Hotel Ristorante Unione,\n\nVia Henri Guisan 1, 6500 Bellinzona\n\nCosto dell'evento CHF 50 da saldare a:\n\nCausale: cognome + GastroTicino\n\nRotaract Club Ticino IBAN: CH65 0020 7207 1336 8601 F\n\nAl termine dell'iscrizione su Polaris, l'importo dell'evento sarà dovuto anche in caso di mancata partecipazione.\n\nLe iscrizioni sono aperte fino al 6 novembre.",
+   "image": "",
+   "registration": "Chiusura delle iscrizioni: mercoledì 11 novembre 2026 alle ore 19:15\n\nNumero massimo di partecipanti: 1000",
+   "deadline": "2026-11-11T19:15",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "218212",
+   "clubs": [
+    "baden"
+   ],
+   "title": "Kauf eins mehr Aktion \"Period Poverty\"",
+   "start": "2026-11-14T09:00",
+   "end": "2026-11-14T16:00",
+   "allday": false,
+   "location": "Migros Landstrasse Wettingen",
+   "coords": [
+    47.47017,
+    8.31714
+   ],
+   "url": "https://baden.rotaract.ch/de/agenda/show/218212",
+   "description": "",
+   "image": "",
+   "registration": "Anmeldung bis: Sonntag, 15. November 2026 um 09:00\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-11-15T09:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "222796",
+   "clubs": [
+    "zurich-international"
+   ],
+   "title": "Essen für Alle Volunteering 12.11",
+   "start": "2026-11-14T11:00",
+   "end": "2026-11-14T16:00",
+   "allday": false,
+   "location": "Holzerhurd 60, 8046 Zürich",
+   "coords": [
+    47.42335,
+    8.49681
+   ],
+   "url": "https://zurich-international.rotaract.ch/en/agenda/show/222796",
+   "description": "Join us for a meaningful day of volunteering with Essen für Alle!\n\nEssen für Alle is a non-profit organization that distributes food to people in need, helping to reduce food insecurity and food waste. \n\nThrough the dedication of volunteers, the organization supports individuals and families facing difficult circumstances. \n\n Together, we will support the organization's activities and contribute to making a positive impact in our local community.\n\n**Please note:** Some activities may take place outdoors, so please dress warmly and appropriately for the weather. Comfortable shoes are recommended.\n \n\nThis is a great opportunity to give back to the community while connecting with fellow Rotaractors. We look forward to seeing you there! \n\n**More information:** https://www.essenfueralle.org/",
+   "image": "",
+   "registration": "Registration until: Friday, November 13, 2026 at 11:00 AM\n\nMax. number of participants: 20",
+   "deadline": "2026-11-13T11:00",
+   "cancelled": true,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "222341",
+   "clubs": [
+    "liechtenstein"
+   ],
+   "title": "Besichtigung der Uhrmacher Werkstatt Huber",
+   "start": "2026-11-16T17:00",
+   "end": "2026-11-16T20:00",
+   "allday": false,
+   "location": "Städtle 34",
+   "coords": [
+    47.13925,
+    9.5225
+   ],
+   "url": "https://rotaract.li/de/agenda/show/222341",
+   "description": "Im Rahmen einer Besichtigung der Uhrmacherwerkstatt im Weissen Würfel bei Huber in Vaduz erhalten wir Einblicke in die tägliche Arbeit eines Uhrmachers. Dabei lernen wir die verschiedenen Arbeitsschritte, die handwerklichen Techniken sowie die Präzision kennen, die für die Uhrmacherei erforderlich ...",
+   "image": "",
+   "registration": "Anmeldung bis: 13.11.2026 17:00",
+   "deadline": "2026-11-13T17:00",
+   "cancelled": false,
+   "members": true,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219196",
+   "clubs": [
+    "zuerich"
+   ],
+   "title": "Wenn GPS zur Waffe wird",
+   "start": "2026-11-17T19:00",
+   "end": "2026-11-17T22:00",
+   "allday": false,
+   "location": "Haus zum Rüden, Limmatquai 42, 8001 Zürich",
+   "coords": [
+    47.3723,
+    8.55188
+   ],
+   "url": "https://rotaract-zuerich.ch/de/agenda/show/219196",
+   "description": "Satelliten vermessen die Erde heute auf den Millimeter genau. Gleichzeitig wird Satellitennavigation im Krieg systematisch gestört und gefälscht. Das erinnert uns daran, wie abhängig unser Alltag davon längst ist.\n\nBenedikt Soja ist Professor für Weltraumgeodäsie an der ETH Zürich und war zuvor am Jet Propulsion Laboratory der NASA. Er erklärt, wie Jamming und Spoofing funktionieren, was sich dagegen tun lässt — und wie man mit Satelliten überhaupt die Erde vermisst.\n\nEs werden Fotos gemacht, die veröffentlicht werden können. Der Anlass wird auf Deutsch gehalten.",
+   "image": "",
+   "registration": "Anmeldung bis: Sonntag, 15. November 2026 um 19:00\n\nMaximale Anzahl Teilnehmer: 100",
+   "deadline": "2026-11-15T19:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "218307",
+   "clubs": [
+    "bern"
+   ],
+   "title": "Bowling-Abend",
+   "start": "2026-11-18T18:00",
+   "end": "2026-11-18T21:00",
+   "allday": false,
+   "location": "Bern",
+   "coords": [
+    46.95456,
+    7.42068
+   ],
+   "url": "https://bern.rotaract.ch/de/agenda/show/218307",
+   "description": "Manchmal ist es einfach schön, gemeinsam etwas zu erleben. Anfeuern, lachen und am Ende ist die Punktzahl sowieso Nebensache. Im November schnüren wir die Bowlingschuhe und machen genau das. Kein Können nötig, nur Lust auf einen entspannten Abend in guter Gesellschaft.\n\nDatum und Uhrzeit: 18. November 2026, 18:30 Uhr bis 20:30 Uhr\nOrt:\nBowlingcenter Marzili\nSandrainstrasse 12, 3007 Bern\nKosten: Die Bahn geht auf die Clubkasse. Getränke und Essen bezahlt jede Person selbst.\n\nAnmeldung:  Bitte melde dich unbedingt an und falls du verhindert bist, auch wieder ab. Wenn wir nicht genügend Teilnehmende sind, können wir bis 4 Tage vor dem Anlass absagen.\n\nMehr Infos\n\nhttps://www.bowling-marzili.ch/",
+   "image": "",
+   "registration": "Anmeldung bis: Freitag, 13. November 2026 um 23:55\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-11-13T23:55",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "223112",
+   "clubs": [
+    "luzern"
+   ],
+   "title": "Suppenmittag Wheel-Clubs Luzern-Sursee",
+   "start": "2026-11-19T12:00",
+   "end": "2026-11-19T20:00",
+   "allday": false,
+   "location": "Rathaus Sursee",
+   "coords": [
+    47.17298,
+    8.10952
+   ],
+   "url": "https://rotaract-luzern.ch/de/agenda/show/223112",
+   "description": "Liebe Rotaracterinnen und Rotaracter, liebe rotarische Familie\n\nDer Inner Wheel Club Luzern-Sursee lädt herzlich zum traditionellen Suppentag ein! Am Donnerstag, 19. November 2026, verwandelt sich das Rathaus in Sursee in einen Ort der Begegnung und Solidarität. Ob für eine gemütliche Mittagspause oder als wärmender Stopp während des stimmungsvollen „Lichterglanz“ am Abend – wir freuen uns darauf, euch eine feine, frisch zubereitete Suppe zu servieren.\n\nWarum vorbeikommen?\n\nJeder Löffel hilft: Der gesamte Erlös geht an die Stiftung Schweizer Tafel, die sich seit über 20 Jahren unermüdlich für die Linderung von Armut und gegen Foodwaste in der Schweiz einsetzt.\nRotarische Freundschaft: Geniesst mit uns eine Portion Solidarität, nutzt die Gelegenheit für gute Gespräche und stärkt das Netzwerk innerhalb unserer rotarischen Familie.\nKommt vorbei, bringt eure Freunde mit und lasst uns gemeinsam Grosses bewirken. Wir freuen uns sehr auf euren Besuch!\n\nHerzliche Grüsse,\n\nInner Wheel Clubs Luzern-Sursee  \n\nWichtig: Eine Anmeldung ist nicht notwendig ;)",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "217714",
+   "clubs": [
+    "stgallen"
+   ],
+   "title": "Activity Stamm - Bowlingabend",
+   "start": "2026-11-19T18:45",
+   "end": "2026-11-19T21:00",
+   "allday": false,
+   "location": "Freizeitzentrum Säntispark, Wiesenbachstrasse 9, 9030 Abtwil",
+   "coords": [
+    47.41883,
+    9.31596
+   ],
+   "url": "https://rotaract-stgallen.ch/de/agenda/show/217714",
+   "description": "Unser Motto SPASS nehmen wir beim nächsten Activity-Stamm wörtlich: Zusammen geht es auf die Bowlingbahn! Ob Strike-Profi oder Gelegenheitswerfer, hier zählt nicht die Punktzahl, sondern die gute Stimmung. Freut euch auf einen lockeren Abend mit viel Lachen, ein paar Pins und guten Gesprächen. Wir freuen uns auf euch!\n\nThis is a publicly advertised event where photos and/or videos may be taken and subsequently published. By registering for and participating in the event, attendees agree to these conditions.\n\nIf you do not wish to appear in any photos or videos, please inform the organiser in advance.",
+   "image": "",
+   "registration": "Anmeldung bis: Sonntag, 15. November 2026 um 23:55\n\nMaximale Anzahl Teilnehmer: 18",
+   "deadline": "2026-11-15T23:55",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219898",
+   "clubs": [
+    "sempachersee"
+   ],
+   "title": "Anlass mit RC Sursee - Treberwurst-Essen im Falläsch",
+   "start": "2026-11-19T19:00",
+   "end": "2026-11-19T21:00",
+   "allday": false,
+   "location": "Falläsch 1 Kaltbach",
+   "coords": [
+    47.03328,
+    9.53056
+   ],
+   "url": "https://rotaract-sempachersee.ch/de/agenda/show/219898",
+   "description": "Einfach authentisch. Markus Bättig passionierter Jäger und einer der ersten Weinproduzenten der Region gewährt uns einen Einblick in das Weingut Falläsch und verköstigt uns zusammen mit dem Räbbärg-Chörli Kaltbach in authentisch-bodenständiger Manier mit einem Treberwurst-Menu (gekocht im Holzofen-...",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": true,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "220281",
+   "clubs": [
+    "zuerich"
+   ],
+   "title": "Sozialprojekt: Adventkränze binden",
+   "start": "2026-11-21T08:00",
+   "end": "2026-11-21T18:00",
+   "allday": false,
+   "location": "Neuweg 12, 8125 Zollikerberg",
+   "coords": [
+    47.34764,
+    8.6004
+   ],
+   "url": "https://rotaract-zuerich.ch/de/agenda/show/220281",
+   "description": "Wir sind herzlich eingeladen, beim jährlichen Weihnachtskranz-binden vom Rotary Club Zürich International teilzunehmen.\n\nJedes Jahr kommen Mitglieder der rotarischen Familie zusammen, um 120 Kränze zu binden und durch deren Verkauf CHF 10'000 zu sammeln. Der Erlös der Kränze kommt zu 100% der Notschlafstelle für Obdachlose \"Pfuusbus\" vom Sozialwerk Pfarrer Sieber zugute. \n\n(https://www.swsieber.ch/was-wir-tun/auffangen/pfuusbus/)\n\nWir freuen uns auf die tolle Gelegenheit, im rotarischen Geist einen guten Zweck zu unterstützen und clubübergreifende Beziehungen zu stärken!\n\nMelde dich hier für 2h-timeslots an:\n\nhttps://forms.gle/sCX2Vj23B8Vmu83D8\n\nWir freuen uns, dich dort sehen!",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "215253",
+   "clubs": [
+    "basel"
+   ],
+   "title": "Hands on Landskronberg",
+   "start": "2026-11-21T13:00",
+   "end": "2026-11-21T21:00",
+   "allday": false,
+   "location": "tbd",
+   "coords": [
+    46.94818,
+    9.52404
+   ],
+   "url": "https://rotaract-basel.ch/de/agenda/show/215253",
+   "description": "Einladung zum Hands-on Landskronberg\nSamstag, 21.11.2026\n\nIm Rahmen unseres Distriktgrantes „Wasser und artenreiche Kulturlandschaft“ organisieren wir am Samstag den 21.11.2026 den Hands-on Anlass\n\nDer Landskronberg liegt auf der französischen-schweizerischen Landesgrenze und ist der erste Jurahügel der Blauenkette.\n\nIn dem umfassenden Naturschutzprojekt werden artenreiche Trockenwiesen und –weiden gepflegt, in wertvollen Eichenwäldern werden Lichtwaldstrukturen hergestellt, Felsen werden freigestellt, Streuobstwiesen und Reben werden aufgewertet, Weiher werden gebaut und aufgewertet.\n\nDas Projekt ist ein wichtiger Beitrag zum Erhalt der Biodiversität in unserer Region.\n\nWO: Landskronberg\n\nab 9 Uhr mit Mittagessen um 13 Uhr, Details zum Treffpunkt und zum genauen Ablauf folgen anfangs November 2026\n\nMan kann sich auch einfach nur fürs Mittagessen anmelden.\n\nVERANTWORTLICH UND FÜR RÜCKFRAGEN\nVerena Geissbühler/RC Basel Dreiländereck\nLukas Merkelbach/ MerNatur Naturschutzbiologie GmbH",
+   "image": "",
+   "registration": "Anmeldung bis: Samstag, 21. November 2026 um 20:00\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-11-21T20:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "220782",
+   "clubs": [
+    "zurich-international"
+   ],
+   "title": "Music meets Purpose: Keys for Change Concert & Apéro",
+   "start": "2026-11-22T11:00",
+   "end": "2026-11-22T13:00",
+   "allday": false,
+   "location": "Zunfthaus zur Waag",
+   "coords": [
+    47.57809,
+    8.29505
+   ],
+   "url": "https://zurich-international.rotaract.ch/en/agenda/show/220782",
+   "description": "Music. Dance. Impact. One morning where art becomes a force for change.\n\nWould you like to experience the power of live music while making a real difference?\n\nJoin a unique morning of art, social impact, and meaningful connections with Keys for Change — a community of professional musicians who use the power of the arts to spark positive social change — this time in support of an innovative education project in Africa, backed by the UBS Optimus Foundation.\n\nYour ticket donation will be matched and doubled, going directly toward giving talented young people access to quality education and a path out of poverty.\n\nThis isn't just a concert.\n\nLive music and dance come together in a truly unique dialogue: the piano duo of Silvia Lama and Vladislav Mantic-Lugo intertwines with the movement of ballerina Cristina Martinez and the voice of opera singer Marìa Dìaz Coca.\n\nAnd behind the beauty, your participation supportsthe work of a UBS Optimus Foundation e program, helping break the cycle of poverty through learning.\n\nAgenda:\n\n10:30 – Doors open\n11:00 – Welcome speech & Introduction to the cause\n11:10 – Piano, Singing & Dance Performance\n12:00 – Networking Apéritif (Bar Bel Paese, included in ticket price)\nRegister now, aperitif and concert included with a minimum donation of 40 chf.\n\nRegistration on event frog: https://eventfrog.ch/de/p/klassik-opern/klassik/music-meets-purpose-keys-for-change-concert-apero-7500928987851424929.html",
+   "image": "",
+   "registration": "Registration until: Saturday, November 21, 2026 at 11:00 PM\n\nMax. number of participants: 1000",
+   "deadline": "2026-11-21T23:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "221488",
+   "clubs": [
+    "basel"
+   ],
+   "title": "Filmpremiere: «Health & Dignity for Women in Uganda»",
+   "start": "2026-11-24T18:00",
+   "end": "2026-11-24T19:30",
+   "allday": false,
+   "location": "Stadtkino Basel, Klostergasse 5, 4051 Basel",
+   "coords": [
+    47.55315,
+    7.5907
+   ],
+   "url": "https://rotaract-basel.ch/de/agenda/show/221488",
+   "description": "Über den Film: «Health & Dignity for Women in Uganda» Mbarara Center for Pelvic Floor Disorders (15 min):\n\nDie Operation eines geschwächten Beckenbodens erfordert das Know-how hochspezialisierter Fachkräfte. Prof. Dr. med. Verena Geissbühler, Kaderärztin Urogynäkologie Universitätsfrauenklinik Basel, reist mehrmals jährlich nach Uganda, um diese Operation durchzuführen.",
+   "image": "",
+   "registration": "Die Anmeldefrist ist abgelaufen",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "219083",
+   "clubs": [
+    "zuerich"
+   ],
+   "title": "Informal: Kerzenziehen am Hechtplatz",
+   "start": "2026-11-24T18:00",
+   "end": "2026-11-24T20:00",
+   "allday": false,
+   "location": "Hechtplatz, 8001 Zürich",
+   "coords": [
+    47.36832,
+    8.54469
+   ],
+   "url": "https://rotaract-zuerich.ch/de/agenda/show/219083",
+   "description": "Ihr sucht noch das ideale Weihnachtsgeschenk? Wie wäre es mit einer selbst hergestellten Kerze? - Dann haben wir genau das richtige für euch ...\n\nFür das Informal treffen wir uns diese Woche auf dem Hechtplatz in Zürich zum gemeinsamen Kerzenziehen in geselliger Runde. Wir starten bereits um 18:00 Uhr. Der Preis hängt vom Gewicht der jeweiligen Kerze ab. \n\nDies ist eine öffentlich beworbene Veranstaltung bei der Fotos erstellt werden können.",
+   "image": "",
+   "registration": "Anmeldung bis: Dienstag, 8. Dezember 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-12-08T18:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "222524",
+   "clubs": [
+    "geneve-international"
+   ],
+   "title": "Statutory meeting",
+   "start": "2026-11-25T19:00",
+   "end": "2026-11-25T21:00",
+   "allday": false,
+   "location": "Beau-Rivage Genève, Quai du Mont-Blanc 13, 1201 Genève",
+   "coords": [
+    46.21022,
+    6.15452
+   ],
+   "url": "https://geneve-international.rotaract.ch/fr/agenda/show/222524",
+   "description": "Site internet: https://www.beau-rivage.com/fr/",
+   "image": "",
+   "registration": "Date limite d'inscription: mercredi 25 novembre 2026 à 15:00\n\nNombre max. de participants: 40",
+   "deadline": "2026-11-25T15:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "217812",
+   "clubs": [
+    "luzern"
+   ],
+   "title": "Stamm Rudolfs Weihnacht",
+   "start": "2026-11-27T18:00",
+   "end": "2026-11-27T22:00",
+   "allday": false,
+   "location": "Rudolfs Weihnachtsmarkt, Inseliquai, 6005 Luzern",
+   "coords": [
+    47.0407,
+    8.29266
+   ],
+   "url": "https://rotaract-luzern.ch/de/agenda/show/217812",
+   "description": "Die Adventszeit ist die perfekte Gelegenheit, gemeinsam einen gemütlichen Abend zu verbringen. Deshalb treffen wir uns zu unserem Stamm am Rudolfs Weihnachtsmarkt.\n\nFreut euch auf gute Gespräche, einen gemütlichen Austausch und gesellige Stunden in weihnachtlicher Atmosphäre. Nutzt die Gelegenheit, bekannte Gesichter wiederzusehen, neue Kontakte zu knüpfen und gemeinsam die Vorfreude auf Weihnachten zu geniessen.\n\nAls kleines Weihnachts-Dankeschön lädt der Verein jedes Mitglied auf ein Getränk ein.\n\nWir freuen uns auf einen stimmungsvollen Abend mit euch und wünschen euch schon jetzt eine schöne Adventszeit!",
+   "image": "",
+   "registration": "Anmeldung bis: Freitag, 27. November 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-11-27T18:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "222792",
+   "clubs": [
+    "sempachersee"
+   ],
+   "title": "Rudolfs Weihnachtsmarkt in Luzern",
+   "start": "2026-11-27T18:00",
+   "end": "2026-11-27T22:00",
+   "allday": false,
+   "location": "Luzern",
+   "coords": [
+    47.05473,
+    8.30089
+   ],
+   "url": "https://rotaract-sempachersee.ch/de/agenda/show/222792",
+   "description": "Die Adventszeit ist die perfekte Gelegenheit, gemeinsam einen gemütlichen Abend zu verbringen. Deshalb treffen wir uns gemeinsam mit dem Rotaract Luzern auf einen warmen Glühwein am Rudolfs Weihnachtsmarkt.\n\nFreut euch auf gute Gespräche, einen gemütlichen Austausch und gesellige Stunden in weihnachtlicher Atmosphäre. Nutzt die Gelegenheit, bekannte Gesichter wiederzusehen, neue Kontakte zu knüpfen und gemeinsam die Vorfreude auf Weihnachten zu geniessen.\n\nWir freuen uns auf einen stimmungsvollen Abend mit euch und wünschen euch schon jetzt eine schöne Adventszeit!\n\nHerzlichen Dank an den Rotaract Luzern für die Organisation dieses Anlasses.",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "222674",
+   "clubs": [
+    "geneve-international"
+   ],
+   "title": "Samedi du Partage | Volunteering event",
+   "start": "2026-11-28T08:00",
+   "end": "2026-11-28T18:00",
+   "allday": false,
+   "location": "tbd",
+   "coords": [
+    46.94818,
+    9.52404
+   ],
+   "url": "https://geneve-international.rotaract.ch/fr/agenda/show/222674",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "217808",
+   "clubs": [
+    "luzern"
+   ],
+   "title": "Stamm am Weihnachtsmarkt",
+   "start": "2026-12-10T19:00",
+   "end": "2026-12-10T21:00",
+   "allday": false,
+   "location": "Lozärner Wiehnachtsmärt, Franziskanerplatz",
+   "coords": [
+    47.0496,
+    8.30368
+   ],
+   "url": "https://rotaract-luzern.ch/de/agenda/show/217808",
+   "description": "Gemeinsamer Stamm am Lozärner Wiehnachtsmärt\n\nLasst uns die Adventszeit gemeinsam geniessen! Wir treffen uns am Lozärner Wiehnachtsmärt, um in gemütlicher Atmosphäre zusammenzusitzen, zu plaudern und eine schöne gemeinsame Zeit zu verbringen.\n\nDer Stamm bietet die Gelegenheit, sich auszutauschen, tolle Gespräche zu führen – ganz ungezwungen bei einem warmen Getränk und weihnachtlicher Stimmung.\n\nWir freuen uns auf einen stimmungsvollen Abend mit euch!",
+   "image": "",
+   "registration": "Anmeldung bis: Donnerstag, 10. Dezember 2026 um 19:00\n\nMaximale Anzahl Teilnehmer: 1000",
+   "deadline": "2026-12-10T19:00",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "eu2069",
+   "clubs": [
+    "international"
+   ],
+   "title": "Pre-REM Satu Mare",
+   "start": "2027-01-26T00:00",
+   "end": "2027-01-29T00:00",
+   "allday": true,
+   "location": "",
+   "coords": null,
+   "url": "https://rotaracteurope.eu/event/pre-rem-satu-mare/",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "eu2067",
+   "clubs": [
+    "international"
+   ],
+   "title": "REM Cluj Napoca – REMSYLVANIA",
+   "start": "2027-01-28T00:00",
+   "end": "2027-02-01T00:00",
+   "allday": true,
+   "location": "",
+   "coords": null,
+   "url": "https://rotaracteurope.eu/event/rem-cluj-napoca-remsylvania/",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "eu2071",
+   "clubs": [
+    "international"
+   ],
+   "title": "Post-REM Sibiu",
+   "start": "2027-01-31T00:00",
+   "end": "2027-02-03T00:00",
+   "allday": true,
+   "location": "",
+   "coords": null,
+   "url": "https://rotaracteurope.eu/event/post-rem-sibiu/",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  },
+  {
+   "id": "eu2074",
+   "clubs": [
+    "international"
+   ],
+   "title": "EUCO Napoli",
+   "start": "2027-04-14T00:00",
+   "end": "2027-04-19T00:00",
+   "allday": true,
+   "location": "",
+   "coords": null,
+   "url": "https://rotaracteurope.eu/event/euco-napoli/",
+   "description": "",
+   "image": "",
+   "registration": "",
+   "deadline": "",
+   "cancelled": false,
+   "members": false,
+   "layer": "",
+   "organiser": ""
+  }
+ ],
+ "rotary": {
+  "clubs": [
+   {
+    "id": "rotary1980",
+    "name": "Rotary Distrikt 1980",
+    "short": "Rotary 1980",
+    "url": "https://rotary1980.ch",
+    "color": "#17458f",
+    "logo": "img/fam/rotary.svg",
+    "district": "1980",
+    "coords": null,
+    "photos": [],
+    "news": [],
+    "projects": [],
+    "instagram": [],
+    "links": {},
+    "source": "rotary",
+    "how": "",
+    "partners": []
+   },
+   {
+    "id": "rotary2000",
+    "name": "Rotary Distrikt 2000",
+    "short": "Rotary 2000",
+    "url": "https://rotary2000.ch",
+    "color": "#17458f",
+    "logo": "img/fam/rotary.svg",
+    "district": "2000",
+    "coords": null,
+    "photos": [],
+    "news": [],
+    "projects": [],
+    "instagram": [],
+    "links": {},
+    "source": "rotary",
+    "how": "",
+    "partners": []
+   }
+  ],
+  "events": [
+   {
+    "id": "217170",
+    "clubs": [
+     "rotary2000"
+    ],
+    "title": "Rotary \"Restaurant Wystübli 2026\"",
+    "start": "2026-11-11T09:00",
+    "end": "2026-11-11T22:00",
+    "allday": false,
+    "location": "Schloss Andelfingen",
+    "coords": [
+     47.59605,
+     8.68014
+    ],
+    "url": "https://rotary-zuercherweinland.ch/de/agenda/show/217170",
+    "description": "Der Rotary Club Zürcher Weinland führt auch dieses Jahr das Restaurant Wystübli im Schloss Andelfingen \n\nam Andelfinger Jahrmarkt 2026. Warme (ab 11 Uhr) und kalte Speisen durchgehend verfügbar.  Alle Gäste, jung und alt, auch alle rotarischen Freunde, sind herzlich eingeladen bei uns im Wystübli e...",
+    "image": "",
+    "registration": "",
+    "deadline": "",
+    "cancelled": false,
+    "members": false,
+    "layer": "rotary",
+    "organiser": "Rotary Zürcher Weinland"
+   },
+   {
+    "id": "222831",
+    "clubs": [
+     "rotary1980"
+    ],
+    "title": "Regio Apéro",
+    "start": "2026-11-11T18:00",
+    "end": "2026-11-11T19:00",
+    "allday": false,
+    "location": "Galerie - Bar",
+    "coords": [
+     47.0352,
+     7.24634
+    ],
+    "url": "https://rotary-olten.ch/de/agenda/show/222831",
+    "description": "Regio Apéro\nJeden 2. Mittwoch im Monat",
+    "image": "",
+    "registration": "Anmeldung bis: 11.11.2026 18:00",
+    "deadline": "2026-11-11T18:00",
+    "cancelled": false,
+    "members": false,
+    "layer": "rotary",
+    "organiser": "Rotary Olten"
+   },
+   {
+    "id": "222592",
+    "clubs": [
+     "rotary1980"
+    ],
+    "title": "TANZINOLTEN Partneranlass",
+    "start": "2026-11-11T18:30",
+    "end": "2026-11-11T21:30",
+    "allday": false,
+    "location": "Kulturzentrum Schützenmatte",
+    "coords": [
+     47.22392,
+     7.45768
+    ],
+    "url": "https://rotary-olten.ch/de/agenda/show/222592",
+    "description": "TANZINOLTEN feiert 30 Jahre und lädt den Rotary Club zum Partneranlass mit exklusivem Apéro auf der Galerie der Schützi ein. Das Choreographen-Duo Katarzyna Gdaniec und Marco Cantalupo der Abendvorstellung \"Land Of Hope\" der Compagnie Linga werden uns ihre Arbeit persönlich vorstellen.  Um Anmeldu...",
+    "image": "",
+    "registration": "",
+    "deadline": "",
+    "cancelled": false,
+    "members": false,
+    "layer": "rotary",
+    "organiser": "Rotary Olten"
+   },
+   {
+    "id": "218819",
+    "clubs": [
+     "rotary1980"
+    ],
+    "title": "Wenn die Realität nicht mehr verhandelt. Führung und Entscheidung im Krisenfall",
+    "start": "2026-11-12T12:00",
+    "end": "2026-11-12T13:30",
+    "allday": false,
+    "location": "Restaurant Post",
+    "coords": [
+     47.15548,
+     8.72178
+    ],
+    "url": "https://rotary-laufenburg.ch/de/agenda/show/218819",
+    "description": "",
+    "image": "",
+    "registration": "Anmeldung bis: 12.11.2026 00:00",
+    "deadline": "2026-11-12T00:00",
+    "cancelled": false,
+    "members": false,
+    "layer": "rotary",
+    "organiser": "Rotary Laufenburg-Fricktal"
+   }
+  ]
+ }
+}
