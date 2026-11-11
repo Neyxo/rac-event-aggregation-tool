@@ -1,4 +1,4 @@
-// The developer screen draws the old dev.html DOM from events.json and status.json, plus the new status fields (warnings, unreadable).
+// The developer screen, from events.json and status.json, with the status fields (warnings, unreadable).
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
@@ -50,7 +50,7 @@ async function show() {
 }
 
 describe("developer screen", () => {
-  it("draws the old sections in order with build state, counts and links", async () => {
+  it("draws the sections in order with build state, counts and links", async () => {
     await show();
     expect(texts("main.wrap.settings.dev > section.glass > h2")).toEqual(["Last build", "Preview on this device", "This device", "Content checks", "Clubs and layers"]);
     expect($("#build .devstate")?.className).toBe("devstate warn");  // built 01:58, now 10:00: 8 h

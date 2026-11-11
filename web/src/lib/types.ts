@@ -32,7 +32,7 @@ export interface Event {
 
 export interface NewsItem { url: string; title: string; date: string; image: string }
 export interface InstaPost { url: string; image: string; caption: string }
-/** a partner in clubs.toml: url "club.html?id=<id>" means another club of this app */
+/** a partner in clubs.toml: url "#/club/<id>" means another club of this app */
 export interface Partner { name: string; url: string; note?: string }
 
 export interface Club {

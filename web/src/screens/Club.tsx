@@ -36,12 +36,13 @@ function ShareButton({ c }: { c: ClubT }) {
   return <button className="btn glass ic" type="button" aria-label={t("share")} title={t("share")} onClick={() => void share()}><Icon name="share" /></button>;
 }
 
-/** "club.html?id=X" in clubs.toml is another club of this app: its chip; anything else is an outside site */
+/** "#/club/X" in clubs.toml is another club of this app: its chip (a plain link while it is not loaded); anything else is an outside site */
 function PartnerChip({ p }: { p: Partner }) {
   const { D } = useData();
-  const m = p.url.match(/^club\.html\?id=(.+)/);
-  if (m?.[1] && D.clubs[m[1]]) return <ClubChip id={m[1]} />;
-  return <a className="chip club" href={m?.[1] ? href("club", m[1]) : p.url} target="_blank" rel="noopener" title={p.note || undefined}><Icon name="wheel" />{p.name}</a>;
+  const id = p.url.match(/^#\/club\/(.+)/)?.[1];
+  if (id && D.clubs[id]) return <ClubChip id={id} />;
+  const out = id ? {} : { target: "_blank", rel: "noopener" };
+  return <a className="chip club" href={p.url} {...out} title={p.note || undefined}><Icon name="wheel" />{p.name}</a>;
 }
 
 function About({ c }: { c: ClubT }) {

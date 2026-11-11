@@ -33,31 +33,21 @@ describe("mergeRotary", () => {
 
 describe("resolveSettings", () => {
   const clubs = { bern: {} as Club, luzern: {} as Club, zuerich: {} as Club };
-  it("migrates rac.prefs: the first club is the main one", async () => {
+  it("drops unknown clubs and the main club from also show", async () => {
     const { resolveSettings } = await fresh();
-    expect(resolveSettings(clubs, null, { clubs: ["luzern", "bern", "gone"] }, false)).toEqual({ settings: { home: "luzern", also: ["bern"] }, real: { home: "luzern", also: ["bern"] }, migrated: true });
+    expect(resolveSettings(clubs, { home: "gone", also: ["bern", "gone", "zuerich"] }, false)).toEqual({ home: "", also: ["bern", "zuerich"] });
+    expect(resolveSettings(clubs, { home: "bern", also: ["bern", "luzern"] }, false)).toEqual({ home: "bern", also: ["luzern"] });
   });
-  it("rac.settings wins over rac.prefs; unknown and duplicate clubs are dropped", async () => {
+  it("nothing stored, or the guest preview: no clubs", async () => {
     const { resolveSettings } = await fresh();
-    const r = resolveSettings(clubs, { home: "gone", also: ["bern", "gone", "zuerich"] }, { clubs: ["luzern"] }, false);
-    expect(r.settings).toEqual({ home: "", also: ["bern", "zuerich"] });
-    expect(resolveSettings(clubs, { home: "bern", also: ["bern", "luzern"] }, null, false).settings).toEqual({ home: "bern", also: ["luzern"] });
-  });
-  it("nothing stored; empty prefs", async () => {
-    const { resolveSettings } = await fresh();
-    expect(resolveSettings(clubs, null, null, false)).toEqual({ settings: { home: "", also: [] }, real: { home: "", also: [] }, migrated: false });
-    expect(resolveSettings(clubs, null, { clubs: [] }, false).settings).toEqual({ home: "", also: [] });
-  });
-  it("guest preview: empty in memory, the real settings kept for saving", async () => {
-    const { resolveSettings } = await fresh();
-    const r = resolveSettings(clubs, { home: "bern", also: [] }, null, true);
-    expect(r.settings).toEqual({ home: "", also: [] }); expect(r.real.home).toBe("bern");
+    expect(resolveSettings(clubs, null, false)).toEqual({ home: "", also: [] });
+    expect(resolveSettings(clubs, { home: "bern", also: [] }, true)).toEqual({ home: "", also: [] });
   });
 });
 
 describe("loadData", () => {
-  it("fetches once per session and sets the state; migrates rac.prefs", async () => {
-    localStorage.setItem("rac.prefs", JSON.stringify({ clubs: ["bern", "luzern"] }));
+  it("fetches once per session and sets the state", async () => {
+    localStorage.setItem("rac.settings", JSON.stringify({ home: "bern", also: ["luzern"] }));
     localStorage.setItem("rac.saved", JSON.stringify(["202811"]));
     const f = json(fixture); vi.stubGlobal("fetch", f);
     const m = await fresh();
@@ -65,8 +55,6 @@ describe("loadData", () => {
     expect(f).toHaveBeenCalledTimes(1);
     expect(m.loaded).toBe(true);
     expect(m.getData().settings).toEqual({ home: "bern", also: ["luzern"] });
-    expect(localStorage.getItem("rac.prefs")).toBeNull();
-    expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "bern", also: ["luzern"] });
     expect(m.getData().saved.has("202811")).toBe(true);
     expect(m.myClubs()).toEqual(["bern", "luzern"]);
     expect(m.getData().clubs.rotary1980).toBeUndefined();

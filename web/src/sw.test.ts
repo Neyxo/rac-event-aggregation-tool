@@ -83,12 +83,4 @@ describe("service worker", () => {
     await get("events.json");
     expect(net).not.toHaveBeenCalled();
   });
-  it("drops the old site's cache on activate", async () => {
-    stores.set("rac-events", new Map()); cacheOf("rac-app"); stores.set("another-project", new Map());
-    let p: Promise<unknown> | undefined;
-    handlers.activate!({ request: {} as Request, waitUntil: x => { p = x; } });
-    await p;
-    // another site on the same github.io origin keeps its cache
-    expect([...stores.keys()].sort()).toEqual(["another-project", "rac-app"]);
-  });
 });

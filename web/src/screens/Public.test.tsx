@@ -1,4 +1,4 @@
-// Public draws the old public.html: know tiles, what it can't show, your data, questions (one open at a time), links, footer with source.
+// Public: know tiles, what it can't show, your data, questions (one open at a time), links, footer with source.
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { t, tx } from "../i18n";
@@ -11,7 +11,7 @@ const show = () => render(<Public route={parseHash("#/public")} />);
 const all = (s: string) => [...document.querySelectorAll<HTMLElement>(s)];
 
 describe("Public", () => {
-  it("draws the sections of the old page", () => {
+  it("draws its sections", () => {
     show();
     expect(all("main.wrap.fam > h1")[0]!.textContent).toBe("About this app");
     expect(all("#know > .ft.glass")).toHaveLength(4);

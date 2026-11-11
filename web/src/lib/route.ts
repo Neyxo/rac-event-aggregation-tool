@@ -25,25 +25,6 @@ export function href(name: RouteName, id?: string | null, query?: string | URLSe
   return "#/" + (name === "home" ? "" : name) + (id ? "/" + encodeURIComponent(id) : "") + (q ? "?" + q : "");
 }
 
-/** Old links that must land on a route: index.html?event=X, and a Home link with filters (it belongs on Discover).
- *  Returns the hash to go to, or null. ?lang= and ?welcome stay in the search part. */
-export function legacyRedirect(search: string, hash: string): string | null {
-  const p = new URLSearchParams(search);
-  const ev = p.get("event");
-  if (ev) return href("event", ev);
-  if ((!hash || hash === "#" || hash === "#/") && ["q", "clubs", "d", "place", "r"].some(k => p.has(k))) {
-    const q = new URLSearchParams([...p].filter(([k]) => k !== "lang" && k !== "welcome"));
-    return href("discover", null, q);
-  }
-  return null;
-}
-/** the search part kept after a legacy redirect: only lang and welcome */
-export function keptSearch(search: string): string {
-  const p = new URLSearchParams([...new URLSearchParams(search)].filter(([k]) => k === "lang" || k === "welcome"));
-  const s = p.toString().replace(/=(&|$)/g, "$1");  // "?welcome", not "?welcome="
-  return s ? "?" + s : "";
-}
-
 /** ?welcome (index.html?welcome, Settings' "run the welcome steps"): true once per page load, for Home's onboarding. Taking it also
  *  drops it from the URL, so a reload doesn't start the welcome steps again. */
 let welcome = typeof location !== "undefined" && new URLSearchParams(location.search).has("welcome");

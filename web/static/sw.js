@@ -7,8 +7,7 @@
 //    copy after 2.5 s on a slow network. Every successful fetch refreshes the cache, so a new deploy shows on the next load: no versions,
 //    no "new version" prompt. A page opened with ?lang= or ?welcome falls back to the cached app page when offline.
 // Only ok responses are cached; other origins (maps, geocoding, pictures) are never touched.
-// index.html, the icons, the scripts and styles index.html names, and events.json / status.json are fetched on install. The cache of the old multi-page site ("rac-events": its pages, common.js ...)
-// is deleted on activate, so a slow network can never get an old page back.
+// index.html, the icons, the scripts and styles index.html names, and events.json / status.json are fetched on install.
 // ponytail: old hashed assets stay in the cache after a deploy (a few hundred kB each time the code changes); prune by name if it grows.
 const CACHE = "rac-app";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon.svg", "rotaract.svg", "icon-180.png", "icon-192.png", "icon-512.png"];
@@ -17,7 +16,7 @@ const FRESH = 30 * 60e3;
 
 self.addEventListener("install", e => e.waitUntil((async () => {
   const c = await caches.open(CACHE);
-  // "reload": past the browser's HTTP cache, which could still hold the old site's index.html
+  // "reload": past the browser's HTTP cache, which could still hold the previous deploy's index.html
   await c.addAll(SHELL.map(u => new Request(u, { cache: "reload" })));
   // The page that registered this worker loaded its scripts, styles and events.json before the worker was there to see them: fetch them
   // now, or the very first visit would not work offline (a blank page) and the next load would still go to the network for the data.
@@ -29,8 +28,7 @@ self.addEventListener("install", e => e.waitUntil((async () => {
   await Promise.all(["events.json", "status.json"].map(u => data(new Request(new URL(u, location).href)).catch(() => {})));
   await self.skipWaiting();
 })()));
-// only the old site's cache by name: Cache Storage is per origin, and other projects on the same github.io origin keep theirs
-self.addEventListener("activate", e => e.waitUntil(caches.delete("rac-events").then(() => self.clients.claim())));
+self.addEventListener("activate", e => e.waitUntil(self.clients.claim()));
 
 async function data(req) {
   const c = await caches.open(CACHE), key = req.url.split("?")[0], hit = await c.match(key);

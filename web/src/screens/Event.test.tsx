@@ -1,4 +1,4 @@
-// The event screen draws site/event.html's DOM for each kind of event, and its buttons do what the old ones did.
+// The event screen for each kind of event, and what its buttons do.
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";

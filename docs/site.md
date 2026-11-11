@@ -13,7 +13,7 @@ One page app in React 19 and TypeScript, built with Vite. `npm run build` writes
 | `src/lib/` | Logic with tests: dates, filters, calendar, changes since the last visit, geo, share links, routes, the device store. |
 | `src/i18n/` | The texts, one file per language. |
 | `src/app.css` | All styles (see [design rules](design.md)). |
-| `static/` | Copied as is: icons, crests, pictures, the manifest, `sw.js`, the legacy forwarders. |
+| `static/` | Copied as is: icons, crests, pictures, the manifest, `sw.js`. |
 | `e2e/` | The browser tests (Playwright, `npm run e2e`). |
 
 `npm test` runs the unit tests (Vitest), `npm run typecheck` the TypeScript check, `npm run dev` the app with the real data from `public/`.
@@ -42,7 +42,7 @@ An unknown route is Home. `?lang=` before the hash picks the language for that v
 
 German, French, Italian and English, one file each in `web/src/i18n/`. `en.ts` is the source of truth; the others are typed against it (`Messages`), so a missing or misspelled key in any language fails `npm run typecheck` and `npm run build`. `t("key")` takes only keys with a plain string value, so a typo there fails too.
 
-## Share pages and old links
+## Share pages
 
 A shared link opens a tiny page with its own preview (title, text, picture for WhatsApp, iMessage, Slack...) that forwards into the app:
 
@@ -50,15 +50,13 @@ A shared link opens a tiny page with its own preview (title, text, picture for W
 - `c/<id>.html`: a club, with its about sentence and number of upcoming events. Written by `polaris_feed.py`.
 - `s/<lang>/<page>.html`: the other screens, per language. Written by the Vite build.
 
-The old page names (`event.html?id=…`, `club.html?id=…`, `discover.html`, …) are forwarders in `static/` that send old links and bookmarks to the matching route, query included. `index.html?event=…` also still works.
-
 ## Navigation
 
 One top bar (Rotaract, This app, Settings) and three bottom tabs (Home, Discover, Calendar) on every screen. On event and club screens the head sticks under the top bar and compacts as you scroll. Section headings stick in two levels on one frosted bar.
 
 ## What the device remembers
 
-Main club, followed clubs, language, theme, starred events, whether Rotary events are shown, what was new at the last visit, whether the welcome steps and the guide were seen, and the developer switches. All in the browser's local storage (`rac.*`, the same keys as the old site, so nobody lost their clubs); nothing is sent anywhere. The approximate location is only looked up after a tap and kept for the open tab.
+Main club, followed clubs, language, theme, starred events, whether Rotary events are shown, what was new at the last visit, whether the welcome steps and the guide were seen, and the developer switches. All in the browser's local storage (`rac.*`); nothing is sent anywhere. The approximate location is only looked up after a tap and kept for the open tab.
 
 ## Offline and updates
 

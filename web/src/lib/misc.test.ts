@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { clubVars, onColor, vars } from "./color";
 import { guessClubs, km, mapsUrl, nearestClubs } from "./geo";
 import { PILLAR_RE, pillarFallback } from "./pillars";
-import { href, keptSearch, legacyRedirect, parseHash } from "./route";
+import { href, parseHash } from "./route";
 import { shareUrl } from "./share";
 import { here, store } from "./store";
 import { devFlag, installPretendDate } from "./dev";
@@ -93,14 +93,6 @@ describe("route", () => {
     expect(href("club", "zurich-international")).toBe("#/club/zurich-international");
     expect(href("discover", null, "?clubs=bern")).toBe("#/discover?clubs=bern");
     expect(href("discover", null, new URLSearchParams())).toBe("#/discover");
-  });
-  it("rewrites old links", () => {
-    expect(legacyRedirect("?event=179501&lang=de", "")).toBe("#/event/179501");
-    expect(legacyRedirect("?clubs=bern&lang=fr", "")).toBe("#/discover?clubs=bern");
-    expect(legacyRedirect("?clubs=bern", "#/settings")).toBeNull();
-    expect(legacyRedirect("?lang=de&welcome", "")).toBeNull();
-    expect(keptSearch("?event=1&lang=de&welcome")).toBe("?lang=de&welcome");
-    expect(keptSearch("?event=1")).toBe("");
   });
   it("?welcome counts once and leaves the URL; ?lang stays", async () => {
     history.replaceState(null, "", "/?lang=de&welcome#/");

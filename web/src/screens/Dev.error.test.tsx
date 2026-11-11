@@ -1,4 +1,4 @@
-// events.json fails (offline on a first visit): the old dev.html replaced everything in main with the offline message and Retry.
+// events.json fails (offline on a first visit): main holds only the offline message and Retry.
 // A file of its own, so events.json was never loaded in this module instance.
 import { expect, it, vi } from "vitest";
 import { act, render } from "@testing-library/react";

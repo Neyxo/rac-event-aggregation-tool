@@ -1,4 +1,4 @@
-// Intl draws the old intl.html with the fixture (clock: 2026-11-11 10:00): kinds, the international entry's upcoming events, why, questions.
+// Intl, with the fixture (clock: 2026-11-11 10:00): kinds, the international entry's upcoming events, why, questions.
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { cleanup, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";

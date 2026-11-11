@@ -1,4 +1,4 @@
-// Subscribe draws the old subscribe.html DOM: platform steps, the all-clubs feed, per-club feeds by district, international, Rotary,
+// Subscribe: platform steps, the all-clubs feed, per-club feeds by district, international, Rotary,
 // questions; on a phone the Google link explains itself in a popup and copies the link (clock: 2026-11-11 10:00).
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";

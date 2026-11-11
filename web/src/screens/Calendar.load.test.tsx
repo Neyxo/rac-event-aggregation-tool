@@ -11,7 +11,7 @@ const $ = (s: string) => document.querySelector(s);
 const route = parseHash("#/calendar");
 
 describe("Calendar loading", () => {  // in this order: a failed load is retried, a pending one is not
-  it("events.json fails: <main> holds only the offline note, like the old page", async () => {
+  it("events.json fails: <main> holds only the offline note", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) })));
     await act(async () => { render(<Calendar route={route} />); });
     const main = $("main.calwrap#main")!;
@@ -20,7 +20,7 @@ describe("Calendar loading", () => {  // in this order: a failed load is retried
     expect(main.querySelector("button.linkbtn")).not.toBeNull();
     expect($("#sheet")?.getAttribute("aria-hidden")).toBe("true");
   });
-  it("month, scope and today buttons do nothing until the data is in (the old page had no listeners yet)", async () => {
+  it("month, scope and today buttons do nothing until the data is in", async () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-11-11T10:00"));
     localStorage.setItem("rac.settings", JSON.stringify({ home: "luzern", also: ["zuerich"] }));

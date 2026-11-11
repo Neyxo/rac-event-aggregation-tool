@@ -1,4 +1,4 @@
-// The club screen draws the DOM of the old club.html, with the fixture's clubs (clock: 2026-11-11 10:00).
+// The club screen, with the fixture's clubs (clock: 2026-11-11 10:00).
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render } from "@testing-library/react";
 import { fixture } from "../test/fixture";
@@ -49,9 +49,9 @@ describe("club screen", () => {
     const about = main.querySelector("section.aboutc.glass")!;
     expect(about.querySelector(".k")?.textContent).toBe("About this club");
     expect(about.querySelector(".links button")?.textContent).toBe("How to join");
-    // the fixture has no sempachersee: that partner stays a plain chip, but a club link, not club.html
+    // the fixture has no sempachersee: that partner stays a plain chip, a link into the app
     expect([...about.querySelectorAll(".with a.chip.club")].map(a => [a.getAttribute("href"), a.getAttribute("target")])).toEqual([
-      ["https://eclubzentralschweiz.rotary1980.ch", "_blank"], ["https://luzern-wasserturm.rotary1980.ch", "_blank"], ["#/club/sempachersee", "_blank"]]);
+      ["https://eclubzentralschweiz.rotary1980.ch", "_blank"], ["https://luzern-wasserturm.rotary1980.ch", "_blank"], ["#/club/sempachersee", null]]);
     // only the news of the last year; the club's own photos
     expect([...main.querySelectorAll("h3.sh")].map(h => h.textContent)).toEqual(["News", "Pictures"]);
     expect(main.querySelectorAll(".strip.teasers a.nw")).toHaveLength(1);
@@ -61,7 +61,7 @@ describe("club screen", () => {
   });
 
   it("a partner that is a club of this app is its club chip", () => {
-    initData(withLuzern({ partners: [{ name: "Bern", url: "club.html?id=bern" }] }));
+    initData(withLuzern({ partners: [{ name: "Bern", url: "#/club/bern" }] }));
     const { container } = show("luzern");
     const chip = container.querySelector(".with a.chip.club")!;
     expect(chip.getAttribute("href")).toBe("#/club/bern");
