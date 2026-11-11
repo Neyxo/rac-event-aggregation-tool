@@ -1,0 +1,78 @@
+{
+ "generated": "20261111T005856Z",
+ "events": 34,
+ "rotary_events": 4,
+ "with_image": 0,
+ "without_location": 0,
+ "clubs": {
+  "luzern": {
+   "events": 4,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "sempachersee": {
+   "events": 3,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "bern": {
+   "events": 2,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "basel": {
+   "events": 4,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "baden": {
+   "events": 1,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "zuerich": {
+   "events": 6,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "zurich-international": {
+   "events": 2,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "stgallen": {
+   "events": 1,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "liechtenstein": {
+   "events": 3,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "geneve-international": {
+   "events": 3,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "ticino": {
+   "events": 1,
+   "cancelled": 0,
+   "without_detail": 0
+  },
+  "international": {
+   "events": 4,
+   "cancelled": 0,
+   "without_detail": 0
+  }
+ },
+ "failures": [],
+ "warnings": [
+  "e2e fixture warning: layout of one club changed"
+ ],
+ "unreadable": {
+  "bern": 1
+ },
+ "commit": "abc1234",
+ "run": "https://example.invalid/run/1"
+}

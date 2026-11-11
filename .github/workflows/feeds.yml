@@ -29,6 +29,20 @@ jobs:
         with:
           ref: data
           path: data
+      # The web app first: polaris_feed.py copies dist/ into public/. Any failure here stops the run before the
+      # deploy, so a broken app never ships (a failing club sync below does not).
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+        env:
+          E2E_DIR: dist
       - run: python3 test_polaris_feed.py
       # A failing club keeps its last good history; the other clubs still update.
       # The run is marked failed at the end so the problem gets noticed.
