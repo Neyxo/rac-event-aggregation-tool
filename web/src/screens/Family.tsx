@@ -5,7 +5,7 @@ import { t, tx } from "../i18n";
 import { isRac } from "../lib/data";
 import { clubVars, vars } from "../lib/color";
 import { href } from "../lib/route";
-import { ClubMark, Footer, Icon, LoadError, useData, useStickyHeads, useWash, type IconName } from "../components";
+import { ClubMark, Footer, Icon, useData, useStickyHeads, useWash, type IconName } from "../components";
 
 // logos in static/img/fam (Rotary and RYLA from Wikimedia Commons, Interact from Commons, Rotex and Inner Wheel from their sites);
 // the icon stands in where there is none yet, or when the file fails to load
@@ -43,7 +43,7 @@ function Tiles() {
 }
 
 function Districts() {
-  const { D } = useData();
+  const D = useData();
   return (
     <>
       {DISTRICTS.map(d => (
@@ -61,10 +61,8 @@ function Districts() {
 }
 
 export default function Family(_props: ScreenProps) {
-  const { ready, error } = useData();
   useWash("#0067c8", "#009739", "#d41367");
   useStickyHeads();
-  if (error) return <main className="wrap fam"><LoadError /></main>;
   return (
     <main className="wrap fam">
       <h1>{t("fam_h")}</h1>
@@ -72,8 +70,8 @@ export default function Family(_props: ScreenProps) {
       <Tiles />
       <h2 className="sh lv1">{t("fam_clubs")}</h2>
       {/* a box of its own: the district headings stop sticking where the clubs end */}
-      <div>{ready && <Districts />}</div>
-      <div id="foot">{ready && <Footer />}</div>
+      <div><Districts /></div>
+      <div id="foot"><Footer /></div>
     </main>
   );
 }

@@ -1,19 +1,19 @@
 // Hooks every screen can use: the data, stored values, the colour wash, the morphing hero, the sticky headings.
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore, type RefObject } from "react";
-import { getData, loadData, loaded, subscribeData, type AppData } from "../lib/data";
+import { use, useEffect, useLayoutEffect, useMemo, useRef, useSyncExternalStore, type RefObject } from "react";
+import { getData, getFailure, getStatus, loadData, subscribeData, type AppData } from "../lib/data";
 import { getInstallPrompt, subscribeInstall, type InstallPrompt } from "../lib/install";
 import { store, type StoreKey, type StoreKeys } from "../lib/store";
 
-/** events.json and what the app derives from it (lib/data's state), loaded once per session. Synchronous once loaded (no skeleton
- *  flash on back/forward). Re-renders whenever an action (setSettings, toggleSaved, setRotary) changes the state.
- *  Render <Skel/> while !ready and <LoadError/> on error (offline on a first visit, or the site is broken). */
-export function useData(): { ready: boolean; error: boolean; D: AppData } {
+/** events.json and what the app derives from it (lib/data's state): D.data.events, D.clubs, D.settings, D.saved. Re-renders whenever an
+ *  action (setSettings, toggleSaved, setRotary) changes the state. Until events.json is in, the screen suspends (App's DataBoundary
+ *  shows a skeleton instead); when it can't be loaded, it throws LoadFailed (the DataBoundary shows the offline note). So a screen
+ *  never sees the data missing, and only renders once it is there. */
+export function useData(): AppData {
   const D = useSyncExternalStore(subscribeData, getData);
-  const [status, setStatus] = useState<"loading" | "ready" | "error">(loaded ? "ready" : "loading");
-  useEffect(() => {
-    if (status !== "ready") loadData().then(() => setStatus("ready"), () => setStatus("error"));
-  }, []);
-  return { ready: status === "ready", error: status === "error", D };
+  const status = getStatus();
+  if (status === "error") throw getFailure();
+  if (status === "loading") use(loadData());
+  return D;
 }
 
 /** the browser's install prompt while it can be shown (lib/install's install() shows it), null otherwise */
@@ -136,3 +136,4 @@ export function useModal(dlg: RefObject<HTMLDialogElement | null>, open: boolean
     return () => clearTimeout(id);
   }, [open, refocus]);
 }
+

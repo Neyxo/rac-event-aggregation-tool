@@ -7,7 +7,7 @@ import { nClubs } from "../lib/data";
 import { vars } from "../lib/color";
 import type { Pillar } from "../lib/pillars";
 import { shareUrl } from "../lib/share";
-import { CtaBlock, Footer, HelpLinks, Icon, LoadError, PillarPic, QaList, share, useData, useEventListener, useNav, useStickyHeads, useWash } from "../components";
+import { CtaBlock, Footer, HelpLinks, Icon, PillarPic, QaList, share, useData, useEventListener, useNav, useStickyHeads, useWash } from "../components";
 import { scrollTarget } from "../components/router";
 
 const PILLARS: { k: Pillar; color: string; word: string; text: string }[] = [
@@ -32,13 +32,13 @@ export function ShareButton() {
 interface Phase { cur: number; all: boolean }
 
 /** The scroll range of the track split into four parts, with a little hysteresis so it never flickers at a boundary. */
-function usePhase(track: RefObject<HTMLDivElement | null>, ready: boolean): Phase {
+function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   const [phase, setPhase] = useState<Phase>({ cur: -2, all: false });
-  const nav = useNav(), readyAtMount = useRef(ready);
+  const nav = useNav();
   /** y: the scroll position to measure at (default: the current one) */
   const measure = (y?: number) => {
     const tr = track.current;
-    if (!ready || !tr) return;
+    if (!tr) return;
     const range = tr.offsetHeight - innerHeight, top = tr.getBoundingClientRect().top;
     const p = range > 0 ? Math.min(1, Math.max(0, (y === undefined ? -top : y - (top + scrollY)) / range)) : 1;
     const raw = p * 4 - 1;
@@ -50,17 +50,16 @@ function usePhase(track: RefObject<HTMLDivElement | null>, ready: boolean): Phas
   useEventListener("scroll", () => measure());
   useEventListener("resize", () => measure());
   useLayoutEffect(() => {
-    if (!ready) return;
-    // mounted with the data at hand (navigated here): this runs before App scrolls to the top (or back to where it was), so measure at
-    // that position, not at the previous screen's, or a word flashes open and closes again
-    measure(readyAtMount.current ? scrollTarget(nav) : undefined);
+    // this runs before App scrolls to the top (or back to where it was), so measure at that position, not at the previous screen's, or a
+    // word flashes open and closes again
+    measure(scrollTarget(nav));
     // reduced motion: everything open at first (no scroll-driven reveal); the next phase change takes over again
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPhase(ph => ({ ...ph, all: true }));
-  }, [ready]);
+  }, []);
   return phase;
 }
 
-function Stage({ ready, phase }: { ready: boolean; phase: Phase }) {
+function Stage({ phase }: { phase: Phase }) {
   const { cur, all } = phase;
   const color = cur < 0 ? CLOSED_COLOR : PILLARS[cur]!.color;
   return (
@@ -69,7 +68,7 @@ function Stage({ ready, phase }: { ready: boolean; phase: Phase }) {
         {PILLARS.map((p, i) => <i key={p.k} className={i === cur ? "on" : undefined} />)}
       </div>
       <div className={cur === -1 && !all ? "words closed" : "words"}>
-        {ready && PILLARS.map((p, i) => (
+        {PILLARS.map((p, i) => (
           <div key={p.k} className={all || i === cur ? "w on" : "w"} style={vars({ "--p": p.color })}>
             <div className="word">{p.word + "."}</div>
             <div className="open">
@@ -87,27 +86,25 @@ function Stage({ ready, phase }: { ready: boolean; phase: Phase }) {
 }
 
 export default function About(_props: ScreenProps) {
-  const { ready, error, D } = useData();
+  const D = useData();
   useWash("#0067c8", "#009739", "#d41367");
   useStickyHeads();
   const track = useRef<HTMLDivElement>(null);
-  const phase = usePhase(track, ready);
-  // events.json failed: the offline note in place of the screen
-  if (error) return <main className="wrap about"><LoadError /></main>;
+  const phase = usePhase(track);
   return (
     <main className="wrap about">
       <div className="track" ref={track}>
-        <Stage ready={ready} phase={phase} />
+        <Stage phase={phase} />
       </div>
       <section className="after">
         <h2>{t("ab_people")}</h2>
-        <p className="lead">{ready ? t("ab_people_t", { n: nClubs() }) : t("ab_people_t")}</p>
-        {ready && !D.clubs[D.settings.home] && <CtaBlock />}
+        <p className="lead">{t("ab_people_t", { n: nClubs() })}</p>
+        {!D.clubs[D.settings.home] && <CtaBlock />}
         <h3 className="sh">{t("read_on")}</h3>
-        {ready && <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />}
+        <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />
         <h3 className="sh">{t("faq")}</h3>
         <div className="qa"><QaList items={QA.map(i => [t(`ab_q${i}`), t(`ab_a${i}`)])} /></div>
-        <div id="foot">{ready && <Footer />}</div>
+        <div id="foot"><Footer /></div>
       </section>
     </main>
   );

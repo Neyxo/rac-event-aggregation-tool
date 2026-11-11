@@ -11,7 +11,7 @@ import { fmt, isPast } from "../lib/dates";
 import { SWISSTOPO_GREY } from "../lib/geo";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
-import { LoadError, useData } from "../components";
+import { useData } from "../components";
 
 
 /** the dot: an HTML string, because Leaflet's divIcon takes markup */
@@ -36,16 +36,14 @@ function popupLink(e: Event): HTMLElement {
 }
 
 export default function MapScreen(_props: ScreenProps) {
-  const { ready, error, D } = useData();
+  const D = useData();
   // kept in the history entry, so back/forward brings it back as a browser restores a form field
   const [past, setPast] = useState(() => !!(history.state as { past?: boolean } | null)?.past);
   const [count, setCount] = useState<number | null>(null);
   const box = useRef<HTMLDivElement>(null);
   const layer = useRef<L.LayerGroup | null>(null);
 
-  // the map is up (and its tiles loading) before the events arrive
   useEffect(() => {
-    if (error) return;
     // Switzerland & Liechtenstein, no zooming out to space
     const map = L.map(box.current!, { minZoom: 7, maxBounds: [[45, 4.5], [48.6, 12]], maxBoundsViscosity: 1 }).setView([46.9, 8.2], 8);
     // the grey national map, so the markers carry the colour
@@ -55,11 +53,11 @@ export default function MapScreen(_props: ScreenProps) {
       map.remove();
       layer.current = null;
     };
-  }, [error]);
+  }, []);
 
   useEffect(() => {
     const group = layer.current;
-    if (!ready || !group) return;
+    if (!group) return;
     group.clearLayers();
     let n = 0;
     for (const e of D.data.events) {
@@ -69,10 +67,8 @@ export default function MapScreen(_props: ScreenProps) {
       L.marker(e.coords, { title: e.title, icon }).bindPopup(popupLink(e)).addTo(group);
     }
     setCount(n);
-  }, [ready, past]);
+  }, [past]);
 
-  // events.json failed: the offline note in place of the screen, map included
-  if (error) return <main className="mapwrap"><LoadError /></main>;
   return (
     <main className="mapwrap">
       <div id="map" ref={box} />

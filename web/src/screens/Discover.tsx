@@ -6,7 +6,7 @@ import { club, myClubs } from "../lib/data";
 import { clubVars } from "../lib/color";
 import { activeCount, DISTRICT_IDS, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
-import { ClubChips, ClubMark, LoadError, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
+import { ClubChips, ClubMark, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, type FilterApi } from "./EventList";
 
@@ -38,7 +38,7 @@ function DistrictRow({ api }: { api: FilterApi }) {
 /** "Clubs: All", the chosen clubs (a tap removes one), and the button that opens the picker */
 function ClubRow({ api }: { api: FilterApi }) {
   const [picking, setPicking] = useState(false);
-  const { D } = useData();
+  const D = useData();
   const { clubs, d } = api.live;
   const toggle = (id: string) => change(api, { clubs: toggled(api.live.clubs, id) });
   // with districts chosen, the picker offers only their clubs
@@ -77,7 +77,7 @@ function PlaceInput({ api }: { api: FilterApi }) {
 }
 
 /** search, the Filters button (with the number of filters in use), the map, the views, and the panel the button opens */
-function FilterBar({ api, ready }: { api: FilterApi; ready: boolean }) {
+function FilterBar({ api }: { api: FilterApi }) {
   const [open, setOpen] = useState(false);
   // the chips, place and radius count; typing a search doesn't
   const n = activeCount(api.live);
@@ -99,8 +99,8 @@ function FilterBar({ api, ready }: { api: FilterApi; ready: boolean }) {
       </div>
       <Views views={["all", "near", "saved", "past"]} pressed={api.inited ? api.live.view : undefined} onPick={api.setView} />
       <div className="panel glass" id="panel" hidden={!open}>
-        <div className="row" id="districts" role="group" aria-label={t("district")}>{ready && <DistrictRow api={api} />}</div>
-        <div className="row" id="clubs" role="group" aria-label={t("clubs")}>{ready && <ClubRow api={api} />}</div>
+        <div className="row" id="districts" role="group" aria-label={t("district")}><DistrictRow api={api} /></div>
+        <div className="row" id="clubs" role="group" aria-label={t("clubs")}><ClubRow api={api} /></div>
         <div className="tools">
           <PlaceInput api={api} />
           <button className="linkbtn" type="button" onClick={api.locate}>📍 <span>{t("locate")}</span></button>
@@ -122,22 +122,19 @@ export default function Discover({ route }: ScreenProps) {
 }
 
 function DiscoverScreen({ route }: ScreenProps) {
-  const { ready, error, D } = useData();
-  const api = useFilters(ready, route.query, "discover");
+  const D = useData();
+  const api = useFilters(route.query, "discover");
   useStickyHeads();
-  if (error) {
-    return <><StaleBanner ready={false} /><main className="wrap" id="main"><LoadError /></main></>;
-  }
   const f = api.shown;
   const res = f ? selectEvents(D.data.events, f, { page: "discover", mine: myClubs(), saved: D.saved, scope: null, club }) : null;
   return (
     <>
-      <StaleBanner ready={ready} />
+      <StaleBanner />
       <main className="wrap" id="main">
-        <FilterBar api={api} ready={ready} />
+        <FilterBar api={api} />
         <ListHead title={t("events")} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
         <Results res={res} view={f?.view ?? "all"} onClear={api.clear} />
-        <Foot ready={ready} />
+        <Foot />
       </main>
     </>
   );

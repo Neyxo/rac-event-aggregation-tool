@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Club as ClubT, Partner } from "../lib/types";
 import {
-  ClubChip, EventCard, FeedLinks, Footer, HelpLinks, Icon, ICON, LoadError, NewsStrip, NextUp, Popup, Rich, share,
+  ClubChip, EventCard, FeedLinks, Footer, HelpLinks, Icon, ICON, NewsStrip, NextUp, Popup, Rich, share,
   useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
 } from "../components";
 
@@ -29,7 +29,7 @@ function ShareButton({ c }: { c: ClubT }) {
 
 /** "#/club/X" in clubs.toml is another club of this app: its chip (a plain link while it is not loaded); anything else is an outside site */
 function PartnerChip({ p }: { p: Partner }) {
-  const { D } = useData();
+  const D = useData();
   const id = p.url.match(/^#\/club\/(.+)/)?.[1];
   if (id && D.clubs[id]) return <ClubChip id={id} />;
   const out = id ? {} : { target: "_blank", rel: "noopener" };
@@ -76,8 +76,8 @@ function Photos({ c, pastPics }: { c: ClubT; pastPics: { src: string; href: stri
 }
 
 export default function Club({ route }: ScreenProps) {
-  const { ready, error, D } = useData();
-  const c = ready ? D.clubs[route.params.id] : undefined;
+  const D = useData();
+  const c = D.clubs[route.params.id];
   const head = useRef<HTMLDivElement>(null), hero = useRef<HTMLDivElement>(null), ph = useRef<HTMLSpanElement>(null);
   const [sub, setSub] = useState(false);
   useWash(c?.color, c?.color, c?.color);
@@ -102,8 +102,6 @@ export default function Club({ route }: ScreenProps) {
   useEventListener("scroll", drift);
   useLayoutEffect(drift, [c]);
 
-  if (error) return <main className="wrap clubpage"><LoadError /></main>;
-  if (!ready) return <main className="wrap clubpage" />;
   if (!c) {
     return (
       <main className="wrap clubpage">

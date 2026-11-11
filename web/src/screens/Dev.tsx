@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { store, type StoreKey } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, Footer, LoadError, toast, useData } from "../components";
+import { ClubMark, Footer, toast, useData } from "../components";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
 type Stat = Pick<Status, "clubs" | "failures"> & Partial<Omit<Status, "clubs" | "failures">>;
@@ -79,7 +79,7 @@ function nextRun(): Date {
 }
 
 function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot: Event[] }) {
-  const { data } = useData().D;
+  const { data } = useData();
   const gen = new Date(data.generated);
   const age = (Date.now() - gen.getTime()) / 36e5;
   const level = age < 8 ? "ok" : age < 30 ? "warn" : "bad";
@@ -235,7 +235,7 @@ function missingTexts(): string[] {
 
 /** what a club could fix on Polaris, and texts that are missing in a language */
 function Checks({ own, up }: { own: Event[]; up: Event[] }) {
-  const { data } = useData().D;
+  const { data } = useData();
   const ev = (e: Event) => <a key={e.id} href={href("event", e.id)}>{`${fmt.dms.format(new Date(e.start))} · ${club(e.clubs[0] ?? "").short} · ${e.title}`}</a>;
   const lastOf = (c: Club) => own.filter(e => e.clubs.includes(c.id)).at(-1);
   const quiet = data.clubs.filter(c => !c.source).filter(c => !up.some(e => e.clubs.includes(c.id)));
@@ -257,7 +257,7 @@ function Checks({ own, up }: { own: Event[]; up: Event[] }) {
 
 /** one line per club, the Rotary districts included whether or not their layer is switched on */
 function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[]; rotClubs: Club[] }) {
-  const { data } = useData().D;
+  const { data } = useData();
   const upBy: Record<string, number> = {};
   for (const e of [...own, ...rot]) if (!isPast(e)) for (const c of e.clubs) upBy[c] = (upBy[c] || 0) + 1;
   const all = [...data.clubs.filter(c => c.source !== "rotary"), ...rotClubs];
@@ -270,7 +270,7 @@ function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[
 }
 
 export default function Dev(_props: ScreenProps) {
-  const { ready, error, D } = useData();
+  const D = useData();
   const st = useStatus();
   const [dev, setDev] = useState<Device | null>(null);
   useEffect(() => {
@@ -279,10 +279,8 @@ export default function Dev(_props: ScreenProps) {
   const own = D.data.events.filter(e => e.layer !== "rotary");
   const up = own.filter(e => !isPast(e));
   const rot = D.rotary;
-  // the sections fill once both events.json and status.json are in, so nothing jumps
-  const go = ready && st;
-  // events.json failed: the offline note in place of the screen
-  if (error) return <main className="wrap settings dev"><LoadError /></main>;
+  // the sections fill once status.json is in too, so nothing jumps
+  const go = st;
   return (
     <main className="wrap settings dev">
       <h1>Developer</h1>

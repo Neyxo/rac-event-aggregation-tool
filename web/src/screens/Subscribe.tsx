@@ -6,7 +6,7 @@ import { clubVars } from "../lib/color";
 import { href } from "../lib/route";
 import type { Club } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, FeedLinks, Footer, LoadError, QaList, useData } from "../components";
+import { ClubMark, FeedLinks, Footer, QaList, useData } from "../components";
 
 const PLATFORMS = [
   ["sp_ios", "sp_ios_s"],
@@ -41,12 +41,11 @@ function FeedGroup({ name, clubs, upcomingBy }: { name: string; clubs: Club[]; u
 }
 
 export default function Subscribe(_props: ScreenProps) {
-  const { ready, error, D } = useData();
-  if (error) return <main className="wrap"><LoadError /></main>;
+  const D = useData();
   // per club, Rotary included (its district feeds); the "everything" feed is Rotaract only, like all.ics
   const upcomingBy: Record<string, number> = {};
   let total = 0;
-  for (const e of ready ? D.data.events : []) {
+  for (const e of D.data.events) {
     if (isPast(e)) continue;
     if (e.layer !== "rotary") total++;
     for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1;
@@ -72,24 +71,24 @@ export default function Subscribe(_props: ScreenProps) {
         <h2>{t("sp_all")}</h2>
         <p>{t("sp_all_text")}</p>
         <div className="feeds">
-          {ready && <FeedRow c={{ name: t("sp_all_feed") }} file="all.ics" count={total} />}
+          <FeedRow c={{ name: t("sp_all_feed") }} file="all.ics" count={total} />
         </div>
       </section>
       <section className="card">
         <h2>{t("sp_club")}</h2>
         <p>{t("sp_club_text")}</p>
         <div className="feeds">
-          {ready && districts.map(([d, k]) => <FeedGroup key={d} name={t(k)} clubs={inDistrict(d)} upcomingBy={upcomingBy} />)}
-          {ready && <FeedGroup name={tx("intl").h} clubs={ofSource("international")} upcomingBy={upcomingBy} />}
+          {districts.map(([d, k]) => <FeedGroup key={d} name={t(k)} clubs={inDistrict(d)} upcomingBy={upcomingBy} />)}
+          <FeedGroup name={tx("intl").h} clubs={ofSource("international")} upcomingBy={upcomingBy} />
           {/* the Rotary layer's feeds, one per district; only there when "Show Rotary events" is on */}
-          {ready && <FeedGroup name={t("rotary_feeds")} clubs={ofSource("rotary")} upcomingBy={upcomingBy} />}
+          <FeedGroup name={t("rotary_feeds")} clubs={ofSource("rotary")} upcomingBy={upcomingBy} />
         </div>
       </section>
       <section className="card">
         <h2>{t("faq")}</h2>
         <div className="qa"><QaList items={tx("sub_qa")} /></div>
       </section>
-      <div id="foot">{ready && <Footer />}</div>
+      <div id="foot"><Footer /></div>
     </main>
   );
 }

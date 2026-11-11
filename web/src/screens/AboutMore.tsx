@@ -6,7 +6,7 @@ import { t } from "../i18n";
 import { isRac, nClubs } from "../lib/data";
 import { SWISSTOPO_GREY } from "../lib/geo";
 import type { Club, Coords } from "../lib/types";
-import { CtaBlock, Footer, HelpLinks, LoadError, PillarPic, useData, useWash } from "../components";
+import { CtaBlock, Footer, HelpLinks, PillarPic, useData, useWash } from "../components";
 
 const DISTRICT_COLOR: Record<string, string> = { "1980": "#0067c8", "1990": "#d41367", "2000": "#009739" };
 // dots on major cities, illustrating the worldwide network
@@ -37,23 +37,18 @@ function drawMaps(swiss: HTMLElement, world: HTMLElement, clubs: Club[]): () => 
 }
 
 export default function AboutMore(_props: ScreenProps) {
-  const { ready, error, D } = useData();
+  const D = useData();
   useWash("#0067c8", "#009739", "#d41367");
   const swiss = useRef<HTMLDivElement>(null);
   const world = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!ready) return;
-    return drawMaps(swiss.current!, world.current!, D.data.clubs);
-  }, [ready]);
+  useEffect(() => drawMaps(swiss.current!, world.current!, D.data.clubs), []);
 
-  // events.json failed: the offline note in place of the screen (the maps need the clubs)
-  if (error) return <main className="wrap more"><LoadError /></main>;
   return (
     <main className="wrap more">
       <h1>{t("ab_more")}</h1>
       <section className="vis">
         {/* a club photo, not a cropped event poster */}
-        {ready ? <PillarPic k="help" className="bg" /> : <img className="bg" alt="" referrerPolicy="no-referrer" />}
+        <PillarPic k="help" className="bg" />
         <div className="pane">
           <img className="wheel" src="rotaract.svg" alt="Rotaract" />
           <b>{t("sp_rotary")}</b>
@@ -63,10 +58,10 @@ export default function AboutMore(_props: ScreenProps) {
       <section className="vis map">
         <div className="bg" ref={swiss} />
         <div className="pane">
-          <b>{ready ? t("sp_dist", { n: nClubs() }) : t("sp_dist")}</b>
+          <b>{t("sp_dist", { n: nClubs() })}</b>
           <span>{t("sp_dist_t")}</span>
           <div className="leg">
-            {ready && Object.entries(DISTRICT_COLOR).map(([d, c]) => <span key={d} style={{ color: c }}>{"D" + d}</span>)}
+            {Object.entries(DISTRICT_COLOR).map(([d, c]) => <span key={d} style={{ color: c }}>{"D" + d}</span>)}
           </div>
         </div>
       </section>
@@ -77,9 +72,9 @@ export default function AboutMore(_props: ScreenProps) {
           <span>{t("sp_world_t")}</span>
         </div>
       </section>
-      {ready && <HelpLinks keys={["intl", "family", "guide"]} />}
-      {ready && <CtaBlock />}
-      <div id="foot">{ready && <Footer />}</div>
+      <HelpLinks keys={["intl", "family", "guide"]} />
+      <CtaBlock />
+      <div id="foot"><Footer /></div>
     </main>
   );
 }

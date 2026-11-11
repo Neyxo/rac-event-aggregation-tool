@@ -8,11 +8,12 @@
  *
  * HOW A SCREEN WORKS (web/src/screens/<Name>.tsx):
  * - export default function Name({ route }: ScreenProps). route.params.id is the id of #/event/<id> and #/club/<id>; route.query is
- *   the URLSearchParams after "?" in the hash (Discover's filters). The screen is remounted when the route name or id changes.
+ *   the URLSearchParams after "?" in the hash (Discover's filters). The screen (and its DataBoundary) is remounted when the route name or id changes.
  * - Render what sits between </header> and <nav>: usually <main className="..."> (id="main" on the skip-link screens), plus siblings such as the stale banner
  *   before main, the calendar sheet or the onboarding <dialog>.
  *   No wrapper elements: app.css has child selectors. Never render header, nav, #frost or #toast: App does.
- * - Data: const { ready, error, D } = useData(); render <Skel/>s until ready, <LoadError/> on error. D is a read-only snapshot:
+ * - Data: const D = useData(). The screen only renders once events.json is in: until then App's DataBoundary shows a skeleton, and
+ *   the offline note when it can't be loaded (no loading or error states in a screen). D is a read-only snapshot:
  *   D.data.events / D.data.clubs / D.clubs / D.settings / D.saved, with myClubs(), club(id), isRac(), nClubs(), eventById(id) (keeps
  *   the shared-link exception for a Rotary event) from lib/data. Change it only through lib/data's actions: setSettings(s),
  *   toggleSaved(id), setRotary(on); every component that called useData() (or useSaved(id) for one star) re-renders.
@@ -34,11 +35,13 @@
  *   here, so Leaflet is only fetched there; AboutMore should import("leaflet") in an effect for the same reason).
  * - Home: takeWelcome() (lib/route) is true once when the app was opened with ?welcome.
  */
-import { lazy, Suspense, useLayoutEffect, type ComponentType } from "react";
+import { lazy, useLayoutEffect, type ComponentType } from "react";
 import { t } from "./i18n";
 import type { Route, RouteName } from "./lib/route";
 import { Tabs, TopBar, type Active } from "./components/Chrome";
 import { Toast } from "./components/Toast";
+import { DataBoundary } from "./components/Blocks";
+import { LoadFailed } from "./lib/data";
 import { inPageLink, scrollTarget, useNav, useRoute } from "./components/router";
 import Home from "./screens/Home";
 import Discover from "./screens/Discover";
@@ -55,8 +58,11 @@ import Guide from "./screens/Guide";
 import Words from "./screens/Words";
 import Intl from "./screens/Intl";
 
-const MapScreen = lazy(() => import("./screens/Map"));  // Leaflet only loads here
-const Dev = lazy(() => import("./screens/Dev"));  // only developers ever open it
+// a screen's code that can't be fetched (offline, or replaced by a newer deploy) is shown like data that can't: the offline note,
+// whose Refresh loads the app again
+const screen = (load: () => Promise<{ default: ComponentType<ScreenProps> }>) => lazy(() => load().catch((e: unknown) => { throw new LoadFailed("screen code: " + String(e), { cause: e }); }));
+const MapScreen = screen(() => import("./screens/Map"));  // Leaflet only loads here
+const Dev = screen(() => import("./screens/Dev"));  // only developers ever open it
 
 export interface ScreenProps { route: Route }
 interface Meta {
@@ -73,25 +79,29 @@ interface Meta {
   skip?: boolean;
   /** a button of the screen's own at the start of the top bar's right side */
   extra?: ComponentType;
+  /** the class of the screen's <main> (default "wrap"), for the skeleton and the offline note App shows in place of the screen */
+  main?: string;
+  /** skeleton rows while the data loads (the lists, an event); none otherwise */
+  skel?: number;
 }
 const T = (s: string) => s + " · Rotaract Events";
 export const ROUTE_META: Record<RouteName, Meta> = {
-  home: { screen: Home, page: "home", active: "home", title: "Rotaract Events", skip: true },
-  discover: { screen: Discover, page: "discover", active: "discover", title: T("Discover"), skip: true },
-  calendar: { screen: Calendar, page: "calendar", cls: "calpage", active: "calendar", title: T("Calendar"), skip: true },
-  map: { screen: MapScreen, page: "map", cls: "calpage", active: "discover", back: true, title: T("Map") },
-  event: { screen: Event, page: "event", active: null, back: true, title: "Rotaract Events" },
-  club: { screen: Club, page: "club", active: null, back: true, title: "Rotaract Club" },
-  settings: { screen: Settings, page: "settings", active: "settings", title: T("Settings") },
+  home: { screen: Home, page: "home", active: "home", title: "Rotaract Events", skip: true, skel: 3 },
+  discover: { screen: Discover, page: "discover", active: "discover", title: T("Discover"), skip: true, skel: 3 },
+  calendar: { screen: Calendar, page: "calendar", cls: "calpage", active: "calendar", title: T("Calendar"), skip: true, main: "calwrap" },
+  map: { screen: MapScreen, page: "map", cls: "calpage", active: "discover", back: true, title: T("Map"), main: "mapwrap" },
+  event: { screen: Event, page: "event", active: null, back: true, title: "Rotaract Events", main: "wrap evpage", skel: 1 },
+  club: { screen: Club, page: "club", active: null, back: true, title: "Rotaract Club", main: "wrap clubpage" },
+  settings: { screen: Settings, page: "settings", active: "settings", title: T("Settings"), main: "wrap settings" },
   subscribe: { screen: Subscribe, page: "subscribe", active: null, back: true, title: T("Subscribe") },
-  about: { screen: About, page: "about", active: "about", title: T("What is Rotaract?"), extra: AboutShare },
-  "about-more": { screen: AboutMore, page: "about-more", cls: "frosted", active: "about", back: true, title: T("Rotary, districts & the world") },
-  family: { screen: Family, page: "family", active: "about", back: true, title: T("The Rotary family") },
+  about: { screen: About, page: "about", active: "about", title: T("What is Rotaract?"), extra: AboutShare, main: "wrap about" },
+  "about-more": { screen: AboutMore, page: "about-more", cls: "frosted", active: "about", back: true, title: T("Rotary, districts & the world"), main: "wrap more" },
+  family: { screen: Family, page: "family", active: "about", back: true, title: T("The Rotary family"), main: "wrap fam" },
   public: { screen: Public, page: "public", active: "app", title: T("About this app") },
-  guide: { screen: Guide, page: "guide", active: "about", back: true, title: T("New in the club") },
+  guide: { screen: Guide, page: "guide", active: "about", back: true, title: T("New in the club"), main: "wrap fam" },
   words: { screen: Words, page: "words", active: "about", back: true, title: T("Rotaract words") },
-  intl: { screen: Intl, page: "intl", active: "about", back: true, title: T("International events") },
-  dev: { screen: Dev, page: "dev", active: "dev", title: T("Developer") },
+  intl: { screen: Intl, page: "intl", active: "about", back: true, title: T("International events"), main: "wrap fam" },
+  dev: { screen: Dev, page: "dev", active: "dev", title: T("Developer"), main: "wrap settings dev" },
 };
 
 export default function App() {
@@ -114,9 +124,9 @@ export default function App() {
       <div id="frost" aria-hidden="true" />
       {meta.skip && <a className="skip" {...inPageLink("main")}>{t("skip_to")}</a>}
       <TopBar active={meta.active} back={meta.back} extra={Extra && <Extra />} />
-      <Suspense fallback={null}>
-        <Screen key={route.name + "/" + route.params.id} route={route} />
-      </Suspense>
+      <DataBoundary key={route.name + "/" + route.params.id} nav={nav.id} main={meta.main ?? "wrap"} skel={meta.skel ?? 0}>
+        <Screen route={route} />
+      </DataBoundary>
       <Tabs active={meta.active} />
       <Toast />
     </>

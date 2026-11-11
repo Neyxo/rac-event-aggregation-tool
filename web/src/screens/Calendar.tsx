@@ -7,7 +7,7 @@ import { byDay, calendarEvents, monthGrid } from "../lib/calendar";
 import { fmt, sameDay, startOfDay } from "../lib/dates";
 import { club, myClubs } from "../lib/data";
 import { clubVars, cx, vars } from "../lib/color";
-import { EventCard, LoadError, useData, useEventListener, useModal } from "../components";
+import { EventCard, useData, useEventListener, useModal } from "../components";
 
 type Scope = "mine" | "all";
 /** what the sheet shows; kept after closing so the content stays while it slides away */
@@ -66,7 +66,7 @@ function Grid({ month, scope, selected, onOpen }: { month: Date; scope: Scope; s
   const ref = useRef<HTMLDivElement>(null);
   const now = new Date();
   const g = monthGrid(month);
-  const days = byDay(calendarEvents(useData().D.data.events, scope, myClubs()), g);
+  const days = byDay(calendarEvents(useData().data.events, scope, myClubs()), g);
   // after every render (new month, scope, pressed day) and on resize. Again next frame
   // (still before it is painted): coming from another screen, App's layout effect gives body its calpage class (the full-height
   // column the cells are measured in) only after this one has run.
@@ -124,13 +124,13 @@ function Sheet({ open, content, onClose }: { open: boolean; content: SheetConten
 }
 
 export default function Calendar(_props: ScreenProps) {
-  const { ready, error, D } = useData();
+  const D = useData();
   const [month, setMonth] = useState(() => firstOfMonth(new Date()));
   const [picked, setScope] = useState<Scope>("mine");
   const [day, setDay] = useState<Date | null>(null);
   const [content, setContent] = useState<SheetContent | null>(null);
   // without clubs of my own there is nothing to narrow down to: everything, and no switch
-  const noClubs = ready && !myClubs().length;
+  const noClubs = !myClubs().length;
   const scope: Scope = noClubs ? "all" : picked;
 
   const openDay = (d: Date, evs: Event[]) => {
@@ -138,44 +138,35 @@ export default function Calendar(_props: ScreenProps) {
     setContent({ day: d, evs });
   };
   const close = () => setDay(null);
-  // the buttons do nothing until the data is in: there is nothing to show for another month yet
-  const shiftMonth = (n: number) => { if (ready) setMonth(m => new Date(m.getFullYear(), m.getMonth() + n, 1)); };
-  const pickScope = (s: Scope) => { if (ready) setScope(s); };
+  const shiftMonth = (n: number) => setMonth(m => new Date(m.getFullYear(), m.getMonth() + n, 1));
   // today's month, and the sheet when something starts today
   const goToday = () => {
-    if (!ready) return;
     const n = new Date();
     setMonth(firstOfMonth(n));
     const evs = calendarEvents(D.data.events, scope, myClubs()).filter(e => sameDay(new Date(e.start), n));
     if (evs.length) openDay(startOfDay(n), evs);
   };
 
-
   return (
     <>
       <main className="calwrap" id="main">
-        {error ? <LoadError /> : (
-          <>
-            <div className="mhead">
-              <button type="button" id="prev" aria-label={t("prev_month")} onClick={() => shiftMonth(-1)}>‹</button>
-              <h2 id="mtitle">{ready ? fmt.month.format(month) : null}</h2>
-              <div className="seg scope" role="group" hidden={noClubs}>
-                <ScopeButton s="mine" label={t("mine_short")} scope={ready ? scope : null} onPick={pickScope} />
-                <ScopeButton s="all" label={t("all_clubs_short")} scope={ready ? scope : null} onPick={pickScope} />
-              </div>
-              <button type="button" id="todayBtn" onClick={goToday}>{t("today")}</button>
-              <button type="button" id="next" aria-label={t("next_month")} onClick={() => shiftMonth(1)}>›</button>
-            </div>
-            {ready ? <Grid month={month} scope={scope} selected={day} onOpen={openDay} /> : <div className="grid" id="grid" role="grid" />}
-          </>
-        )}
+        <div className="mhead">
+          <button type="button" id="prev" aria-label={t("prev_month")} onClick={() => shiftMonth(-1)}>‹</button>
+          <h2 id="mtitle">{fmt.month.format(month)}</h2>
+          <div className="seg scope" role="group" hidden={noClubs}>
+            <ScopeButton s="mine" label={t("mine_short")} scope={scope} onPick={setScope} />
+            <ScopeButton s="all" label={t("all_clubs_short")} scope={scope} onPick={setScope} />
+          </div>
+          <button type="button" id="todayBtn" onClick={goToday}>{t("today")}</button>
+          <button type="button" id="next" aria-label={t("next_month")} onClick={() => shiftMonth(1)}>›</button>
+        </div>
+        <Grid month={month} scope={scope} selected={day} onOpen={openDay} />
       </main>
       <Sheet open={day !== null} content={content} onClose={close} />
     </>
   );
 }
 
-/** scope: null until the data is in (neither button is pressed yet) */
-function ScopeButton({ s, label, scope, onPick }: { s: Scope; label: string; scope: Scope | null; onPick: (s: Scope) => void }) {
-  return <button type="button" aria-pressed={scope ? scope === s : undefined} onClick={() => onPick(s)}>{label}</button>;
+function ScopeButton({ s, label, scope, onPick }: { s: Scope; label: string; scope: Scope; onPick: (s: Scope) => void }) {
+  return <button type="button" aria-pressed={scope === s} onClick={() => onPick(s)}>{label}</button>;
 }

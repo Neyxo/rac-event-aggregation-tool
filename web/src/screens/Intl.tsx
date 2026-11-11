@@ -4,16 +4,14 @@ import { t, tx } from "../i18n";
 import { vars } from "../lib/color";
 import { isPast } from "../lib/dates";
 import { href } from "../lib/route";
-import { EventCard, Footer, HelpLinks, Icon, LoadError, MoreLink, QaList, useData, useStickyHeads, useTitle, useWash, type IconName } from "../components";
+import { EventCard, Footer, HelpLinks, Icon, MoreLink, QaList, useData, useStickyHeads, useTitle, useWash, type IconName } from "../components";
 
 const COL = ["#d41367", "#0067c8", "#009739"];
 const KIND_IC: IconName[] = ["users", "flag", "pin", "wheel"];
 
 /** the dates: the international entry's upcoming events (or a line saying there are none), then the way to follow them */
 function Next() {
-  const { ready, D } = useData();
-  // nothing until the data is there: no skeleton for a few lines
-  if (!ready) return null;
+  const D = useData();
   const x = tx("intl");
   const next = D.data.events.filter(e => e.clubs.includes("international") && !isPast(e));
   return (
@@ -26,11 +24,9 @@ function Next() {
 
 export default function Intl(_props: ScreenProps) {
   const x = tx("intl");
-  const { error } = useData();
   useWash("#d41367", "#0067c8", "#009739");
   useStickyHeads();
   useTitle(x.h);
-  if (error) return <main className="wrap fam"><LoadError /></main>;
   return (
     <main className="wrap fam">
       <h1>{x.h}</h1>

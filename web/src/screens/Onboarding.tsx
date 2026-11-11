@@ -73,7 +73,7 @@ function Slide({ step, title }: { step: number; title: ReactNode }) {
 /** One step of the welcome. A member: welcome, clubs, calendar, install (4). A guest: welcome, three slides, clubs near, install (6). */
 function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void; finish: (s: Settings) => void; h2: RefObject<HTMLHeadingElement | null> }) {
   const { s, member, step, guess } = ob;
-  const { D } = useData();
+  const D = useData();
   const toggleAlso = (id: string) => set({ s: { ...s, also: s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id] } });
   const title = (text: string) => <h2 id="obTitle" tabIndex={-1} ref={h2}>{text}</h2>;
   if (step === 0) {
@@ -161,7 +161,7 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
 
 /** The welcome dialog. It stays mounted, so its content stays while it closes; run > 0 (re)starts it. */
 export function Onboarding({ run, onFinish }: { run: number; onFinish: () => void }) {
-  const { D } = useData();
+  const D = useData();
   const dlg = useRef<HTMLDialogElement>(null);
   const h2 = useRef<HTMLHeadingElement>(null);
   const [ob, setOb] = useState<Ob | null>(null);
