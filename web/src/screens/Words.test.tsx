@@ -11,9 +11,8 @@ const search = () => screen.getByRole("searchbox", { name: "Search a word" });
 const type = (value: string) => fireEvent.change(search(), { target: { value } });
 /** the words shown (hidden ones leave the accessibility tree) */
 const visible = () => screen.queryAllByRole("term").map(d => d.textContent);
-/** the letter headings shown: decoration, hidden from screen readers, so found by class */
-const letterEls = () => [...document.querySelectorAll<HTMLElement>(".gloss .ltr")];
-const letters = () => letterEls().filter(l => !l.hidden).map(l => l.textContent).join("");
+/** the letter headings shown: decoration drawn by CSS from data-ltr on the first word of each letter */
+const letters = () => [...document.querySelectorAll<HTMLElement>(".gloss [data-ltr]")].filter(l => !l.hidden).map(l => l.dataset.ltr).join("");
 const none = () => screen.getByText("No such word here yet.");
 
 describe("Words", () => {
@@ -23,7 +22,6 @@ describe("Words", () => {
     expect(words.length).toBeGreaterThan(40);
     expect(words).toEqual([...words].sort((a, b) => a!.localeCompare(b!, "en-GB")));
     expect(letters().startsWith("ABCD")).toBe(true);
-    expect(letterEls()[0]!.getAttribute("aria-hidden")).toBe("true");
     expect(search().getAttribute("placeholder")).toBe("Search a word");
     expect(search().hasAttribute("value")).toBe(false);
     expect(none().hidden).toBe(true);

@@ -42,12 +42,10 @@ export default function Words(_props: ScreenProps) {
   );
 }
 
-/** one word, preceded by its letter when it starts a new one; the letters go while searching */
+/** one word, with its letter above it when it starts a new one (CSS draws data-ltr: a <dl> takes no other children than its
+ *  dt/dd groups); the letters go while searching */
 function Row({ w, d, hidden, letter, letterHidden }: { w: string; d: string; hidden: boolean; letter: string | null; letterHidden: boolean }) {
   return (
-    <>
-      {letter ? <div className="ltr" aria-hidden="true" hidden={letterHidden}>{letter}</div> : null}
-      <div hidden={hidden}><dt>{w}</dt><dd>{d}</dd></div>
-    </>
+    <div hidden={hidden} data-ltr={letter && !letterHidden ? letter : undefined}><dt>{w}</dt><dd>{d}</dd></div>
   );
 }

@@ -6,11 +6,11 @@ import { expect, go, MEMBER, standalone, test } from "./fixtures";
 const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#/club/luzern", "#/settings", "#/subscribe", "#/about", "#/about-more",
   "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/event/nope", "#/club/nope"];
 
-// What axe found when the check was added, as "<screen> <rule>": open work, not accepted. Fix one, delete its line; anything not
-// listed here fails the test.
+// The axe findings that stay, as "<screen> <rule>"; anything not listed here fails the test.
 const KNOWN_A11Y = new Set<string>([
+  // a day with events shows their titles, its label says "Thursday, 19 November 2026, 2 events": axe wants the titles in the label
+  // word for word; they are read in the sheet the day opens
   "#/calendar label-content-name-mismatch",
-  "#/words definition-list",
 ]);
 
 test.describe("member", () => {

@@ -511,7 +511,7 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 :root[data-theme=dark] .fam .box.tint { background: linear-gradient(160deg, color-mix(in srgb, var(--p) 26%, transparent), transparent 65%), var(--pane); }
 .bh { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; } .bh .ic { margin: 0; flex: 0 0 auto; } .fam .bh h2 { margin: 0; font-size: 1.2rem; }
 .fam .box ul.yes li::before { content: "✓"; color: #009739; }
-.gloss .ltr { padding: 14px 0 0; border-top: 0; font-size: .78rem; font-weight: 800; letter-spacing: .1em; color: var(--accent); } .gloss .ltr + div { border-top: 0; padding-top: 4px; }
+.gloss div[data-ltr] { border-top: 0; padding-top: 14px; } .gloss div[data-ltr]::before { content: attr(data-ltr); display: block; margin-bottom: 4px; font-size: .78rem; font-weight: 800; letter-spacing: .1em; color: var(--accent); }
 
 /* club page: "how this club works" popup, and the partner clubs as a footnote */
 /* on a card the club is information, not a second link inside the card link: crest and name, no pill */
