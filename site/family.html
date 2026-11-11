@@ -34,7 +34,7 @@ addEventListener("DOMContentLoaded", async () => {
   const mark = i => { if (!LOGOS[i]) return el("div", { class: "ic" }, icon(ICONS[i][0])); const im = el("img", { class: "logo", src: LOGOS[i], alt: "" }); im.addEventListener("error", () => im.replaceWith(el("div", { class: "ic" }, icon(ICONS[i][0])))); return im; };
   $("tiles").append(...t("fam").map(([name, text], i) => el("div", { class: "ft glass", style: `--p:${ICONS[i][1]}` }, mark(i), el("b", {}, name), el("span", {}, text))));
   await loadData();
-  for (const d of ["1980", "1990", "2000"]) $("dist").append(el("h3", { class: "sh" }, t("d" + d)), el("div", { class: "tiles" }, ...D.data.clubs.filter(c => c.district === d).map(c => el("a", { class: "tile", href: "club.html?id=" + c.id, style: clubStyle(c.id) }, clubMark(c), el("b", {}, c.short)))));
+  for (const d of ["1980", "1990", "2000"]) $("dist").append(el("h3", { class: "sh" }, t("d" + d)), el("div", { class: "tiles" }, ...D.data.clubs.filter(c => c.district === d && isRac(c)).map(c => el("a", { class: "tile", href: "club.html?id=" + c.id, style: clubStyle(c.id) }, clubMark(c), el("b", {}, c.short)))));
   $("foot").append(footer());
 });
 </script>

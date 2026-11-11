@@ -46,17 +46,22 @@ addEventListener("DOMContentLoaded", async () => {
   const feedRow = (c, file, count) => {
     const https = new URL(file, location.href).href, webcal = https.replace(/^https?:/, "webcal:");
     return el("div", { class: "feed" },
-      el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.id ? el("a", { href: "club.html?id=" + c.id, style: "color:inherit;text-decoration:none" }, c.name) : c.name, count != null ? el("span", { class: "meta" }, t("n_upcoming", { n: count })) : null),
+      el("div", { class: "name", style: c.id ? clubStyle(c.id) : "" }, c.id ? clubMark(c) : null, c.id ? el("a", { href: "club.html?id=" + c.id }, c.name) : c.name, count != null ? el("span", { class: "meta" }, t("n_upcoming", { n: count })) : null),
       el("div", { class: "l" }, el("a", { href: webcal }, t("apple")), googleLink(webcal), el("a", { href: https }, ".ics")));
   };
   for (const k of ["ios", "google", "android", "outlook"]) $("how").append(el("details", {}, el("summary", {}, t("sp_" + k)), el("ol", {}, ...t("sp_" + k + "_s").map(s => el("li", {}, s)))));
   $("qa").append(...qaList(t("sub_qa")));
   await loadData();
   const now = new Date(), upcomingBy = {}; let total = 0;
-  for (const e of D.data.events) if (new Date(e.end) >= now) { total++; for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1; }
+  for (const e of D.data.events) if (new Date(e.end) >= now) { if (e.layer !== "rotary") total++; for (const c of e.clubs) upcomingBy[c] = (upcomingBy[c] || 0) + 1; }
   $("feedAll").append(feedRow({ name: t("sp_all_feed") }, "all.ics", total));
   for (const [d, name] of Object.entries(DISTRICTS)) {
-    const cs = D.data.clubs.filter(c => c.district === d).sort((a, b) => a.name.localeCompare(b.name));
+    const cs = D.data.clubs.filter(c => c.district === d && !c.source).sort((a, b) => a.name.localeCompare(b.name));
+    if (cs.length) $("feeds").append(el("h3", {}, name), ...cs.map(c => feedRow(c, c.id + ".ics", upcomingBy[c.id] || 0)));
+  }
+  // the pseudo-clubs under their own headings: international, and the Rotary layer's feeds, one per district (only there when "Show Rotary events" is on)
+  for (const [source, name] of [["international", t("intl").h], ["rotary", t("rotary_feeds")]]) {
+    const cs = D.data.clubs.filter(c => c.source === source);
     if (cs.length) $("feeds").append(el("h3", {}, name), ...cs.map(c => feedRow(c, c.id + ".ics", upcomingBy[c.id] || 0)));
   }
   $("foot").append(footer());
