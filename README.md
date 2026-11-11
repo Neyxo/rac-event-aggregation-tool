@@ -62,4 +62,6 @@ git push --follow-tags         # the tag becomes a GitHub release with generated
 
 [PolyForm Noncommercial 1.0.0](LICENSE.md): you may use, change and share the code for any noncommercial purpose, which includes personal projects, charities, schools and other clubs. Commercial use needs my permission; ask by opening an issue.
 
-The licence covers the code. Club crests, the Rotaract and Rotary names and marks, and the event texts belong to their owners. By contributing you agree that your contribution may be published under this licence and relicensed by the copyright holder.
+The licence covers the code. Club crests, the Rotaract and Rotary names and marks, and the event texts belong to their owners.
+
+Contributions are welcome under the [Contributor Licence Agreement](CLA.md): you keep your copyright and give the maintainer the right to license your contribution, also under other terms. Opening a pull request means you agree to it.
