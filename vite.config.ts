@@ -93,6 +93,8 @@ export default defineConfig({
   publicDir: "static",
   base: "./",
   plugins: [react(), devData(), shareStubs()],
+  // when and from which commit the app itself was built (the developer screen): the events in events.json can be older, a push of the app alone reuses them
+  define: { __APP_BUILT__: JSON.stringify(new Date().toISOString()), __APP_COMMIT__: JSON.stringify((process.env.GITHUB_SHA ?? "").slice(0, 7)) },
   // no CSS minifier: lightningcss drops "backdrop-filter" when "-webkit-backdrop-filter" follows it (the frost would vanish outside Safari)
   build: { outDir: "../dist", emptyOutDir: true, cssMinify: false },
   test: {

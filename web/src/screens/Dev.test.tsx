@@ -85,10 +85,13 @@ describe("developer screen", () => {
     expect(m.getByText("Working, have a look").className).toBe("devhealth warn");  // an older run failed, built 8 h ago
     expect(document.querySelectorAll(".devstrip i").length).toBe(2);
     expect(m.getByRole("link", { name: "Run history" }).getAttribute("href")).toBe("#/dev/runs");
-    expect(m.getByText("Built 11 Nov, 01:58, 8 h ago · local build").className).toBe("devstate warn");
+    // the app (built when the tests started, so its age is not pinned here) apart from the data it shows
+    expect(m.getByText(/^App · version \d+\.\d+\.\d+ · updated .+, \d+ (min|h) ago · local build$/).className).toBe("devstate ok");
+    expect(m.getByText("Data · read 11 Nov, 01:58, 8 h ago · by a local run").className).toBe("devstate warn");
+    m.getByText(/^Next nightly run about /);
     m.getByText("✓ No failures in the last run");
     expect(m.getAllByRole("link").filter(a => a.classList.contains("more")).map(a => a.getAttribute("href")))
-      .toEqual(["#/dev/runs", "#/dev/commits", "#/dev/build", "#/dev/preview", "#/dev/device", "#/dev/checks", "#/dev/clubs"]);
+      .toEqual(["#/dev/runs", "#/dev/commits", "#/dev/build", "#/dev/preview", "#/dev/device", "#/dev/checks", "#/dev/clubs", "#/dev/feeds"]);
     m.getByRole("link", { name: "Source & data on GitHub" });
   });
 
@@ -100,7 +103,7 @@ describe("developer screen", () => {
     m.getByText("bern: 500");
     expect(m.queryByText(/No failures/)).toBeNull();
     expect(m.getByText("luzern: 2 agenda list item(s) without a readable date").className).toBe("devstate warn");
-    m.getByText(/· commit abc1234$/);
+    m.getByText(/^Data · read .+ · by the run of commit abc1234$/);
   });
 
   it("runs and commits pages, the run that built this page marked", async () => {
@@ -116,8 +119,10 @@ describe("developer screen", () => {
   });
 
   it("build page: the run's steps, counts and links", async () => {
-    status = { ...STATUS, run: "https://github.com/x/runs/1" };
+    status = { ...STATUS, run: "https://github.com/x/runs/1", commit: "abc1234" };
     const build = await page("build");
+    build.getByText(/^App version \d+\.\d+\.\d+ · test build · built .+ ago · local build\.$/);
+    build.getByText(/^The events were read 11 Nov, 01:58, 8 h ago by the run of commit abc1234; /);
     expect(build.getByText("Run: failure · nightly · 7 min").className).toBe("devstate bad");
     expect(texts([...build.getAllByRole("list")[0]!.querySelectorAll("li")])).toEqual(["✓Build the app", "–Feed tests", "✗Fail if a club failed"]);
     expect(build.getByRole("link", { name: "Open the log on GitHub" }).getAttribute("href")).toBe("https://github.com/x/job/9");
@@ -164,6 +169,15 @@ describe("developer screen", () => {
     row.getByText(/^\d+ upcoming · 322 in history · 2 cancelled · 1 without details · 3 with no readable date$/);
     expect(row.getByRole("link", { name: ".ics" }).getAttribute("href")).toBe("luzern.ics");
     expect(clubs.getAllByRole("link").some(a => a.getAttribute("href")?.startsWith("#/club/") && a.getAttribute("aria-label")?.startsWith("Rotary"))).toBe(true);
+  });
+
+  it("calendar feeds: all clubs first, then a feed per club under its district", async () => {
+    const feeds = await page("feeds");
+    feeds.getByRole("heading", { level: 1, name: "Calendar feeds" });
+    const box = document.querySelector("main .feeds")!;
+    expect(box.firstElementChild!.textContent).toMatch(/^All Rotaract events .+\d+ upcoming/);
+    expect(box.querySelectorAll("h3").length).toBeGreaterThan(0);
+    expect(box.querySelector('a[href="#/club/luzern"]')).not.toBeNull();
   });
 
   it("preview switches store their key; the date gets a Real date button", async () => {

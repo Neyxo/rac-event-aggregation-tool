@@ -1,16 +1,16 @@
 // The developer screen: reached from the Dev button in the top bar once developer mode is on (Settings, ten taps on "made by").
 // English only: it is for the people who run the app.
 import { useEffect, useState, type ReactNode } from "react";
-import { I18N } from "../i18n";
+import { I18N, t, tx } from "../i18n";
 import { club } from "../lib/data";
-import { clubVars, cx } from "../lib/color";
+import { clubVars, cx, DISTRICT_IDS, DISTRICTS } from "../lib/color";
 import { fmt, isPast } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { href } from "../lib/route";
 import { store, type StoreKey } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, clubLabel, Footer, MoreLink, toast, useData, type IconName } from "../components";
+import { ClubMark, clubLabel, FeedRow, Footer, MoreLink, toast, useData, type IconName } from "../components";
 import { version } from "../../../package.json";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
@@ -209,31 +209,42 @@ function Commits() {
   );
 }
 
-/** how old this build's data is */
+/** how old this build's data is: when the clubs were last read, not when the app was built */
 function useAge(): { gen: Date; age: number; level: Level } {
   const { data } = useData();
   const gen = new Date(data.generated), age = (Date.now() - gen.getTime()) / 36e5;
   return { gen, age, level: age < 8 ? "ok" : age < 30 ? "warn" : "bad" };
 }
+/** "11 Nov, 01:58, 8 h ago"; minutes under an hour, so a deploy shows right away. Never negative (a pretend date in the past). */
+function stampAgo(d: Date): string {
+  const min = Math.max(0, Math.round((Date.now() - d.getTime()) / 6e4));
+  return `${fmt.stamp.format(d)}, ${min < 60 ? min + " min" : Math.round(min / 60) + " h"} ago`;
+}
+// the app itself: built on every push; the data only when the clubs are read (nightly, or a push of the scraper or the club list)
+const APP_BUILT = new Date(__APP_BUILT__);
+const appCommit = __APP_COMMIT__ ? `commit ${__APP_COMMIT__}` : "local build";
 
-/** Everything at a glance: one overall state, the run history as dots, and what is wrong in this build. Details are on the pages. */
+/** Everything at a glance: one overall state, the app and its data (each with its own age), the run history as dots, and what is
+ *  wrong in this build. Details are on the pages. */
 function Health({ st }: { st: Stat }) {
   const fromGh = !!st.run?.startsWith("https://github.com/");  // a local build has no runs of its own: no request
   const r = useGh<{ workflow_runs: GhRunRow[] }>(fromGh ? RUNS : null);
-  const { gen, age, level: ageLevel } = useAge();
+  const { gen, level: ageLevel } = useAge();
   const warnings = st.warnings ?? [];
   const runs = r && r !== "error" ? r.workflow_runs : null, h = runs ? runHealth(runs) : null;
   const all = worst(ageLevel, h?.level ?? "ok", st.failures.length ? "bad" : "ok", warnings.length ? "warn" : "ok");
   return (
     <section className="glass">
       <p className={cx("devhealth", all)}><i />{all === "ok" ? "All good" : all === "warn" ? "Working, have a look" : "Something is broken"}</p>
+      {/* an old app is no problem, old data is */}
+      <p className="devstate ok"><i />{`App · version ${version} · updated ${stampAgo(APP_BUILT)} · ${appCommit}`}</p>
+      <p className={cx("devstate", ageLevel)}><i />{`Data · read ${stampAgo(gen)}` + (st.commit ? ` · by the run of commit ${st.commit}` : " · by a local run")}</p>
       {runs && h ? <><Strip runs={runs} /><p className={cx("devstate", h.level)}><i />{h.text}</p></>
         : fromGh ? <p className="meta">{r === "error" ? "The runs could not be read from GitHub (offline or rate limit)." : "Loading the runs…"}</p> : null}
-      <p className={cx("devstate", ageLevel)}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
       {warnings.map((w, i) => <p key={i} className="devstate warn"><i />{w}</p>)}
-      <p className="meta">{`Version ${version} · next nightly run about ${fmt.stamp.format(nextRun())}` + (devFlag("Date") ? " · a pretend date is on, so ages here are shifted" : "")}</p>
+      <p className="meta">{`Next nightly run about ${fmt.stamp.format(nextRun())}` + (devFlag("Date") ? " · a pretend date is on, so ages here are shifted" : "")}</p>
     </section>
   );
 }
@@ -241,11 +252,13 @@ function Health({ st }: { st: Stat }) {
 /** the build this page came from: its run's steps, the layers, the counts and the raw files */
 function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot: Event[] }) {
   const { data } = useData();
+  const { gen } = useAge();
   const insta = data.clubs.filter(c => (c.instagram || []).length).length;
   return (
     <>
       {/* the version is package.json's at build time */}
-      <p className="meta">{`App version ${version} · ${import.meta.env.MODE} build.` + (st.commit ? ` The events were read by the run of commit ${st.commit}.` : "") + " The clubs are read every night (GitHub often starts it hours late) and on a push of the scraper or the club list; a push of the app alone reuses the last events."}</p>
+      <p className="meta">{`App version ${version} · ${import.meta.env.MODE} build · built ${stampAgo(APP_BUILT)} · ${appCommit}.`}</p>
+      <p className="meta">{`The events were read ${stampAgo(gen)}` + (st.commit ? ` by the run of commit ${st.commit}` : "") + "; the run below is that one. The clubs are read every night (GitHub often starts it hours late) and on a push of the scraper or the club list; a push of the app alone reuses the last events."}</p>
       {st.run?.startsWith("https://github.com/") ? <Run url={st.run} /> : null}
       <Instagram st={st} insta={insta} />
       {/* news and projects that could not be fetched: the last list stays, the run stays green */}
@@ -411,11 +424,17 @@ function Checks({ own, up }: { own: Event[]; up: Event[] }) {
   );
 }
 
+/** upcoming events per club id, the Rotary districts included */
+function upcomingBy(own: Event[], rot: Event[]): Record<string, number> {
+  const upBy: Record<string, number> = {};
+  for (const e of [...own, ...rot]) if (!isPast(e)) for (const c of e.clubs) upBy[c] = (upBy[c] || 0) + 1;
+  return upBy;
+}
+
 /** one line per club, the Rotary districts included whether or not their layer is switched on */
 function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[]; rotClubs: Club[] }) {
   const { data } = useData();
-  const upBy: Record<string, number> = {};
-  for (const e of [...own, ...rot]) if (!isPast(e)) for (const c of e.clubs) upBy[c] = (upBy[c] || 0) + 1;
+  const upBy = upcomingBy(own, rot);
   const all = [...data.clubs.filter(c => c.source !== "rotary"), ...rotClubs];
   const line = (c: Club) => {
     const s: Partial<Status["clubs"][string]> = st.clubs[c.id] || {};
@@ -427,6 +446,25 @@ function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[
   return <>{all.map(c => <div key={c.id} className="devclub"><Chip c={c} /><span>{line(c)}</span><a href={c.id + ".ics"}>.ics</a></div>)}</>;
 }
 
+/** Every calendar feed with its upcoming count: all clubs (Rotaract only, like all.ics), then one per club by district, the
+ *  international pseudo-club and the Rotary districts (listed whether or not their layer is on). The public Subscribe screen only
+ *  offers the personal ones. */
+function Feeds({ own, up, rot, rotClubs }: { own: Event[]; up: Event[]; rot: Event[]; rotClubs: Club[] }) {
+  const { data } = useData();
+  const upBy = upcomingBy(own, rot);
+  const group = (name: string, clubs: Club[]) => clubs.length ? [<h3 key={name}>{name}</h3>, ...clubs.map(c => <FeedRow key={c.id} c={c} link count={upBy[c.id] || 0} />)] : null;
+  const inDistrict = (d: string) => data.clubs.filter(c => c.district === d && !c.source).sort((a, b) => a.name.localeCompare(b.name));
+  return (
+    <div className="feeds">
+      <FeedRow name={t("sp_all_feed")} count={up.length} />
+      {DISTRICT_IDS.map(d => group(t(DISTRICTS[d].key), inDistrict(d)))}
+      {group(t("national"), inDistrict(""))}
+      {group(tx("intl").h, data.clubs.filter(c => c.source === "international"))}
+      {group(t("rotary_feeds"), rotClubs)}
+    </div>
+  );
+}
+
 // the pages under #/dev/<id>: title, one line for the overview's card, icon
 const PAGES = {
   runs: ["Runs", "Every build of the last weeks, green or not", "refresh"],
@@ -436,6 +474,7 @@ const PAGES = {
   device: ["This device", "Service worker, cache and stored settings", "laptop"],
   checks: ["Content checks", "What clubs could fix on Polaris", "alert"],
   clubs: ["Clubs and layers", "One line per club and district", "wheel"],
+  feeds: ["Calendar feeds", "Every feed, per club and district", "calendar"],
 } as const satisfies Record<string, [string, string, IconName]>;
 type PageId = keyof typeof PAGES;
 
@@ -461,6 +500,7 @@ export default function Dev({ route }: ScreenProps) {
       device: () => <DeviceInfo dev={dev} />,
       checks: () => <div className="qa"><Checks own={own} up={up} /></div>,
       clubs: () => <div><Clubs st={st} own={own} rot={rot.events} rotClubs={rot.clubs} /></div>,
+      feeds: () => <Feeds own={own} up={up} rot={rot.events} rotClubs={rot.clubs} />,
     }[id]();
     return (
       <main className="wrap settings dev">
