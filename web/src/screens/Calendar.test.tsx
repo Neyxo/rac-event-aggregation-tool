@@ -90,6 +90,22 @@ describe("calendar", () => {
     expect(titles(day(7))).toEqual(["Essen für Alle Volunteering 28.11"]);
   });
 
+  it("a sideways swipe changes the month, a vertical one doesn't", () => {
+    show();
+    const main = document.getElementById("main")!;
+    const swipe = (dx: number, dy: number) => {
+      fireEvent.touchStart(main, { touches: [{ clientX: 200, clientY: 300 }] });
+      fireEvent.touchEnd(main, { changedTouches: [{ clientX: 200 + dx, clientY: 300 + dy }] });
+    };
+    swipe(-120, 10);
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 11, 1)));
+    swipe(20, 200);
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 11, 1)));
+    swipe(120, -5);
+    swipe(120, -5);
+    expect(monthTitle()).toBe(fmt.month.format(new Date(2026, 9, 1)));
+  });
+
   it("month navigation and today", () => {
     show();
     fireEvent.click(button(t("next_month")));

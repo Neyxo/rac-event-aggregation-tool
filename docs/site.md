@@ -56,7 +56,7 @@ One top bar (Rotaract, This app, Settings) and three bottom tabs (Home, Discover
 
 ## What the device remembers
 
-Main club, followed clubs, language, theme, starred events, whether Rotary events are shown, what was new at the last visit, whether the welcome steps and the guide were seen, and the developer switches. All in the browser's local storage (`rac.*`); nothing is sent anywhere. The approximate location is only looked up after a tap and kept for the open tab.
+Main club, followed clubs, language, theme, starred events, whether Rotary events are shown, what was new at the last visit, whether the welcome steps and the guide were seen, and the developer switches. All in the browser's local storage (`rac.*`); nothing is sent anywhere. The location is only asked of the device after a tap (falling back to the connection's rough position where the device has none) and kept for the open tab.
 
 ## Offline and updates
 

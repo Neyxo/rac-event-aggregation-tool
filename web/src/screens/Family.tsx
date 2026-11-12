@@ -7,7 +7,7 @@ import { BRAND, clubVars, DISTRICT_IDS, DISTRICTS, vars } from "../lib/color";
 import { href } from "../lib/route";
 import { ClubMark, Footer, Icon, useData, useStickyHeads, useWash, type IconName } from "../components";
 
-// logos in static/img/fam (Rotary and RYLA from Wikimedia Commons, Interact from Commons, Rotex and Inner Wheel from their sites);
+// logos in static/img/fam (Rotary and Interact from Wikimedia Commons, RYLA from rotary-ribi.org, Rotex and Inner Wheel from their sites);
 // the icon stands in where there is none yet, or when the file fails to load
 const MARKS: { icon: IconName; color: string; logo: string }[] = [
   { icon: "wheel", color: BRAND.azure, logo: "img/fam/rotary.svg" },
@@ -64,7 +64,6 @@ export default function Family(_props: ScreenProps) {
   return (
     <main className="wrap fam">
       <h1>{t("fam_h")}</h1>
-      <p className="lead">{t("fam_lead")}</p>
       <Tiles />
       <h2 className="sh lv1">{t("fam_clubs")}</h2>
       {/* a box of its own: the district headings stop sticking where the clubs end */}

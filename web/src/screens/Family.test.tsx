@@ -20,7 +20,6 @@ describe("family", () => {
   it("draws the tiles, then a heading and the club tiles per district", () => {
     const { container } = render(<Family route={route} />);
     screen.getByRole("heading", { level: 1, name: t("fam_h") });
-    screen.getByText(t("fam_lead"));
     // a tile shows the logo where there is one, else the icon
     const tiles = [...container.querySelectorAll(".ft")];
     expect(tiles).toHaveLength(8);

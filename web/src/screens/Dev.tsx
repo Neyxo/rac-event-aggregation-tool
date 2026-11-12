@@ -84,12 +84,48 @@ function Instagram({ st, insta }: { st: Stat; insta: number }) {
   return <p className={cx("devstate", level)}><i />{`Instagram layer: on, ${withPosts} of ${Object.keys(ig.clubs).length} clubs with pictures` + (errors.length ? `, ${errors.length} could not be read (see Clubs and layers)` : "")}</p>;
 }
 
-/** the workflow's cron: 17 *\/6 * * * (UTC) */
-function nextRun(): Date {
-  const n = new Date();
-  const d = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate(), Math.floor(n.getUTCHours() / 6) * 6, 17));
-  if (d <= n) d.setUTCHours(d.getUTCHours() + 6);
+/** the workflow's cron: 17 2 * * * (UTC), once a night; a push to main runs it too */
+export function nextRun(n = new Date()): Date {
+  const d = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate(), 2, 17));
+  if (d <= n) d.setUTCDate(d.getUTCDate() + 1);
   return d;
+}
+
+interface GhStep { name: string; status: string; conclusion: string | null }
+interface GhJob { html_url: string; status: string; conclusion: string | null; started_at: string; completed_at: string | null; steps?: GhStep[] }
+interface GhRun { event: string; display_title: string; status: string; conclusion: string | null }
+const MARK: Record<string, string> = { success: "✓", failure: "✗", cancelled: "✗", skipped: "–" };
+// GitHub's own bookkeeping steps say nothing about the build
+const ownStep = (s: GhStep) => !/^(Set up job|Complete job|Post )/.test(s.name);
+
+/** The run that built this version, read from GitHub's public API when this page opens: what started it, and each step with its
+ *  outcome. The full log stays on GitHub. */
+function Run({ url }: { url: string }) {
+  const [r, setR] = useState<{ run: GhRun; jobs: GhJob[] } | "error" | null>(null);
+  useEffect(() => {
+    const api = url.replace("https://github.com/", "https://api.github.com/repos/");
+    const get = <T,>(u: string) => fetch(u).then(x => { if (!x.ok) throw new Error(String(x.status)); return x.json() as Promise<T>; });
+    Promise.all([get<GhRun>(api), get<{ jobs: GhJob[] }>(api + "/jobs")]).then(([run, j]) => setR({ run, jobs: j.jobs }), () => setR("error"));
+  }, [url]);
+  if (r === null) return <p className="meta">Loading the run…</p>;
+  if (r === "error") return <p className="meta">The run could not be read from GitHub (offline or rate limit).</p>;
+  const { run, jobs } = r, state = run.conclusion ?? run.status;
+  const job = jobs[0];
+  const mins = job?.completed_at ? Math.round((Date.parse(job.completed_at) - Date.parse(job.started_at)) / 6e4) : null;
+  return (
+    <div className="devrun">
+      <p className={cx("devstate", state === "success" ? "ok" : run.conclusion ? "bad" : "warn")}><i />
+        {`Run: ${state.replace("_", " ")} · ${run.event === "schedule" ? "nightly" : run.event}` + (mins != null ? ` · ${mins} min` : "")}</p>
+      {run.event === "push" ? <p className="meta">{run.display_title}</p> : null}
+      <ol className="devsteps">
+        {jobs.flatMap(j => (j.steps ?? []).filter(ownStep)).map((s, i) => {
+          const k = s.conclusion ?? s.status;
+          return <li key={i} className={k}><b>{MARK[k] ?? "○"}</b><span>{s.name}</span></li>;
+        })}
+      </ol>
+      {job ? <div className="links"><Link label="Open the log on GitHub" to={job.html_url} /></div> : null}
+    </div>
+  );
 }
 
 function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot: Event[] }) {
@@ -104,7 +140,8 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
       <p className={cx("devstate", level)}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
       {/* the version is package.json's at build time; a build between two releases carries the last one's number plus its commit */}
       <p className="meta">{`Version ${version}` + (st.commit ? `, built from commit ${st.commit}` : "") + ` · ${import.meta.env.MODE} build`}</p>
-      <p className="meta">{`Next scheduled run about ${fmt.stamp.format(nextRun())} (GitHub often starts it late).` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
+      <p className="meta">{`Next nightly run about ${fmt.stamp.format(nextRun())} (GitHub often starts it hours late); every push to main runs it too.` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
+      {st.run?.startsWith("https://github.com/") ? <Run url={st.run} /> : null}
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
       {warnings.map((w, i) => <p key={i} className="devstate warn"><i />{w}</p>)}
@@ -120,7 +157,6 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
         <Count label="cancelled" n={own.filter(e => e.cancelled).length} />
       </div>
       <div className="links">
-        {st.run ? <Link label="This run's log" to={st.run} /> : null}
         <Link label="All runs" to={ALL_RUNS} />
         <Link label="Releases" to={`${REPO}/releases`} />
         <Link label="status.json" to="status.json" />

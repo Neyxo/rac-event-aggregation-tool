@@ -1,4 +1,4 @@
-// Distances, place search (swisstopo), and the approximate position of the connection: no permission prompt, only ever after a tap.
+// Distances, place search (swisstopo), and the device's position: only ever after a tap.
 import type { Club, Coords } from "./types";
 import { here } from "./store";
 import { isRac } from "./data";
@@ -19,9 +19,18 @@ export async function geocode(text: string): Promise<{ coords: Coords; label: st
   return r ? { coords: [r.attrs.lat, r.attrs.lon], label: r.attrs.label.replace(/<[^>]+>/g, "") } : null;
 }
 
-/** approximate position from the IP (geojs, then ipwho), only inside CH/LI; kept for this tab in sessionStorage rac.here */
+/** the device's own position (the system asks first; it never leaves the device), kept for this tab in sessionStorage rac.here.
+ *  Only where the device can't locate at all (no geolocation, no fix, timeout) the IP's rough position (geojs, then ipwho), inside
+ *  CH/LI. A refusal is respected: then nothing. */
 export async function guessPosition(): Promise<Coords | null> {
   const known = here.get(); if (known) return known;
+  const dev = await new Promise<Coords | "denied" | null>(res => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) { res(null); return; }
+    navigator.geolocation.getCurrentPosition(p => res([p.coords.latitude, p.coords.longitude]),
+      e => res(e.code === e.PERMISSION_DENIED ? "denied" : null), { timeout: 10000, maximumAge: 6e5 });
+  });
+  if (dev === "denied") return null;
+  if (dev) { here.set(dev); return dev; }
   try {
     const ctl = new AbortController(); setTimeout(() => ctl.abort(), 3500);
     type Geo = { latitude?: string | number; longitude?: string | number; country_code?: string } | null;

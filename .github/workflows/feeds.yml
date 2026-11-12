@@ -23,32 +23,41 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the code
+        uses: actions/checkout@v4
       # The event history lives on the `data` branch, so the bot's commits never land on main.
-      - uses: actions/checkout@v4
+      - name: Check out the event history
+        uses: actions/checkout@v4
         with:
           ref: data
           path: data
       # The web app first: polaris_feed.py copies dist/ into public/. Any failure here stops the run before the
       # deploy, so a broken app never ships (a failing club sync below does not). The nightly run only builds:
       # its code is the last push's, which these checks already passed.
-      - uses: actions/setup-node@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
-      - run: npm ci
-      - if: github.event_name != 'schedule'
+      - name: Install packages
+        run: npm ci
+      - name: Lint, typecheck and unit tests
+        if: github.event_name != 'schedule'
         run: npm run lint && npm run typecheck && npm test
-      - run: npm run build
-      - if: github.event_name != 'schedule'
+      - name: Build the app
+        run: npm run build
+      - name: End-to-end tests
+        if: github.event_name != 'schedule'
         run: npx playwright install --with-deps chromium && npm run e2e
         env:
           E2E_DIR: dist
-      - if: github.event_name != 'schedule'
+      - name: Feed tests
+        if: github.event_name != 'schedule'
         run: python3 test_polaris_feed.py
       # A failing club keeps its last good history; the other clubs still update.
       # The run is marked failed at the end so the problem gets noticed.
-      - id: feeds
+      - name: Read the clubs' agendas
+        id: feeds
         continue-on-error: true
         # Instagram pictures: either secret unset (empty) = layer off. See docs/layers.md.
         env:
@@ -62,10 +71,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git diff --cached --quiet || { git commit -m "Update event history" && git push; }
-      - uses: actions/upload-pages-artifact@v3
+      - name: Package the site
+        uses: actions/upload-pages-artifact@v3
         with:
           path: public
-      - id: deployment
+      - name: Publish
+        id: deployment
         uses: actions/deploy-pages@v4
-      - if: steps.feeds.outcome == 'failure'
+      - name: Fail if a club failed
+        if: steps.feeds.outcome == 'failure'
         run: echo "::error::Some clubs or events failed to sync, see the feeds step" && exit 1

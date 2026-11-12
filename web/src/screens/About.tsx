@@ -1,4 +1,4 @@
-// What is Rotaract?: the scroll morph (Learn, Help, Celebrate open one after the other), then the people line, the call to
+// What is Rotaract?: the scroll morph (Learn, Help, Celebrate open one after the other, or on a tap), then the people line, the call to
 // action, the help links and the questions. The top bar carries a share button while this screen is shown.
 import { useLayoutEffect, useRef, useState, type RefObject } from "react";
 import type { ScreenProps } from "../App";
@@ -54,7 +54,15 @@ function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   return phase;
 }
 
-function Stage({ phase }: { phase: Phase }) {
+/** scrolls to the middle of word i's part of the track, so a tap on a word opens it like scrolling there would */
+function scrollToWord(track: HTMLDivElement | null, i: number) {
+  if (!track) return;
+  const range = track.offsetHeight - innerHeight;
+  if (range <= 0) return;
+  window.scrollTo({ top: scrollY + track.getBoundingClientRect().top + range * (i + 1.5) / 4, behavior: "smooth" });
+}
+
+function Stage({ phase, onWord }: { phase: Phase; onWord: (i: number) => void }) {
   const { cur, all } = phase;
   const color = cur < 0 ? CLOSED_COLOR : PILLARS[cur]!.color;
   return (
@@ -65,7 +73,7 @@ function Stage({ phase }: { phase: Phase }) {
       <div className={cur === -1 && !all ? "words closed" : "words"}>
         {PILLARS.map((p, i) => (
           <div key={p.k} className={all || i === cur ? "w on" : "w"} style={vars({ "--p": p.color })}>
-            <div className="word">{p.word + "."}</div>
+            <div className="word" role="button" tabIndex={0} onClick={() => onWord(i)} onKeyDown={ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); onWord(i); } }}>{p.word + "."}</div>
             <div className="open">
               <div>
                 <div className="pic"><PillarPic k={p.k} /></div>
@@ -89,7 +97,7 @@ export default function About(_props: ScreenProps) {
   return (
     <main className="wrap about">
       <div className="track" ref={track}>
-        <Stage phase={phase} />
+        <Stage phase={phase} onWord={i => scrollToWord(track.current, i)} />
       </div>
       <section className="after">
         <h2>{t("ab_people")}</h2>

@@ -6,7 +6,7 @@ import { loadData } from "../lib/data";
 import { parseHash } from "../lib/route";
 import type { Status } from "../lib/types";
 import { Toast } from "../components";
-import Dev from "./Dev";
+import Dev, { nextRun } from "./Dev";
 
 const STATUS: Status = {
   generated: "20261111T005856Z", events: 10, rotary_events: 2, with_image: 5, without_location: 1,
@@ -23,6 +23,9 @@ beforeAll(async () => {
   const error = console.error;
   vi.spyOn(console, "error").mockImplementation((...a: unknown[]) => { if (!String(a[0]).includes("Not implemented: navigation")) error(...a); });
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+    if (url === "https://api.github.com/repos/x/runs/1") return { ok: true, json: async () => ({ event: "schedule", display_title: "Build feeds", status: "completed", conclusion: "failure" }) };
+    if (url === "https://api.github.com/repos/x/runs/1/jobs") return { ok: true, json: async () => ({ jobs: [{ html_url: "https://github.com/x/job/9", status: "completed", conclusion: "failure", started_at: "2026-11-11T09:00:00Z", completed_at: "2026-11-11T09:07:00Z",
+      steps: [{ name: "Set up job", status: "completed", conclusion: "success" }, { name: "Build the app", status: "completed", conclusion: "success" }, { name: "Feed tests", status: "completed", conclusion: "skipped" }, { name: "Fail if a club failed", status: "completed", conclusion: "failure" }] }] }) };
     if (url === "status.json") {
       if (!status) throw new Error("offline");
       return { ok: true, json: async () => structuredClone(status) };
@@ -50,6 +53,13 @@ async function show() {
   return r;
 }
 
+describe("nextRun", () => {
+  it("is the next 02:17 UTC", () => {
+    expect(nextRun(new Date("2026-11-12T09:54:00Z")).toISOString()).toBe("2026-11-13T02:17:00.000Z");
+    expect(nextRun(new Date("2026-11-12T01:00:00Z")).toISOString()).toBe("2026-11-12T02:17:00.000Z");
+  });
+});
+
 describe("developer screen", () => {
   it("draws the sections in order with build state, counts and links", async () => {
     await show();
@@ -59,7 +69,7 @@ describe("developer screen", () => {
     expect(state.className).toBe("devstate warn");  // built 01:58, now 10:00: 8 h; the class colours the dot
     build.getByText("✓ No failures in the last run");
     for (const label of ["upcoming", "in the app", "international", "Rotary layer", "members only", "cancelled"]) build.getByText(label);
-    expect(build.queryByRole("link", { name: "This run's log" })).toBeNull();
+    expect(build.queryByRole("link", { name: "Open the log on GitHub" })).toBeNull();
     expect(build.getByRole("link", { name: "All runs" }).getAttribute("target")).toBe("_blank");
     expect(build.getByRole("link", { name: "status.json" }).getAttribute("href")).toBe("status.json");
     expect(build.getByRole("link", { name: "events.json" }).getAttribute("href")).toBe("events.json");
@@ -75,7 +85,10 @@ describe("developer screen", () => {
     expect(build.queryByText(/No failures/)).toBeNull();
     expect(build.getByText("luzern: 2 agenda list item(s) without a readable date").className).toBe("devstate warn");
     build.getByText(/· commit abc1234$/);
-    expect(build.getByRole("link", { name: "This run's log" }).getAttribute("href")).toBe("https://github.com/x/runs/1");
+    // the run's steps from GitHub's API, without its own setup steps, and the job's log
+    expect(build.getByText("Run: failure · nightly · 7 min").className).toBe("devstate bad");
+    expect(texts([...build.getByRole("list").querySelectorAll("li")])).toEqual(["✓Build the app", "–Feed tests", "✗Fail if a club failed"]);
+    expect(build.getByRole("link", { name: "Open the log on GitHub" }).getAttribute("href")).toBe("https://github.com/x/job/9");
   });
 
   it("Instagram layer and side lists from status.json", async () => {

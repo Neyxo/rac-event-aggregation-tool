@@ -55,9 +55,18 @@ describe("Subscribe", () => {
     show();
     const all = card("Everything");
     const name = within(all).getByText(/^All Rotaract events/);
-    expect(name.textContent).toBe("All Rotaract events in Switzerland & Liechtenstein · 4 upcoming");
+    expect(name.textContent).toBe("All Rotaract events in Switzerland & Liechtenstein4 upcoming");
     expect(name.hasAttribute("style")).toBe(false);
     expect(within(all).getAllByRole("link").map(a => a.getAttribute("href"))).toEqual([webcal, "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), base + "all.ics"]);
+  });
+
+  it(".ics first warns that the file is a copy that won't update, then downloads", () => {
+    show();
+    fireEvent.click(within(card("Everything")).getByRole("link", { name: ".ics" }));
+    const dlg = within(document.querySelector("dialog")!);
+    dlg.getByText(t("ics_stale_feed"));
+    expect(dlg.getAllByRole("listitem")).toHaveLength(3);
+    expect(dlg.getByRole("link", { name: t("ics_dl") }).getAttribute("href")).toBe(base + "all.ics");
   });
 
   it("per club: districts with clubs sorted by name, international under its own heading, no empty National", () => {
@@ -66,7 +75,7 @@ describe("Subscribe", () => {
     expect(within(feeds).getAllByRole("heading", { level: 3 }).map(h => h.textContent)).toEqual(["D1980 · Central & North-West", "D1990 · West", "D2000 · East", "International events"]);
     const clubs = within(feeds).getAllByRole("link").filter(a => a.getAttribute("href")!.startsWith("#/club/"));
     expect(clubs.map(a => a.textContent)).toEqual(["Rotaract Luzern", "Rotaract Bern", "Rotaract Zürich", "Rotaract Zurich International", "Rotaract International"]);
-    expect(clubs.map(a => a.nextElementSibling!.textContent)).toEqual([" · 0 upcoming", " · 0 upcoming", " · 1 upcoming", " · 1 upcoming", " · 2 upcoming"]);
+    expect(clubs.map(a => a.nextElementSibling!.textContent)).toEqual(["0 upcoming", "0 upcoming", "1 upcoming", "1 upcoming", "2 upcoming"]);
     const luzern = clubs[0]!.parentElement!;
     expect(luzern.querySelector("img")?.getAttribute("src")).toBe("crests/luzern.svg");
     expect(clubs[0]!.getAttribute("href")).toBe("#/club/luzern");

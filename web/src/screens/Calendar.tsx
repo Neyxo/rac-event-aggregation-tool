@@ -1,4 +1,4 @@
-// Calendar: the month fills the screen, no scrolling; tapping a day slides up a frosted sheet with that day's events.
+// Calendar: the month fills the screen, no scrolling, a sideways swipe changes the month; tapping a day slides up a frosted sheet with that day's events.
 import { useLayoutEffect, useRef, useState } from "react";
 import type { ScreenProps } from "../App";
 import { t, tx } from "../i18n";
@@ -130,6 +130,14 @@ export default function Calendar(_props: ScreenProps) {
   };
   const close = () => setDay(null);
   const shiftMonth = (n: number) => setMonth(m => new Date(m.getFullYear(), m.getMonth() + n, 1));
+  // a sideways swipe on the month: left for the next, right for the previous
+  const t0 = useRef<{ x: number; y: number } | null>(null);
+  const swipeEnd = (x: number, y: number) => {
+    const s = t0.current; t0.current = null;
+    if (!s) return;
+    const dx = x - s.x, dy = y - s.y;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) shiftMonth(dx < 0 ? 1 : -1);
+  };
   // today's month, and the sheet when something starts today
   const goToday = () => {
     const n = new Date();
@@ -140,7 +148,9 @@ export default function Calendar(_props: ScreenProps) {
 
   return (
     <>
-      <main className="calwrap" id="main">
+      <main className="calwrap" id="main"
+        onTouchStart={ev => { const p = ev.touches[0]; t0.current = p && ev.touches.length === 1 ? { x: p.clientX, y: p.clientY } : null; }}
+        onTouchEnd={ev => { const p = ev.changedTouches[0]; if (p) swipeEnd(p.clientX, p.clientY); }}>
         <div className="mhead">
           <button type="button" id="prev" aria-label={t("prev_month")} onClick={() => shiftMonth(-1)}>‹</button>
           <h2 id="mtitle">{fmt.month.format(month)}</h2>

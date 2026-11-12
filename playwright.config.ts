@@ -16,7 +16,8 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${PORT}/`,
     timezoneId: "Europe/Zurich",
     locale: "en-GB",
-    serviceWorkers: "block",  // page.route can't see what a service worker answers; the SW tests switch it on
+    serviceWorkers: "block",
+    permissions: ["geolocation"], geolocation: { latitude: 47.05, longitude: 8.3 },  // the device is near Lucerne  // page.route can't see what a service worker answers; the SW tests switch it on
     trace: "retain-on-failure",
   },
   projects: [

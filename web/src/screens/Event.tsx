@@ -10,7 +10,7 @@ import { mapsUrl } from "../lib/geo";
 import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Event as Ev } from "../lib/types";
-import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, StarButton, Status, share, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
+import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, IcsLink, StarButton, Status, share, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
 
 /** the Polaris page of the event; international events live on their organisers' sites instead */
 const onPolaris = (e: Ev) => e.url.includes("/agenda/show/");
@@ -97,7 +97,7 @@ function Detail({ e }: { e: Ev }) {
         <div className="links">
           <span className="ph" />
           {/* members-only: Polaris' calendar file needs a login; international events aren't on Polaris at all */}
-          {e.members || !polaris ? null : <a href={e.url.replace("/agenda/show/", "/agenda/ical/")}><Icon name="calendar" />{t("add_cal")}</a>}
+          {e.members || !polaris ? null : <IcsLink href={e.url.replace("/agenda/show/", "/agenda/ical/")}><Icon name="calendar" />{t("add_cal")}</IcsLink>}
           <button type="button" className="linkbtn" onClick={() => void shareEvent(e)}><Icon name="share" />{t("share_event")}</button>
         </div>
         <Facts e={e} />
