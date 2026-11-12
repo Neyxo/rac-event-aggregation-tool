@@ -40,6 +40,10 @@ header { background: var(--surface); border-bottom: 1px solid var(--line); borde
 .bar .lft, .bar .rgt { display: flex; align-items: center; gap: 6px; } .bar .rgt { gap: 2px; }  /* four labelled buttons fit a 375px phone in German */
 .bar .rgt .x { display: flex; gap: 6px; }
 .hbtn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-width: 40px; padding: 3px 5px; border: 0; border-radius: 10px; background: none; color: var(--muted); font-size: .68rem; font-weight: 600; line-height: 1.2; text-decoration: none; white-space: nowrap; transition: transform .12s, color .15s, background .15s; min-height: 40px; }
+/* icons alone where the labels don't fit: phones under 360px, and up to 400px once developer mode adds its button to a bar that
+   already has the back button or a screen's own (About's share) */
+@media (max-width: 359px) { .hbtn span { display: none; } }
+@media (max-width: 400px) { .bar .rgt:has(> :nth-child(5)) .hbtn span, .bar:has(.lft > :nth-child(2)) .rgt:has(> :nth-child(4)) .hbtn span { display: none; } }
 .hbtn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .hbtn:hover { color: var(--accent); } .hbtn:active { transform: scale(.94); }
 .hbtn.on { color: var(--accent-hover); background: color-mix(in srgb, var(--accent) 10%, transparent); }
@@ -147,6 +151,7 @@ a.fbtn { padding: 0; width: var(--h-btn); justify-content: center; }  /* icon on
 .hint { font-size: .8rem; color: var(--muted); width: 100%; }
 .seg { display: inline-flex; min-height: var(--h-btn); border: 1px solid var(--line); border-radius: 99px; overflow: hidden; background: var(--surface); } .seg[hidden] { display: none; }
 .seg button { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: none; border: 0; padding: 0 14px; font-size: .88rem; font-weight: 600; transition: transform .12s, background .15s; }
+@media (max-width: 359px) { .seg button { padding: 0 9px; } }  /* three options fit a 320px phone */
 .seg button + button { border-left: 1px solid var(--line); }
 .seg button[aria-pressed=true], .seg button[aria-selected=true] { background: var(--accent); color: var(--on-accent); }
 .seg button:active { transform: scale(.96); }
@@ -414,7 +419,7 @@ dialog.ob.full { width: 100%; max-width: none; height: 100dvh; max-height: none;
 .about .track { height: 340vh; position: relative; margin: 0 -16px; }
 html:has(.about .track) { scroll-snap-type: y proximity; }
 .about .snap { position: absolute; left: 0; width: 1px; height: 1px; top: calc(var(--at) * (340vh - 100dvh)); scroll-snap-align: start; }  /* About.tsx MIDS */
-.about .stage { position: sticky; top: 63px; height: calc(100dvh - 63px - 64px - env(safe-area-inset-bottom)); padding: 20px 16px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(180deg, color-mix(in srgb, var(--p, #d41367) 12%, transparent), transparent 70%); transition: background .5s; }
+.about .stage { position: sticky; top: 63px; height: calc(100dvh - 63px - var(--tabs, calc(64px + env(safe-area-inset-bottom)))); padding: 20px 16px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(180deg, color-mix(in srgb, var(--p, #d41367) 12%, transparent), transparent 70%); transition: background .5s; }
 .about .prog { position: absolute; right: 16px; top: 18px; display: flex; gap: 5px; }
 .about .prog i { width: 6px; height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--text) 28%, transparent); transition: background .3s, width .3s; }
 .about .prog i.on { background: var(--p); width: 18px; }

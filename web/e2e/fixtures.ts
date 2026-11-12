@@ -71,3 +71,24 @@ export async function standalone(page: Page): Promise<void> {
     window.matchMedia = q => mm(/display-mode:\s*standalone/.test(q) ? "(min-width: 0px)" : q);
   });
 }
+
+/** Everything a scroll, a resize or a render set off has come to rest: the frame after it (the sticky headings measure there) and
+ *  the transitions it started, twice over because the one may start the other. Endless animations (About's bobbing hint) don't count. */
+export const settle = (page: Page) => page.evaluate(async () => {
+  for (let i = 0; i < 2; i++) {
+    await new Promise<void>(r => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+    const ends = document.getAnimations().filter(a => a.playState === "running" && Number.isFinite(a.effect?.getComputedTiming().endTime)).map(a => a.finished.catch(() => {}));
+    await Promise.race([Promise.all(ends), new Promise(r => setTimeout(r, 1500))]);
+  }
+});
+/** Scrolls, waits for the scroll event (the fixtures' fake clock also fakes requestAnimationFrame, so a frame of it says nothing about
+ *  whether the browser has told the app yet; this listener is added last, so the app's own ran before it), then for the rest. No
+ *  event comes when the page is already there, or when a snap point holds it: hence the timeout. */
+export const scrollToY = async (page: Page, y: number) => {
+  await page.evaluate(y => new Promise<void>(r => {
+    addEventListener("scroll", () => r(), { once: true });
+    setTimeout(r, 150);
+    scrollTo({ top: y, behavior: "instant" });
+  }), y);
+  await settle(page);
+};

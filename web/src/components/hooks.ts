@@ -79,7 +79,10 @@ export function stickyHeads(): void {
   const box = (h: HTMLElement) => { const r = h.getBoundingClientRect(), ty = parseFloat(h.style.getPropertyValue("--ty")) || 0; return { top: r.top - ty, bottom: r.bottom - ty }; };
   const at = (b: { top: number; bottom: number }, pos: number) => b.top <= pos + 1 && b.bottom > pos;  // at its stick line, and not scrolled off with its container
   const cur = lv1.filter(h => at(box(h), s)).at(-1), curH = cur ? cur.getBoundingClientRect().height : 0, s2 = s + curH;
-  root.style.setProperty("--stick2", s2.toFixed(2) + "px");
+  // the headings only move to a new --stick2 with the next frame (their boxes read below are still the old ones): measure again then.
+  // Without it a jump (back/forward restoring the scroll position) left the stuck heading unmarked, and without frost, until the next scroll.
+  const s2px = s2.toFixed(2) + "px";
+  if (root.style.getPropertyValue("--stick2") !== s2px) { root.style.setProperty("--stick2", s2px); onScroll(); }
   let capH = 0;
   hs.forEach((h, i) => {
     const b = box(h), one = h.classList.contains("lv1"), next = one ? lv1[lv1.indexOf(h) + 1] : hs[i + 1], nt = next?.getBoundingClientRect().top;
@@ -95,7 +98,7 @@ export function stickyHeads(): void {
   frost.style.setProperty("--fh", (depth + 1).toFixed(2) + "px");
 }
 let headsRaf = 0;
-const onScroll = () => { if (!headsRaf) headsRaf = requestAnimationFrame(() => { headsRaf = 0; stickyHeads(); }); };
+function onScroll() { if (!headsRaf) headsRaf = requestAnimationFrame(() => { headsRaf = 0; stickyHeads(); }); }
 if (typeof window !== "undefined") addEventListener("scroll", onScroll, { passive: true });
 /** call in every screen with .sh headings: re-measures after each render of that screen (scrolling re-measures on its own) */
 export function useStickyHeads(): void {
