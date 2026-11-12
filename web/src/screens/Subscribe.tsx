@@ -48,7 +48,7 @@ export default function Subscribe(_props: ScreenProps) {
             <details key={h}>
               <summary>{t(h)}</summary>
               <ol>{tx(steps).map((s, i) => <li key={i}>{s}</li>)}</ol>
-              {(h === "sp_google" || h === "sp_android") && <GoogleSync />}
+              {h === "sp_google" ? <GoogleSync /> : h === "sp_android" ? <GoogleSync only="android" /> : null}
             </details>
           ))}
         </div>

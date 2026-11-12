@@ -3,7 +3,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
-import { t } from "../i18n";
+import { t, tx } from "../i18n";
 import { loadData, setRotary } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { Toast } from "../components";
@@ -55,9 +55,10 @@ describe("Subscribe", () => {
     expect(card("Subscribe to a calendar").querySelectorAll(".facts2 li")).toHaveLength(4);
     const how = [...card("Subscribe to a calendar").querySelectorAll("details")];
     expect(how.map(d => d.querySelector("summary")!.textContent)).toEqual(["iPhone / iPad (Apple Calendar)", "Google Calendar", "Android (Samsung or other calendar apps)", "Outlook / Windows / Mac"]);
-    expect(how.map(d => d.querySelectorAll("ol li").length)).toEqual([3, 3, 2, 2]);
-    // Google and Android say how to switch the calendar on on the phone, with the link for Apple Calendar
-    expect(how.map(d => d.querySelectorAll(".syncfix a[href='https://calendar.google.com/calendar/syncselect']").length)).toEqual([0, 1, 1, 0]);
+    expect(how.map(d => d.querySelectorAll("details > ol > li").length)).toEqual([3, 3, 2, 2]);
+    // Google and Android say what is left to do on the phone; Google lets you pick the phone, Android is Android
+    expect(how.map(d => d.querySelectorAll(".phonefix").length)).toEqual([0, 1, 1, 0]);
+    expect(how.map(d => d.querySelectorAll(".phonefix .seg button").length)).toEqual([0, 2, 0, 0]);
     expect(card("Questions").querySelectorAll("details[name=qa]").length).toBeGreaterThan(0);
     screen.getByText(t("made_by"));
   });
@@ -82,9 +83,13 @@ describe("Subscribe", () => {
     fireEvent.click(way(dlg, "way_google"));
     dlg.getByRole("heading", { name: t("way_google") });
     dlg.getByText(t("sp_g_tab"));
+    // "On your phone": Android's steps first, iPhone's with Google's sync page on a tap
     dlg.getByText(t("sp_g_sync_h"));
+    dlg.getByText(tx("sp_g_sync_a")[3]!);
+    expect(dlg.queryByRole("link", { name: t("sp_g_sync_btn") })).toBeNull();
+    fireEvent.click(dlg.getByRole("button", { name: "iPhone" }));
     expect(dlg.getByRole("link", { name: t("sp_g_sync_btn") }).getAttribute("href")).toBe("https://calendar.google.com/calendar/syncselect");
-    expect(dlg.getByRole("link", { name: "calendar.google.com/calendar/syncselect" }).getAttribute("href")).toBe("https://calendar.google.com/calendar/syncselect");
+    expect(dlg.queryByText(tx("sp_g_sync_a")[3]!)).toBeNull();
     expect(dlg.queryByText(t("sp_g_no"))).toBeNull();
   });
 
@@ -140,7 +145,9 @@ describe("Subscribe", () => {
     fireEvent.click(way(dlg, "way_google"));
     dlg.getByRole("heading", { name: t("way_google") });
     dlg.getByText(t("sp_g_both"));
+    // on an iPhone the box opens on the iPhone's steps
     dlg.getByText(t("sp_g_sync_h"));
+    expect(dlg.getByRole("button", { name: "iPhone" }).getAttribute("aria-pressed")).toBe("true");
     await act(async () => { fireEvent.click(dlg.getByRole("button", { name: t("sp_g_send") })); });
     expect(writeText).toHaveBeenCalledWith(gcal(webcal));
     expect(screen.getByRole("status").textContent).toBe("Link copied");

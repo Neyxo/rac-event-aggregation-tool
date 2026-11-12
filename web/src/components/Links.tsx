@@ -112,29 +112,32 @@ export function SubFacts() {
 const apple = () => IOS || /Macintosh/.test(navigator.userAgent);
 type Way = "apple" | "google" | "outlook" | "ics";
 
-/** Google doesn't put a newly subscribed calendar on every phone by itself: the one switch to flip, per phone. Shown wherever
- *  Google is the way, because a calendar that never arrives looks like the subscription failed. */
-const SYNCSELECT = "calendar.google.com/calendar/syncselect";
-export function GoogleSync() {
-  const [android, iphone] = tx("sp_g_sync");
-  const at = SYNCSELECT;
+/** Google doesn't put a newly subscribed calendar on every phone by itself. One box, "On your phone", wherever Google is the
+ *  way (a calendar that never arrives looks like the subscription failed): pick the phone, Android or iPhone, and get its few
+ *  steps. It opens on the phone this is, Android elsewhere; only: just that phone's steps, no choice. */
+const SYNCSELECT = "https://calendar.google.com/calendar/syncselect";
+type Os = "android" | "ios";
+export function GoogleSync({ only }: { only?: Os }) {
+  const [os, setOs] = useState<Os>(only ?? (IOS ? "ios" : "android"));
   return (
-    <div className="alertline">
-      <Icon name="alert" />
-      <div>
-        <b>{t("sp_g_sync_h")}</b>
-        <ul className="syncfix">
-          <li>{android}</li>
-          <li>{iphone} <a href={"https://" + at} target="_blank" rel="noopener">{at}</a>.</li>
-        </ul>
-      </div>
+    <div className="phonefix">
+      <div className="pf-h"><Icon name="phone" /><span><b>{t("sp_g_sync_h")}</b><small>{t("sp_g_sync_s")}</small></span></div>
+      {!only && (
+        <div className="seg" role="group" aria-label={t("sp_g_sync_h")}>
+          {(["android", "ios"] as const).map(o => <button key={o} type="button" aria-pressed={o === os} onClick={() => setOs(o)}>{o === "ios" ? "iPhone" : "Android"}</button>)}
+        </div>
+      )}
+      <Steps items={tx(os === "ios" ? "sp_g_sync_i" : "sp_g_sync_a")} />
+      {os === "ios" && <>
+        <a className="linkbtn" href={SYNCSELECT} target="_blank" rel="noopener"><Icon name="ext" />{t("sp_g_sync_btn")}</a>
+        <small className="pf-note">{t("sp_g_sync_note")}</small>
+      </>}
     </div>
   );
 }
 
-/** the steps for Google or Outlook on a phone: their apps can't subscribe, a computer's browser can, and then it is on the phone too */
-function WebBody({ way, url }: { way: "google" | "outlook"; url: string }) {
-  const send = () => void share({ title: t(way === "google" ? "sp_google" : "way_outlook"), url });
+/** the steps for Google or Outlook on a phone (the button that sends the link is the popup's action): their apps can't subscribe, a computer's browser can, and then it is on the phone too */
+function WebBody({ way }: { way: "google" | "outlook" }) {
   return (
     <>
       <ul className="where">
@@ -144,20 +147,19 @@ function WebBody({ way, url }: { way: "google" | "outlook"; url: string }) {
       </ul>
       <Steps items={tx(way === "google" ? "sp_g_steps" : "sp_o_steps")} />
       {way === "google" && <GoogleSync />}
-      <div className="links"><button className="primary" type="button" onClick={send}><Icon name="share" />{t("sp_g_send")}</button></div>
     </>
   );
 }
-/** a calendar file: the warning that it is a copy, how to add it, the download */
-function IcsBody({ to, feed, onDone }: { to: string; feed: boolean; onDone: () => void }) {
+/** a calendar file: the warning that it is a copy and how to add it; IcsDl is the download, the popup's action */
+function IcsBody({ feed }: { feed: boolean }) {
   return (
     <>
       <Warn>{t(feed ? "ics_stale_feed" : "ics_stale")}</Warn>
       <Steps items={tx("ics_steps")} />
-      <div className="links"><a className="primary" href={to} onClick={onDone}><Icon name="calendar" />{t("ics_dl")}</a></div>
     </>
   );
 }
+const IcsDl = ({ to, onDone }: { to: string; onDone: () => void }) => <a className="linkbtn primary" href={to} onClick={onDone}><Icon name="calendar" />{t("ics_dl")}</a>;
 
 /** Subscribing to one feed: what it does, then Apple, Google, Outlook or the file. A way that can't work on this device says why
  *  and what to do instead, never a tap that does nothing. */
@@ -172,8 +174,16 @@ export function SubscribeSheet({ file, name, onClose }: { file: string; name: st
     return to ? <a className="way" href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={w === "google" ? () => setWay(w) : undefined}>{body}</a>
       : <button className="way" type="button" onClick={() => setWay(w)}>{body}</button>;
   };
+  const send = (title: string, url: string) => <button className="linkbtn primary" type="button" onClick={() => void share({ title, url })}><Icon name="share" />{t("sp_g_send")}</button>;
+  // one action per way, on the line of Close: the download, or the link to send to a device that can subscribe
+  const action = way === null ? <a className="meta" href={href("subscribe")}>{t("sub_more")}</a>
+    : way === "ics" ? <IcsDl to={https} onDone={onClose} />
+    : way === "apple" ? send(name, https)
+    : way === "outlook" ? send(t("way_outlook"), outlook)
+    : PHONE ? send(t("sp_google"), google)
+    : null;
   return (
-    <Popup title={way ? t(`way_${way}`) : name} onClose={onClose} done={t("close")} aside={way === null ? <a className="meta" href={href("subscribe")}>{t("sub_more")}</a> : null}>
+    <Popup title={way ? t(`way_${way}`) : name} onClose={onClose} done={t("close")} quiet aside={action} back={way ? () => setWay(null) : undefined}>
       {way === null ? (
         <div>
           <SubFacts />
@@ -187,15 +197,10 @@ export function SubscribeSheet({ file, name, onClose }: { file: string; name: st
         </div>
       ) : (
         <div>
-          <button className="linkbtn wayback" type="button" onClick={() => setWay(null)}>{t("back")}</button>
-          {way === "apple" ? <><Warn>{t("apple_na")}</Warn>
-            <div className="links"><button className="primary" type="button" onClick={() => void share({ title: name, url: https })}><Icon name="share" />{t("sp_g_send")}</button></div></>
-            : way === "ics" ? <IcsBody to={https} feed onDone={onClose} />
-            : way === "google" && !PHONE ? <><p>{t("sp_g_tab")}</p>
-              {/* the one switch that can be flipped from here: Google's own page, once the calendar is added. Android's is on the phone only */}
-              <div className="links"><a className="primary" href={"https://" + SYNCSELECT} target="_blank" rel="noopener"><Icon name="phone" />{t("sp_g_sync_btn")}</a></div>
-              <GoogleSync /></>
-            : <WebBody way={way} url={way === "google" ? google : outlook} />}
+          {way === "apple" ? <Warn>{t("apple_na")}</Warn>
+            : way === "ics" ? <IcsBody feed />
+            : way === "google" && !PHONE ? <><p>{t("sp_g_tab")}</p><GoogleSync /></>
+            : <WebBody way={way} />}
         </div>
       )}
     </Popup>
@@ -208,7 +213,7 @@ export function IcsLink({ href: to, children }: { href: string; children: ReactN
   return (
     <>
       <a href={to} onClick={ev => { ev.preventDefault(); setOpen(true); }}>{children}</a>
-      {open && <Popup title={t("ics_h")} onClose={() => setOpen(false)}><div><IcsBody to={to} feed={false} onDone={() => setOpen(false)} /></div></Popup>}
+      {open && <Popup title={t("ics_h")} onClose={() => setOpen(false)} done={t("close")} quiet aside={<IcsDl to={to} onDone={() => setOpen(false)} />}><div><IcsBody feed={false} /></div></Popup>}
     </>
   );
 }
