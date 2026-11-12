@@ -97,7 +97,7 @@ export function FeedRow({ c = null, name, count, link = false }: { c?: Club | nu
 
 /** a warning line: icon and text in the danger colour */
 export function Warn({ children }: { children: ReactNode }) {
-  return <p className="warn"><Icon name="alert" /><span>{children}</span></p>;
+  return <p className="alertline"><Icon name="alert" /><span>{children}</span></p>;
 }
 /** short numbered steps */
 const Steps = ({ items }: { items: string[] }) => <ol className="qsteps">{items.map((s, i) => <li key={i}>{s}</li>)}</ol>;
@@ -151,17 +151,17 @@ export function SubscribeSheet({ file, name, onClose }: { file: string; name: st
       : <button className="way" type="button" onClick={() => setWay(w)}>{body}</button>;
   };
   return (
-    <Popup title={way ? t(`way_${way}`) : name} onClose={onClose}>
+    <Popup title={way ? t(`way_${way}`) : name} onClose={onClose} done={t("close")} aside={way === null ? <a className="meta" href={href("subscribe")}>{t("sub_more")}</a> : null}>
       {way === null ? (
         <div>
           <SubFacts />
+          <p className="waypick">{t("way_pick")}</p>
           <div className="ways">
             {row("apple", "phone", t("way_apple"), t("way_apple_s"), apple() ? webcal : undefined)}
             {row("google", "globe", t("way_google"), t("way_google_s"), PHONE ? undefined : google)}
             {row("outlook", "laptop", t("way_outlook"), t("way_outlook_s"), PHONE ? undefined : outlook)}
             {row("ics", "calendar", t("way_ics"), t("way_ics_s"))}
           </div>
-          <p className="meta"><a href={href("subscribe")}>{t("sub_more")}</a></p>
         </div>
       ) : (
         <div>

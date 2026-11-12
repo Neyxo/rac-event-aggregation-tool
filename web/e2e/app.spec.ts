@@ -153,7 +153,8 @@ test.describe("member", () => {
     await expect(popup).toBeVisible();
     await expect(popup.locator(".way")).toHaveCount(4);
     await expect(popup.getByText("Calendar file (.ics)")).toBeVisible();
-    await popup.getByRole("button", { name: "Done" }).click();
+    await expect(popup.getByText("Where do you want it?")).toBeVisible();
+    await popup.getByRole("button", { name: "Close" }).click();
     await expect(popup).toHaveCount(0);
     // the partner chip leads to the other club
     await page.locator(".aboutc .with a.chip[href='#/club/sempachersee']").click();

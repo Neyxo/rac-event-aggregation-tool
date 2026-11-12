@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { store, type StoreKey } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, clubLabel, Footer, toast, useData } from "../components";
+import { ClubMark, clubLabel, Footer, MoreLink, toast, useData, type IconName } from "../components";
 import { version } from "../../../package.json";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
@@ -131,58 +131,122 @@ function Run({ url }: { url: string }) {
 interface GhCommit { sha: string; html_url: string; commit: { message: string; author: { date: string } } }
 interface GhRunRow { html_url: string; event: string; status: string; conclusion: string | null; created_at: string; updated_at: string; head_sha: string }
 const API = REPO.replace("https://github.com/", "https://api.github.com/repos/");
+const RUNS = `${API}/actions/workflows/feeds.yml/runs?per_page=30`, COMMITS = `${API}/commits?per_page=20`;
+// one request per address and page load: the overview and the runs page share the list, and GitHub allows 60 calls an hour
+const cache = new Map<string, Promise<unknown>>();
+function gh<T>(u: string): Promise<T> {
+  if (!cache.has(u)) cache.set(u, fetch(u).then(x => { if (!x.ok) throw new Error(String(x.status)); return x.json(); }).catch(e => { cache.delete(u); throw e; }));
+  return cache.get(u) as Promise<T>;
+}
+/** a GitHub read: null while loading (or without u), "error" when offline or rate-limited */
+function useGh<T>(u: string | null): T | "error" | null {
+  const [r, setR] = useState<T | "error" | null>(null);
+  useEffect(() => { if (u) gh<T>(u).then(setR, () => setR("error")); }, [u]);
+  return r;
+}
+const when = (d: string) => fmt.stamp.format(new Date(d));
+type Level = "ok" | "warn" | "bad";
+const WORST: Level[] = ["ok", "warn", "bad"];
+const worst = (...l: Level[]) => WORST[Math.max(...l.map(x => WORST.indexOf(x)))]!;
+const runLevel = (x: GhRunRow): Level => x.conclusion === "success" ? "ok" : x.conclusion && x.conclusion !== "cancelled" && x.conclusion !== "skipped" ? "bad" : "warn";
 
-/** the last three commits on main and the last three runs, from GitHub's public API: when the app last changed, and whether the
- *  builds since then worked. The run that built this page is marked. */
-function Recent({ run }: { run?: string }) {
-  const [r, setR] = useState<{ commits: GhCommit[]; runs: GhRunRow[] } | "error" | null>(null);
-  useEffect(() => {
-    const get = <T,>(u: string) => fetch(u).then(x => { if (!x.ok) throw new Error(String(x.status)); return x.json() as Promise<T>; });
-    Promise.all([get<GhCommit[]>(`${API}/commits?per_page=3`), get<{ workflow_runs: GhRunRow[] }>(`${API}/actions/workflows/feeds.yml/runs?per_page=3`)])
-      .then(([commits, j]) => setR({ commits, runs: j.workflow_runs }), () => setR("error"));
-  }, []);
-  if (r === null) return <p className="meta">Loading commits and runs…</p>;
-  if (r === "error") return <p className="meta">Commits and runs could not be read from GitHub (offline or rate limit).</p>;
-  const when = (d: string) => fmt.stamp.format(new Date(d));
+/** the runs' history in one line: green when every finished run worked, yellow when an older one failed, red when the last one did.
+ *  Cancelled runs (a newer push replaced them) don't count. */
+export function runHealth(runs: GhRunRow[]): { level: Level; text: string } {
+  const done = runs.filter(r => r.status === "completed" && r.conclusion !== "cancelled" && r.conclusion !== "skipped");
+  const failed = done.filter(r => r.conclusion !== "success");
+  if (!done.length) return { level: "warn", text: "No finished run yet" };
+  const since = ` since ${fmt.date.format(new Date(done.at(-1)!.created_at))}`;
+  if (done[0]!.conclusion !== "success") return { level: "bad", text: "Last run failed" + (failed.length > 1 ? ` · ${failed.length} of ${done.length} failed${since}` : "") };
+  if (failed.length) return { level: "warn", text: `Last run worked · ${failed.length} of ${done.length} failed${since}` };
+  return { level: "ok", text: `All ${done.length} runs worked${since}` };
+}
+
+/** one dot per run, oldest left, newest right */
+function Strip({ runs }: { runs: GhRunRow[] }) {
+  return <a className="devstrip" href={href("dev", "runs")} aria-label="Run history">{[...runs].reverse().map(x =>
+    <i key={x.html_url} className={runLevel(x)} title={`${when(x.created_at)} · ${x.conclusion ?? x.status}`} />)}</a>;
+}
+
+/** the last 30 runs: outcome, what started it, the commit, how long; the run that built this page marked */
+function Runs({ run }: { run?: string }) {
+  const r = useGh<{ workflow_runs: GhRunRow[] }>(RUNS);
+  if (r === null) return <p className="meta">Loading the runs…</p>;
+  if (r === "error") return <p className="meta">The runs could not be read from GitHub (offline or rate limit).</p>;
+  const runs = r.workflow_runs, h = runHealth(runs);
   return (
     <>
-      <h3>Last commits</h3>
+      <p className={cx("devstate", h.level)}><i />{h.text}</p>
+      <Strip runs={runs} />
       <ul className="devrecent">
-        {r.commits.map(c => <li key={c.sha}><a href={c.html_url} target="_blank" rel="noopener"><code>{c.sha.slice(0, 7)}</code> {c.commit.message.split("\n")[0]}</a><small>{when(c.commit.author.date)}</small></li>)}
-      </ul>
-      <h3>Last runs</h3>
-      <ul className="devrecent">
-        {r.runs.map(x => {
+        {runs.map(x => {
           const state = x.conclusion ?? x.status, mins = Math.round((Date.parse(x.updated_at) - Date.parse(x.created_at)) / 6e4);
           return (
-            <li key={x.html_url} className={cx("devstate", state === "success" ? "ok" : x.conclusion ? "bad" : "warn")}><i />
+            <li key={x.html_url} className={cx("devstate", runLevel(x))}><i />
               <a href={x.html_url} target="_blank" rel="noopener">{`${state.replace("_", " ")} · ${x.event === "schedule" ? "nightly" : x.event} · ${x.head_sha.slice(0, 7)}` + (x.conclusion ? ` · ${mins} min` : "")}</a>
               <small>{when(x.created_at) + (x.html_url === run ? " · this build" : "")}</small>
             </li>
           );
         })}
       </ul>
+      <div className="links"><Link label="All runs on GitHub" to={ALL_RUNS} /></div>
     </>
   );
 }
 
-function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot: Event[] }) {
-  const { data } = useData();
-  const gen = new Date(data.generated);
-  const age = (Date.now() - gen.getTime()) / 36e5;
-  const level = age < 8 ? "ok" : age < 30 ? "warn" : "bad";
-  const insta = data.clubs.filter(c => (c.instagram || []).length).length;
-  const warnings = st.warnings ?? [];
+/** the last 20 commits on main: when the app last changed */
+function Commits() {
+  const r = useGh<GhCommit[]>(COMMITS);
+  if (r === null) return <p className="meta">Loading the commits…</p>;
+  if (r === "error") return <p className="meta">The commits could not be read from GitHub (offline or rate limit).</p>;
   return (
     <>
-      <p className={cx("devstate", level)}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
-      {/* the version is package.json's at build time; a build between two releases carries the last one's number plus its commit */}
-      <p className="meta">{`Version ${version}` + (st.commit ? `, built from commit ${st.commit}` : "") + ` · ${import.meta.env.MODE} build`}</p>
-      <p className="meta">{`Next nightly run about ${fmt.stamp.format(nextRun())} (GitHub often starts it hours late); every push to main runs it too.` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
-      {st.run?.startsWith("https://github.com/") ? <><Run url={st.run} /><Recent run={st.run} /></> : null}
+      <ul className="devrecent">
+        {r.map(c => <li key={c.sha}><a href={c.html_url} target="_blank" rel="noopener"><code>{c.sha.slice(0, 7)}</code> {c.commit.message.split("\n")[0]}</a><small>{when(c.commit.author.date)}</small></li>)}
+      </ul>
+      <div className="links"><Link label="All commits on GitHub" to={`${REPO}/commits/main`} /></div>
+    </>
+  );
+}
+
+/** how old this build's data is */
+function useAge(): { gen: Date; age: number; level: Level } {
+  const { data } = useData();
+  const gen = new Date(data.generated), age = (Date.now() - gen.getTime()) / 36e5;
+  return { gen, age, level: age < 8 ? "ok" : age < 30 ? "warn" : "bad" };
+}
+
+/** Everything at a glance: one overall state, the run history as dots, and what is wrong in this build. Details are on the pages. */
+function Health({ st }: { st: Stat }) {
+  const fromGh = !!st.run?.startsWith("https://github.com/");  // a local build has no runs of its own: no request
+  const r = useGh<{ workflow_runs: GhRunRow[] }>(fromGh ? RUNS : null);
+  const { gen, age, level: ageLevel } = useAge();
+  const warnings = st.warnings ?? [];
+  const runs = r && r !== "error" ? r.workflow_runs : null, h = runs ? runHealth(runs) : null;
+  const all = worst(ageLevel, h?.level ?? "ok", st.failures.length ? "bad" : "ok", warnings.length ? "warn" : "ok");
+  return (
+    <section className="glass">
+      <p className={cx("devhealth", all)}><i />{all === "ok" ? "All good" : all === "warn" ? "Working, have a look" : "Something is broken"}</p>
+      {runs && h ? <><Strip runs={runs} /><p className={cx("devstate", h.level)}><i />{h.text}</p></>
+        : fromGh ? <p className="meta">{r === "error" ? "The runs could not be read from GitHub (offline or rate limit)." : "Loading the runs…"}</p> : null}
+      <p className={cx("devstate", ageLevel)}><i />{`Built ${fmt.stamp.format(gen)}, ${age < 1 ? "less than an hour" : Math.round(age) + " h"} ago` + (st.commit ? ` · commit ${st.commit}` : " · local build")}</p>
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
       {warnings.map((w, i) => <p key={i} className="devstate warn"><i />{w}</p>)}
+      <p className="meta">{`Version ${version} · next nightly run about ${fmt.stamp.format(nextRun())}` + (devFlag("Date") ? " · a pretend date is on, so ages here are shifted" : "")}</p>
+    </section>
+  );
+}
+
+/** the build this page came from: its run's steps, the layers, the counts and the raw files */
+function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot: Event[] }) {
+  const { data } = useData();
+  const insta = data.clubs.filter(c => (c.instagram || []).length).length;
+  return (
+    <>
+      {/* the version is package.json's at build time */}
+      <p className="meta">{`Version ${version}` + (st.commit ? `, built from commit ${st.commit}` : "") + ` · ${import.meta.env.MODE} build. Every push to main and every night runs it again (GitHub often starts the nightly one hours late).`}</p>
+      {st.run?.startsWith("https://github.com/") ? <Run url={st.run} /> : null}
       <Instagram st={st} insta={insta} />
       {/* news and projects that could not be fetched: the last list stays, the run stays green */}
       {st.notes ? <Fold title="Side lists not updated" items={st.notes.map(n => <span key={n}>{n}</span>)} /> : null}
@@ -195,7 +259,6 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
         <Count label="cancelled" n={own.filter(e => e.cancelled).length} />
       </div>
       <div className="links">
-        <Link label="All runs" to={ALL_RUNS} />
         <Link label="Releases" to={`${REPO}/releases`} />
         <Link label="status.json" to="status.json" />
         <Link label="events.json" to="events.json" />
@@ -364,7 +427,19 @@ function Clubs({ st, own, rot, rotClubs }: { st: Stat; own: Event[]; rot: Event[
   return <>{all.map(c => <div key={c.id} className="devclub"><Chip c={c} /><span>{line(c)}</span><a href={c.id + ".ics"}>.ics</a></div>)}</>;
 }
 
-export default function Dev(_props: ScreenProps) {
+// the pages under #/dev/<id>: title, one line for the overview's card, icon
+const PAGES = {
+  runs: ["Runs", "Every build of the last weeks, green or not", "refresh"],
+  commits: ["Commits", "What changed in the app, and when", "book"],
+  build: ["This build", "Its run's steps, layers, counts and files", "info"],
+  preview: ["Preview on this device", "Guest view, new marks, a pretend date", "phone"],
+  device: ["This device", "Service worker, cache and stored settings", "laptop"],
+  checks: ["Content checks", "What clubs could fix on Polaris", "alert"],
+  clubs: ["Clubs and layers", "One line per club and district", "wheel"],
+} as const satisfies Record<string, [string, string, IconName]>;
+type PageId = keyof typeof PAGES;
+
+export default function Dev({ route }: ScreenProps) {
   const D = useData();
   const st = useStatus();
   const [dev, setDev] = useState<Device | null>(null);
@@ -374,19 +449,34 @@ export default function Dev(_props: ScreenProps) {
   const own = D.data.events.filter(e => e.layer !== "rotary");
   const up = own.filter(e => !isPast(e));
   const rot = D.rotary;
-  // the sections fill once status.json is in too, so nothing jumps
-  const go = st;
+  const id = route.params.id in PAGES ? route.params.id as PageId : null;
+  // the page fills once status.json (and the device) are in, so nothing jumps
+  const ready = st && dev;
+  if (id) {
+    const body = !ready ? null : {
+      runs: () => <Runs run={st.run} />,
+      commits: () => <Commits />,
+      build: () => <Build st={st} own={own} up={up} rot={rot.events} />,
+      preview: () => <Preview />,
+      device: () => <DeviceInfo dev={dev} />,
+      checks: () => <div className="qa"><Checks own={own} up={up} /></div>,
+      clubs: () => <div><Clubs st={st} own={own} rot={rot.events} rotClubs={rot.clubs} /></div>,
+    }[id]();
+    return (
+      <main className="wrap settings dev">
+        <a className="devback" href={href("dev")}>‹ Developer</a>
+        <h1>{PAGES[id][0]}</h1>
+        <section className="glass">{body}</section>
+      </main>
+    );
+  }
   return (
     <main className="wrap settings dev">
       <h1>Developer</h1>
       <p className="lead">For the people who run this app. English only. Everything here affects this device alone.</p>
-      <section className="glass"><h2>Last build</h2>{go && <Build st={st} own={own} up={up} rot={rot.events} />}</section>
-      <section className="glass"><h2>Preview on this device</h2>{go && <Preview />}</section>
-      <section className="glass"><h2>This device</h2>{go && dev && <DeviceInfo dev={dev} />}</section>
-      <section className="glass"><h2>Content checks</h2><div className="qa">{go && dev && <Checks own={own} up={up} />}</div></section>
-      {/* the wrapper makes the first row :first-child, so it has no top border */}
-      <section className="glass"><h2>Clubs and layers</h2><div>{go && dev && <Clubs st={st} own={own} rot={rot.events} rotClubs={rot.clubs} />}</div></section>
-      <div id="foot">{go && dev && <Footer source />}</div>
+      {ready ? <Health st={st} /> : null}
+      {(Object.entries(PAGES) as [PageId, readonly [string, string, IconName]][]).map(([k, [title, sub, ic]]) => <MoreLink key={k} to={href("dev", k)} title={title} sub={sub} ic={ic} />)}
+      <div id="foot">{ready && <Footer source />}</div>
     </main>
   );
 }

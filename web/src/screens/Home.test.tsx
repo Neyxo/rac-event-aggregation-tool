@@ -80,7 +80,7 @@ describe("Home, member", () => {
     fireEvent.click(screen.getByRole("link", { name: /^Get your club's events in your calendar/ }));
     const dlg = within(document.querySelector<HTMLElement>("dialog[open]")!);
     dlg.getByRole("heading", { name: "Rotaract Zürich" });
-    fireEvent.click(dlg.getByRole("button", { name: "Done" }));
+    fireEvent.click(dlg.getByRole("button", { name: "Close" }));
     expect(screen.queryByRole("link", { name: /^Get your club's events/ })).toBeNull();
     localStorage.removeItem("rac.subSeen");
   });

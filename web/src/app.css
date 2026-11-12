@@ -306,7 +306,7 @@ footer a { color: var(--muted); }
 dialog.ob { border: 0; border-radius: 20px; padding: 0; width: min(460px, calc(100% - 32px)); background: var(--surface); color: var(--text); box-shadow: 0 20px 60px -20px rgba(0,0,0,.5); }
 dialog.ob[open] { animation: pop .25s ease-out; }
 dialog.ob::backdrop { background: rgba(20,16,30,.55); animation: fade .25s ease-out; }
-.ob-in { padding: 20px 20px 16px; max-height: 88vh; overflow: auto; }
+.ob-in { padding: 20px 20px 16px; max-height: calc(100dvh - 24px); overflow: auto; }
 .ob .choice { display: grid; gap: 8px; margin-top: 6px; }
 .ob .btn.big { width: 100%; }
 .ob .btn.big.alt { background: var(--surface-2); color: var(--text); }
@@ -554,9 +554,9 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 .evdetail .links > a, .evdetail .links > button { padding: 0 12px; white-space: nowrap; }
 @media (max-width: 359px) { .evdetail .links { flex-wrap: wrap; } }
 /* popups: a warning, where it works, short steps */
-.warn { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); font-weight: 600; font-size: .92rem; }
-.ob p.warn { color: var(--danger); }
-.warn svg, .where svg { width: 20px; height: 20px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.alertline { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); font-weight: 600; font-size: .92rem; }
+.ob p.alertline { color: var(--danger); }
+.alertline svg, .where svg { width: 20px; height: 20px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .where { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 6px; }
 .where li { display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 10px; font-weight: 600; }
 .where .no { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); }
@@ -570,10 +570,11 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 .devsteps .skipped { color: var(--muted); } :root[data-theme=dark] .devsteps .success b { color: #5fd08a; }
 
 /* the subscribe sheet: what a subscription does, then the ways in */
-.facts2 { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 8px; }
+.facts2 { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 6px; }
 .facts2 li { display: flex; gap: 10px; align-items: flex-start; font-size: .9rem; line-height: 1.35; } .facts2 svg { color: var(--azure); margin-top: 1px; }
-.ways { display: grid; gap: 8px; margin: 0 0 12px; }
-.way { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); font: inherit; text-align: left; text-decoration: none; }
+.ob .waypick { margin: 0 0 6px; font-weight: 600; color: var(--text); }
+.ways { display: grid; gap: 6px; margin: 0; }
+.way { display: flex; align-items: center; gap: 12px; width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); font: inherit; text-align: left; text-decoration: none; }
 .way > svg:first-child { width: 22px; height: 22px; color: var(--azure); }
 .way span { flex: 1; display: flex; flex-direction: column; min-width: 0; } .way b { font-size: .95rem; } .way small { color: var(--muted); font-size: .8rem; }
 .way .chev { color: var(--muted); transform: scaleX(-1); }
@@ -582,3 +583,10 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 .devrecent { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 6px; }
 .devrecent li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; font-size: .86rem; font-weight: 400; margin: 0; } .devrecent li.devstate i { align-self: center; }
 .devrecent a { color: inherit; flex: 1 1 60%; min-width: 0; } .devrecent small { color: var(--muted); }
+/* Developer overview: one overall state, the runs as dots, a back link on the pages under it */
+.devhealth { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; font-size: 1.2rem; font-weight: 700; }
+.devhealth i { width: 16px; height: 16px; border-radius: 50%; background: #009739; flex: 0 0 auto; } .devhealth.warn i { background: #e8a317; } .devhealth.bad i { background: var(--danger); }
+.devstrip { display: flex; gap: 3px; margin: 0 0 10px; }
+.devstrip i { flex: 1 1 0; max-width: 14px; height: 18px; border-radius: 3px; background: #009739; } .devstrip i.warn { background: #e8a317; } .devstrip i.bad { background: var(--danger); }
+.dev .devback { display: inline-block; margin: 4px 0 0; font-weight: 600; text-decoration: none; }
+.dev > .more { margin-bottom: 8px; }
