@@ -170,7 +170,7 @@ describe("blocks", () => {
     expect(link(t("go")).getAttribute("href")).toMatch(/^#\/(event|club)\//);
     setSettings({ home: "", also: [] });
   });
-  it("popup: rendered into body, title focusable, Done closes", () => {
+  it("popup: rendered into body, title focusable; the title then the round x, no back, no footer; the x closes", () => {
     const close = vi.fn();
     render(<Popup title="Clubs" onClose={close}><p>x</p></Popup>);
     const dlg = document.body.querySelector<HTMLDialogElement>(":scope > dialog.ob")!;
@@ -179,18 +179,23 @@ describe("blocks", () => {
     expect(h2.getAttribute("tabindex")).toBe("-1");
     expect(document.activeElement).toBe(h2);
     expect(within(dlg).getByText("x")).toBeTruthy();
-    fireEvent.click(within(dlg).getByRole("button", { name: t("done"), hidden: true }));
+    expect([...dlg.querySelector(".obhead")!.children].map(e => [e.tagName, e.className, e.getAttribute("aria-label")])).toEqual([["H2", "", null], ["BUTTON", "obback obx", t("close")]]);
+    expect(dlg.querySelector(".nav")).toBeNull();
+    expect(within(dlg).getAllByRole("button", { hidden: true })).toHaveLength(1);
+    fireEvent.click(within(dlg).getByRole("button", { name: t("close"), hidden: true }));
     expect(close).toHaveBeenCalled();
   });
-  it("popup with an action (a stepper's Next): it sits on the right, closing is the quiet text on the left; back before the title", () => {
+  it("popup with an action (a stepper's Next) and a way back: back, title, x in the header; the footer holds only the action", () => {
     const close = vi.fn(), back = vi.fn();
-    render(<Popup title="Steps" onClose={close} done={t("close")} quiet back={back} action={<button className="btn" type="button">{t("next")}</button>}><p>x</p></Popup>);
+    render(<Popup title="Steps" onClose={close} back={back} action={<button className="btn" type="button">{t("next")}</button>}><p>x</p></Popup>);
     const dlg = document.body.querySelector<HTMLDialogElement>(":scope > dialog.ob")!;
     dlg.close = () => { fireEvent(dlg, new Event("close")); };
-    expect([...dlg.querySelector(".nav")!.children].map(b => [b.className, b.textContent])).toEqual([["skip", t("close")], ["btn", t("next")]]);
-    expect(dlg.querySelector(".obhead")!.firstElementChild!.getAttribute("aria-label")).toBe(t("back"));
+    expect([...dlg.querySelector(".obhead")!.children].map(e => [e.tagName, e.className, e.getAttribute("aria-label")])).toEqual([["BUTTON", "obback", t("back")], ["H2", "", null], ["BUTTON", "obback obx", t("close")]]);
+    expect([...dlg.querySelectorAll(".nav button")].map(b => [b.className, b.textContent])).toEqual([["btn", t("next")]]);
+    expect(dlg.querySelector(".nav")!.lastElementChild!.textContent).toBe(t("next"));  // on the right
     fireEvent.click(within(dlg).getByRole("button", { name: t("back"), hidden: true }));
     expect(back).toHaveBeenCalled();
+    expect(close).not.toHaveBeenCalled();
     fireEvent.click(within(dlg).getByRole("button", { name: t("close"), hidden: true }));
     expect(close).toHaveBeenCalled();
   });

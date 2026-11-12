@@ -5,7 +5,7 @@ import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { t, tx } from "../i18n";
-import { loadData, setSettings } from "../lib/data";
+import { getData, loadData, setSettings } from "../lib/data";
 import { parseHash } from "../lib/route";
 import { Toast } from "../components";
 import Subscribe from "./Subscribe";
@@ -59,9 +59,15 @@ const pick = (name: string) => fireEvent.click(rows().find(r => r.querySelector(
 /** follows a link as far as jsdom can: the click arrives, the navigation (which it doesn't have) is left out */
 const tap = (a: HTMLElement) => { a.addEventListener("click", ev => ev.preventDefault()); fireEvent.click(a); };
 const btn = (name: string) => fireEvent.click(dlg().getByRole("button", { name }));
-/** the step shown: [where it is, its sentence, what its drawing says] */
-const step = () => [q(".sfn")?.textContent, q(".sft")?.textContent, q("svg.vis")?.textContent ?? null];
+/** the step shown: [where it is in the row of steps, where it happens, its sentence (none when its button says it)] */
+const step = () => [q(".stepper")?.getAttribute("aria-label"), q(".sfctx")?.textContent, q(".sft")?.textContent];
 const of = (i: number, n: number) => S.step.replace("{i}", String(i)).replace("{n}", String(n));
+/** the step's drawing: what it says, null without one */
+const vis = () => q("figure svg")?.textContent ?? null;
+/** the popup's footer: the one button that moves on, if any */
+const nav = () => [...document.querySelectorAll("dialog .nav button")].map(b => [b.className, b.textContent]);
+/** Android: the same page, opened in Chrome instead of the calendar's app */
+const inChrome = (u: string) => `intent://${u.slice("https://".length)}#Intent;scheme=https;package=com.android.chrome;end`;
 /** Home's and the help's start: the sheet on the list, then the all-clubs calendar */
 const add = () => {
   show();
@@ -95,21 +101,23 @@ describe("calendar help", () => {
     fireEvent.click(fix.getByRole("button", { name: S.show }));
     // the phone part alone: which phone, then its steps; a computer starts on Android
     expect(title()).toBe(S.sync_h);
-    expect(step()).toEqual([of(1, 5), S.phone_q, null]);
+    expect(step()).toEqual([of(1, 5), undefined, S.phone_q]);
+    expect(vis()).toBeNull();
     expect(dlg().getByRole("button", { name: "Android" }).getAttribute("aria-pressed")).toBe("true");
     expect(dlg().queryByRole("button", { name: t("back") })).toBeNull();
     btn(t("next"));
-    expect(step()).toEqual([of(2, 5), S.sync_a[0], "31"]);
+    expect(step()).toEqual([of(2, 5), S.ctx_phone, S.sync_a[0]]);
     btn(t("back"));
     btn("iPhone");
-    expect(q(".sfn")!.textContent).toBe(of(1, 4));
+    expect(step()[0]).toBe(of(1, 4));
     btn(t("next"));
     expect(dlg().getByRole("link", { name: S.sync_btn }).getAttribute("href")).toBe("https://calendar.google.com/calendar/syncselect");
     dlg().getByText(S.sync_note);
     btn(t("next")); btn(t("next"));
-    // the last step: nothing after it, only Close
-    expect(step()).toEqual([of(4, 4), S.sync_i[2], S.ui_save]);
-    expect(dlg().queryByRole("button", { name: t("next") })).toBeNull();
+    // the last step: nothing after it, so no footer; the x closes
+    expect(step()).toEqual([of(4, 4), S.ctx_browser, S.sync_i[2]]);
+    expect(vis()).toContain(S.ui_save);
+    expect(q(".nav")).toBeNull();
     btn(t("close"));
     expect(document.querySelector("dialog")).toBeNull();
 
@@ -125,66 +133,99 @@ describe("calendar help", () => {
     show();
     fireEvent.click(within(fixes()[1]!).getByRole("button", { name: S.show }));
     expect(dlg().getByRole("button", { name: "iPhone" }).getAttribute("aria-pressed")).toBe("true");
-    expect(q(".sfn")!.textContent).toBe(of(1, 4));
+    expect(step()[0]).toBe(of(1, 4));
   });
 });
 
 describe("adding a calendar", () => {
-  it("which calendar (my clubs, the international events, all clubs), then where: three rows and the quiet file, no links", () => {
+  it("which calendar (my clubs, the international events, all clubs, another club), then where: three rows and the small file button, no links", () => {
     setSettings({ home: "zuerich", also: ["luzern"] });
     show();
     fireEvent.click(within(card(t("sub_title"))).getByRole("button", { name: S.add }));
     expect(title()).toBe(S.pick);
     expect(names()).toEqual(["Rotaract Zürich", "Rotaract Luzern", "Rotaract International", t("sp_all_feed")]);
+    expect(q(".ways")!.lastElementChild).toBe(q(".sfmore"));
+    expect(q(".sfmore")!.textContent).toBe(S.other);
     expect(rows()[1]!.querySelector("img")?.getAttribute("src")).toBe("crests/luzern.svg");
     expect(dlg().queryByRole("button", { name: t("back") })).toBeNull();
     pick("Rotaract Luzern");
     expect(title()).toBe(t("way_pick"));
     expect(q(".sfn")!.textContent).toBe("Rotaract Luzern");
     expect(rows().map(r => [r.tagName, r.querySelector("span")!.textContent])).toEqual((["apple", "google", "outlook"] as const).map(w => ["BUTTON", t(`way_${w}`) + t(`way_${w}_s`)]));
-    expect(q(".sfquiet")!.textContent).toBe(t("way_ics") + " · " + t("way_ics_s"));
+    expect([...document.querySelectorAll("dialog .sfmore")].map(b => [b.tagName, b.textContent])).toEqual([["BUTTON", t("way_ics")]]);
     expect(dlg().queryAllByRole("link")).toEqual([]);
-    // nothing to go on with yet: Close is the popup's only button, and Back returns to the list
-    expect(q(".nav")!.textContent).toBe(t("close"));
+    // nothing to go on with yet: no footer; Back returns to the list, the x closes
+    expect(q(".nav")).toBeNull();
     btn(t("back"));
     expect(title()).toBe(S.pick);
     btn(t("close"));
     expect(document.querySelector("dialog")).toBeNull();
   });
 
+  it("Another club: every other club by name, Back returns; picking one goes on to where", () => {
+    setSettings({ home: "zuerich", also: ["luzern"] });
+    show();
+    fireEvent.click(within(card(t("sub_title"))).getByRole("button", { name: S.add }));
+    const shown = names();
+    btn(S.other);
+    expect(title()).toBe(S.other);
+    const others = getData().data.clubs.map(c => c.name).filter(n => !shown.includes(n)).sort((a, b) => a.localeCompare(b));
+    expect(others).toContain("Rotaract Bern");
+    expect(names()).toEqual(others);
+    expect(q(".sfmore")).toBeNull();
+    expect(q(".nav")).toBeNull();
+    btn(t("back"));
+    expect(title()).toBe(S.pick);
+    expect(names()).toEqual(shown);
+    btn(S.other);
+    pick("Rotaract Bern");
+    expect(title()).toBe(t("way_pick"));
+    expect(q(".sfn")!.textContent).toBe("Rotaract Bern");
+    pick(t("way_outlook"));
+    expect(dlg().getByRole("link", { name: S.o_open }).getAttribute("href")).toMatch(/bern\.ics&name=Rotaract%20Bern$/);
+    // Back from where: the list it was picked from
+    btn(t("back")); btn(t("back"));
+    expect(title()).toBe(S.other);
+  });
+
   it("Google on a computer: open (a new tab), confirm, which phone, its sync steps, Done!, and the added calendar is ticked", () => {
     add();
     pick(t("way_google"));
     expect(title()).toBe(t("way_google"));
-    expect(step()).toEqual([of(1, 7), S.g_open, null]);
-    const open = dlg().getByRole("link", { name: t("way_google") });
+    // a step that is just a button: the button is the instruction, no sentence, no drawing
+    expect(step()).toEqual([of(1, 7), undefined, undefined]);
+    expect(vis()).toBeNull();
+    const open = dlg().getByRole("link", { name: S.g_open });
     expect([open.getAttribute("href"), open.getAttribute("target")]).toEqual([gcal, "_blank"]);
-    // with an action the footer is a quiet Close on the left, Next on the right: quiet too beside the step's own button
-    const nav = () => [...q(".nav")!.children].map(b => [b.className, b.textContent]);
-    expect(nav()).toEqual([["skip", t("close")], ["btn quiet", t("next")]]);
+    // the footer holds only Next: quiet beside the step's own button
+    expect(nav()).toEqual([["btn quiet", t("next")]]);
     tap(open);  // the action goes on to the next step
-    expect(step()).toEqual([of(2, 7), S.g_confirm, S.ui_add]);
-    expect(nav()).toEqual([["skip", t("close")], ["btn", t("next")]]);
+    expect(step()).toEqual([of(2, 7), S.ctx_browser, S.g_confirm]);
+    expect(vis()).toContain(S.ui_add);
+    expect(nav()).toEqual([["btn", t("next")]]);
     btn(t("next"));
-    expect(step()).toEqual([of(3, 7), S.phone_q, null]);
+    expect(step()).toEqual([of(3, 7), undefined, S.phone_q]);
     expect(dlg().getByRole("button", { name: "Android" }).getAttribute("aria-pressed")).toBe("true");
     btn(t("next"));
-    expect(step()).toEqual([of(4, 7), S.sync_a[0], "31"]);
+    expect(step()).toEqual([of(4, 7), S.ctx_phone, S.sync_a[0]]);
     // the iPhone has one step less, the first with Google's sync page
     btn(t("back"));
     btn("iPhone");
-    expect(q(".sfn")!.textContent).toBe(of(3, 6));
+    expect(step()[0]).toBe(of(3, 6));
     btn(t("next"));
-    expect(step()).toEqual([of(4, 6), S.sync_i[0], null]);
+    expect(step()).toEqual([of(4, 6), undefined, S.sync_i[0]]);
     expect(dlg().getByRole("link", { name: S.sync_btn }).getAttribute("href")).toBe("https://calendar.google.com/calendar/syncselect");
     btn(t("next"));
-    expect(step()).toEqual([of(5, 6), S.sync_i[1], ""]);
+    expect(step()).toEqual([of(5, 6), S.ctx_browser, S.sync_i[1]]);
     btn(t("next"));
-    expect(step()).toEqual([of(6, 6), S.sync_i[2], S.ui_save]);
-    expect(dlg().queryByRole("button", { name: t("next") })).toBeNull();
+    expect(step()).toEqual([of(6, 6), S.ctx_browser, S.sync_i[2]]);
+    expect(vis()).toContain(S.ui_save);
+    expect(nav()).toEqual([["btn", t("done")]]);
     btn(t("done"));
     expect(title()).toBe(S.done);
     dlg().getByText(S.done_t);
+    // nothing to go on to
+    expect([vis(), q(".stepper"), q(".nav")]).toEqual(["", null, null]);
     expect(dlg().getByRole("link", { name: S.trouble }).getAttribute("href")).toBe("#/subscribe");
     expect(dlg().queryByRole("button", { name: t("back") })).toBeNull();
     pick(S.another);
@@ -193,43 +234,83 @@ describe("adding a calendar", () => {
     expect(names().at(-1)).toBe(t("sp_all_feed"));
   });
 
-  it("Android's four sync steps, each with its drawing; Back walks the steps back to the ways", () => {
+  it("the row of steps: one per step, the past ones ticked, the current one marked, named \"Step i of n\"", () => {
+    add();
+    pick(t("way_google"));
+    const lis = () => [...document.querySelectorAll("dialog ol.stepper li")].map(li => [li.className, li.textContent, li.getAttribute("aria-current")]);
+    expect(lis()).toEqual([["now", "1", "step"], ...[2, 3, 4, 5, 6, 7].map(k => ["", String(k), null])]);
+    btn(t("next")); btn(t("next"));
+    expect(q("ol.stepper")!.getAttribute("aria-label")).toBe(of(3, 7));
+    expect(lis()).toEqual([["past", "✓", null], ["past", "✓", null], ["now", "3", "step"], ...[4, 5, 6, 7].map(k => ["", String(k), null])]);
+    expect(dlg().queryByText(of(3, 7))).toBeNull();  // not also as text
+    btn(t("back"));
+    expect(lis().map(l => l[0])).toEqual(["past", "now", "", "", "", "", ""]);
+  });
+
+  it("Android's four sync steps, each where it happens and with its drawing; Back walks the steps back to the ways", () => {
     add();
     pick(t("way_google"));
     for (let i = 0; i < 3; i++) btn(t("next"));
     const seen = [step()];
     for (let i = 0; i < 3; i++) { btn(t("next")); seen.push(step()); }
-    expect(seen).toEqual([[of(4, 7), S.sync_a[0], "31"], [of(5, 7), S.sync_a[1], S.ui_settings], [of(6, 7), S.sync_a[2], "Rotaract …" + S.ui_more], [of(7, 7), S.sync_a[3], S.ui_sync]]);
+    expect(seen).toEqual([[of(4, 7), S.ctx_phone, S.sync_a[0]], [of(5, 7), S.ctx_gcal, S.sync_a[1]], [of(6, 7), S.ctx_gcal, S.sync_a[2]], [of(7, 7), S.ctx_gcal, S.sync_a[3]]]);
+    expect(vis()).toContain(S.ui_sync);
     dlg().getByRole("button", { name: t("done") });
     for (let i = 0; i < 6; i++) btn(t("back"));
-    expect(q(".sft")!.textContent).toBe(S.g_open);
+    dlg().getByRole("link", { name: S.g_open });
     btn(t("back"));
     expect(title()).toBe(t("way_pick"));
   });
 
-  it("Google on a phone asks how: on this phone copies the link for the browser, then this phone's sync steps", async () => {
+  it("Google on an Android phone asks how: on this phone opens the page in Chrome (or copies the link), confirm, then this phone's sync steps", async () => {
     ua.phone = true;
     add();
     pick(t("way_google"));
     expect(title()).toBe(S.how);
     expect(rows().map(r => r.textContent)).toEqual([S.on_phone + S.on_phone_s, S.on_pc + S.on_pc_s]);
     pick(S.on_phone);
-    expect(step()).toEqual([of(1, 7), S.g_copy, null]);
-    await act(async () => { btn(S.copy_btn); });
+    expect(step()).toEqual([of(1, 6), undefined, undefined]);
+    // not the plain link, which the Google Calendar app would take: Chrome, by an intent
+    const open = dlg().getByRole("link", { name: S.open_browser });
+    expect([open.getAttribute("href"), open.hasAttribute("target")]).toEqual([inChrome(gcal), false]);
+    expect(dlg().queryByRole("button", { name: S.copy_btn })).toBeNull();
+    tap(open);
+    expect(step()).toEqual([of(2, 6), S.ctx_browser, S.g_confirm]);
+    // the quiet second way: the plain link, copied, and on
+    btn(t("back"));
+    expect(q(".sfmore")!.textContent).toBe(S.copy_alt);
+    await act(async () => { btn(S.copy_alt); });
     expect(writeText).toHaveBeenCalledWith(gcal);
     expect(screen.getByRole("status").textContent).toBe(t("copied"));
-    expect(step()).toEqual([of(2, 7), S.g_paste, "calendar.google.com/…"]);
-    btn(t("next"));
-    expect(q(".sft")!.textContent).toBe(S.g_confirm);
+    expect(step()).toEqual([of(2, 6), S.ctx_browser, S.g_confirm]);
+    expect(vis()).toContain(S.ui_add);
     // an Android phone: no question, its four steps
     btn(t("next"));
-    expect(step()).toEqual([of(4, 7), S.sync_a[0], "31"]);
+    expect(step()).toEqual([of(3, 6), S.ctx_phone, S.sync_a[0]]);
     expect(dlg().queryByRole("button", { name: "iPhone" })).toBeNull();
     // Back: the steps, then how, then the ways
-    for (let i = 0; i < 4; i++) btn(t("back"));
+    for (let i = 0; i < 3; i++) btn(t("back"));
     expect(title()).toBe(S.how);
     btn(t("back"));
     expect(title()).toBe(t("way_pick"));
+  });
+
+  it("Google on an iPhone, on this phone: copy the link, paste it into the browser, confirm, the iPhone's sync steps", async () => {
+    ua.phone = true; ua.ios = true;
+    add();
+    pick(t("way_google"));
+    pick(S.on_phone);
+    expect(step()).toEqual([of(1, 6), undefined, undefined]);
+    expect(dlg().queryAllByRole("link")).toEqual([]);  // nothing like Android's intent
+    await act(async () => { btn(S.copy_btn); });
+    expect(writeText).toHaveBeenCalledWith(gcal);
+    expect(screen.getByRole("status").textContent).toBe(t("copied"));
+    expect(step()).toEqual([of(2, 6), S.ctx_browser, S.g_paste]);
+    btn(t("next"));
+    expect(step()).toEqual([of(3, 6), S.ctx_browser, S.g_confirm]);
+    btn(t("next"));
+    expect(step()).toEqual([of(4, 6), undefined, S.sync_i[0]]);
+    dlg().getByRole("link", { name: S.sync_btn });
   });
 
   it("Google on an iPhone through a computer: send the link, open it there, confirm, the iPhone's sync steps", async () => {
@@ -237,14 +318,14 @@ describe("adding a calendar", () => {
     add();
     pick(t("way_google"));
     pick(S.on_pc);
-    expect(step()).toEqual([of(1, 6), S.send, null]);
+    expect(step()).toEqual([of(1, 6), undefined, undefined]);
     await act(async () => { btn(t("sp_g_send")); });
     expect(writeText).toHaveBeenCalledWith(gcal);
-    expect(q(".sft")!.textContent).toBe(S.pc);
+    expect(step()).toEqual([of(2, 6), S.ctx_pc, S.pc]);
     btn(t("next"));
-    expect(q(".sft")!.textContent).toBe(S.g_confirm);
+    expect(step()).toEqual([of(3, 6), S.ctx_pc, S.g_confirm]);
     btn(t("next"));
-    expect(step()).toEqual([of(4, 6), S.sync_i[0], null]);
+    expect(step()).toEqual([of(4, 6), undefined, S.sync_i[0]]);
     dlg().getByRole("link", { name: S.sync_btn });
   });
 
@@ -252,11 +333,12 @@ describe("adding a calendar", () => {
     ua.phone = true; ua.ios = true;
     add();
     pick(t("way_apple"));
-    expect(step()).toEqual([of(1, 2), S.a_open, null]);
-    const open = dlg().getByRole("link", { name: t("way_apple") });
+    expect(step()).toEqual([of(1, 2), undefined, undefined]);
+    const open = dlg().getByRole("link", { name: S.a_open });
     expect([open.getAttribute("href"), open.hasAttribute("target")]).toEqual([webcal, false]);
     tap(open);
-    expect(step()).toEqual([of(2, 2), S.a_confirm, S.ui_sub]);
+    expect(step()).toEqual([of(2, 2), undefined, S.a_confirm]);
+    expect(vis()).toContain(S.ui_sub);
     btn(t("done"));
     expect(title()).toBe(S.done);
   });
@@ -266,45 +348,90 @@ describe("adding a calendar", () => {
     pick(t("way_apple"));
     expect(q(".alertline")!.textContent).toBe(t("apple_na"));
     expect(dlg().queryAllByRole("link")).toEqual([]);
-    expect(q(".sfn")).toBeNull();  // a single page: no "Step 1 of 1"
+    expect(q(".stepper")).toBeNull();  // a single page: no row of steps
+    expect(q(".nav")).toBeNull();  // nothing was added: no Done
     await act(async () => { btn(t("sp_g_send")); });
     expect(writeText).toHaveBeenCalledWith(base + "all.ics");
     expect(q(".alertline")!.textContent).toBe(t("apple_na"));
   });
 
-  it("Outlook: on a computer open and confirm; on a phone send the link to a computer first", async () => {
+  it("Outlook on a computer: open and confirm", () => {
     add();
     pick(t("way_outlook"));
-    expect(step()).toEqual([of(1, 2), S.o_open, null]);
-    const open = dlg().getByRole("link", { name: t("way_outlook") });
+    expect(step()).toEqual([of(1, 2), undefined, undefined]);
+    const open = dlg().getByRole("link", { name: S.o_open });
     expect([open.getAttribute("href"), open.getAttribute("target")]).toEqual([outlook, "_blank"]);
     tap(open);
-    expect(step()).toEqual([of(2, 2), S.o_confirm, S.ui_import]);
-    cleanup();
+    expect(step()).toEqual([of(2, 2), S.ctx_browser, S.o_confirm]);
+    expect(vis()).toContain(S.ui_import);
+  });
 
+  it("Outlook on a phone asks how too; on this phone: Android opens it in Chrome (or copies the link), an iPhone copies and pastes; no sync steps", async () => {
     ua.phone = true;
     add();
     pick(t("way_outlook"));
-    expect(step()).toEqual([of(1, 3), S.send, null]);
+    expect(title()).toBe(S.how);
+    expect(names()).toEqual([S.on_phone, S.on_pc]);
+    pick(S.on_phone);
+    expect(step()).toEqual([of(1, 2), undefined, undefined]);
+    const open = dlg().getByRole("link", { name: S.open_browser });
+    expect([open.getAttribute("href"), open.hasAttribute("target")]).toEqual([inChrome(outlook), false]);
+    await act(async () => { btn(S.copy_alt); });
+    expect(writeText).toHaveBeenCalledWith(outlook);
+    expect(step()).toEqual([of(2, 2), S.ctx_browser, S.o_confirm]);
+    btn(t("back"));
+    tap(dlg().getByRole("link", { name: S.open_browser }));
+    expect(step()).toEqual([of(2, 2), S.ctx_browser, S.o_confirm]);
+    btn(t("done"));
+    expect(title()).toBe(S.done);
+    cleanup();
+    writeText.mockClear();
+
+    ua.ios = true;
+    add();
+    pick(t("way_outlook"));
+    pick(S.on_phone);
+    expect(step()).toEqual([of(1, 3), undefined, undefined]);
+    expect(dlg().queryAllByRole("link")).toEqual([]);
+    await act(async () => { btn(S.copy_btn); });
+    expect(writeText).toHaveBeenCalledWith(outlook);
+    expect(step()).toEqual([of(2, 3), S.ctx_browser, S.g_paste]);
+    btn(t("next"));
+    expect(step()).toEqual([of(3, 3), S.ctx_browser, S.o_confirm]);
+    dlg().getByRole("button", { name: t("done") });
+  });
+
+  it("Outlook on a phone, on a computer: send the link, open it there and sign in, confirm", async () => {
+    ua.phone = true;
+    add();
+    pick(t("way_outlook"));
+    pick(S.on_pc);
+    expect(step()).toEqual([of(1, 3), undefined, undefined]);
     await act(async () => { btn(t("sp_g_send")); });
     expect(writeText).toHaveBeenCalledWith(outlook);
-    expect(q(".sft")!.textContent).toBe(S.o_pc);
+    expect(step()).toEqual([of(2, 3), S.ctx_pc, S.o_pc]);
     btn(t("next"));
-    expect(step()).toEqual([of(3, 3), S.o_confirm, S.ui_import]);
+    expect(step()).toEqual([of(3, 3), S.ctx_pc, S.o_confirm]);
+    expect(vis()).toContain(S.ui_import);
+    // Back: the steps, then how
+    btn(t("back")); btn(t("back")); btn(t("back"));
+    expect(title()).toBe(S.how);
   });
 
   it("the file first warns that it is a copy that won't update, then downloads, opens, confirms", () => {
     add();
-    fireEvent.click(q(".sfquiet")!);
+    btn(t("way_ics"));
     expect(title()).toBe(t("way_ics"));
-    expect(q(".sfn")!.textContent).toBe(of(1, 3));
+    expect(step()).toEqual([of(1, 3), undefined, undefined]);
     expect(q(".alertline")!.textContent).toBe(t("ics_stale_feed"));
     const dl = dlg().getByRole("link", { name: t("ics_dl") });
     expect(dl.getAttribute("href")).toBe(base + "all.ics");
     tap(dl);
-    expect(step()).toEqual([of(2, 3), tx("ics_steps")[1], ".ics"]);
+    expect(step()).toEqual([of(2, 3), undefined, tx("ics_steps")[1]]);
+    expect(vis()).toBe(".ics");
     btn(t("next"));
-    expect(step()).toEqual([of(3, 3), tx("ics_steps")[2], S.ui_add]);
+    expect(step()).toEqual([of(3, 3), undefined, tx("ics_steps")[2]]);
+    expect(vis()).toContain(S.ui_add);
     btn(t("done"));
     expect(title()).toBe(S.done);
   });

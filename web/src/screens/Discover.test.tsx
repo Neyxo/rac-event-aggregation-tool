@@ -94,14 +94,14 @@ describe("Discover", () => {
     expect(location.hash).toBe("#/discover?d=2000");
     fireEvent.click(btn("Choose clubs"));
     const pop = within(screen.getByRole("dialog"));
-    const chips = () => pop.getAllByRole("button").filter(b => b.textContent !== "Done");
+    const chips = () => pop.getAllByRole("button").filter(b => !b.classList.contains("obx"));
     // only the clubs of the chosen district
     expect(chips().map(b => b.textContent)).toEqual(["Zürich", "ZH Intl"]);
     fireEvent.click(chips()[1]!);
     expect(chips().filter(b => b.getAttribute("aria-pressed") === "true").map(b => b.textContent)).toEqual(["ZH Intl"]);
     expect(ids()).toEqual(["222796"]);
     expect(filters().textContent).toBe("Filters2");
-    fireEvent.click(pop.getByRole("button", { name: "Done" }));
+    fireEvent.click(pop.getByRole("button", { name: "Close" }));
     expect(screen.queryByRole("dialog")).toBeNull();
     fireEvent.click(btn("Clear"));
     expect(ids()).toHaveLength(4);

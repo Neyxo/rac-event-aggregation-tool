@@ -601,21 +601,41 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 .devstrip i { flex: 1 1 0; max-width: 14px; height: 18px; border-radius: 3px; background: #009739; } .devstrip i.warn { background: #e8a317; } .devstrip i.bad { background: var(--danger); }
 .dev .devback { display: inline-block; margin: 4px 0 0; font-weight: 600; text-decoration: none; }
 .dev > .more { margin-bottom: 8px; }
-/* the add-a-calendar flow (components/Subscribe.tsx): one step per page, a drawing of what to tap */
+/* the add-a-calendar flow (components/Subscribe.tsx): one step per page, where you are, a drawing of what to tap */
 .sfstep { display: grid; gap: 10px; justify-items: start; } .sfstep .linkbtn { margin: 0; } .sfstep .ways { width: 100%; }
-.ob .sfn { margin: 0; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.sfstep > .linkbtn.primary { width: 100%; min-height: 48px; font-size: 1rem; }
+.ob .sfn { margin: 0 0 8px; font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .ob .sft { margin: 0; font-size: 1.1rem; font-weight: 650; line-height: 1.3; color: var(--text); }
-.vis { width: 100%; max-height: 150px; border-radius: 14px; background: var(--surface-2); color: var(--text); }
-.vis .pn { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; } .vis .ln { fill: var(--line); } .vis .hl { fill: var(--azure); } .vis .hl.o { fill: var(--surface); stroke: var(--azure); stroke-width: 2.5; }
-.vis .ar, .vis .onl { fill: none; stroke: var(--muted); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; } .vis .onl { stroke: #fff; } .vis .onl.big { stroke-width: 7; } .vis .knob { fill: #fff; }
-.vis text { font-size: 11px; font-weight: 600; fill: var(--muted); } .vis text.on { fill: #fff; } .vis text.b { font-size: 14px; fill: currentColor; }
-.way .wi { flex: 0 0 auto; display: grid; } .way .wi svg { width: 28px; height: 28px; stroke: none; }
+/* the steps as a row of numbered dots joined by a line: done ones ticked, this one filled */
+.stepper { list-style: none; display: flex; width: 100%; margin: 0 0 4px; padding: 0; gap: 0; }
+.stepper li { flex: 1 1 0; display: flex; align-items: center; font-size: .72rem; font-weight: 700; color: var(--muted); }
+.stepper li::before { content: ""; flex: 1; height: 2px; background: var(--line); } .stepper li:first-child::before { display: none; } .stepper li:first-child { flex: 0 0 auto; }
+.stepper li { --d: 24px; } .stepper li span { display: grid; place-items: center; flex: 0 0 var(--d); width: var(--d); height: var(--d); border-radius: 50%; border: 2px solid var(--line); background: var(--surface); }
+.stepper li.past::before, .stepper li.now::before { background: var(--azure); }
+.stepper li.past span { border-color: var(--azure); color: var(--azure); } .stepper li.now span { border-color: var(--azure); background: var(--azure); color: #fff; }
+.ob .sfctx { display: inline-flex; align-items: center; gap: 6px; margin: 0; padding: 4px 10px 4px 8px; border-radius: 99px; background: color-mix(in srgb, var(--azure) 14%, var(--surface)); color: var(--text); font-size: .82rem; font-weight: 650; }
+.sfctx svg { width: 15px; height: 15px; stroke: var(--azure); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* a drawing: dashed like a sketch, so nobody takes its switch for a real one */
+.sfvis { position: relative; width: 100%; margin: 0; border-radius: 14px; border: 1.5px dashed var(--line); background: var(--surface-2); color: var(--text); overflow: hidden; pointer-events: none; user-select: none; }
+.sfvis svg { display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; }
+.sfvis .pn { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; } .sfvis .pn.dl { filter: drop-shadow(0 3px 6px rgba(0,0,0,.18)); } .sfvis .ln { fill: var(--line); } .sfvis .rule { fill: none; stroke: var(--line); stroke-width: 1.5; }
+.sfvis .hl { fill: var(--azure); } .sfvis .hl.o { fill: color-mix(in srgb, var(--azure) 10%, var(--surface)); stroke: var(--azure); stroke-width: 2; }
+.sfvis .tap { fill: color-mix(in srgb, var(--azure) 22%, transparent); stroke: var(--azure); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.sfvis .ar, .sfvis .onl { fill: none; stroke: var(--muted); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; } .sfvis .ar.thin { stroke-width: 1.5; } .sfvis .onl { stroke: #fff; } .sfvis .onl.thin { stroke-width: 1.8; } .sfvis .onl.big { stroke-width: 7; } .sfvis .knob { fill: #fff; } .sfvis .gear { fill: none; stroke: #fff; stroke-width: 2; }
+.sfvis text { font-size: 9.5px; font-weight: 600; fill: var(--muted); } .sfvis text.on { fill: #fff; } .sfvis text.b { font-size: 11px; font-weight: 700; fill: currentColor; } .sfvis text.sm { font-size: 9.5px; }
+.way .wi { flex: 0 0 auto; display: grid; } .way .wi svg { width: 34px; height: 34px; stroke: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.18)); }
 .sfmark { flex: 0 0 auto; display: grid; } .sfmark img { width: 24px; height: 24px; object-fit: contain; }
 .sfok { color: #009739; font-size: 1.1rem; }
-.sfquiet, .ob .skip.web { background: none; border: 0; color: var(--muted); font: inherit; font-size: .85rem; padding: 8px 4px; text-align: center; width: 100%; }
+/* a smaller second choice under the rows (another club, the .ics file): quiet, but an outlined pill with a chevron, so plainly a button */
+.sfmore { justify-self: center; display: inline-flex; align-items: center; gap: 6px; margin: 4px auto 0; min-height: 34px; padding: 0 10px 0 12px; border: 1px solid var(--line); border-radius: 99px; background: none; color: var(--muted); font: inherit; font-size: .82rem; font-weight: 600; }
+.sfmore:hover { border-color: var(--muted); color: var(--text); } .sfmore:active { transform: scale(.97); }
+.sfmore svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; } .sfmore .chev { transform: scaleX(-1); }
+.ob .skip.web { background: none; border: 0; color: var(--muted); font: inherit; font-size: .85rem; padding: 8px 4px; text-align: center; width: 100%; }
 .sfseg { display: flex; width: 100%; } .sfseg button { flex: 1; color: var(--text); }
 .sfhelp { justify-self: center; }
 .facts2.big { gap: 14px; margin: 10px 0 4px; } .facts2.big li { align-items: center; font-size: 1.05rem; font-weight: 650; } .facts2.big svg { width: 26px; height: 26px; margin: 0; }
+/* every popup: back top left, close top right */
+.obx { margin: 0 -4px 0 0; }
 /* calendar help: a problem's question and its fixes */
 .fixask { margin-top: 8px; } .fixask p { margin: 0 0 8px; color: var(--muted); } .fixask .seg { display: flex; } .fixask .seg button { flex: 1; color: var(--text); }
 .fixcase { display: grid; gap: 2px; justify-items: start; margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); animation: fade .25s ease-out; }

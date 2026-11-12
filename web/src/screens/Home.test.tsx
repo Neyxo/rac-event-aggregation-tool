@@ -79,7 +79,7 @@ describe("Home, member", () => {
     fireEvent.click(screen.getByRole("link", { name: /^Get your club's events in your calendar/ }));
     const dlg = within(document.querySelector<HTMLElement>("dialog[open]:not(#ob)")!);
     dlg.getByRole("heading", { name: tx("sf").pick });
-    expect(dlg.getAllByRole("button").map(b => b.textContent)).toEqual(["Rotaract Zürich", "Rotaract Luzern", "Rotaract International", t("sp_all_feed"), t("close")]);
+    expect(dlg.getAllByRole("button").map(b => b.textContent)).toEqual(["", "Rotaract Zürich", "Rotaract Luzern", "Rotaract International", t("sp_all_feed"), tx("sf").other]);
     fireEvent.click(dlg.getByRole("button", { name: t("close") }));
     expect(screen.queryByRole("link", { name: /^Get your club's events/ })).toBeNull();
     expect(JSON.parse(localStorage.getItem("rac.subSeen")!)).toBe(true);
@@ -321,7 +321,7 @@ describe("welcome steps", () => {
     expect(title().textContent).toBe(t("ob_sub"));
     row("Rotaract Bern");
     row(t("way_outlook"));
-    expect(inDlg().getByRole("link", { name: t("way_outlook") }).getAttribute("href")).toMatch(/bern\.ics&name=Rotaract%20Bern$/);
+    expect(inDlg().getByRole("link", { name: tx("sf").o_open }).getAttribute("href")).toMatch(/bern\.ics&name=Rotaract%20Bern$/);
     inDlg().getByRole("button", { name: t("not_now") });
     click("Next");
     click("Done");

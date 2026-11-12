@@ -98,7 +98,7 @@ export function IcsLink({ href: to, children }: { href: string; children: ReactN
   return (
     <>
       <a href={to} onClick={ev => { ev.preventDefault(); setOpen(true); }}>{children}</a>
-      {open && <Popup title={t("ics_h")} onClose={() => setOpen(false)} done={t("close")} quiet aside={<IcsDl to={to} onDone={() => setOpen(false)} />}><div><IcsBody feed={false} /></div></Popup>}
+      {open && <Popup title={t("ics_h")} onClose={() => setOpen(false)} action={<IcsDl to={to} onDone={() => setOpen(false)} />}><div><IcsBody feed={false} /></div></Popup>}
     </>
   );
 }

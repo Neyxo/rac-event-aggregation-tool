@@ -65,7 +65,7 @@ describe("Settings", () => {
     button("Also show Zürich");
     expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "bern", also: ["zuerich"] });
     expect(pressed(button("Rotaract Bern", dialog()))).toBe("true");
-    fireEvent.click(button("Done", dialog()));
+    fireEvent.click(button("Close", dialog()));
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
@@ -87,14 +87,14 @@ describe("Settings", () => {
     const district = () => within(dialog()).queryByRole("button", { name: "Rotary 1980 (Rotary Distrikt 1980)" });
     fireEvent.click(button(/^Also show/));
     expect(district()).toBeNull();
-    fireEvent.click(button("Done", dialog()));
+    fireEvent.click(button("Close", dialog()));
     expect(pressed(button("Off", $("#rotarySeg")))).toBe("true");
     fireEvent.click(button("On", $("#rotarySeg")));
     expect(localStorage.getItem("rac.rotary")).toBe("true");
     expect(pressed(button("On", $("#rotarySeg")))).toBe("true");
     fireEvent.click(button(/^Also show/));
     expect(district()).not.toBeNull();
-    fireEvent.click(button("Done", dialog()));
+    fireEvent.click(button("Close", dialog()));
     fireEvent.click(button("Off", $("#rotarySeg")));
     expect(getData().clubs.rotary1980).toBeUndefined();
     expect(reload).not.toHaveBeenCalled();

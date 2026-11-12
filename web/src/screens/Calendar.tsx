@@ -7,7 +7,7 @@ import { byDay, calendarEvents, monthGrid } from "../lib/calendar";
 import { fmt, sameDay, startOfDay } from "../lib/dates";
 import { club, myClubs } from "../lib/data";
 import { clubVars, cx, vars } from "../lib/color";
-import { EventCard, useData, useEventListener, useModal } from "../components";
+import { EventCard, Icon, useData, useEventListener, useModal } from "../components";
 
 type Scope = "mine" | "all";
 /** what the sheet shows; kept after closing so the content stays while it slides away */
@@ -102,7 +102,7 @@ function Sheet({ open, content, onClose }: { open: boolean; content: SheetConten
         </div>
         <div className="sheet-head">
           <h3 id="sheetTitle" tabIndex={-1} ref={title}>{content ? fmt.full.format(content.day) : null}</h3>
-          <button type="button" className="linkbtn" id="sheetClose" onClick={onClose}>{t("close")}</button>
+          <button type="button" className="obback obx" id="sheetClose" aria-label={t("close")} onClick={onClose}><Icon name="x" /></button>
         </div>
         <div className="sheet-body" id="sheetBody">
           {content && (content.evs.length

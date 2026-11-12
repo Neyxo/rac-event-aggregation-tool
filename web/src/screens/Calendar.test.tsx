@@ -145,6 +145,7 @@ describe("calendar", () => {
     expect(s.classList.contains("open")).toBe(true);  // slid in
     expect(sheetLinks()).toEqual([href("event", "219091")]);
 
+    expect([button(t("close")).id, button(t("close")).textContent]).toEqual(["sheetClose", ""]);  // the round x: a label, no text
     fireEvent.click(button(t("close")));
     expect(day(11).getAttribute("aria-pressed")).toBe("false");
     // it slides away first, with its content, and only then closes

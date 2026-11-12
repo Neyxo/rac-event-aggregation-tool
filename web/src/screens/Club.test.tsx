@@ -71,12 +71,13 @@ describe("club screen", () => {
     } finally { initData(fixture); }
   });
 
-  it("How to join opens the club's text in a popup; Done closes it", () => {
+  it("How to join opens the club's text in a popup; the x closes it", () => {
     show("luzern");
     fireEvent.click(screen.getByRole("button", { name: "How to join" }));
     dialog().getByRole("heading", { level: 2, name: "How to join" });
     expect(dialog().getAllByRole("listitem").length).toBeGreaterThan(0);
-    fireEvent.click(dialog().getByRole("button", { name: "Done" }));
+    expect(document.querySelector("dialog .nav")).toBeNull();  // nothing to go on to: no footer
+    fireEvent.click(dialog().getByRole("button", { name: t("close") }));
     expect(document.querySelector("dialog")).toBeNull();
   });
 
@@ -91,7 +92,7 @@ describe("club screen", () => {
     expect(dialog().queryByRole("button", { name: t("back") })).toBeNull();
     // Outlook on a computer: the link with this club's calendar, confirm, Done!
     way(t("way_outlook"));
-    expect(dialog().getByRole("link", { name: t("way_outlook") }).getAttribute("href")).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern$/);
+    expect(dialog().getByRole("link", { name: tx("sf").o_open }).getAttribute("href")).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern$/);
     fireEvent.click(dialog().getByRole("button", { name: t("next") }));
     fireEvent.click(dialog().getByRole("button", { name: t("done") }));
     dialog().getByRole("heading", { level: 2, name: tx("sf").done });

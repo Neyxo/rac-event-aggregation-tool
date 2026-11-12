@@ -42,29 +42,47 @@ test.describe("first visit", () => {
     await ob.locator(".way").first().click();
     await expect(h2).toHaveText("Where do you want it?");
     await expect(ob.locator(".way b")).toHaveText(["Apple Calendar", "Google Calendar", "Outlook"]);
-    await expect(ob.locator(".sfquiet")).toContainText("Calendar file (.ics)");
+    await expect(ob.locator(".sfmore")).toHaveText("Calendar file (.ics)");
     await ob.locator(".way", { hasText: "Google Calendar" }).click();
-    const n = ob.locator(".sfstep .sfn");
+    const n = ob.locator("ol.stepper"), ctx = ob.locator("p.sfctx");
+    // a phone: the link in Chrome, confirm, the four sync steps; a desktop: open, confirm, which phone, the sync steps
+    const of = isMobile ? 6 : 7;
     let at = 1;
     if (isMobile) {
       // the Google Calendar app can't subscribe: through this phone's browser, or a computer
       await expect(h2).toHaveText("How do you want to add it?");
       await ob.locator(".way", { hasText: "On this phone" }).click();
-      await expect(n).toHaveText("Step 1 of 7");
-      await ob.getByRole("button", { name: "Copy link" }).click();  // done: on to the next step by itself
-      await expect(n).toHaveText("Step 2 of 7");
-      expect(await copied(page)).toContain("https://calendar.google.com/calendar/r?cid=" + encodeURIComponent("webcal://"));
-      expect(await copied(page)).toContain("bern.ics");
+      await expect(n).toHaveAccessibleName("Step 1 of 6");
+      // Android hands a calendar.google.com link to the app: this one opens it in Chrome (not clicked here: it would navigate)
+      const open = ob.locator(".sfstep a.linkbtn");
+      await expect(open).toHaveText("Open in Chrome");
+      await expect(open).toHaveAttribute("href", /^intent:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*bern\.ics#Intent;scheme=https;package=com\.android\.chrome;end$/);
+      await ob.getByRole("button", { name: "Didn't open? Copy the link" }).click();  // done: on to the next step by itself
+      await expect(n).toHaveAccessibleName("Step 2 of 6");
+      expect(await copied(page)).toMatch(/^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*bern\.ics$/);
       at = 2;
     } else {
-      await expect(n).toHaveText("Step 1 of 7");
+      await expect(n).toHaveAccessibleName("Step 1 of 7");
+      // a step that is only a button: no sentence, no drawing
+      await expect(ob.locator(".sfstep a.linkbtn")).toHaveText("Open Google Calendar");
       await expect(ob.locator(".sfstep a.linkbtn")).toHaveAttribute("href", /^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*bern\.ics$/);
+      await expect(ob.locator(".sfstep .sft, .sfstep figure.sfvis")).toHaveCount(0);
+      await ob.getByRole("button", { name: "Next" }).click();
+      at = 2;
     }
     await expect(h2).toHaveText("Google Calendar");
-    while (at < 7) {
+    // the confirming step: where it happens, a drawing, the row of steps with this one current
+    await expect(ctx).toHaveText("In your browser");
+    await expect(ob.locator("figure.sfvis svg")).toBeVisible();
+    await expect(n.locator("li")).toHaveCount(of);
+    await expect(n.locator("li[aria-current=step]")).toHaveText("2");
+    await expect(n.locator("li.past")).toHaveText(["✓"]);
+    while (at < of) {
       await ob.getByRole("button", { name: "Next" }).click();
-      await expect(n).toHaveText(`Step ${++at} of 7`);
+      await expect(n).toHaveAccessibleName(`Step ${++at} of ${of}`);
+      if (at === of - 3) await expect(ctx).toHaveText("On your phone");
     }
+    await expect(ctx).toHaveText("On your phone, in the Google Calendar app");
     await expect(ob.locator(".sfstep")).toContainText("Turn on Sync.");
     await ob.getByRole("button", { name: "Done", exact: true }).click();
     await expect(h2).toHaveText("Done!");
@@ -186,7 +204,7 @@ test.describe("member", () => {
       await page.keyboard.press("Tab");
       expect(await page.evaluate(() => !!document.activeElement?.closest("#sheet"))).toBe(true);
     }
-    await page.locator("#sheetClose").click();
+    await page.locator("#sheetClose.obx[aria-label=Close]").click();
     await expect(sheet).not.toHaveClass(/open/);
     // closed: gone (its links can't be reached by Tab), and the focus is back on the day
     await expect(sheet).toBeHidden();
@@ -214,7 +232,7 @@ test.describe("member", () => {
     expect(await copied(page)).toBe(new URL(`e/${EVENT}.html`, page.url()).href);
   });
 
-  test("Club: partner chip, share c/<id>.html, the subscribe popup", async ({ page }) => {
+  test("Club: partner chip, share c/<id>.html, the subscribe popup, how to join", async ({ page, isMobile }) => {
     await stubClipboard(page);
     await page.goto("./#/club/luzern");
     await expect(page.locator("main h1")).toHaveText("Rotaract Luzern");
@@ -229,13 +247,42 @@ test.describe("member", () => {
     await expect(popup.locator("h2")).toHaveText("Where do you want it?");
     await expect(popup.locator(".sfn")).toHaveText("Rotaract Luzern");
     await expect(popup.locator(".way")).toHaveCount(3);
-    await expect(popup.locator(".sfquiet")).toContainText("Calendar file (.ics)");
-    // in the steps: a quiet Close on the left, Next on the right
+    await expect(popup.locator(".sfmore")).toHaveText("Calendar file (.ics)");
+    // nothing to go back to, nothing to move on with: only the round close button, top right
+    await expect(popup.locator(".obhead button")).toHaveCount(1);
+    await expect(popup.locator(".nav")).toHaveCount(0);
     await popup.locator(".way", { hasText: "Outlook" }).click();
-    await expect(popup.locator(".sfstep .sfn")).toContainText("Step 1 of");
-    await expect(popup.locator(".nav > *")).toHaveText(["Close", "Next"]);
-    await expect(popup.locator(".nav button.skip")).toHaveText("Close");
-    await popup.getByRole("button", { name: "Close" }).click();
+    const open = popup.locator(".sfstep a.linkbtn");
+    if (isMobile) {
+      // the Outlook app can't subscribe either
+      await expect(popup.locator("h2")).toHaveText("How do you want to add it?");
+      await expect(popup.locator(".way b")).toHaveText(["On this phone", "On a computer"]);
+      await popup.locator(".way", { hasText: "On this phone" }).click();
+      await expect(open).toHaveText("Open in Chrome");
+      await expect(open).toHaveAttribute("href", /^intent:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern#Intent;scheme=https;package=com\.android\.chrome;end$/);
+      await popup.getByRole("button", { name: "Didn't open? Copy the link" }).click();
+      expect(await copied(page)).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern$/);
+    } else {
+      await expect(open).toHaveText("Open Outlook");
+      await expect(open).toHaveAttribute("href", /^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern$/);
+      // in the steps: back and close in the head, only Next below
+      await expect(popup.locator(".obhead button")).toHaveCount(2);
+      await expect(popup.locator(".nav button")).toHaveText(["Next"]);
+      await popup.getByRole("button", { name: "Next" }).click();
+    }
+    await expect(popup.locator("h2")).toHaveText("Outlook");
+    await expect(popup.locator("ol.stepper")).toHaveAccessibleName("Step 2 of 2");
+    await expect(popup.locator("p.sfctx")).toHaveText("In your browser");
+    await expect(popup.locator(".sfstep")).toContainText("Confirm \"Import\".");
+    await expect(popup.locator(".nav button")).toHaveText(["Done"]);
+    await popup.locator(".obhead button.obx[aria-label=Close]").click();
+    await expect(popup).toHaveCount(0);
+    // a club's "How to join": the same head, no button below
+    await page.getByRole("button", { name: "How to join" }).click();
+    await expect(popup.locator("h2")).toHaveText("How to join");
+    await expect(popup.locator(".obhead button")).toHaveCount(1);
+    await expect(popup.locator(".nav")).toHaveCount(0);
+    await popup.locator(".obhead button.obx[aria-label=Close]").click();
     await expect(popup).toHaveCount(0);
     // the partner chip leads to the other club
     await page.locator(".aboutc .with a.chip[href='#/club/sempachersee']").click();
@@ -253,6 +300,20 @@ test.describe("member", () => {
     await expect(popup.locator(".way b").last()).toHaveText("All Rotaract events in Switzerland & Liechtenstein");
     await popup.locator(".way").first().click();
     await expect(popup.locator("h2")).toHaveText("Where do you want it?");
+    await popup.getByRole("button", { name: "Back" }).click();
+    await expect(popup.locator("h2")).toHaveText("Which calendar?");
+    // every other club, behind the small button under the rows
+    await popup.locator(".sfmore", { hasText: "Another club" }).click();
+    await expect(popup.locator("h2")).toHaveText("Another club");
+    const names = await popup.locator(".way b").allInnerTexts();
+    expect(names.length).toBeGreaterThan(5);
+    expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
+    expect(names).not.toContain("Rotaract Luzern");
+    await popup.locator(".way", { hasText: "Rotaract Bern" }).click();
+    await expect(popup.locator("h2")).toHaveText("Where do you want it?");
+    await expect(popup.locator(".sfn")).toHaveText("Rotaract Bern");
+    await popup.getByRole("button", { name: "Back" }).click();
+    await expect(popup.locator("h2")).toHaveText("Another club");
     await popup.getByRole("button", { name: "Back" }).click();
     await expect(popup.locator("h2")).toHaveText("Which calendar?");
     await popup.getByRole("button", { name: "Close" }).click();
@@ -278,11 +339,11 @@ test.describe("member", () => {
     await expect(fix.first().locator(".fixcase b")).toHaveText("It is hidden on your phone");
     await fix.first().getByRole("button", { name: "Show me how" }).click();
     await expect(popup.locator("h2")).toHaveText("Show it on your phone");
-    await expect(popup.locator(".sfstep .sfn")).toHaveText("Step 1 of 5");
+    await expect(popup.locator("ol.stepper")).toHaveAccessibleName("Step 1 of 5");
     await expect(popup.getByRole("button", { name: "Android" })).toHaveAttribute("aria-pressed", "true");
     // an iPhone has other steps, and fewer
     await popup.getByRole("button", { name: "iPhone" }).click();
-    await expect(popup.locator(".sfstep .sfn")).toHaveText("Step 1 of 4");
+    await expect(popup.locator("ol.stepper")).toHaveAccessibleName("Step 1 of 4");
     await popup.getByRole("button", { name: "Next" }).click();
     await expect(popup.locator(".sfstep a.linkbtn")).toHaveAttribute("href", "https://calendar.google.com/calendar/syncselect");
     await popup.getByRole("button", { name: "Close" }).click();
@@ -304,6 +365,13 @@ test.describe("member", () => {
 
   test("Settings: French reloads the app in French", async ({ page }) => {
     await page.goto("./#/settings");
+    // the club picker: the same popup head as everywhere, closed by its x (no Done below)
+    await page.locator("button.setrow.link").first().click();
+    const popup = page.locator("dialog.ob[open]");
+    await expect(popup.locator(".obhead > *")).toHaveCount(2);
+    await expect(popup.locator(".nav")).toHaveCount(0);
+    await popup.locator(".obhead button.obx[aria-label=Close]").click();
+    await expect(popup).toHaveCount(0);
     await page.getByRole("button", { name: "Français" }).click();
     await expect(page.locator("html")).toHaveAttribute("lang", "fr");
     await expect(page.locator("main h1")).toHaveText("Réglages");
