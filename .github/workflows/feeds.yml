@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write  # commit the event history in data/
+  actions: read  # an app-only push takes the last published site's events (its Pages artifact)
   pages: write
   id-token: write
 
@@ -63,10 +64,40 @@ jobs:
       - name: Feed tests
         if: github.event_name != 'schedule'
         run: python3 test_polaris_feed.py
+      # Reading every club takes about 6 minutes and gives the same result as last night's run. So a push that changes only the
+      # app reuses the events of the last published site (feeds, events.json, status.json, share pages, Instagram pictures)
+      # and puts the new app on top. The nightly run, a run by hand and a push that touches the scraper or the club list read
+      # everything again.
+      - name: Decide whether to read the clubs again
+        id: mode
+        run: |
+          full=true
+          if [ "${{ github.event_name }}" = push ] && [ "${{ github.event.before }}" != 0000000000000000000000000000000000000000 ]; then
+            git fetch --depth=1 origin ${{ github.event.before }}
+            changed=$(git diff --name-only ${{ github.event.before }} HEAD)
+            echo "$changed"
+            echo "$changed" | grep -qE '^(polaris_feed\.py|clubs\.toml|test_polaris_feed\.py)$' || full=false
+          fi
+          echo "full=$full" | tee -a "$GITHUB_OUTPUT"
+      - name: Reuse the last site's events
+        id: reuse
+        if: steps.mode.outputs.full == 'false'
+        continue-on-error: true  # no usable artifact: the step below reads the clubs instead
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          art=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=github-pages&per_page=1" -q '.artifacts[0] | select(.expired | not) | .id')
+          [ -n "$art" ]
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$art/zip" > "$RUNNER_TEMP/site.zip"
+          mkdir -p "$RUNNER_TEMP/old" && unzip -q "$RUNNER_TEMP/site.zip" -d "$RUNNER_TEMP/zip" && tar -xf "$RUNNER_TEMP/zip/artifact.tar" -C "$RUNNER_TEMP/old"
+          [ -s "$RUNNER_TEMP/old/events.json" ] && [ -s "$RUNNER_TEMP/old/all.ics" ]
+          rm -rf public && mkdir public && cp -r dist/. public/
+          cd "$RUNNER_TEMP/old" && cp -r *.ics events.json status.json e c "$GITHUB_WORKSPACE/public/" && { [ ! -d ig ] || cp -r ig "$GITHUB_WORKSPACE/public/"; }
       # A failing club keeps its last good history; the other clubs still update.
       # The run is marked failed at the end so the problem gets noticed.
       - name: Read the clubs' agendas
         id: feeds
+        if: steps.mode.outputs.full == 'true' || steps.reuse.outcome == 'failure'
         continue-on-error: true
         # Instagram pictures: either secret unset (empty) = layer off. See docs/layers.md.
         env:

@@ -84,7 +84,7 @@ function Instagram({ st, insta }: { st: Stat; insta: number }) {
   return <p className={cx("devstate", level)}><i />{`Instagram layer: on, ${withPosts} of ${Object.keys(ig.clubs).length} clubs with pictures` + (errors.length ? `, ${errors.length} could not be read (see Clubs and layers)` : "")}</p>;
 }
 
-/** the workflow's cron: 17 2 * * * (UTC), once a night; a push to main runs it too */
+/** the workflow's cron: 17 2 * * * (UTC), once a night; a push of the scraper or the club list reads the clubs too */
 export function nextRun(n = new Date()): Date {
   const d = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate(), 2, 17));
   if (d <= n) d.setUTCDate(d.getUTCDate() + 1);
@@ -245,7 +245,7 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
   return (
     <>
       {/* the version is package.json's at build time */}
-      <p className="meta">{`Version ${version}` + (st.commit ? `, built from commit ${st.commit}` : "") + ` · ${import.meta.env.MODE} build. Every push to main and every night runs it again (GitHub often starts the nightly one hours late).`}</p>
+      <p className="meta">{`App version ${version} · ${import.meta.env.MODE} build.` + (st.commit ? ` The events were read by the run of commit ${st.commit}.` : "") + " The clubs are read every night (GitHub often starts it hours late) and on a push of the scraper or the club list; a push of the app alone reuses the last events."}</p>
       {st.run?.startsWith("https://github.com/") ? <Run url={st.run} /> : null}
       <Instagram st={st} insta={insta} />
       {/* news and projects that could not be fetched: the last list stays, the run stays green */}

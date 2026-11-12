@@ -47,7 +47,7 @@ Edit its `[[clubs]]` entry in `clubs.toml`: Polaris website, language, city, cre
 
 ## Hosting
 
-GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions), with read and write workflow permissions. `.github/workflows/feeds.yml` runs every night, on every push and by hand. Lint, typecheck and the tests run on a push or by hand; the nightly run only builds and syncs.
+GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions), with read and write workflow permissions. `.github/workflows/feeds.yml` runs every night, on every push and by hand. Lint, typecheck and the tests run on a push or by hand; the nightly run only builds and syncs. A push that changes only the app doesn't read the clubs again: it takes the events from the last published site and deploys the new app with them (about 3 minutes instead of 9). A push that touches `polaris_feed.py` or `clubs.toml`, the nightly run and a run by hand read everything.
 
 ## Versions
 
