@@ -1,11 +1,11 @@
 // Before and without events.json: App renders every screen inside a DataBoundary, which shows a skeleton while the data loads and
-// the offline note when it can't be loaded. A file of its own: the data module loads once per module instance, and here it must
+// the offline note when it can't be loaded (the calendar help is text: only its "Add a calendar" needs the data). A file of its own: the data module loads once per module instance, and here it must
 // not have loaded yet. The tests run in order: first the failures, then the load that works.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ComponentType } from "react";
 import { fixture } from "../test/fixture";
-import { t } from "../i18n";
+import { t, tx } from "../i18n";
 import { parseHash, type RouteName } from "../lib/route";
 import type { ScreenProps } from "../App";
 import { DataBoundary } from "./Blocks";
@@ -48,7 +48,7 @@ const offlineOnly = async () => {
 
 const SCREENS: [RouteName, ComponentType<ScreenProps>, string][] = [
   ["home", Home, "#/"], ["discover", Discover, "#/discover"], ["calendar", Calendar, "#/calendar"], ["map", MapScreen, "#/map"],
-  ["event", Event, "#/event/217812"], ["club", Club, "#/club/luzern"], ["settings", Settings, "#/settings"], ["subscribe", Subscribe, "#/subscribe"],
+  ["event", Event, "#/event/217812"], ["club", Club, "#/club/luzern"], ["settings", Settings, "#/settings"],
   ["about", About, "#/about"], ["about-more", AboutMore, "#/about-more"], ["family", Family, "#/family"], ["guide", Guide, "#/guide"],
   ["intl", Intl, "#/intl"], ["dev", Dev, "#/dev"],
 ];
@@ -85,6 +85,16 @@ describe("DataBoundary", () => {
     await act(async () => { show(Screen, hash); });
     await offlineOnly();
     expect(document.querySelector(".leaflet-container")).toBeNull();
+  });
+
+  it("the calendar help is text, there without the events; adding a calendar needs them: then the offline note", async () => {
+    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) { this.open = true; };
+    vi.stubGlobal("fetch", failing());
+    await act(async () => { show(Subscribe, "#/subscribe"); });
+    screen.getByRole("heading", { name: t("sub_fix_h") });
+    await act(async () => { fireEvent.click(screen.getAllByRole("button", { name: tx("sf").add })[0]!); });
+    await offlineOnly();
+    expect(document.querySelector("dialog")).toBeNull();
   });
 
   it("a shared filter link to Home goes to Discover at once, without waiting for (or counting on) the data", async () => {

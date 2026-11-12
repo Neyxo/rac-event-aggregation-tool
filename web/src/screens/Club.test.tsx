@@ -2,6 +2,7 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
+import { t, tx } from "../i18n";
 import { getData, initData, loadData } from "../lib/data";
 import { parseHash } from "../lib/route";
 import type { Club as ClubT, EventsJson } from "../lib/types";
@@ -79,14 +80,30 @@ describe("club screen", () => {
     expect(document.querySelector("dialog")).toBeNull();
   });
 
-  it("subscribe opens the calendar choices instead of following the link", () => {
+  it("subscribe opens the calendar flow for this club instead of following the link: no list first, no way back until one is added", () => {
     show("luzern");
     expect(fireEvent.click(screen.getByRole("link", { name: "Subscribe" }))).toBe(false);  // default prevented
-    dialog().getByRole("heading", { level: 2, name: "Rotaract Luzern" });
-    const links = dialog().getAllByRole("link").map(a => a.getAttribute("href"));
-    expect(links[0]).toMatch(/^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*luzern\.ics$/);
-    expect(links[1]).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics/);
-    expect(links[2]).toBe("#/subscribe");
+    const ways = () => [...document.querySelectorAll("dialog .way")].map(b => b.querySelector("b")!.textContent);
+    const way = (name: string) => fireEvent.click([...document.querySelectorAll("dialog .way")].find(b => b.querySelector("b")!.textContent === name)!);
+    dialog().getByRole("heading", { level: 2, name: t("way_pick") });
+    expect(document.querySelector("dialog .sfn")!.textContent).toBe("Rotaract Luzern");
+    expect(ways()).toEqual([t("way_apple"), t("way_google"), t("way_outlook")]);
+    expect(dialog().queryByRole("button", { name: t("back") })).toBeNull();
+    // Outlook on a computer: the link with this club's calendar, confirm, Done!
+    way(t("way_outlook"));
+    expect(dialog().getByRole("link", { name: t("way_outlook") }).getAttribute("href")).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern$/);
+    fireEvent.click(dialog().getByRole("button", { name: t("next") }));
+    fireEvent.click(dialog().getByRole("button", { name: t("done") }));
+    dialog().getByRole("heading", { level: 2, name: tx("sf").done });
+    // another one: the list, this club first and ticked, then the international events and all clubs; now there is a way back
+    way(tx("sf").another);
+    expect(ways()).toEqual(["Rotaract Luzern", "Rotaract International", t("sp_all_feed")]);
+    expect([...document.querySelectorAll("dialog .way")].map(b => !!b.querySelector(".sfok"))).toEqual([true, false, false]);
+    way("Rotaract Luzern");
+    fireEvent.click(dialog().getByRole("button", { name: t("back") }));
+    dialog().getByRole("heading", { level: 2, name: tx("sf").pick });
+    fireEvent.click(dialog().getByRole("button", { name: t("close") }));
+    expect(document.querySelector("dialog")).toBeNull();
   });
 
   it("share: navigator.share with the club's share page, else the clipboard and a toast", async () => {

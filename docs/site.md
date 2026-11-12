@@ -31,7 +31,7 @@ Hash routes, so every screen is the same `index.html` and works on GitHub Pages 
 | `#/event/<id>` | One event: picture, when, where, deadline, description, register on Polaris, add to calendar, share. |
 | `#/club/<id>` | One club: next event, About this club (how to join, partner clubs), news, projects, pictures, more events. |
 | `#/settings` | Main club, clubs to also show, Rotary events on or off, language, appearance, install, share. |
-| `#/subscribe` | The calendar feeds and how to subscribe per platform. |
+| `#/subscribe` | Calendar help: the "Add a calendar" flow, common problems and their fixes, questions. The feeds themselves are listed on the developer page. |
 | `#/about`, `#/about-more`, `#/family` | What Rotaract is, Rotary and the districts, the Rotary family. |
 | `#/public`, `#/guide`, `#/words`, `#/intl` | This app, New in the club, Rotaract words, International events. |
 | `#/dev` | Developer: last build, per-club counts, failures, warnings, preview switches. Ten quick taps on the "made by" line in Settings unlock it. |

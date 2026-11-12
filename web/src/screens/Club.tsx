@@ -130,7 +130,7 @@ export default function Club({ route }: ScreenProps) {
       {upcoming.slice(1, 8).map((e, i) => <EventCard key={e.id} e={e} i={i} />)}
       <div className="links center"><a href={href("discover", null, "clubs=" + c.id)}><Icon name="discover" />{t("cp_all")}</a></div>
       <Footer />
-      {sub && <SubscribeSheet file={c.id + ".ics"} name={c.name} onClose={() => setSub(false)} />}
+      {sub && <SubscribeSheet club={c} onClose={() => setSub(false)} />}
     </main>
   );
 }

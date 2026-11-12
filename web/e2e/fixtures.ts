@@ -10,6 +10,8 @@ export const FIXTURE = fileURLToPath(new URL("./fixture/", import.meta.url));
 export const NOW = new Date("2026-11-11T10:00:00+01:00");
 /** a member of Luzern who also follows Sempachersee, past the welcome steps */
 export const MEMBER = { "rac.settings": { home: "luzern", also: ["sempachersee"] }, "rac.onboarded": true };
+/** a guest who follows no club, past the welcome steps (without "rac.onboarded" Home opens them) */
+export const GUEST = { "rac.onboarded": true };
 const PIXEL = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=", "base64");
 
 export interface Problems { errors: string[]; console: string[]; http: string[] }

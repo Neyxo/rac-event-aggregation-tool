@@ -182,4 +182,16 @@ describe("blocks", () => {
     fireEvent.click(within(dlg).getByRole("button", { name: t("done"), hidden: true }));
     expect(close).toHaveBeenCalled();
   });
+  it("popup with an action (a stepper's Next): it sits on the right, closing is the quiet text on the left; back before the title", () => {
+    const close = vi.fn(), back = vi.fn();
+    render(<Popup title="Steps" onClose={close} done={t("close")} quiet back={back} action={<button className="btn" type="button">{t("next")}</button>}><p>x</p></Popup>);
+    const dlg = document.body.querySelector<HTMLDialogElement>(":scope > dialog.ob")!;
+    dlg.close = () => { fireEvent(dlg, new Event("close")); };
+    expect([...dlg.querySelector(".nav")!.children].map(b => [b.className, b.textContent])).toEqual([["skip", t("close")], ["btn", t("next")]]);
+    expect(dlg.querySelector(".obhead")!.firstElementChild!.getAttribute("aria-label")).toBe(t("back"));
+    fireEvent.click(within(dlg).getByRole("button", { name: t("back"), hidden: true }));
+    expect(back).toHaveBeenCalled();
+    fireEvent.click(within(dlg).getByRole("button", { name: t("close"), hidden: true }));
+    expect(close).toHaveBeenCalled();
+  });
 });

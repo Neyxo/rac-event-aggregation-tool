@@ -2,6 +2,7 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
+import { t, tx } from "../i18n";
 import { eventById, getData, initData, loadData, setSettings, toggleSaved } from "../lib/data";
 import { EventCard, Toast, navigate, useRoute } from "../components";
 import Home from "./Home";
@@ -21,6 +22,7 @@ beforeEach(() => {
   vi.setSystemTime(new Date("2026-11-11T10:00"));
   history.replaceState(null, "", "/#/");
   localStorage.clear();
+  localStorage.setItem("rac.onboarded", "true");  // not the first visit: that one opens the welcome steps (see there)
   initData(fixture);
 });
 afterEach(() => {
@@ -72,17 +74,15 @@ describe("Home, member", () => {
     expect(screen.getAllByRole("link").some(a => href(a) === "#/guide")).toBe(true);
   });
 
-  it("offers the main club's calendar until the sheet was opened once", async () => {
-    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) { this.open = true; };
-    HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) { this.open = false; this.dispatchEvent(new Event("close")); };
-    localStorage.removeItem("rac.subSeen");
+  it("offers the calendar until the sheet was opened once: it asks which, my clubs first", async () => {
     await show();
     fireEvent.click(screen.getByRole("link", { name: /^Get your club's events in your calendar/ }));
-    const dlg = within(document.querySelector<HTMLElement>("dialog[open]")!);
-    dlg.getByRole("heading", { name: "Rotaract Zürich" });
-    fireEvent.click(dlg.getByRole("button", { name: "Close" }));
+    const dlg = within(document.querySelector<HTMLElement>("dialog[open]:not(#ob)")!);
+    dlg.getByRole("heading", { name: tx("sf").pick });
+    expect(dlg.getAllByRole("button").map(b => b.textContent)).toEqual(["Rotaract Zürich", "Rotaract Luzern", "Rotaract International", t("sp_all_feed"), t("close")]);
+    fireEvent.click(dlg.getByRole("button", { name: t("close") }));
     expect(screen.queryByRole("link", { name: /^Get your club's events/ })).toBeNull();
-    localStorage.removeItem("rac.subSeen");
+    expect(JSON.parse(localStorage.getItem("rac.subSeen")!)).toBe(true);
   });
 
   it("news since the last visit: new events get the tag, the line jumps to the list", async () => {
@@ -189,30 +189,78 @@ describe("welcome steps", () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
-  const dlg = () => screen.getByRole<HTMLDialogElement>("dialog", { hidden: true });
+  const dlg = () => document.querySelector<HTMLDialogElement>("dialog#ob")!;
   const inDlg = () => within(dlg());
   const click = (name: string | RegExp) => fireEvent.click(inDlg().getByRole("button", { name }));
   const title = () => inDlg().getByRole("heading", { level: 2 });
+  /** "Get started", in the browser: the app is offered first */
   const start = async () => {
     await show();
     fireEvent.click(screen.getByRole("button", { name: "Get started" }));
     await act(async () => {});
   };
+  /** past the app, to "Welcome 👋" */
+  const web = async () => { await start(); click(t("ob_web")); };
   // the progress dots are decoration (aria-hidden): only the CSS reads them
   const dots = (sel: string) => dlg().querySelectorAll(".bar2 " + sel).length;
+  /** the calendar step's rows, by their title */
+  const rows = () => [...dlg().querySelectorAll<HTMLElement>(".way")];
+  const row = (name: string) => fireEvent.click(rows().find(r => r.querySelector("b")!.textContent === name)!);
 
-  it("as a guest: three slides, clubs near, install; finishing saves the clubs and shows them", async () => {
+  it("the first visit opens them by itself, in the browser with the app first; not on a shared link, not a second time", async () => {
+    localStorage.removeItem("rac.onboarded");
+    const first = await show();
+    expect(dlg().open).toBe(true);
+    screen.getByRole("dialog", { name: t("ob_inst") });
+    expect(document.activeElement).toBe(title());
+    // no progress yet: the app is not one of the steps
+    expect(dots("i")).toBe(0);
+    expect(inDlg().getAllByRole("button").map(b => [b.className, b.textContent])).toEqual([["btn big", t("inst_btn")], ["skip web", t("ob_web")]]);
+    click(t("ob_web"));
+    expect(title().textContent).toBe(t("ob_welcome"));
+    expect(document.activeElement).toBe(title());
+    expect(dots("i")).toBe(4);
+    first.unmount();
+    history.replaceState(null, "", "/#/?view=saved");
+    await show();
+    expect(dlg().open).toBe(false);
+    cleanup();
+    history.replaceState(null, "", "/#/");
+    localStorage.setItem("rac.onboarded", "true");
+    await show();
+    expect(dlg().open).toBe(false);
+  });
+
+  it("Install app: the browser's prompt when it has one, else this system's three steps and the way on to the website", async () => {
+    const prompt = vi.fn(async () => {});
+    act(() => { window.dispatchEvent(Object.assign(new Event("beforeinstallprompt"), { prompt, userChoice: Promise.resolve({ outcome: "dismissed" }) })); });
+    await start();
+    await act(async () => { click(t("inst_btn")); });
+    expect(prompt).toHaveBeenCalledTimes(1);
+    // declined: a prompt works once, so the button now explains
+    expect(title().textContent).toBe(t("ob_inst"));
+    click(t("inst_btn"));
+    expect(title().textContent).toBe(t("inst_btn"));
+    expect([...dlg().querySelectorAll("ol.qsteps li")].map(li => li.textContent)).toEqual(tx("g_desktop"));
+    inDlg().getByText(t("ob_inst_then"));
+    expect(inDlg().getAllByRole("button").map(b => [b.className, b.textContent])).toEqual([["skip web", t("ob_web")]]);
+    click(t("ob_web"));
+    expect(title().textContent).toBe(t("ob_welcome"));
+  });
+
+  it("as a guest: three slides, clubs near; Done there saves the clubs and shows them", async () => {
     await show();
     expect(dlg().open).toBe(false);
     fireEvent.click(screen.getByRole("button", { name: "Get started" }));
     await act(async () => {});
     expect(dlg().open).toBe(true);
+    click(t("ob_web"));
     screen.getByRole("dialog", { name: "Welcome 👋" });
     expect(document.activeElement).toBe(title());
     await act(async () => { click("Not (yet)"); });
     // a guest's welcome is the full-screen one (CSS: .ob.full)
     expect(dlg().classList.contains("full")).toBe(true);
-    expect(dots("i")).toBe(6);
+    expect([dots("i"), dots("i.on")]).toEqual([5, 2]);
     expect(title().textContent).toBe("Who we are");
     expect(document.activeElement).toBe(title());
     click("Next");
@@ -221,10 +269,11 @@ describe("welcome steps", () => {
     click("Next");
     click("Next");
     expect(title().textContent).toBe("Clubs near you");
+    expect(dots("i.on")).toBe(5);
     click("ZH Intl (Rotaract Zurich International)");
-    click("Next");
-    expect(title().textContent).toBe("Install as an app?");
-    expect(href(inDlg().getByRole("link", { name: "Settings" }))).toBe("#/settings#install");
+    inDlg().getByText(t("credit_short"));
+    // the last step: no Next, no install step after it
+    expect(inDlg().queryByRole("button", { name: "Next" })).toBeNull();
     click("Done");
     expect(dlg().open).toBe(false);
     expect(JSON.parse(localStorage.getItem("rac.onboarded")!)).toBe(true);
@@ -234,11 +283,18 @@ describe("welcome steps", () => {
     screen.getByRole("heading", { level: 1 });
   });
 
-  it("as a member: main club and others, the calendar feeds, install", async () => {
-    await start();
+  it("a guest's Skip jumps to the clubs", async () => {
+    await web();
+    await act(async () => { click("Not (yet)"); });
+    click("Skip");
+    expect(title().textContent).toBe("Clubs near you");
+  });
+
+  it("as a member: main club and others, good to know, then the calendar flow for those clubs up to Done", async () => {
+    await web();
     await act(async () => { click("Yes, I'm a member"); });
     expect(dlg().classList.contains("full")).toBe(false);
-    expect(dots("i.on")).toBe(2);
+    expect([dots("i"), dots("i.on")]).toEqual([4, 2]);
     expect(title().textContent).toBe("Which clubs are you interested in?");
     // a club is in both pickers: the main one first, then the others
     fireEvent.click(inDlg().getAllByRole("button", { name: "Rotaract Bern" })[0]!);
@@ -247,14 +303,56 @@ describe("welcome steps", () => {
     expect(inDlg().getByRole("button", { name: "Rotaract Bern" }).getAttribute("aria-pressed")).toBe("true");
     expect(document.activeElement).toBe(title());
     click("Next");
-    for (const n of ["Rotaract Bern", "Rotaract Luzern", "All Rotaract events CH & LI"]) inDlg().getByText(n);
-    expect(inDlg().getAllByRole("button", { name: "Subscribe" })).toHaveLength(3);
+    expect(title().textContent).toBe(t("app_know_h"));
+    expect([...dlg().querySelectorAll("ul.facts2.big li")].map(li => [li.textContent, !!li.querySelector("svg")])).toEqual(tx("ob_facts").map(f => [f, true]));
+    expect(dots("i.on")).toBe(3);
+    expect(inDlg().queryByRole("button", { name: "Skip" })).toBeNull();
     click("Next");
-    inDlg().getByText("Made by Jean-Michel Carrel · Rotaract Club Luzern");
+    // the calendar: the same flow as everywhere, in the dialog itself, for the clubs just chosen
+    expect(title().textContent).toBe(t("ob_sub"));
+    expect(dots("i.on")).toBe(4);
+    expect(rows().map(r => r.textContent)).toEqual(["Rotaract Bern", "Rotaract Luzern", "Rotaract International", t("sp_all_feed")]);
+    expect(dlg().querySelectorAll(".nav button")).toHaveLength(1);
+    inDlg().getByRole("button", { name: t("not_now") });
+    row("Rotaract Bern");
+    expect(title().textContent).toBe(t("way_pick"));
+    expect(document.activeElement).toBe(title());
+    click(t("back"));
+    expect(title().textContent).toBe(t("ob_sub"));
+    row("Rotaract Bern");
+    row(t("way_outlook"));
+    expect(inDlg().getByRole("link", { name: t("way_outlook") }).getAttribute("href")).toMatch(/bern\.ics&name=Rotaract%20Bern$/);
+    inDlg().getByRole("button", { name: t("not_now") });
+    click("Next");
     click("Done");
+    // the flow's end: Done! with another calendar on offer; nothing is saved before the dialog's own Done
+    expect(title().textContent).toBe(tx("sf").done);
+    expect(dlg().open).toBe(true);
+    expect(inDlg().queryByRole("button", { name: t("not_now") })).toBeNull();
+    expect(localStorage.getItem("rac.settings")).toBe(JSON.stringify({ home: "", also: [] }));
+    row(tx("sf").another);
+    expect(rows().map(r => r.querySelector(".sfok")?.textContent ?? "")).toEqual(["✓", "", "", ""]);
+    row("Rotaract Luzern");
+    row(t("way_outlook"));
+    click("Next");
+    click("Done");
+    click("Done");
+    expect(dlg().open).toBe(false);
+    expect(JSON.parse(localStorage.getItem("rac.onboarded")!)).toBe(true);
     expect(getData().settings).toEqual({ home: "bern", also: ["geneve-international", "luzern"] });
     const main = hello().getAllByRole("link")[0]!;
     expect([href(main), main.classList.contains("main")]).toEqual(["#/club/bern", true]);
+  });
+
+  it("a member's Not now at the calendar finishes too", async () => {
+    await web();
+    await act(async () => { click("Yes, I'm a member"); });
+    click("Next");
+    click("Next");
+    click(t("not_now"));
+    expect(dlg().open).toBe(false);
+    expect(getData().settings).toEqual({ home: "zurich-international", also: ["geneve-international"] });
+    expect(toastText()).toBe("Showing ZH Intl");
   });
 
   it("Esc finishes like Skip", async () => {
@@ -262,5 +360,32 @@ describe("welcome steps", () => {
     fireEvent(dlg(), new Event("cancel", { cancelable: true }));
     expect(dlg().open).toBe(false);
     expect(JSON.parse(localStorage.getItem("rac.onboarded")!)).toBe(true);
+  });
+
+  it("the installed app starts with Welcome: nothing to install", async () => {
+    const mm = window.matchMedia;
+    window.matchMedia = ((q: string) => ({ matches: q === "(display-mode: standalone)", media: q })) as unknown as typeof window.matchMedia;
+    try {
+      localStorage.removeItem("rac.onboarded");
+      await show();
+      expect(dlg().open).toBe(true);
+      expect(title().textContent).toBe(t("ob_welcome"));
+      expect(dots("i")).toBe(4);
+      expect(inDlg().queryByRole("button", { name: t("ob_web") })).toBeNull();
+    } finally { window.matchMedia = mm; }
+  });
+
+  // last: an accepted install is remembered for as long as the page lives (lib/install), so no later test would see the install step
+  it("installed from the prompt: the website's part is over, with a way to carry on here all the same", async () => {
+    const prompt = vi.fn(async () => {});
+    act(() => { window.dispatchEvent(Object.assign(new Event("beforeinstallprompt"), { prompt, userChoice: Promise.resolve({ outcome: "accepted" }) })); });
+    await start();
+    await act(async () => { click(t("inst_btn")); });
+    expect(prompt).toHaveBeenCalledTimes(1);
+    expect(title().textContent).toBe(t("ob_inst_done"));
+    inDlg().getByText(t("ob_inst_done_t"));
+    expect(inDlg().getAllByRole("button").map(b => [b.className, b.textContent])).toEqual([["skip web", t("ob_web_back")]]);
+    click(t("ob_web_back"));
+    expect(title().textContent).toBe(t("ob_welcome"));
   });
 });

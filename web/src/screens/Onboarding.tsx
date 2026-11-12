@@ -1,22 +1,24 @@
-// The welcome steps: the onboarding dialog Home opens from ?welcome, from "Get started", or on the first start of the installed app.
-// A member: welcome, clubs, calendar, install. A guest: welcome, three slides, clubs near, install.
+// The welcome steps: the onboarding dialog Home opens on the first visit, from ?welcome and from "Get started".
+// In the browser it first offers the app (step -1); installed, it stops there: the welcome goes on in the app.
+// A member: welcome, clubs, good to know, calendar. A guest: welcome, three slides, clubs near.
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
-import { t } from "../i18n";
+import { t, tx } from "../i18n";
 import { club, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../lib/data";
 import { BRAND, cx, vars } from "../lib/color";
 import { guessClubs } from "../lib/geo";
-import { install, isInstalled } from "../lib/install";
+import { chromeUrl, install, isInstalled } from "../lib/install";
+import { guessOS } from "../lib/geo";
 import type { Pillar } from "../lib/pillars";
-import { href } from "../lib/route";
 import { store } from "../lib/store";
 import type { Settings } from "../lib/types";
-import { ClubChips, FeedRow, PillarPic, toast, useData, useInstallPrompt, useModal } from "../components";
+import { ClubChips, feedsFor, Icon, PillarPic, toast, useData, useInstallPrompt, useModal, useSubFlow, type IconName } from "../components";
 
 interface Ob {
   /** the clubs being chosen; saved on finish */
   s: Settings;
   /** null on the first step, which asks */
   member: boolean | null;
+  /** -1: the app first (in a browser) */
   step: number;
   /** clubs near the approximate position (or per language) */
   guess: string[];
@@ -33,11 +35,44 @@ function ObNav({ next, skip, onNext, onSkip }: { next: string; skip?: string; on
   );
 }
 
-function InstallHow({ onDone }: { onDone: () => void }) {
-  const prompt = useInstallPrompt();
-  if (isInstalled()) return <p>{t("ob_installed")}</p>;
-  if (prompt) return <button className="btn" type="button" onClick={() => void install().then(onDone)}>{t("inst_btn")}</button>;
-  return <p className="meta">{t("inst_text")} <a href={href("settings") + "#install"}>{t("settings")}</a></p>;
+const HOW = { ios: "g_ios", android: "g_android", desktop: "g_desktop" } as const;
+/** The app first: one big button, and a faint way past it. With the browser's prompt the button installs; without one (iPhone,
+ *  Firefox) it shows this system's three steps. Installed, the website's part is over: "use the app from here". */
+function InstallStep({ title, onWeb }: { title: (text: string) => ReactNode; onWeb: () => void }) {
+  const prompt = useInstallPrompt(), chrome = chromeUrl();
+  const [how, setHow] = useState(false);
+  const web = (k: "ob_web" | "ob_web_back") => <button className="skip web" type="button" onClick={onWeb}>{t(k)}</button>;
+  if (isInstalled()) return <>{title(t("ob_inst_done"))}<p>{t("ob_inst_done_t")}</p>{web("ob_web_back")}</>;
+  if (how) return <>{title(t("inst_btn"))}<ol className="qsteps">{tx(HOW[guessOS()]).map((s, i) => <li key={i}>{s}</li>)}</ol><p>{t("ob_inst_then")}</p>{web("ob_web")}</>;
+  return (
+    <>
+      {title(t("ob_inst"))}
+      <div className="choice">
+        {chrome ? <a className="btn big" href={chrome}>{t("inst_chrome")}</a>
+          : <button className="btn big" type="button" onClick={() => { if (prompt) void install(); else setHow(true); }}>{t("inst_btn")}</button>}
+        {web("ob_web")}
+      </div>
+    </>
+  );
+}
+
+const FACT_IC: IconName[] = ["eye", "refresh", "ext"];
+/** the calendar step: the same flow as everywhere, for the clubs just chosen; "Not now" and its end both finish the welcome */
+function SubStep({ ids, title, onDone }: { ids: string[]; title: (text: string) => ReactNode; onDone: () => void }) {
+  const f = useSubFlow(feedsFor(useData(), ids), { pickTitle: t("ob_sub") });
+  return (
+    <>
+      <div className="obhead">
+        {f.back && <button className="obback" type="button" aria-label={t("back")} onClick={f.back}><Icon name="back" /></button>}
+        {title(f.title)}
+      </div>
+      {f.body}
+      <div className="nav">
+        {f.finished ? <span /> : <button className="skip" type="button" onClick={onDone}>{t("not_now")}</button>}
+        {f.finished ? <button className="btn" type="button" onClick={onDone}>{t("done")}</button> : f.primary}
+      </div>
+    </>
+  );
 }
 
 const SLIDES: [k: "who" | "what" | "how", color: string, pic: Pillar][] = [["who", BRAND.azure, "learn"], ["what", BRAND.green, "help"], ["how", BRAND.cranberry, "party"]];
@@ -60,12 +95,13 @@ function Slide({ step, title }: { step: number; title: ReactNode }) {
   );
 }
 
-/** One step of the welcome. A member: welcome, clubs, calendar, install (4). A guest: welcome, three slides, clubs near, install (6). */
+/** One step of the welcome. A member: welcome, clubs, good to know, calendar (4). A guest: welcome, three slides, clubs near (5). */
 function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void; finish: (s: Settings) => void; h2: RefObject<HTMLHeadingElement | null> }) {
   const { s, member, step, guess } = ob;
   const D = useData();
   const toggleAlso = (id: string) => set({ s: withAlsoToggled(s, id) });
   const title = (text: string) => <h2 id="obTitle" tabIndex={-1} ref={h2}>{text}</h2>;
+  if (step < 0) return <InstallStep title={title} onWeb={() => set({ step: 0 })} />;
   if (step === 0) {
     const yes = async () => {
       const g = await guessClubs(D.data.clubs);
@@ -92,7 +128,7 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
     return (
       <>
         {title(t("ob_q"))}
-        <p>{s.home ? t("ob_pre") : t("ob_pick")}</p>
+        {s.home ? null : <p>{t("ob_pick")}</p>}
         <h3>{t("ob_main")}</h3>
         <ClubChips single selected={s.home} onPick={id => set({ s: withHome(s, id) })} />
         <h3>{t("ob_also")}</h3>
@@ -102,21 +138,15 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
     );
   }
   if (member && step === 2) {
-    const ids = [s.home, ...s.also].filter(id => D.clubs[id]);
     return (
       <>
-        {title(t("ob_sub"))}
-        <p>{t("ob_sub_text")}</p>
-        <div className="feeds stack">
-          {ids.map(id => <FeedRow key={id} c={club(id)} />)}
-          {ids.length ? <p className="meta" style={{ margin: "4px 0 0" }}>{t("ob_or")}</p> : null}
-          <FeedRow name={t("all_feed_short")} />
-          <p className="meta" style={{ margin: "6px 0 0" }}>{t("ob_help")}<a href={href("subscribe")} target="_blank">{t("ob_help_link")}</a></p>
-        </div>
-        <ObNav next={t("next")} skip={t("not_now")} onNext={() => set({ step: 3 })} onSkip={() => set({ step: 3 })} />
+        {title(t("app_know_h"))}
+        <ul className="facts2 big">{tx("ob_facts").map((f, i) => <li key={i}><Icon name={FACT_IC[i] ?? "info"} /><span>{f}</span></li>)}</ul>
+        <ObNav next={t("next")} onNext={() => set({ step: 3 })} />
       </>
     );
   }
+  if (member) return <SubStep ids={[s.home, ...s.also]} title={title} onDone={() => finish(s)} />;
   if (!member && step <= 3) {
     // Skip jumps to the clubs
     return (
@@ -126,22 +156,11 @@ function ObStep({ ob, set, finish, h2 }: { ob: Ob; set: (o: Partial<Ob>) => void
       </>
     );
   }
-  if (!member && step === 4) {
-    const near = guess.length ? guess : D.data.clubs.filter(isRac).slice(0, 4).map(c => c.id);
-    return (
-      <>
-        {title(t("ob_follow"))}
-        <p>{t("ob_guest_text")}</p>
-        <ClubChips selected={new Set(s.also)} onPick={toggleAlso} only={near} />
-        <ObNav next={t("next")} skip={t("skip")} onNext={() => set({ step: 5 })} onSkip={() => finish(s)} />
-      </>
-    );
-  }
+  const near = guess.length ? guess : D.data.clubs.filter(isRac).slice(0, 4).map(c => c.id);
   return (
     <>
-      {title(t("ob_inst"))}
-      <p>{t("ob_inst_text")}</p>
-      <InstallHow onDone={() => finish(s)} />
+      {title(t("ob_follow"))}
+      <ClubChips selected={new Set(s.also)} onPick={toggleAlso} only={near} />
       <ObNav next={t("done")} onNext={() => finish(s)} />
       <div className="credit">{t("credit_short")}</div>
     </>
@@ -155,7 +174,7 @@ export function Onboarding({ run }: { run: number }) {
   const h2 = useRef<HTMLHeadingElement>(null);
   const [ob, setOb] = useState<Ob | null>(null);
   useEffect(() => {
-    if (run) setOb({ s: { home: D.settings.home, also: [...D.settings.also] }, member: null, step: 0, guess: [] });
+    if (run) setOb({ s: { home: D.settings.home, also: [...D.settings.also] }, member: null, step: isInstalled() ? 0 : -1, guess: [] });
   }, [run]);
   // every step (and every chip tap) puts the focus on the title, so a screen reader reads where it is; finished, it closes
   useModal(dlg, !!ob && !ob.done, { focus: h2, refocus: ob });
@@ -171,7 +190,7 @@ export function Onboarding({ run }: { run: number }) {
     <dialog className={cx("ob", ob?.member === false && "full")} id="ob" aria-labelledby="obTitle" ref={dlg}
       onCancel={ev => { ev.preventDefault(); if (ob) finish(ob.s); }}>
       <div className="ob-in">
-        {ob ? <Bar n={ob.member === false ? 6 : 4} step={ob.step} /> : null}
+        {ob && ob.step >= 0 ? <Bar n={ob.member === false ? 5 : 4} step={ob.step} /> : null}
         {ob ? <ObStep ob={ob} set={set} finish={finish} h2={h2} /> : null}
       </div>
     </dialog>

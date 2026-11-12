@@ -8,7 +8,7 @@ import { t } from "../i18n";
 import { Icon } from "./Icon";
 import { useModal } from "./hooks";
 
-export function Popup({ title, onClose, children, className = "ob", done = t("done"), aside, quiet, back }: { title: string; onClose: () => void; children: ReactNode; className?: string; done?: string; aside?: ReactNode; quiet?: boolean; back?: () => void }) {
+export function Popup({ title, onClose, children, className = "ob", done = t("done"), aside, quiet, back, action }: { title: string; onClose: () => void; children: ReactNode; className?: string; done?: string; aside?: ReactNode; quiet?: boolean; back?: () => void; action?: ReactNode }) {
   const dlg = useRef<HTMLDialogElement>(null), h2 = useRef<HTMLHeadingElement>(null);
   useModal(dlg, true, { focus: h2 });
   return createPortal(
@@ -19,7 +19,9 @@ export function Popup({ title, onClose, children, className = "ob", done = t("do
           <h2 tabIndex={-1} ref={h2}>{title}</h2>
         </div>
         {children}
-        <div className="nav"><span>{aside}</span><button className={quiet ? "btn quiet" : "btn"} type="button" onClick={() => dlg.current?.close()}>{quiet && <Icon name="x" />}{done}</button></div>
+        {/* action: a stepper's Next takes Done's place, and closing becomes the quiet text on the left */}
+        {action ? <div className="nav"><button className="skip" type="button" onClick={() => dlg.current?.close()}>{done}</button>{action}</div>
+          : <div className="nav"><span>{aside}</span><button className={quiet ? "btn quiet" : "btn"} type="button" onClick={() => dlg.current?.close()}>{quiet && <Icon name="x" />}{done}</button></div>}
       </div>
     </dialog>,
     document.body,

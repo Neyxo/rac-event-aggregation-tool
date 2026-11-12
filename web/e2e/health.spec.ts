@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, go, MEMBER, standalone, test } from "./fixtures";
 
 const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#/club/luzern", "#/settings", "#/subscribe", "#/about", "#/about-more",
-  "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/event/nope", "#/club/nope"];
+  "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/dev/feeds", "#/event/nope", "#/club/nope"];
 
 // The axe findings that stay, as "<screen> <rule>"; anything not listed here fails the test.
 const KNOWN_A11Y = new Set<string>([
@@ -121,11 +121,12 @@ test.describe("member", () => {
 });
 
 test.describe("installed app", () => {
-  test("the first start opens the welcome steps on its own", async ({ page }) => {
+  test("the first start opens the welcome steps on its own, without the install step", async ({ page }) => {
     await standalone(page);
     await page.goto("./");
     await expect(page.locator("dialog#ob")).toBeVisible();
     await expect(page.locator("dialog#ob h2")).toHaveText("Welcome 👋");
+    await expect(page.locator("dialog#ob").getByRole("button", { name: "Install app" })).toHaveCount(0);
   });
 
   test.describe("onboarded", () => {

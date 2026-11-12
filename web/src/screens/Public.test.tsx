@@ -1,4 +1,4 @@
-// Public: know tiles, what it can't show, your data, questions (one open at a time), links, footer with source.
+// Public: the calendar link first, know tiles (titles only), what it can't show, your data, questions (one open at a time), links, footer with source.
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
 import { t, tx } from "../i18n";
@@ -16,15 +16,20 @@ describe("Public", () => {
     const { container } = show();
     screen.getByRole("heading", { level: 1, name: "About this app" });
     screen.getByRole("heading", { name: "Good to know" });
+    // the calendar is what people come for: its link is the first thing under the lead
+    const sub = container.querySelector(".lead")!.nextElementSibling!;
+    expect([sub.tagName, sub.getAttribute("href")]).toEqual(["A", "#/subscribe"]);
+    within(sub as HTMLElement).getByText(t("sub_title"));
     const tiles = [...container.querySelectorAll<HTMLElement>(".ft")];
     expect(tiles.map(n => n.style.getPropertyValue("--p"))).toEqual(["#d41367", "#0067c8", "#009739", "#d41367"]);
+    // titles only, each with its icon
+    expect(tiles.map(n => [n.classList.contains("slim"), n.textContent, !!n.querySelector(".ic svg")])).toEqual(tx("app_know").map(k => [true, k, true]));
     for (const n of [t("pub_h"), t("app_data_h")]) {
       const b = box(n);
       expect(b.icon).not.toBeNull();
       expect(within(b.section).getAllByRole("listitem").length).toBeGreaterThan(2);
     }
     screen.getByRole("heading", { name: "Questions" });
-    expect(screen.getByRole("link", { name: new RegExp(t("sub_title")) }).getAttribute("href")).toBe("#/subscribe");
     expect(screen.getByRole("link", { name: t("source") }).getAttribute("href")).toBe("https://github.com/Neyxo/rotaract-events");
     expect(screen.getByRole("link", { name: t("report") }).getAttribute("target")).toBe("_blank");
   });

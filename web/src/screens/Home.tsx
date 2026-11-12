@@ -1,6 +1,6 @@
 // Home: for a member, a personal overview (greeting, next event, what changed, deadlines, saved) above the
 // upcoming events of their clubs; for a guest, "explore mode" (an invitation, the club finder, events near them). The welcome steps
-// (onboarding dialog) open from ?welcome, from "Get started", or on the first start of the installed app.
+// (onboarding dialog) open on the first visit, from ?welcome and from "Get started".
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, freshNews, myClubs } from "../lib/data";
@@ -9,7 +9,6 @@ import { dayN, isPast, relDay } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { whatChanged, type Changes } from "../lib/changes";
 import { hasFilters, isFilterLink, scopeClubs, selectEvents } from "../lib/filters";
-import { standalone } from "../lib/install";
 import { href, takeWelcome } from "../lib/route";
 import { here, store } from "../lib/store";
 import type { Event } from "../lib/types";
@@ -98,17 +97,15 @@ function MemberBox({ cols, mineEv, changes }: { cols: string[]; mineEv: Event[];
   );
 }
 
-/** The calendar subscription is the app's main use beyond looking, so Home offers it for the member's club until opened once;
- *  later it is on every club page and in Settings. */
+/** The calendar subscription is the app's main use beyond looking, so Home offers it until opened once; later it is on every club
+ *  page and in Settings. */
 function SubOffer() {
-  const D = useData();
   const seen = useStored("rac.subSeen", false), [open, setOpen] = useState(false);
   if (seen) return null;
-  const c = D.clubs[D.settings.home] ?? D.clubs[myClubs()[0] ?? ""];
   return (
     <>
       <MoreLink to={href("subscribe")} title={t("home_sub")} sub={t("ab_sub_sub")} ic="calendar" p={BRAND.azure} onClick={ev => { ev.preventDefault(); setOpen(true); }} />
-      {open && <SubscribeSheet file={c ? c.id + ".ics" : "all.ics"} name={c ? c.name : t("sp_all_feed")} onClose={() => { setOpen(false); store.set("rac.subSeen", true); }} />}
+      {open && <SubscribeSheet onClose={() => { setOpen(false); store.set("rac.subSeen", true); }} />}
     </>
   );
 }
@@ -155,7 +152,8 @@ function HomeScreen({ route }: ScreenProps) {
 
   useEffect(() => {
     const shared = [...route.query.keys()].some(k => k !== "lang" && k !== "welcome");
-    if (takeWelcome() || (standalone() && !shared && !store.get("rac.onboarded", false))) setObRun(1);
+    // the first visit, in the browser too: there the welcome starts with the app
+    if (takeWelcome() || (!shared && !store.get("rac.onboarded", false))) setObRun(1);
   }, []);
 
   // what changed since the last visit: computed once per set of clubs (store writes below would change the answer for a redraw)

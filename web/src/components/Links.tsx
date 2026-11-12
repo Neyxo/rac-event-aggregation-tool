@@ -1,11 +1,8 @@
 // Links and small blocks shared by several screens.
 import { useState, type MouseEventHandler, type ReactNode } from "react";
 import { LANG, LANGS, setLang, t, tx, type Lang, type Pair } from "../i18n";
-import { IOS, PHONE } from "../lib/geo";
-import { BRAND, clubVars, vars } from "../lib/color";
+import { BRAND, vars } from "../lib/color";
 import { href } from "../lib/route";
-import type { Club } from "../lib/types";
-import { ClubMark } from "./Club";
 import { Icon, type IconName } from "./Icon";
 import { Popup } from "./Popup";
 import { toast } from "./Toast";
@@ -77,81 +74,15 @@ export function feedUrls(file: string): { https: string; webcal: string } {
   return { https, webcal: https.replace(/^https?:/, "webcal:") };
 }
 
-/** a feed's row: the club (crest and name, a link to its page with link) or, without one, the all-clubs feed under name; the
- *  upcoming count when given; then the Subscribe button */
-export function FeedRow({ c = null, name, count, link = false }: { c?: Club | null; name?: string; count?: number; link?: boolean }) {
-  const [open, setOpen] = useState(false);
-  const title = c ? c.name : name ?? "";
-  return (
-    <div className="feed">
-      <div className="name" style={c ? clubVars(c.color) : undefined}>
-        {c ? <ClubMark c={c} /> : null}
-        <span className="nm">{c && link ? <a href={href("club", c.id)}>{c.name}</a> : title}
-          {count != null ? <small className="meta">{t("n_upcoming", { n: count })}</small> : null}</span>
-      </div>
-      <button className="subbtn" type="button" onClick={() => setOpen(true)}><Icon name="calendar" />{t("subscribe")}</button>
-      {open && <SubscribeSheet file={c ? c.id + ".ics" : "all.ics"} name={title} onClose={() => setOpen(false)} />}
-    </div>
-  );
-}
-
 /** a warning line: icon and text in the danger colour */
 export function Warn({ children }: { children: ReactNode }) {
   return <p className="alertline"><Icon name="alert" /><span>{children}</span></p>;
 }
 /** short numbered steps */
-const Steps = ({ items }: { items: string[] }) => <ol className="qsteps">{items.map((s, i) => <li key={i}>{s}</li>)}</ol>;
+export const Steps = ({ items }: { items: string[] }) => <ol className="qsteps">{items.map((s, i) => <li key={i}>{s}</li>)}</ol>;
 
-/** what a subscription does, as icon lines (the subscribe screen and the sheet) */
-export function SubFacts() {
-  const ic: IconName[] = ["refresh", "calendar", "phone", "lock"];
-  return <ul className="facts2">{tx("sub_facts").map((f, i) => <li key={i}><Icon name={ic[i] ?? "info"} /><span>{f}</span></li>)}</ul>;
-}
-
-// Apple Calendar takes webcal: on an iPhone, iPad or Mac; Windows and Android have nothing that opens it
-const apple = () => IOS || /Macintosh/.test(navigator.userAgent);
-type Way = "apple" | "google" | "outlook" | "ics";
-
-/** Google doesn't put a newly subscribed calendar on every phone by itself. One box, "On your phone", wherever Google is the
- *  way (a calendar that never arrives looks like the subscription failed): pick the phone, Android or iPhone, and get its few
- *  steps. It opens on the phone this is, Android elsewhere; only: just that phone's steps, no choice. */
-const SYNCSELECT = "https://calendar.google.com/calendar/syncselect";
-type Os = "android" | "ios";
-export function GoogleSync({ only }: { only?: Os }) {
-  const [os, setOs] = useState<Os>(only ?? (IOS ? "ios" : "android"));
-  return (
-    <div className="phonefix">
-      <div className="pf-h"><Icon name="phone" /><span><b>{t("sp_g_sync_h")}</b><small>{t("sp_g_sync_s")}</small></span></div>
-      {!only && (
-        <div className="seg" role="group" aria-label={t("sp_g_sync_h")}>
-          {(["android", "ios"] as const).map(o => <button key={o} type="button" aria-pressed={o === os} onClick={() => setOs(o)}>{o === "ios" ? "iPhone" : "Android"}</button>)}
-        </div>
-      )}
-      <Steps items={tx(os === "ios" ? "sp_g_sync_i" : "sp_g_sync_a")} />
-      {os === "ios" && <>
-        <a className="linkbtn" href={SYNCSELECT} target="_blank" rel="noopener"><Icon name="ext" />{t("sp_g_sync_btn")}</a>
-        <small className="pf-note">{t("sp_g_sync_note")}</small>
-      </>}
-    </div>
-  );
-}
-
-/** the steps for Google or Outlook on a phone (the button that sends the link is the popup's action): their apps can't subscribe, a computer's browser can, and then it is on the phone too */
-function WebBody({ way }: { way: "google" | "outlook" }) {
-  return (
-    <>
-      <ul className="where">
-        <li className="no"><Icon name="phone" /><span>{t("sp_g_no")}</span></li>
-        <li className="ok"><Icon name="laptop" /><span>{t("sp_g_yes")}</span></li>
-        <li className="ok both"><Icon name="laptop" /><Icon name="phone" /><span>{t("sp_g_both")}</span></li>
-      </ul>
-      <Steps items={tx(way === "google" ? "sp_g_steps" : "sp_o_steps")} />
-      {way === "google" && <GoogleSync />}
-    </>
-  );
-}
 /** a calendar file: the warning that it is a copy and how to add it; IcsDl is the download, the popup's action */
-function IcsBody({ feed }: { feed: boolean }) {
+export function IcsBody({ feed }: { feed: boolean }) {
   return (
     <>
       <Warn>{t(feed ? "ics_stale_feed" : "ics_stale")}</Warn>
@@ -159,53 +90,7 @@ function IcsBody({ feed }: { feed: boolean }) {
     </>
   );
 }
-const IcsDl = ({ to, onDone }: { to: string; onDone: () => void }) => <a className="linkbtn primary" href={to} onClick={onDone}><Icon name="calendar" />{t("ics_dl")}</a>;
-
-/** Subscribing to one feed: what it does, then Apple, Google, Outlook or the file. A way that can't work on this device says why
- *  and what to do instead, never a tap that does nothing. */
-export function SubscribeSheet({ file, name, onClose }: { file: string; name: string; onClose: () => void }) {
-  const { https, webcal } = feedUrls(file);
-  const [way, setWay] = useState<Way | null>(null);
-  const google = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal);
-  const outlook = `https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(name)}`;
-  const row = (w: Way, ic: IconName, title: string, sub: string, to?: string) => {
-    const body = <><Icon name={ic} /><span><b>{title}</b><small>{sub}</small></span><Icon name="back" className="chev" /></>;
-    // Google opens in a new tab; the sheet left behind then says what is still to do on the phone
-    return to ? <a className="way" href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={w === "google" ? () => setWay(w) : undefined}>{body}</a>
-      : <button className="way" type="button" onClick={() => setWay(w)}>{body}</button>;
-  };
-  const send = (title: string, url: string) => <button className="linkbtn primary" type="button" onClick={() => void share({ title, url })}><Icon name="share" />{t("sp_g_send")}</button>;
-  // one action per way, on the line of Close: the download, or the link to send to a device that can subscribe
-  const action = way === null ? <a className="meta" href={href("subscribe")}>{t("sub_more")}</a>
-    : way === "ics" ? <IcsDl to={https} onDone={onClose} />
-    : way === "apple" ? send(name, https)
-    : way === "outlook" ? send(t("way_outlook"), outlook)
-    : PHONE ? send(t("sp_google"), google)
-    : null;
-  return (
-    <Popup title={way ? t(`way_${way}`) : name} onClose={onClose} done={t("close")} quiet aside={action} back={way ? () => setWay(null) : undefined}>
-      {way === null ? (
-        <div>
-          <SubFacts />
-          <p className="waypick">{t("way_pick")}</p>
-          <div className="ways">
-            {row("apple", "phone", t("way_apple"), t("way_apple_s"), apple() ? webcal : undefined)}
-            {row("google", "globe", t("way_google"), t("way_google_s"), PHONE ? undefined : google)}
-            {row("outlook", "laptop", t("way_outlook"), t("way_outlook_s"), PHONE ? undefined : outlook)}
-            {row("ics", "calendar", t("way_ics"), t("way_ics_s"))}
-          </div>
-        </div>
-      ) : (
-        <div>
-          {way === "apple" ? <Warn>{t("apple_na")}</Warn>
-            : way === "ics" ? <IcsBody feed />
-            : way === "google" && !PHONE ? <><p>{t("sp_g_tab")}</p><GoogleSync /></>
-            : <WebBody way={way} />}
-        </div>
-      )}
-    </Popup>
-  );
-}
+export const IcsDl = ({ to, onDone }: { to: string; onDone: () => void }) => <a className="linkbtn primary" href={to} onClick={onDone}><Icon name="calendar" />{t("ics_dl")}</a>;
 
 /** A calendar file for one event (.ics): a one-time copy, not a subscription. A tap first says so and how to add it, then downloads. */
 export function IcsLink({ href: to, children }: { href: string; children: ReactNode }) {

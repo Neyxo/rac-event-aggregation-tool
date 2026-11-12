@@ -1,26 +1,75 @@
 // The app end to end, screen by screen and across screens, on a phone and on a desktop, with the fixture data at 2026-11-11 10:00.
-import { copied, expect, go, MEMBER, stubClipboard, test } from "./fixtures";
+import { copied, expect, go, GUEST, MEMBER, stubClipboard, test } from "./fixtures";
 
 const EVENT = "223112";  // Luzern, Thu 19 Nov 2026: "Suppenmittag Wheel-Clubs Luzern-Sursee"
 const ROTARY = "218819"; // a Rotary-layer event, 12 Nov 2026
 const store = (page: import("@playwright/test").Page, k: string) => page.evaluate(k => JSON.parse(localStorage.getItem(k) ?? "null"), k);
 
 test.describe("first visit", () => {
-  test("member path: the welcome steps pick a main club, Home then shows it", async ({ page }) => {
+  test("the welcome opens by itself and offers the app first; without an install prompt the button shows the steps", async ({ page }) => {
     await page.goto("./");
-    await expect(page.locator(".explore")).toBeVisible();
-    await page.getByRole("button", { name: "Get started" }).click();
     const ob = page.locator("dialog#ob");
     await expect(ob).toBeVisible();
+    await expect(ob.locator("h2")).toHaveText("Get the app");
+    await ob.getByRole("button", { name: "Install app" }).click();
+    await expect(ob.locator("ol.qsteps li").first()).toBeVisible();
+    // the faint way past it
+    await ob.getByRole("button", { name: "No thanks, use the website" }).click();
+    await expect(ob.locator("h2")).toHaveText("Welcome 👋");
+    await expect(ob.getByRole("button", { name: "Not (yet)" })).toBeVisible();
+    expect(await store(page, "rac.onboarded")).toBe(null);
+  });
+
+  test("member path: main club, good to know, the calendar step by step, Home then shows the club", async ({ page, isMobile }) => {
+    await stubClipboard(page);
+    await page.goto("./");
+    const ob = page.locator("dialog#ob"), h2 = ob.locator("h2");
+    await ob.getByRole("button", { name: "No thanks, use the website" }).click();
     await ob.getByRole("button", { name: "Yes, I'm a member" }).click();
     // pre-selected from the (stubbed) IP position near Lucerne
     await expect(ob.locator(".chips").first().getByRole("button", { name: "Rotaract Luzern" })).toHaveAttribute("aria-pressed", "true");
     await ob.locator(".chips").first().getByRole("button", { name: "Rotaract Bern" }).click();
     await expect(ob.locator(".chips").first().getByRole("button", { name: "Rotaract Bern" })).toHaveAttribute("aria-pressed", "true");
     await ob.getByRole("button", { name: "Next" }).click();
-    await expect(ob.locator(".feeds")).toContainText("Rotaract Bern");
+    await expect(h2).toHaveText("Good to know");
+    await expect(ob.locator("ul.facts2.big li")).toHaveCount(3);
     await ob.getByRole("button", { name: "Next" }).click();
-    await ob.getByRole("button", { name: "Done" }).click();
+    // the calendar: which one, where, then one step per page
+    await expect(h2).toHaveText("Add events to your calendar?");
+    await expect(ob.getByRole("button", { name: "Not now" })).toBeVisible();
+    await expect(ob.locator(".way").first()).toContainText("Rotaract Bern");
+    await expect(ob.locator(".way").last()).toHaveText("All Rotaract events in Switzerland & Liechtenstein");
+    await ob.locator(".way").first().click();
+    await expect(h2).toHaveText("Where do you want it?");
+    await expect(ob.locator(".way b")).toHaveText(["Apple Calendar", "Google Calendar", "Outlook"]);
+    await expect(ob.locator(".sfquiet")).toContainText("Calendar file (.ics)");
+    await ob.locator(".way", { hasText: "Google Calendar" }).click();
+    const n = ob.locator(".sfstep .sfn");
+    let at = 1;
+    if (isMobile) {
+      // the Google Calendar app can't subscribe: through this phone's browser, or a computer
+      await expect(h2).toHaveText("How do you want to add it?");
+      await ob.locator(".way", { hasText: "On this phone" }).click();
+      await expect(n).toHaveText("Step 1 of 7");
+      await ob.getByRole("button", { name: "Copy link" }).click();  // done: on to the next step by itself
+      await expect(n).toHaveText("Step 2 of 7");
+      expect(await copied(page)).toContain("https://calendar.google.com/calendar/r?cid=" + encodeURIComponent("webcal://"));
+      expect(await copied(page)).toContain("bern.ics");
+      at = 2;
+    } else {
+      await expect(n).toHaveText("Step 1 of 7");
+      await expect(ob.locator(".sfstep a.linkbtn")).toHaveAttribute("href", /^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*bern\.ics$/);
+    }
+    await expect(h2).toHaveText("Google Calendar");
+    while (at < 7) {
+      await ob.getByRole("button", { name: "Next" }).click();
+      await expect(n).toHaveText(`Step ${++at} of 7`);
+    }
+    await expect(ob.locator(".sfstep")).toContainText("Turn on Sync.");
+    await ob.getByRole("button", { name: "Done", exact: true }).click();
+    await expect(h2).toHaveText("Done!");
+    await expect(ob.getByRole("button", { name: "Not now" })).toHaveCount(0);
+    await ob.getByRole("button", { name: "Done", exact: true }).click();
     await expect(ob).toBeHidden();
     expect(await store(page, "rac.settings")).toMatchObject({ home: "bern" });
     expect(await store(page, "rac.onboarded")).toBe(true);
@@ -29,20 +78,45 @@ test.describe("first visit", () => {
     await expect(page.locator("#toast")).toContainText("Bern");
   });
 
+  test("member path: \"Not now\" on the calendar step finishes the welcome", async ({ page }) => {
+    await page.goto("./");
+    const ob = page.locator("dialog#ob");
+    await ob.getByRole("button", { name: "No thanks, use the website" }).click();
+    await ob.getByRole("button", { name: "Yes, I'm a member" }).click();
+    for (let i = 0; i < 2; i++) await ob.getByRole("button", { name: "Next" }).click();
+    await ob.getByRole("button", { name: "Not now" }).click();
+    await expect(ob).toBeHidden();
+    expect(await store(page, "rac.settings")).toMatchObject({ home: "luzern" });
+    expect(await store(page, "rac.onboarded")).toBe(true);
+  });
+
   test("guest path: three slides, follow a club nearby", async ({ page }) => {
     await page.goto("./");
-    await page.getByRole("button", { name: "Get started" }).click();
     const ob = page.locator("dialog#ob");
+    await ob.getByRole("button", { name: "No thanks, use the website" }).click();
     await ob.getByRole("button", { name: "Not (yet)" }).click();
     await expect(ob).toHaveClass(/full/);
     for (let i = 0; i < 3; i++) await ob.getByRole("button", { name: "Next" }).click();
     await expect(ob.locator(".chips .chip")).toHaveText(["Luzern", "Sempach"]);  // the two nearest
     await ob.getByRole("button", { name: "Rotaract Sempachersee" }).click();
-    await ob.getByRole("button", { name: "Next" }).click();
     await ob.getByRole("button", { name: "Done" }).click();
     await expect(ob).toBeHidden();
     expect(await store(page, "rac.settings")).toEqual({ home: "", also: ["sempachersee"] });
+    expect(await store(page, "rac.onboarded")).toBe(true);
     await expect(page.locator(".hello .chips")).toContainText("Sempach");
+  });
+});
+
+test.describe("guest, past the welcome", () => {
+  test.use({ storage: GUEST });
+  test("Home is explore mode without the dialog; \"Get started\" opens the welcome again", async ({ page }) => {
+    await page.goto("./");
+    await expect(page.locator(".explore")).toBeVisible();
+    const ob = page.locator("dialog#ob");
+    await expect(ob).toBeHidden();
+    await page.getByRole("button", { name: "Get started" }).click();
+    await expect(ob).toBeVisible();
+    await expect(ob.locator("h2")).toHaveText("Get the app");
   });
 });
 
@@ -151,14 +225,81 @@ test.describe("member", () => {
     await page.locator(".cstick a.go").click();
     const popup = page.locator("dialog.ob[open]");
     await expect(popup).toBeVisible();
-    await expect(popup.locator(".way")).toHaveCount(4);
-    await expect(popup.getByText("Calendar file (.ics)")).toBeVisible();
-    await expect(popup.getByText("Where do you want it?")).toBeVisible();
+    // about this club: straight to where it goes
+    await expect(popup.locator("h2")).toHaveText("Where do you want it?");
+    await expect(popup.locator(".sfn")).toHaveText("Rotaract Luzern");
+    await expect(popup.locator(".way")).toHaveCount(3);
+    await expect(popup.locator(".sfquiet")).toContainText("Calendar file (.ics)");
+    // in the steps: a quiet Close on the left, Next on the right
+    await popup.locator(".way", { hasText: "Outlook" }).click();
+    await expect(popup.locator(".sfstep .sfn")).toContainText("Step 1 of");
+    await expect(popup.locator(".nav > *")).toHaveText(["Close", "Next"]);
+    await expect(popup.locator(".nav button.skip")).toHaveText("Close");
     await popup.getByRole("button", { name: "Close" }).click();
     await expect(popup).toHaveCount(0);
     // the partner chip leads to the other club
     await page.locator(".aboutc .with a.chip[href='#/club/sempachersee']").click();
     await expect(page.locator("main h1")).toHaveText("Rotaract Sempachersee");
+  });
+
+  test("Home: the calendar card opens the subscribe popup, once", async ({ page }) => {
+    await page.goto("./");
+    const card = page.locator("main a.more", { hasText: "Get your club's events in your calendar" });
+    await card.click();
+    const popup = page.locator("dialog.ob[open]");
+    await expect(popup.locator("h2")).toHaveText("Which calendar?");
+    await expect(popup.locator(".way b").first()).toHaveText("Rotaract Luzern");
+    await expect(popup.locator(".way b").nth(1)).toHaveText("Rotaract Sempachersee");
+    await expect(popup.locator(".way b").last()).toHaveText("All Rotaract events in Switzerland & Liechtenstein");
+    await popup.locator(".way").first().click();
+    await expect(popup.locator("h2")).toHaveText("Where do you want it?");
+    await popup.getByRole("button", { name: "Back" }).click();
+    await expect(popup.locator("h2")).toHaveText("Which calendar?");
+    await popup.getByRole("button", { name: "Close" }).click();
+    await expect(popup).toHaveCount(0);
+    await expect(card).toHaveCount(0);
+    expect(await store(page, "rac.subSeen")).toBe(true);
+  });
+
+  test("Calendar help: add a calendar, and a problem's Yes leads to the phone steps", async ({ page }) => {
+    await page.goto("./#/subscribe");
+    const popup = page.locator("dialog.ob[open]");
+    await page.locator("main").getByRole("button", { name: "Add a calendar" }).click();
+    await expect(popup.locator("h2")).toHaveText("Which calendar?");
+    await popup.getByRole("button", { name: "Close" }).click();
+    await expect(popup).toHaveCount(0);
+    // the how-tos and the per-club list are gone from here
+    await expect(page.locator("main .feed")).toHaveCount(0);
+    const fix = page.locator("main details[name=fix]");
+    await expect(fix).toHaveCount(5);
+    await fix.first().locator("summary").click();
+    await expect(fix.first().locator(".fixcase")).toHaveCount(0);  // nothing before the answer
+    await fix.first().getByRole("button", { name: "Yes" }).click();
+    await expect(fix.first().locator(".fixcase b")).toHaveText("It is hidden on your phone");
+    await fix.first().getByRole("button", { name: "Show me how" }).click();
+    await expect(popup.locator("h2")).toHaveText("Show it on your phone");
+    await expect(popup.locator(".sfstep .sfn")).toHaveText("Step 1 of 5");
+    await expect(popup.getByRole("button", { name: "Android" })).toHaveAttribute("aria-pressed", "true");
+    // an iPhone has other steps, and fewer
+    await popup.getByRole("button", { name: "iPhone" }).click();
+    await expect(popup.locator(".sfstep .sfn")).toHaveText("Step 1 of 4");
+    await popup.getByRole("button", { name: "Next" }).click();
+    await expect(popup.locator(".sfstep a.linkbtn")).toHaveAttribute("href", "https://calendar.google.com/calendar/syncselect");
+    await popup.getByRole("button", { name: "Close" }).click();
+    await expect(popup).toHaveCount(0);
+    // No: add it again
+    await fix.first().getByRole("button", { name: "No", exact: true }).click();
+    await expect(fix.first().locator(".fixcase")).toContainText("It isn't subscribed yet");
+    await expect(fix.first().locator(".fixcase").getByRole("button", { name: "Add a calendar" })).toBeVisible();
+  });
+
+  test("About this app: the calendar card comes first, the tiles are titles only", async ({ page }) => {
+    await page.goto("./#/public");
+    await expect(page.locator("main p.lead + a.more")).toHaveAttribute("href", "#/subscribe");
+    await expect(page.locator("main p.lead + a.more b")).toHaveText("Subscribe to a calendar");
+    await expect(page.locator("#know .ft")).toHaveCount(4);
+    await expect(page.locator("#know .ft span")).toHaveCount(0);
+    await expect(page.locator("#know .ft b").first()).toHaveText("Updated every night");
   });
 
   test("Settings: French reloads the app in French", async ({ page }) => {
@@ -201,6 +342,15 @@ test.describe("member", () => {
     await page.locator("header#top a.hbtn", { hasText: "Dev" }).click();
     await expect(page.locator("body")).toHaveAttribute("data-page", "dev");
     await expect(page.locator("main")).toContainText("e2e fixture warning: layout of one club changed");
+    // the app and its data, each with its own age
+    await expect(page.locator("main .devstate", { hasText: /^App · version \d\S* · updated .+ ago · / })).toBeVisible();
+    await expect(page.locator("main .devstate", { hasText: /^Data · read .+ ago · / })).toBeVisible();
+    // every feed, with its Subscribe button
+    await page.locator("main a[href='#/dev/feeds']").click();
+    await expect(page.locator("main .feeds .feed").first()).toContainText("All Rotaract events in Switzerland & Liechtenstein");
+    await expect(page.locator("main .feeds .feed a[href='#/club/luzern']")).toBeVisible();
+    await page.locator("main .feeds .feed", { hasText: "Rotaract Luzern" }).getByRole("button", { name: "Subscribe" }).click();
+    await expect(page.locator("dialog.ob[open] h2")).toHaveText("Where do you want it?");
   });
 
   test("back and forward restore the scroll position", async ({ page }) => {
