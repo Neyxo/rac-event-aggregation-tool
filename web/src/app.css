@@ -151,7 +151,9 @@ a.fbtn { padding: 0; width: var(--h-btn); justify-content: center; }  /* icon on
 .hint { font-size: .8rem; color: var(--muted); width: 100%; }
 .seg { display: inline-flex; min-height: var(--h-btn); border: 1px solid var(--line); border-radius: 99px; overflow: hidden; background: var(--surface); } .seg[hidden] { display: none; }
 .seg button { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: none; border: 0; padding: 0 14px; font-size: .88rem; font-weight: 600; transition: transform .12s, background .15s; }
-@media (max-width: 359px) { .seg button { padding: 0 9px; } }  /* three options fit a 320px phone */
+/* never wider than its place, whatever the font: the options share what there is, tighter on the narrowest phones */
+.seg { max-width: 100%; } .seg button { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+@media (max-width: 359px) { .seg button { padding: 0 8px; } }
 .seg button + button { border-left: 1px solid var(--line); }
 .seg button[aria-pressed=true], .seg button[aria-selected=true] { background: var(--accent); color: var(--on-accent); }
 .seg button:active { transform: scale(.96); }
@@ -479,7 +481,7 @@ a.more .ic { margin: 0; flex: 0 0 auto; }
 
 /* family page: one frosted tile per part of Rotary (icon, name, half a sentence), then the clubs by district */
 .fam h1 { font-size: 1.4rem; margin: 18px 0 2px; } .fam .lead { color: var(--muted); margin: 0 0 14px; } .fam h2 { font-size: 1.1rem; }
-.fam #know { grid-template-columns: 1fr 1fr; }
+.fam #know { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .fam #know b { min-width: 0; overflow-wrap: anywhere; }  /* a long word wraps instead of widening the page */
 .tiles2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .ft { border-radius: 16px; padding: 14px; }
 .ft .ic, a.more .ic, .step .ic, .bh .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--p) 16%, var(--surface)); color: var(--p); margin-bottom: 8px; }

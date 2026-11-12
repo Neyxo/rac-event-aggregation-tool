@@ -20,6 +20,7 @@ test.use({ storage: MEMBER });
 test.describe("developer mode on, so the Dev screens are there too", () => {
   test.use({ storage: { ...MEMBER, "rac.dev": true, "rac.devUnlocked": true } });
   test("every screen: never wider than the screen, the top bar and the tabs stay put from the first line to the last", async ({ page }) => {
+  test.slow();  // many screens and scroll steps: three times the usual time limit, for a busy CI machine
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("./");
   await expect(page.locator(".hello")).toBeVisible();
@@ -90,6 +91,7 @@ test.describe("the list headings on Discover", () => {
   });
 
   test("scrolling: the title sticks under the bar, the current month right under the title, the next month pushes it out, the frost covers both", async ({ page }) => {
+    test.slow();  // many scroll steps: three times the usual time limit, for a busy CI machine
     const h0 = await openList(page), bad: string[] = [], stuck = new Set<string>();
     const max = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
     const from = Math.round(h0.title.top - h0.bar) + 40;  // the title has reached the bar

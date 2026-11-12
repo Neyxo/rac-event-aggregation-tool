@@ -76,16 +76,24 @@ export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): 
 export function stickyHeads(): void {
   const root = document.documentElement, s = parseFloat(getComputedStyle(root).getPropertyValue("--stick")) || 64;
   const hs = [...document.querySelectorAll<HTMLElement>(".sh")], lv1 = hs.filter(h => h.classList.contains("lv1"));
-  const box = (h: HTMLElement) => { const r = h.getBoundingClientRect(), ty = parseFloat(h.style.getPropertyValue("--ty")) || 0; return { top: r.top - ty, bottom: r.bottom - ty }; };
+  const ty = (h: HTMLElement) => parseFloat(h.style.getPropertyValue("--ty")) || 0;
+  // the box without the push (--ty). lift: how far below its new stick line a level-2 heading still reports itself (see below)
+  let lift = (_top: number) => 0;
+  const box = (h: HTMLElement) => { const r = h.getBoundingClientRect(), t = ty(h), up = h.classList.contains("lv1") ? 0 : lift(r.top - t); return { top: r.top - t + up, bottom: r.bottom - t + up }; };
   const at = (b: { top: number; bottom: number }, pos: number) => b.top <= pos + 1 && b.bottom > pos;  // at its stick line, and not scrolled off with its container
   const cur = lv1.filter(h => at(box(h), s)).at(-1), curH = cur ? cur.getBoundingClientRect().height : 0, s2 = s + curH;
-  // the headings only move to a new --stick2 with the next frame (their boxes read below are still the old ones): measure again then.
-  // Without it a jump (back/forward restoring the scroll position) left the stuck heading unmarked, and without frost, until the next scroll.
-  const s2px = s2.toFixed(2) + "px";
-  if (root.style.getPropertyValue("--stick2") !== s2px) { root.style.setProperty("--stick2", s2px); onScroll(); }
+  // The browser only moves the level-2 headings to a new --stick2 with the next frame: the boxes read below still sit at the old line.
+  // When the line went down (a title just stuck, after a jump such as back/forward restoring the scroll position) every heading
+  // above it will be on it, so that is where it counts as being; when it went up there is no telling, so measure again next frame.
+  // Without this the stuck heading stayed unmarked, and without frost, until the next scroll.
+  const s2px = s2.toFixed(2) + "px", old = parseFloat(root.style.getPropertyValue("--stick2"));
+  if (root.style.getPropertyValue("--stick2") !== s2px) {
+    root.style.setProperty("--stick2", s2px);
+    if (s2 > old) lift = top => Math.max(0, s2 - top); else onScroll();
+  }
   let capH = 0;
   hs.forEach((h, i) => {
-    const b = box(h), one = h.classList.contains("lv1"), next = one ? lv1[lv1.indexOf(h) + 1] : hs[i + 1], nt = next?.getBoundingClientRect().top;
+    const b = box(h), one = h.classList.contains("lv1"), next = one ? lv1[lv1.indexOf(h) + 1] : hs[i + 1], nt = next ? box(next).top + ty(next) : undefined;
     // a section heading that precedes the stuck title belongs to the section before it: pushed out, never part of this stack
     const stuck = at(b, one ? s : s2) && (one || !cur || i > hs.indexOf(cur)); h.classList.toggle("stuck", stuck);
     if (stuck && !one) capH = Math.max(capH, b.bottom - b.top);

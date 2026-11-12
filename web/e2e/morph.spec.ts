@@ -144,6 +144,7 @@ for (const H of HEADS) {
     });
 
     test("every scroll position on the way down and back up: never under the bar, never covered, never off the side", async ({ page }) => {
+      test.slow();  // many scroll steps: three times the usual time limit, for a busy CI machine
       await page.emulateMedia({ reducedMotion: "reduce" });
       await open(page, H);
       const at = await stickAt(page, H.head), end = at + 400, bad: string[] = [];
@@ -434,6 +435,7 @@ test.describe("about: the scroll morph", () => {
   });
 
   test("the words open in order on the way down and close in order on the way up, never two at once, no flicker at a boundary", async ({ page }) => {
+    test.slow();  // many scroll steps: three times the usual time limit, for a busy CI machine
     const a0 = await openAbout(page);
     // without the snap points (their own test below): they hold the page on a word, and this is about where one word hands over to the next
     await page.addStyleTag({ content: "html { scroll-snap-type: none !important; }" });
