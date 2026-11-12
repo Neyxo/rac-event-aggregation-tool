@@ -146,12 +146,12 @@ const fr: Messages = {
   sp_google_s: [
     "Sur un ordinateur, cliquez sur S'abonner à côté d'un calendrier ci-dessous, puis Google Agenda.",
     "Confirmez « Ajouter l'agenda ».",
-    "C'est fait : il apparaît aussi dans l'app Google Agenda du téléphone (actualisé toutes les quelques heures).",
+    "Vérifiez ensuite sur le téléphone. Si l'agenda n'y est pas, activez-le une fois (voir ci-dessous). Actualisé toutes les quelques heures.",
   ],
   sp_android: "Android (Samsung ou autres apps de calendrier)",
   sp_android_s: [
     "Abonnez-vous une fois avec Google sur un ordinateur (voir Google Agenda ci-dessus) : la plupart des apps de calendrier Android affichent vos agendas Google.",
-    "Activez ensuite le nouveau calendrier dans les paramètres de votre app de calendrier.",
+    "Activez ensuite la synchronisation du nouvel agenda (voir ci-dessous). S'il reste masqué, activez-le dans les paramètres de votre app de calendrier.",
   ],
   sp_g_send: "M'envoyer le lien",
   sub_facts: [
@@ -175,7 +175,7 @@ const fr: Messages = {
   way_ics: "Fichier de calendrier (.ics)",
   way_ics_s: "Une copie unique, sans mise à jour",
   apple_na: "Cet appareil n'est pas un iPhone, iPad ou Mac : Calendrier Apple ne peut pas s'ouvrir ici. Ouvrez cette page sur votre appareil Apple, ou choisissez Google ou Outlook.",
-  sp_g_both: "Ensuite aussi sur le téléphone, tout seul",
+  sp_g_both: "Ensuite aussi sur le téléphone : à activer une fois",
   sub_more: "Plus d'aide sur les calendriers",
   home_sub: "Les événements de votre club dans votre calendrier",
   sp_g_no: "Téléphone : impossible",
@@ -183,7 +183,15 @@ const fr: Messages = {
   sp_g_steps: [
     "Envoyez-vous le lien.",
     "Ouvrez-le sur un ordinateur.",
-    "Confirmez « Ajouter l'agenda ». C'est tout, aussi sur le téléphone.",
+    "Confirmez « Ajouter l'agenda ».",
+    "Vérifiez sur le téléphone. Si l'agenda n'y est pas, activez-le une fois (ci-dessous).",
+  ],
+  sp_g_tab: "Google Agenda s'est ouvert dans un nouvel onglet. Confirmez-y « Ajouter l'agenda », puis vérifiez sur le téléphone.",
+  sp_g_sync_btn: "iPhone avec le Calendrier d'Apple : activer maintenant",
+  sp_g_sync_h: "Rien sur le téléphone ? À activer une fois :",
+  sp_g_sync: [
+    "Android : app Google Agenda › Paramètres › touchez le nouvel agenda (parfois sous « Afficher plus ») › activez la synchronisation.",
+    "iPhone avec le Calendrier d'Apple : cochez le nouvel agenda et enregistrez sur",
   ],
   ics_h: "Ajouter à l'agenda",
   ics_stale: "Juste une copie : si l'événement est déplacé ou annulé, votre agenda ne le saura pas.",

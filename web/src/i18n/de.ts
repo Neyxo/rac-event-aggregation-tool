@@ -146,12 +146,12 @@ const de: Messages = {
   sp_google_s: [
     "Am Computer bei einem Kalender unten auf Abonnieren klicken, dann Google Kalender.",
     "«Kalender hinzufügen» bestätigen.",
-    "Fertig: erscheint auch in der Google-Kalender-App auf dem Handy (aktualisiert alle paar Stunden).",
+    "Dann auf dem Handy nachsehen. Fehlt der Kalender, einmal einschalten (siehe unten). Aktualisiert alle paar Stunden.",
   ],
   sp_android: "Android (Samsung oder andere Kalender-Apps)",
   sp_android_s: [
     "Einmal am Computer mit Google abonnieren (siehe Google Kalender oben): die meisten Android-Kalender zeigen deine Google-Kalender.",
-    "Danach den neuen Kalender in den Einstellungen der Kalender-App aktivieren.",
+    "Danach die Synchronisierung für den neuen Kalender einschalten (siehe unten). Fehlt er immer noch, in den Einstellungen der Kalender-App aktivieren.",
   ],
   sp_g_send: "Link an mich schicken",
   sub_facts: [
@@ -175,7 +175,7 @@ const de: Messages = {
   way_ics: "Kalenderdatei (.ics)",
   way_ics_s: "Einmalige Kopie, aktualisiert sich nicht",
   apple_na: "Das ist kein iPhone, iPad oder Mac, darum kann sich Apple Kalender hier nicht öffnen. Öffne diese Seite auf deinem Apple-Gerät oder wähle Google oder Outlook.",
-  sp_g_both: "Danach automatisch auch auf dem Handy",
+  sp_g_both: "Danach auch auf dem Handy: einmal einschalten",
   sub_more: "Mehr Hilfe zu Kalendern",
   home_sub: "Anlässe deines Clubs in deinen Kalender",
   sp_g_no: "Handy: geht nicht",
@@ -183,7 +183,15 @@ const de: Messages = {
   sp_g_steps: [
     "Link an dich schicken.",
     "Am Computer öffnen.",
-    "«Kalender hinzufügen» bestätigen. Fertig, auch auf dem Handy.",
+    "«Kalender hinzufügen» bestätigen.",
+    "Auf dem Handy nachsehen. Fehlt der Kalender, einmal einschalten (unten).",
+  ],
+  sp_g_tab: "Google Kalender ist in einem neuen Tab offen. Dort «Kalender hinzufügen» bestätigen, dann auf dem Handy nachsehen.",
+  sp_g_sync_btn: "iPhone mit Apple-Kalender: jetzt einschalten",
+  sp_g_sync_h: "Erscheint nicht auf dem Handy? Einmal einschalten:",
+  sp_g_sync: [
+    "Android: Google-Kalender-App › Einstellungen › den neuen Kalender antippen (evtl. unter «Mehr anzeigen») › Synchronisierung einschalten.",
+    "iPhone mit Apple-Kalender: den neuen Kalender anhaken und speichern auf",
   ],
   ics_h: "In den Kalender",
   ics_stale: "Nur eine Kopie: Wird der Anlass verschoben oder abgesagt, merkt dein Kalender das nicht.",

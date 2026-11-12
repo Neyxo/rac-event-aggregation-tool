@@ -4,7 +4,7 @@ import { t, tx, type StrKey } from "../i18n";
 import { isPast } from "../lib/dates";
 import type { Club } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { FeedRow, Footer, QaList, SubFacts, useData } from "../components";
+import { FeedRow, Footer, GoogleSync, QaList, SubFacts, useData } from "../components";
 import { DISTRICT_IDS, DISTRICTS } from "../lib/color";
 
 const PLATFORMS = [
@@ -48,6 +48,7 @@ export default function Subscribe(_props: ScreenProps) {
             <details key={h}>
               <summary>{t(h)}</summary>
               <ol>{tx(steps).map((s, i) => <li key={i}>{s}</li>)}</ol>
+              {(h === "sp_google" || h === "sp_android") && <GoogleSync />}
             </details>
           ))}
         </div>

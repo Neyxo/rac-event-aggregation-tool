@@ -146,12 +146,12 @@ const it: Messages = {
   sp_google_s: [
     "Al computer, clicca su Abbonati accanto a un calendario qui sotto, poi Google Calendar.",
     "Conferma «Aggiungi calendario».",
-    "Fatto: compare anche nell'app Google Calendar sul telefono (si aggiorna ogni poche ore).",
+    "Poi controlla sul telefono. Se il calendario non c'è, attivalo una volta (vedi sotto). Si aggiorna ogni poche ore.",
   ],
   sp_android: "Android (Samsung o altre app calendario)",
   sp_android_s: [
     "Abbonati una volta con Google da un computer (vedi Google Calendar sopra): la maggior parte delle app calendario Android mostra i tuoi calendari Google.",
-    "Poi attiva il nuovo calendario nelle impostazioni della tua app calendario.",
+    "Poi attiva la sincronizzazione del nuovo calendario (vedi sotto). Se resta nascosto, attivalo nelle impostazioni della tua app calendario.",
   ],
   sp_g_send: "Inviami il link",
   sub_facts: [
@@ -175,7 +175,7 @@ const it: Messages = {
   way_ics: "File calendario (.ics)",
   way_ics_s: "Una copia unica, non si aggiorna",
   apple_na: "Questo non è un iPhone, iPad o Mac, quindi Calendario Apple non si può aprire qui. Apri questa pagina sul tuo dispositivo Apple, o scegli Google o Outlook.",
-  sp_g_both: "Poi anche sul telefono, da solo",
+  sp_g_both: "Poi anche sul telefono: attivalo una volta",
   sub_more: "Altro aiuto sui calendari",
   home_sub: "Gli eventi del tuo club nel tuo calendario",
   sp_g_no: "Telefono: non funziona",
@@ -183,7 +183,15 @@ const it: Messages = {
   sp_g_steps: [
     "Mandati il link.",
     "Aprilo su un computer.",
-    "Conferma «Aggiungi calendario». Fatto, anche sul telefono.",
+    "Conferma «Aggiungi calendario».",
+    "Controlla sul telefono. Se il calendario non c'è, attivalo una volta (sotto).",
+  ],
+  sp_g_tab: "Google Calendar si è aperto in una nuova scheda. Conferma lì «Aggiungi calendario», poi controlla sul telefono.",
+  sp_g_sync_btn: "iPhone con il Calendario di Apple: attivalo ora",
+  sp_g_sync_h: "Non compare sul telefono? Attivalo una volta:",
+  sp_g_sync: [
+    "Android: app Google Calendar › Impostazioni › tocca il nuovo calendario (magari sotto «Mostra altro») › attiva la sincronizzazione.",
+    "iPhone con il Calendario di Apple: spunta il nuovo calendario e salva su",
   ],
   ics_h: "Aggiungi al calendario",
   ics_stale: "Solo una copia: se l'evento viene spostato o annullato, il tuo calendario non lo saprà.",

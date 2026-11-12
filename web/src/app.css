@@ -556,6 +556,7 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 /* popups: a warning, where it works, short steps */
 .alertline { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, var(--surface)); font-weight: 600; font-size: .92rem; }
 .ob p.alertline { color: var(--danger); }
+.syncfix { margin: 4px 0 0; padding-left: 18px; font-weight: 400; color: var(--text); } .syncfix li { margin: 4px 0; } .syncfix a { overflow-wrap: anywhere; }
 .alertline svg, .where svg { width: 20px; height: 20px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .where { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 6px; }
 .where li { display: flex; gap: 10px; align-items: center; padding: 8px 12px; border-radius: 10px; font-weight: 600; }

@@ -55,7 +55,9 @@ describe("Subscribe", () => {
     expect(card("Subscribe to a calendar").querySelectorAll(".facts2 li")).toHaveLength(4);
     const how = [...card("Subscribe to a calendar").querySelectorAll("details")];
     expect(how.map(d => d.querySelector("summary")!.textContent)).toEqual(["iPhone / iPad (Apple Calendar)", "Google Calendar", "Android (Samsung or other calendar apps)", "Outlook / Windows / Mac"]);
-    expect(how.map(d => d.querySelectorAll("li").length)).toEqual([3, 3, 2, 2]);
+    expect(how.map(d => d.querySelectorAll("ol li").length)).toEqual([3, 3, 2, 2]);
+    // Google and Android say how to switch the calendar on on the phone, with the link for Apple Calendar
+    expect(how.map(d => d.querySelectorAll(".syncfix a[href='https://calendar.google.com/calendar/syncselect']").length)).toEqual([0, 1, 1, 0]);
     expect(card("Questions").querySelectorAll("details[name=qa]").length).toBeGreaterThan(0);
     screen.getByText(t("made_by"));
   });
@@ -72,6 +74,18 @@ describe("Subscribe", () => {
     expect(way(dlg, "way_google").getAttribute("target")).toBe("_blank");
     expect(way(dlg, "way_outlook").getAttribute("href")).toBe(`https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(t("sp_all_feed"))}`);
     expect(dlg.getByRole("link", { name: t("sub_more") }).getAttribute("href")).toBe("#/subscribe");
+  });
+
+  it("computer: Google opens in a new tab and the sheet left behind says how to switch it on on the phone", () => {
+    show();
+    const dlg = sheet(card("Everything"));
+    fireEvent.click(way(dlg, "way_google"));
+    dlg.getByRole("heading", { name: t("way_google") });
+    dlg.getByText(t("sp_g_tab"));
+    dlg.getByText(t("sp_g_sync_h"));
+    expect(dlg.getByRole("link", { name: t("sp_g_sync_btn") }).getAttribute("href")).toBe("https://calendar.google.com/calendar/syncselect");
+    expect(dlg.getByRole("link", { name: "calendar.google.com/calendar/syncselect" }).getAttribute("href")).toBe("https://calendar.google.com/calendar/syncselect");
+    expect(dlg.queryByText(t("sp_g_no"))).toBeNull();
   });
 
   it("the file first warns that it is a copy that won't update, then downloads", () => {
@@ -126,6 +140,7 @@ describe("Subscribe", () => {
     fireEvent.click(way(dlg, "way_google"));
     dlg.getByRole("heading", { name: t("way_google") });
     dlg.getByText(t("sp_g_both"));
+    dlg.getByText(t("sp_g_sync_h"));
     await act(async () => { fireEvent.click(dlg.getByRole("button", { name: t("sp_g_send") })); });
     expect(writeText).toHaveBeenCalledWith(gcal(webcal));
     expect(screen.getByRole("status").textContent).toBe("Link copied");

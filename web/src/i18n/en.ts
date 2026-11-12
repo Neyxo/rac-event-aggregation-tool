@@ -149,12 +149,12 @@ const en = {
   sp_google_s: [
     "On a computer, tap Subscribe next to a calendar below, then Google Calendar.",
     "Confirm \"Add calendar\".",
-    "Done: it also shows up in the Google Calendar app on your phone (refreshes every few hours).",
+    "Then check your phone. If the calendar isn't there, switch it on once (see below). It refreshes every few hours.",
   ],
   sp_android: "Android (Samsung or other calendar apps)",
   sp_android_s: [
     "Subscribe with Google once on a computer (see Google Calendar above): most Android calendar apps show your Google calendars.",
-    "Then enable the new calendar in your calendar app's settings.",
+    "Then turn on Sync for the new calendar (see below). If it's still hidden, enable it in your calendar app's settings.",
   ],
   sp_g_send: "Send me the link",
   sub_facts: [
@@ -178,7 +178,7 @@ const en = {
   way_ics: "Calendar file (.ics)",
   way_ics_s: "A one-time copy, doesn't update",
   apple_na: "This isn't an iPhone, iPad or Mac, so Apple Calendar can't open here. Open this page on your Apple device, or pick Google or Outlook.",
-  sp_g_both: "Then it's on your phone too, by itself",
+  sp_g_both: "Then on your phone too: switch it on once",
   sub_more: "More help with calendars",
   home_sub: "Get your club's events in your calendar",
   sp_g_no: "Phone: doesn't work",
@@ -186,7 +186,15 @@ const en = {
   sp_g_steps: [
     "Send yourself the link.",
     "Open it on a computer.",
-    "Confirm \"Add calendar\". Done, on your phone too.",
+    "Confirm \"Add calendar\".",
+    "Check your phone. If the calendar isn't there, switch it on once (below).",
+  ],
+  sp_g_tab: "Google Calendar opened in a new tab. Confirm \"Add calendar\" there, then check your phone.",
+  sp_g_sync_btn: "iPhone with Apple Calendar: switch it on now",
+  sp_g_sync_h: "Not showing on your phone? Switch it on once:",
+  sp_g_sync: [
+    "Android: Google Calendar app › Settings › tap the new calendar (it may be under \"Show more\") › turn on Sync.",
+    "iPhone with Apple Calendar: tick the new calendar and save at",
   ],
   ics_h: "Add to calendar",
   ics_stale: "Just a copy: if the event moves or is cancelled, your calendar won't know.",

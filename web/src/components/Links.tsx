@@ -112,6 +112,26 @@ export function SubFacts() {
 const apple = () => IOS || /Macintosh/.test(navigator.userAgent);
 type Way = "apple" | "google" | "outlook" | "ics";
 
+/** Google doesn't put a newly subscribed calendar on every phone by itself: the one switch to flip, per phone. Shown wherever
+ *  Google is the way, because a calendar that never arrives looks like the subscription failed. */
+const SYNCSELECT = "calendar.google.com/calendar/syncselect";
+export function GoogleSync() {
+  const [android, iphone] = tx("sp_g_sync");
+  const at = SYNCSELECT;
+  return (
+    <div className="alertline">
+      <Icon name="alert" />
+      <div>
+        <b>{t("sp_g_sync_h")}</b>
+        <ul className="syncfix">
+          <li>{android}</li>
+          <li>{iphone} <a href={"https://" + at} target="_blank" rel="noopener">{at}</a>.</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 /** the steps for Google or Outlook on a phone: their apps can't subscribe, a computer's browser can, and then it is on the phone too */
 function WebBody({ way, url }: { way: "google" | "outlook"; url: string }) {
   const send = () => void share({ title: t(way === "google" ? "sp_google" : "way_outlook"), url });
@@ -123,6 +143,7 @@ function WebBody({ way, url }: { way: "google" | "outlook"; url: string }) {
         <li className="ok both"><Icon name="laptop" /><Icon name="phone" /><span>{t("sp_g_both")}</span></li>
       </ul>
       <Steps items={tx(way === "google" ? "sp_g_steps" : "sp_o_steps")} />
+      {way === "google" && <GoogleSync />}
       <div className="links"><button className="primary" type="button" onClick={send}><Icon name="share" />{t("sp_g_send")}</button></div>
     </>
   );
@@ -147,7 +168,8 @@ export function SubscribeSheet({ file, name, onClose }: { file: string; name: st
   const outlook = `https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(name)}`;
   const row = (w: Way, ic: IconName, title: string, sub: string, to?: string) => {
     const body = <><Icon name={ic} /><span><b>{title}</b><small>{sub}</small></span><Icon name="back" className="chev" /></>;
-    return to ? <a className="way" href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener">{body}</a>
+    // Google opens in a new tab; the sheet left behind then says what is still to do on the phone
+    return to ? <a className="way" href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={w === "google" ? () => setWay(w) : undefined}>{body}</a>
       : <button className="way" type="button" onClick={() => setWay(w)}>{body}</button>;
   };
   return (
@@ -169,6 +191,10 @@ export function SubscribeSheet({ file, name, onClose }: { file: string; name: st
           {way === "apple" ? <><Warn>{t("apple_na")}</Warn>
             <div className="links"><button className="primary" type="button" onClick={() => void share({ title: name, url: https })}><Icon name="share" />{t("sp_g_send")}</button></div></>
             : way === "ics" ? <IcsBody to={https} feed onDone={onClose} />
+            : way === "google" && !PHONE ? <><p>{t("sp_g_tab")}</p>
+              {/* the one switch that can be flipped from here: Google's own page, once the calendar is added. Android's is on the phone only */}
+              <div className="links"><a className="primary" href={"https://" + SYNCSELECT} target="_blank" rel="noopener"><Icon name="phone" />{t("sp_g_sync_btn")}</a></div>
+              <GoogleSync /></>
             : <WebBody way={way} url={way === "google" ? google : outlook} />}
         </div>
       )}
