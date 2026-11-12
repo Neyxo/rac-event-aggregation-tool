@@ -1165,21 +1165,21 @@
  "221752": {
   "detail": {
    "description": "",
-   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1612120067.jpg",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6af5d2c8995a2.png",
    "organiser": "Rotary Laufenburg-Fricktal",
-   "registration": "Anmeldung bis: 10.06.2027 00:00"
+   "registration": "Anmeldung bis: 18.06.2027 00:00"
   },
   "first_seen": "20261111T095123Z",
-  "modified": "20261111T095123Z",
-  "sequence": 0,
+  "modified": "20261112T155435Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-221752@rotary.ch",
-   "SUMMARY:2. Mitgliederversammlung",
-   "LOCATION:Restaurant Post",
+   "SUMMARY:Safe the Date - Clubreise",
+   "LOCATION:noch offen",
    "URL:https://rotary-laufenburg.ch/de/agenda/show/221752",
-   "DTSTART;TZID=Europe/Zurich:20270610T120000",
-   "DTEND;TZID=Europe/Zurich:20270610T133000"
+   "DTSTART;TZID=Europe/Zurich:20270618T120000",
+   "DTEND;TZID=Europe/Zurich:20270620T160000"
   ]
  },
  "221753": {
