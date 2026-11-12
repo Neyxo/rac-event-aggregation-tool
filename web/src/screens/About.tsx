@@ -30,7 +30,13 @@ export function ShareButton() {
 /** cur: -2 not measured yet, -1 closed, 0..2 that word open. all: every word open (reduced motion), until the phase next changes. */
 interface Phase { cur: number; all: boolean }
 
-/** The scroll range of the track split into four parts, with a little hysteresis so it never flickers at a boundary. */
+// The scroll range of the track: a short closed start (a small scroll already opens Learn), then a third for each word. Each third's
+// middle is a proximity snap point (app.css .snap), so a scroll that ends near a word settles on it, while a long fling still goes
+// straight through to the end.
+const CLOSED = 0.05;
+const MIDS = [0, 1, 2].map(i => CLOSED + (1 - CLOSED) * (i + 0.5) / 3);
+
+/** The phase from the scroll position, with a little hysteresis so it never flickers at a boundary. */
 function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   const [phase, setPhase] = useState<Phase>({ cur: -2, all: false });
   const measure = () => {
@@ -38,9 +44,10 @@ function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
     if (!tr) return;
     const range = tr.offsetHeight - innerHeight, top = tr.getBoundingClientRect().top;
     const p = range > 0 ? Math.min(1, Math.max(0, -top / range)) : 1;
-    const raw = p * 4 - 1;
+    // -1 below CLOSED, then 0..3 across the thirds
+    const raw = p < CLOSED ? -1 + p / CLOSED : (p - CLOSED) / (1 - CLOSED) * 3;
     setPhase(ph => {
-      const next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > ph.cur ? -0.08 : 0.08))));
+      const next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > ph.cur ? -0.06 : 0.06))));
       return next === ph.cur ? ph : { cur: next, all: false };
     });
   };
@@ -54,12 +61,12 @@ function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   return phase;
 }
 
-/** scrolls to the middle of word i's part of the track, so a tap on a word opens it like scrolling there would */
+/** scrolls to the middle of word i's third of the track, so a tap on a word opens it like scrolling there would */
 function scrollToWord(track: HTMLDivElement | null, i: number) {
   if (!track) return;
   const range = track.offsetHeight - innerHeight;
   if (range <= 0) return;
-  window.scrollTo({ top: scrollY + track.getBoundingClientRect().top + range * (i + 1.5) / 4, behavior: "smooth" });
+  window.scrollTo({ top: scrollY + track.getBoundingClientRect().top + range * MIDS[i]!, behavior: "smooth" });
 }
 
 function Stage({ phase, onWord }: { phase: Phase; onWord: (i: number) => void }) {
@@ -97,6 +104,7 @@ export default function About(_props: ScreenProps) {
   return (
     <main className="wrap about">
       <div className="track" ref={track}>
+        {MIDS.map(m => <i key={m} className="snap" aria-hidden="true" style={vars({ "--at": m })} />)}
         <Stage phase={phase} onWord={i => scrollToWord(track.current, i)} />
       </div>
       <section className="after">

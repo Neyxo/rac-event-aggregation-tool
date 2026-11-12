@@ -12,6 +12,8 @@ export interface StoreKeys {
   "rac.rotary": boolean;
   "rac.onboarded": boolean;
   "rac.guideSeen": boolean;
+  /** the subscribe card on Home was opened once, so it stays away */
+  "rac.subSeen": boolean;
   /** developer mode switch; rac.dev* preview flags only count while it is on */
   "rac.dev": boolean;
   "rac.devUnlocked": boolean;

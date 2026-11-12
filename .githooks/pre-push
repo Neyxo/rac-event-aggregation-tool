@@ -1,0 +1,16 @@
+#!/bin/sh
+# Refuses a push to main that leaves package.json's version as it is on the remote: every push bumps it (README, Versions).
+# Installed by `npm install` (the prepare script sets core.hooksPath); `git push --no-verify` skips it in an emergency.
+zero=0000000000000000000000000000000000000000
+ver() { git show "$1:package.json" 2>/dev/null | sed -n 's/^  "version": "\(.*\)",*$/\1/p'; }
+while read -r lref lsha rref rsha; do
+  [ "$rref" = refs/heads/main ] || continue
+  { [ "$lsha" = $zero ] || [ "$rsha" = $zero ]; } && continue
+  new=$(ver "$lsha"); old=$(ver "$rsha")
+  [ -n "$old" ] || continue
+  if [ "$new" = "$old" ]; then
+    echo "pre-push: the version is still $new, as on origin/main. Every push bumps it:" >&2
+    echo "  npm version patch --no-git-tag-version   # or minor for new features, then commit it" >&2
+    exit 1
+  fi
+done

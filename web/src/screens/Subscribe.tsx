@@ -4,7 +4,7 @@ import { t, tx, type StrKey } from "../i18n";
 import { isPast } from "../lib/dates";
 import type { Club } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { FeedRow, Footer, QaList, useData } from "../components";
+import { FeedRow, Footer, QaList, SubFacts, useData } from "../components";
 import { DISTRICT_IDS, DISTRICTS } from "../lib/color";
 
 const PLATFORMS = [
@@ -42,7 +42,7 @@ export default function Subscribe(_props: ScreenProps) {
     <main className="wrap">
       <section className="card">
         <h2>{t("sub_title")}</h2>
-        <p>{t("sp_intro")}</p>
+        <SubFacts />
         <div className="how">
           {PLATFORMS.map(([h, steps]) => (
             <details key={h}>

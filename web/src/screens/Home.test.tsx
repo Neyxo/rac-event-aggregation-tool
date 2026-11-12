@@ -72,6 +72,19 @@ describe("Home, member", () => {
     expect(screen.getAllByRole("link").some(a => href(a) === "#/guide")).toBe(true);
   });
 
+  it("offers the main club's calendar until the sheet was opened once", async () => {
+    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) { this.open = true; };
+    HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) { this.open = false; this.dispatchEvent(new Event("close")); };
+    localStorage.removeItem("rac.subSeen");
+    await show();
+    fireEvent.click(screen.getByRole("link", { name: /^Get your club's events in your calendar/ }));
+    const dlg = within(document.querySelector<HTMLElement>("dialog[open]")!);
+    dlg.getByRole("heading", { name: "Rotaract Zürich" });
+    fireEvent.click(dlg.getByRole("button", { name: "Done" }));
+    expect(screen.queryByRole("link", { name: /^Get your club's events/ })).toBeNull();
+    localStorage.removeItem("rac.subSeen");
+  });
+
   it("news since the last visit: new events get the tag, the line jumps to the list", async () => {
     setSettings({ home: "zuerich", also: ["zurich-international"] });
     localStorage.setItem("rac.seen", JSON.stringify({ at: Date.now() - 2 * 36e5, map: { "219091": "2026-11-11T19:00" } }));
@@ -235,9 +248,7 @@ describe("welcome steps", () => {
     expect(document.activeElement).toBe(title());
     click("Next");
     for (const n of ["Rotaract Bern", "Rotaract Luzern", "All Rotaract events CH & LI"]) inDlg().getByText(n);
-    expect(inDlg().getAllByRole("link", { name: "Apple / Outlook" }).map(href)).toEqual([
-      expect.stringMatching(/^webcal:.*\/bern\.ics$/), expect.stringMatching(/^webcal:.*\/luzern\.ics$/), expect.stringMatching(/^webcal:.*\/all\.ics$/),
-    ]);
+    expect(inDlg().getAllByRole("button", { name: "Subscribe" })).toHaveLength(3);
     click("Next");
     inDlg().getByText("Made by Jean-Michel Carrel · Rotaract Club Luzern");
     click("Done");

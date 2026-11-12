@@ -82,12 +82,11 @@ describe("club screen", () => {
   it("subscribe opens the calendar choices instead of following the link", () => {
     show("luzern");
     expect(fireEvent.click(screen.getByRole("link", { name: "Subscribe" }))).toBe(false);  // default prevented
-    dialog().getByRole("heading", { level: 2, name: "Subscribe to this club's calendar" });
+    dialog().getByRole("heading", { level: 2, name: "Rotaract Luzern" });
     const links = dialog().getAllByRole("link").map(a => a.getAttribute("href"));
-    expect(links[0]).toMatch(/^webcal:\/\/.*\/luzern\.ics$/);
-    expect(links[1]).toMatch(/^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal/);
-    expect(links[2]).toMatch(/^http:\/\/.*\/luzern\.ics$/);
-    expect(links[3]).toBe("#/subscribe");
+    expect(links[0]).toMatch(/^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*luzern\.ics$/);
+    expect(links[1]).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics/);
+    expect(links[2]).toBe("#/subscribe");
   });
 
   it("share: navigator.share with the club's share page, else the clipboard and a toast", async () => {

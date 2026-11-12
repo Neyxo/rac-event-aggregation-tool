@@ -10,7 +10,8 @@
     "test": "TZ=Europe/Zurich vitest run",
     "typecheck": "tsc -b",
     "lint": "oxlint web/src",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
@@ -33,6 +34,6 @@
     "vite": "^8.3.8",
     "vitest": "^5.1.0"
   },
-  "version": "0.9.0",
+  "version": "0.10.0",
   "license": "PolyForm-Noncommercial-1.0.0"
 }

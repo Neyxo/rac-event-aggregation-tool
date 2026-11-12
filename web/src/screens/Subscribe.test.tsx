@@ -9,12 +9,12 @@ import { parseHash } from "../lib/route";
 import { Toast } from "../components";
 import Subscribe from "./Subscribe";
 
-// GoogleLink reads PHONE / IOS from lib/geo; a getter lets one test be an iPhone
-const ua = vi.hoisted(() => ({ phone: false }));
+// the subscribe sheet reads PHONE / IOS from lib/geo; getters let a test be an iPhone or an Android phone
+const ua = vi.hoisted(() => ({ phone: false, ios: false }));
 vi.mock("../lib/geo", async orig => ({
   ...await orig<typeof import("../lib/geo")>(),
   get PHONE() { return ua.phone; },
-  get IOS() { return ua.phone; },
+  get IOS() { return ua.ios; },
 }));
 
 beforeAll(async () => {
@@ -29,7 +29,7 @@ beforeAll(async () => {
 afterAll(() => { vi.useRealTimers(); });
 afterEach(() => {
   cleanup();
-  ua.phone = false;
+  ua.phone = false; ua.ios = false;
 });
 
 const route = parseHash("#/subscribe");
@@ -38,12 +38,21 @@ const base = location.href.replace(/[#?].*$/, "").replace(/[^/]*$/, "");
 const webcal = (base + "all.ics").replace(/^https?:/, "webcal:");
 /** a card, by its heading */
 const card = (name: string) => screen.getByRole("heading", { level: 2, name }).closest("section")!;
-const google = () => within(card("Everything")).getByRole("link", { name: t("google") }) as HTMLAnchorElement;
+/** taps a feed's Subscribe button and returns the sheet */
+const sheet = (el: HTMLElement, i = 0) => {
+  fireEvent.click(within(el).getAllByRole("button", { name: t("subscribe") }).at(i)!);
+  return within(document.querySelector("dialog")!);
+};
+const gcal = (w: string) => "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(w);
+/** one way in of the open sheet, by its title */
+const way = (_dlg: unknown, k: "way_apple" | "way_google" | "way_outlook" | "way_ics") =>
+  [...document.querySelectorAll<HTMLElement>("dialog .way")].find(x => x.textContent!.startsWith(t(k)))!;
 
 describe("Subscribe", () => {
-  it("draws the four cards with their headings and the platform steps", () => {
+  it("draws the four cards with their headings, what a subscription does and the platform steps", () => {
     show();
     expect(screen.getAllByRole("heading", { level: 2 }).map(h => h.textContent)).toEqual(["Subscribe to a calendar", "Everything", "Per club", "Questions"]);
+    expect(card("Subscribe to a calendar").querySelectorAll(".facts2 li")).toHaveLength(4);
     const how = [...card("Subscribe to a calendar").querySelectorAll("details")];
     expect(how.map(d => d.querySelector("summary")!.textContent)).toEqual(["iPhone / iPad (Apple Calendar)", "Google Calendar", "Android (Samsung or other calendar apps)", "Outlook / Windows / Mac"]);
     expect(how.map(d => d.querySelectorAll("li").length)).toEqual([3, 3, 2, 2]);
@@ -51,22 +60,37 @@ describe("Subscribe", () => {
     screen.getByText(t("made_by"));
   });
 
-  it("the everything feed: Rotaract upcoming count, webcal / Google / .ics links", () => {
+  it("the everything feed: upcoming count, then one Subscribe button whose sheet offers Apple, Google, Outlook and the file", () => {
     show();
     const all = card("Everything");
     const name = within(all).getByText(/^All Rotaract events/);
     expect(name.textContent).toBe("All Rotaract events in Switzerland & Liechtenstein4 upcoming");
     expect(name.hasAttribute("style")).toBe(false);
-    expect(within(all).getAllByRole("link").map(a => a.getAttribute("href"))).toEqual([webcal, "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), base + "all.ics"]);
+    const dlg = sheet(all);
+    dlg.getByRole("heading", { name: t("sp_all_feed") });
+    expect(way(dlg, "way_google").getAttribute("href")).toBe(gcal(webcal));
+    expect(way(dlg, "way_google").getAttribute("target")).toBe("_blank");
+    expect(way(dlg, "way_outlook").getAttribute("href")).toBe(`https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(t("sp_all_feed"))}`);
+    expect(dlg.getByRole("link", { name: t("sub_more") }).getAttribute("href")).toBe("#/subscribe");
   });
 
-  it(".ics first warns that the file is a copy that won't update, then downloads", () => {
+  it("the file first warns that it is a copy that won't update, then downloads", () => {
     show();
-    fireEvent.click(within(card("Everything")).getByRole("link", { name: ".ics" }));
-    const dlg = within(document.querySelector("dialog")!);
+    const dlg = sheet(card("Everything"));
+    fireEvent.click(way(dlg, "way_ics"));
     dlg.getByText(t("ics_stale_feed"));
     expect(dlg.getAllByRole("listitem")).toHaveLength(3);
     expect(dlg.getByRole("link", { name: t("ics_dl") }).getAttribute("href")).toBe(base + "all.ics");
+    fireEvent.click(dlg.getByRole("button", { name: t("back") }));
+    dlg.getByText(t("way_ics_s"));
+  });
+
+  it("not an Apple device: Apple says so instead of a dead webcal link", () => {
+    show();
+    const dlg = sheet(card("Everything"));
+    expect(way(dlg, "way_apple").tagName).toBe("BUTTON");
+    fireEvent.click(way(dlg, "way_apple"));
+    dlg.getByText(t("apple_na"));
   });
 
   it("per club: districts with clubs sorted by name, international under its own heading, no empty National", () => {
@@ -76,7 +100,7 @@ describe("Subscribe", () => {
     const clubs = within(feeds).getAllByRole("link").filter(a => a.getAttribute("href")!.startsWith("#/club/"));
     expect(clubs.map(a => a.textContent)).toEqual(["Rotaract Luzern", "Rotaract Bern", "Rotaract Zürich", "Rotaract Zurich International", "Rotaract International"]);
     expect(clubs.map(a => a.nextElementSibling!.textContent)).toEqual(["0 upcoming", "0 upcoming", "1 upcoming", "1 upcoming", "2 upcoming"]);
-    const luzern = clubs[0]!.parentElement!;
+    const luzern = clubs[0]!.closest<HTMLElement>(".name")!;
     expect(luzern.querySelector("img")?.getAttribute("src")).toBe("crests/luzern.svg");
     expect(clubs[0]!.getAttribute("href")).toBe("#/club/luzern");
     expect(luzern.style.getPropertyValue("--c")).toBe("#0b5cad");
@@ -87,29 +111,23 @@ describe("Subscribe", () => {
     show();
     const feeds = card("Per club");
     expect(within(feeds).getAllByRole("heading", { level: 3 }).at(-1)?.textContent).toBe("Rotary, by district");
-    expect(within(feeds).getAllByRole("link", { name: ".ics" }).at(-1)?.getAttribute("href")).toBe(base + "rotary1980.ics");
+    const dlg = sheet(feeds, -1);
+    expect(way(dlg, "way_google").getAttribute("href")).toBe(gcal((base + "rotary1980.ics").replace(/^https?:/, "webcal:")));
     act(() => { setRotary(false); });
   });
 
-  it("desktop: Google is a plain new-tab link", () => {
-    show();
-    expect(google().target).toBe("_blank");
-    expect(fireEvent.click(google())).toBe(true);
-    expect(document.querySelector("dialog")).toBeNull();
-  });
-
-  it("iPhone: Google opens the popup with the Apple link; send copies the Google link and toasts", async () => {
-    ua.phone = true;
+  it("iPhone: Apple subscribes right away; Google explains computer then phone, and send copies its link", async () => {
+    ua.phone = true; ua.ios = true;
     const writeText = vi.fn(async () => {});
     Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
     show();
-    const g = google();
-    expect(fireEvent.click(g)).toBe(false);
-    const dialog = document.querySelector("dialog")!;
-    within(dialog).getByRole("heading", { name: "Google Calendar" });
-    expect(within(dialog).getByRole("link", { name: t("apple") }).getAttribute("href")).toBe(webcal);
-    await act(async () => { fireEvent.click(within(dialog).getByRole("button", { name: t("sp_g_send") })); });
-    expect(writeText).toHaveBeenCalledWith(g.href);
+    const dlg = sheet(card("Everything"));
+    expect(way(dlg, "way_apple").getAttribute("href")).toBe(webcal);
+    fireEvent.click(way(dlg, "way_google"));
+    dlg.getByRole("heading", { name: t("way_google") });
+    dlg.getByText(t("sp_g_both"));
+    await act(async () => { fireEvent.click(dlg.getByRole("button", { name: t("sp_g_send") })); });
+    expect(writeText).toHaveBeenCalledWith(gcal(webcal));
     expect(screen.getByRole("status").textContent).toBe("Link copied");
   });
 });

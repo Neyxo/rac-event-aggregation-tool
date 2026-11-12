@@ -128,6 +128,44 @@ function Run({ url }: { url: string }) {
   );
 }
 
+interface GhCommit { sha: string; html_url: string; commit: { message: string; author: { date: string } } }
+interface GhRunRow { html_url: string; event: string; status: string; conclusion: string | null; created_at: string; updated_at: string; head_sha: string }
+const API = REPO.replace("https://github.com/", "https://api.github.com/repos/");
+
+/** the last three commits on main and the last three runs, from GitHub's public API: when the app last changed, and whether the
+ *  builds since then worked. The run that built this page is marked. */
+function Recent({ run }: { run?: string }) {
+  const [r, setR] = useState<{ commits: GhCommit[]; runs: GhRunRow[] } | "error" | null>(null);
+  useEffect(() => {
+    const get = <T,>(u: string) => fetch(u).then(x => { if (!x.ok) throw new Error(String(x.status)); return x.json() as Promise<T>; });
+    Promise.all([get<GhCommit[]>(`${API}/commits?per_page=3`), get<{ workflow_runs: GhRunRow[] }>(`${API}/actions/workflows/feeds.yml/runs?per_page=3`)])
+      .then(([commits, j]) => setR({ commits, runs: j.workflow_runs }), () => setR("error"));
+  }, []);
+  if (r === null) return <p className="meta">Loading commits and runs…</p>;
+  if (r === "error") return <p className="meta">Commits and runs could not be read from GitHub (offline or rate limit).</p>;
+  const when = (d: string) => fmt.stamp.format(new Date(d));
+  return (
+    <>
+      <h3>Last commits</h3>
+      <ul className="devrecent">
+        {r.commits.map(c => <li key={c.sha}><a href={c.html_url} target="_blank" rel="noopener"><code>{c.sha.slice(0, 7)}</code> {c.commit.message.split("\n")[0]}</a><small>{when(c.commit.author.date)}</small></li>)}
+      </ul>
+      <h3>Last runs</h3>
+      <ul className="devrecent">
+        {r.runs.map(x => {
+          const state = x.conclusion ?? x.status, mins = Math.round((Date.parse(x.updated_at) - Date.parse(x.created_at)) / 6e4);
+          return (
+            <li key={x.html_url} className={cx("devstate", state === "success" ? "ok" : x.conclusion ? "bad" : "warn")}><i />
+              <a href={x.html_url} target="_blank" rel="noopener">{`${state.replace("_", " ")} · ${x.event === "schedule" ? "nightly" : x.event} · ${x.head_sha.slice(0, 7)}` + (x.conclusion ? ` · ${mins} min` : "")}</a>
+              <small>{when(x.created_at) + (x.html_url === run ? " · this build" : "")}</small>
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}
+
 function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot: Event[] }) {
   const { data } = useData();
   const gen = new Date(data.generated);
@@ -141,7 +179,7 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
       {/* the version is package.json's at build time; a build between two releases carries the last one's number plus its commit */}
       <p className="meta">{`Version ${version}` + (st.commit ? `, built from commit ${st.commit}` : "") + ` · ${import.meta.env.MODE} build`}</p>
       <p className="meta">{`Next nightly run about ${fmt.stamp.format(nextRun())} (GitHub often starts it hours late); every push to main runs it too.` + (devFlag("Date") ? " A pretend date is on, so ages on this page are shifted." : "")}</p>
-      {st.run?.startsWith("https://github.com/") ? <Run url={st.run} /> : null}
+      {st.run?.startsWith("https://github.com/") ? <><Run url={st.run} /><Recent run={st.run} /></> : null}
       {st.failures.length ? <pre className="devfail">{st.failures.join("\n")}</pre> : <p className="devok">✓ No failures in the last run</p>}
       {/* a run that worked but looks suspicious (layout changes, lists gone empty); no line when there are none */}
       {warnings.map((w, i) => <p key={i} className="devstate warn"><i />{w}</p>)}

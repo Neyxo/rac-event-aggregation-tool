@@ -34,6 +34,15 @@ jobs:
       # The web app first: polaris_feed.py copies dist/ into public/. Any failure here stops the run before the
       # deploy, so a broken app never ships (a failing club sync below does not). The nightly run only builds:
       # its code is the last push's, which these checks already passed.
+      # Every push to main bumps package.json's version (README, Versions); the pre-push hook checks it locally, this catches a
+      # push made without the hook. It fails before the deploy, so an unbumped version never ships.
+      - name: Check the version went up
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        run: |
+          git fetch --depth=1 origin ${{ github.event.before }}
+          old=$(git show ${{ github.event.before }}:package.json | jq -r .version); new=$(jq -r .version package.json)
+          echo "version $old -> $new"
+          [ "$old" != "$new" ] || { echo "::error::package.json version is still $old: bump it with every push"; exit 1; }
       - name: Set up Node
         uses: actions/setup-node@v4
         with:

@@ -26,6 +26,8 @@ beforeAll(async () => {
     if (url === "https://api.github.com/repos/x/runs/1") return { ok: true, json: async () => ({ event: "schedule", display_title: "Build feeds", status: "completed", conclusion: "failure" }) };
     if (url === "https://api.github.com/repos/x/runs/1/jobs") return { ok: true, json: async () => ({ jobs: [{ html_url: "https://github.com/x/job/9", status: "completed", conclusion: "failure", started_at: "2026-11-11T09:00:00Z", completed_at: "2026-11-11T09:07:00Z",
       steps: [{ name: "Set up job", status: "completed", conclusion: "success" }, { name: "Build the app", status: "completed", conclusion: "success" }, { name: "Feed tests", status: "completed", conclusion: "skipped" }, { name: "Fail if a club failed", status: "completed", conclusion: "failure" }] }] }) };
+    if (url.endsWith("/commits?per_page=3")) return { ok: true, json: async () => [{ sha: "abc1234ffff", html_url: "https://github.com/x/commit/abc1234", commit: { message: "Fix the map\n\nbody", author: { date: "2026-11-11T08:00:00Z" } } }] };
+    if (url.endsWith("/runs?per_page=3")) return { ok: true, json: async () => ({ workflow_runs: [{ html_url: "https://github.com/x/runs/1", event: "push", status: "completed", conclusion: "success", created_at: "2026-11-11T08:01:00Z", updated_at: "2026-11-11T08:09:00Z", head_sha: "abc1234ffff" }] }) };
     if (url === "status.json") {
       if (!status) throw new Error("offline");
       return { ok: true, json: async () => structuredClone(status) };
@@ -87,8 +89,12 @@ describe("developer screen", () => {
     build.getByText(/· commit abc1234$/);
     // the run's steps from GitHub's API, without its own setup steps, and the job's log
     expect(build.getByText("Run: failure · nightly · 7 min").className).toBe("devstate bad");
-    expect(texts([...build.getByRole("list").querySelectorAll("li")])).toEqual(["✓Build the app", "–Feed tests", "✗Fail if a club failed"]);
+    expect(texts([...build.getAllByRole("list")[0]!.querySelectorAll("li")])).toEqual(["✓Build the app", "–Feed tests", "✗Fail if a club failed"]);
     expect(build.getByRole("link", { name: "Open the log on GitHub" }).getAttribute("href")).toBe("https://github.com/x/job/9");
+    // the last commits and runs, the run that built this page marked
+    expect(build.getByRole("link", { name: "abc1234 Fix the map" }).getAttribute("href")).toBe("https://github.com/x/commit/abc1234");
+    build.getByRole("link", { name: "success · push · abc1234 · 8 min" });
+    build.getByText(/· this build$/);
   });
 
   it("Instagram layer and side lists from status.json", async () => {

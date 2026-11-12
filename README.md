@@ -51,11 +51,11 @@ GitHub Pages from GitHub Actions (Settings → Pages → Source: GitHub Actions)
 
 ## Versions
 
-[Semantic versioning](https://semver.org); the number is in `package.json` and shows in the app under Settings and on the developer screen. The site deploys on every push, so a version marks a milestone, not a deploy. To release:
+[Semantic versioning](https://semver.org); the number is in `package.json` and shows in the app under Settings and on the developer screen. **Every push to main bumps it**: patch for fixes and text, minor for new features, major for breaking changes. The pre-push hook in `.githooks/` refuses a push without a new version (`npm install` turns it on), and the deploy workflow fails before publishing if one slips through.
 
 ```bash
-npm version minor              # or patch / major: bumps package.json, commits and tags
-git push --follow-tags         # the tag becomes a GitHub release with generated notes
+npm version patch --no-git-tag-version   # or minor / major; then commit it with the change
+git tag v0.10.0 && git push --tags       # optional: a tag becomes a GitHub release with generated notes
 ```
 
 ## More detail

@@ -14,7 +14,7 @@ import { href, takeWelcome } from "../lib/route";
 import { here, store } from "../lib/store";
 import type { Event } from "../lib/types";
 import {
-  ClubChip, CtaBlock, HelpLinks, Icon, NewIds, NewsStrip, NextUp, inPageLink, navigate, useData, useNav, useStickyHeads,
+  ClubChip, CtaBlock, HelpLinks, Icon, MoreLink, SubscribeSheet, NewIds, NewsStrip, NextUp, inPageLink, navigate, useData, useNav, useStickyHeads,
   useStored, useWash,
 } from "../components";
 import type { ScreenProps } from "../App";
@@ -93,6 +93,22 @@ function MemberBox({ cols, mineEv, changes }: { cols: string[]; mineEv: Event[];
       <News changes={changes} />
       <Panes mineEv={mineEv} />
       {guideSeen ? null : <HelpLinks keys={["guide"]} />}
+      <SubOffer />
+    </>
+  );
+}
+
+/** The calendar subscription is the app's main use beyond looking, so Home offers it for the member's club until opened once;
+ *  later it is on every club page and in Settings. */
+function SubOffer() {
+  const D = useData();
+  const seen = useStored("rac.subSeen", false), [open, setOpen] = useState(false);
+  if (seen) return null;
+  const c = D.clubs[D.settings.home] ?? D.clubs[myClubs()[0] ?? ""];
+  return (
+    <>
+      <MoreLink to={href("subscribe")} title={t("home_sub")} sub={t("ab_sub_sub")} ic="calendar" p={BRAND.azure} onClick={ev => { ev.preventDefault(); setOpen(true); }} />
+      {open && <SubscribeSheet file={c ? c.id + ".ics" : "all.ics"} name={c ? c.name : t("sp_all_feed")} onClose={() => { setOpen(false); store.set("rac.subSeen", true); }} />}
     </>
   );
 }

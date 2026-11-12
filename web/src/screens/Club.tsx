@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Club as ClubT, Partner } from "../lib/types";
 import {
-  ClubChip, EventCard, FeedLinks, Footer, HelpLinks, Icon, ICON, NewsStrip, NextUp, Popup, Rich, share,
+  ClubChip, EventCard, SubscribeSheet, Footer, HelpLinks, Icon, ICON, NewsStrip, NextUp, Popup, Rich, share,
   useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
 } from "../components";
 
@@ -47,18 +47,6 @@ function About({ c }: { c: ClubT }) {
       {partners.length ? <div className="with"><span>{t("cp_partners")}</span>{partners.map(p => <PartnerChip key={p.url} p={p} />)}</div> : null}
       {join && <Popup title={t("cp_join")} onClose={() => setJoin(false)}><Rich text={c.how} color={c.color} /></Popup>}
     </section>
-  );
-}
-
-/** a bare webcal: link does nothing where no app handles it (Android, most Windows browsers): the same choices as the subscribe screen */
-function SubscribePopup({ c, onClose }: { c: ClubT; onClose: () => void }) {
-  return (
-    <Popup title={t("cp_sub")} onClose={onClose}>
-      <div className="feeds">
-        <div className="feed"><FeedLinks file={c.id + ".ics"} /></div>
-        <p className="meta"><a href={href("subscribe")}>{t("sub_title")}</a></p>
-      </div>
-    </Popup>
   );
 }
 
@@ -142,7 +130,7 @@ export default function Club({ route }: ScreenProps) {
       {upcoming.slice(1, 8).map((e, i) => <EventCard key={e.id} e={e} i={i} />)}
       <div className="links center"><a href={href("discover", null, "clubs=" + c.id)}><Icon name="discover" />{t("cp_all")}</a></div>
       <Footer />
-      {sub && <SubscribePopup c={c} onClose={() => setSub(false)} />}
+      {sub && <SubscribeSheet file={c.id + ".ics"} name={c.name} onClose={() => setSub(false)} />}
     </main>
   );
 }
