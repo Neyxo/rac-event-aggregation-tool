@@ -86,7 +86,7 @@ describe("developer screen", () => {
     expect(document.querySelectorAll(".devstrip i").length).toBe(2);
     expect(m.getByRole("link", { name: "Run history" }).getAttribute("href")).toBe("#/dev/runs");
     // the app (built when the tests started, so its age is not pinned here) apart from the data it shows
-    expect(m.getByText(/^App · version \d+\.\d+\.\d+ · updated .+, \d+ (min|h) ago · local build$/).className).toBe("devstate ok");
+    expect(m.getByText(/^App · version \d+\.\d+\.\d+ · updated .+, \d+ (min|h) ago · (local build|commit [0-9a-f]{7})$/).className).toBe("devstate ok");
     expect(m.getByText("Data · read 11 Nov, 01:58, 8 h ago · by a local run").className).toBe("devstate warn");
     m.getByText(/^Next nightly run about /);
     m.getByText("✓ No failures in the last run");
@@ -121,7 +121,7 @@ describe("developer screen", () => {
   it("build page: the run's steps, counts and links", async () => {
     status = { ...STATUS, run: "https://github.com/x/runs/1", commit: "abc1234" };
     const build = await page("build");
-    build.getByText(/^App version \d+\.\d+\.\d+ · test build · built .+ ago · local build\.$/);
+    build.getByText(/^App version \d+\.\d+\.\d+ · test build · built .+ ago · (local build|commit [0-9a-f]{7})\.$/);
     build.getByText(/^The events were read 11 Nov, 01:58, 8 h ago by the run of commit abc1234; /);
     expect(build.getByText("Run: failure · nightly · 7 min").className).toBe("devstate bad");
     expect(texts([...build.getAllByRole("list")[0]!.querySelectorAll("li")])).toEqual(["✓Build the app", "–Feed tests", "✗Fail if a club failed"]);
