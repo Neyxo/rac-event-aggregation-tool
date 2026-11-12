@@ -1408,21 +1408,21 @@
  "223207": {
   "detail": {
    "description": "",
-   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6af57699e5dc9.png",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6af5cb41dbd44.png",
    "organiser": "Rotary Laufenburg-Fricktal",
-   "registration": "Anmeldung bis: 28.01.2027 07:00"
+   "registration": "Anmeldung bis: 28.01.2027 00:00"
   },
   "first_seen": "20261112T095421Z",
-  "modified": "20261112T095421Z",
-  "sequence": 0,
+  "modified": "20261112T142903Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-223207@rotary.ch",
-   "SUMMARY:Plauderdinner",
+   "SUMMARY:Plauderlunch",
    "LOCATION:Park-Hotel am Rhein",
    "URL:https://rotary-laufenburg.ch/de/agenda/show/223207",
-   "DTSTART;TZID=Europe/Zurich:20270128T190000",
-   "DTEND;TZID=Europe/Zurich:20270128T210000"
+   "DTSTART;TZID=Europe/Zurich:20270128T120000",
+   "DTEND;TZID=Europe/Zurich:20270128T133000"
   ]
  },
  "223208": {
@@ -1468,21 +1468,21 @@
  "223210": {
   "detail": {
    "description": "",
-   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/1322430958.png",
+   "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6af5cb9253992.png",
    "organiser": "Rotary Laufenburg-Fricktal",
-   "registration": "Anmeldung bis: 25.02.2027 07:00"
+   "registration": "Anmeldung bis: 25.02.2027 00:00"
   },
   "first_seen": "20261112T095421Z",
-  "modified": "20261112T095421Z",
-  "sequence": 0,
+  "modified": "20261112T142903Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-223210@rotary.ch",
-   "SUMMARY:Plauderdinner",
+   "SUMMARY:Plauderlunch",
    "LOCATION:Park-Hotel am Rhein",
    "URL:https://rotary-laufenburg.ch/de/agenda/show/223210",
-   "DTSTART;TZID=Europe/Zurich:20270225T190000",
-   "DTEND;TZID=Europe/Zurich:20270225T210000"
+   "DTSTART;TZID=Europe/Zurich:20270225T120000",
+   "DTEND;TZID=Europe/Zurich:20270225T133000"
   ]
  },
  "223213": {
