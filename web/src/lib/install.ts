@@ -13,8 +13,11 @@ const { subscribe, emit } = emitter();
 
 /** Samsung Internet: the app it builds targets an old Android, so Play Protect blocks the install as unsafe; Chrome's installs */
 const samsung = (): boolean => /SamsungBrowser/.test(navigator.userAgent);
-/** on Samsung Internet, a link that opens the app in Chrome, to install it from there; null elsewhere */
-export const chromeUrl = (): string | null => samsung() ? `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end` : null;
+/** the browser inside another app (Instagram, Facebook, LinkedIn, Line, or any Android WebView): it can't install anything */
+export const inApp = (): boolean => /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Line\/|; wv\)/.test(navigator.userAgent);
+/** on Samsung Internet and inside another app on Android, a link that opens the app in Chrome, to install it from there; null
+ *  elsewhere (a page can name Chrome, but not "the default browser"; an iPhone has no such link at all) */
+export const chromeUrl = (): string | null => samsung() || (inApp() && /Android/.test(navigator.userAgent)) ? `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end` : null;
 
 if (typeof window !== "undefined") {
   addEventListener("beforeinstallprompt", e => {

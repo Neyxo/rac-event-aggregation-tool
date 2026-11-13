@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, go, MEMBER, standalone, test } from "./fixtures";
 
 const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#/club/luzern", "#/settings", "#/subscribe", "#/about", "#/about-more",
-  "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/dev/feeds", "#/event/nope", "#/club/nope"];
+  "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/dev/feeds", "#/dev/links", "#/event/nope", "#/club/nope"];
 
 // The axe findings that stay, as "<screen> <rule>"; anything not listed here fails the test.
 const KNOWN_A11Y = new Set<string>([

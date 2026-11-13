@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- Opens Google Calendar's or Outlook's "add this calendar" page in THIS browser, on a phone.
+     A link the user taps to calendar.google.com is handed to the calendar app (Android app links, iOS universal links), which can't
+     subscribe to a calendar. A form this page submits by itself is not a tap: browsers keep it (Chromium: form submissions go to a
+     server, not an app, and an app is never opened without a user gesture; iOS: universal links only fire on a tapped link).
+     The app opens this page in a new tab as go.html#<the address, URL-encoded>. Only the two calendar hosts are accepted. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Rotaract Events</title>
+<style>
+  body { font: 16px/1.4 system-ui, sans-serif; margin: 0; min-height: 100dvh; display: grid; place-content: center; gap: 14px; padding: 24px; text-align: center; color: #1c1a24; background: #f4f3f7; }
+  a[hidden] { display: none; }
+  a:not([hidden]) { display: inline-block; padding: 12px 20px; border-radius: 99px; background: #d41367; color: #fff; font-weight: 600; text-decoration: none; }
+  @media (prefers-color-scheme: dark) { body { color: #f1eff6; background: #17151d; } }
+</style>
+</head>
+<body>
+<a id="a" hidden></a>
+<script>
+(function () {
+  var u; try { u = new URL(decodeURIComponent(location.hash.slice(1))); } catch (e) { return; }
+  if (u.protocol !== "https:" || ["calendar.google.com", "outlook.live.com"].indexOf(u.hostname) < 0) return;
+  var a = document.getElementById("a");
+  a.href = u.href; a.textContent = u.hostname + " ›"; a.hidden = false;
+  // once per tab: coming back here with Back must not bounce forward again
+  try { if (sessionStorage.getItem("go") === u.href) return; sessionStorage.setItem("go", u.href); } catch (e) { /* storage off */ }
+  var f = document.createElement("form");
+  f.method = "get"; f.action = u.origin + u.pathname;
+  u.searchParams.forEach(function (v, k) { var i = document.createElement("input"); i.type = "hidden"; i.name = k; i.value = v; f.appendChild(i); });
+  document.body.appendChild(f);
+  f.submit();
+})();
+</script>
+</body>
+</html>

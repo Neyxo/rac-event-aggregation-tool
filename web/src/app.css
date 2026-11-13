@@ -630,7 +630,7 @@ a.ft .chev { position: absolute; right: 12px; top: 14px; width: 18px; height: 18
 .sfvis .tap { fill: color-mix(in srgb, var(--azure) 22%, transparent); stroke: var(--azure); stroke-width: 1.5; stroke-dasharray: 3 3; }
 .sfvis .ar, .sfvis .onl { fill: none; stroke: var(--muted); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; } .sfvis .ar.thin { stroke-width: 1.5; } .sfvis .onl { stroke: #fff; } .sfvis .onl.thin { stroke-width: 1.8; } .sfvis .onl.big { stroke-width: 7; } .sfvis .knob { fill: #fff; } .sfvis .gear { fill: none; stroke: #fff; stroke-width: 2; }
 .sfvis text { font-size: 9.5px; font-weight: 600; fill: var(--muted); } .sfvis text.on { fill: #fff; } .sfvis text.b { font-size: 11px; font-weight: 700; fill: currentColor; } .sfvis text.sm { font-size: 9.5px; }
-.way .wi { flex: 0 0 auto; display: grid; } .way .wi svg { width: 34px; height: 34px; stroke: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.18)); }
+.way .wi { flex: 0 0 auto; width: 34px; height: 34px; object-fit: contain; }
 .sfmark { flex: 0 0 auto; display: grid; } .sfmark img { width: 24px; height: 24px; object-fit: contain; }
 .sfok { color: #009739; font-size: 1.1rem; }
 /* a smaller second choice under the rows (another club, the .ics file): quiet, but an outlined pill with a chevron, so plainly a button */

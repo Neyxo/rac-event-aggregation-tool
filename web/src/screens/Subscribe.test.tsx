@@ -67,7 +67,8 @@ const vis = () => q("figure svg")?.textContent ?? null;
 /** the popup's footer: the one button that moves on, if any */
 const nav = () => [...document.querySelectorAll("dialog .nav button")].map(b => [b.className, b.textContent]);
 /** Android: the same page, opened in Chrome instead of the calendar's app */
-const inChrome = (u: string) => `intent://${u.slice("https://".length)}#Intent;scheme=https;package=com.android.chrome;end`;
+/** the helper page that opens the address in this browser, past the calendar app */
+const go = (u: string) => "go.html#" + encodeURIComponent(u);
 /** Home's and the help's start: the sheet on the list, then the all-clubs calendar */
 const add = () => {
   show();
@@ -262,7 +263,7 @@ describe("adding a calendar", () => {
     expect(title()).toBe(t("way_pick"));
   });
 
-  it("Google on an Android phone asks how: on this phone opens the page in Chrome (or copies the link), confirm, then this phone's sync steps", async () => {
+  it("Google on an Android phone asks how: on this phone opens the page in this browser (or copies the link), confirm, then this phone's sync steps", async () => {
     ua.phone = true;
     add();
     pick(t("way_google"));
@@ -270,10 +271,9 @@ describe("adding a calendar", () => {
     expect(rows().map(r => r.textContent)).toEqual([S.on_phone + S.on_phone_s, S.on_pc + S.on_pc_s]);
     pick(S.on_phone);
     expect(step()).toEqual([of(1, 6), undefined, undefined]);
-    // not the plain link, which the Google Calendar app would take: Chrome, by an intent
-    const open = dlg().getByRole("link", { name: S.open_browser });
-    expect([open.getAttribute("href"), open.hasAttribute("target")]).toEqual([inChrome(gcal), false]);
-    expect(dlg().queryByRole("button", { name: S.copy_btn })).toBeNull();
+    // not the plain link, which the Google Calendar app would take: the helper page, in a new tab
+    const open = dlg().getByRole("link", { name: S.g_open });
+    expect([open.getAttribute("href"), open.getAttribute("target")]).toEqual([go(gcal), "_blank"]);
     tap(open);
     expect(step()).toEqual([of(2, 6), S.ctx_browser, S.g_confirm]);
     // the quiet second way: the plain link, copied, and on
@@ -284,6 +284,7 @@ describe("adding a calendar", () => {
     expect(screen.getByRole("status").textContent).toBe(t("copied"));
     expect(step()).toEqual([of(2, 6), S.ctx_browser, S.g_confirm]);
     expect(vis()).toContain(S.ui_add);
+    dlg().getByText(S.g_desktop);  // the phone's Google page may hide the button
     // an Android phone: no question, its four steps
     btn(t("next"));
     expect(step()).toEqual([of(3, 6), S.ctx_phone, S.sync_a[0]]);
@@ -295,21 +296,19 @@ describe("adding a calendar", () => {
     expect(title()).toBe(t("way_pick"));
   });
 
-  it("Google on an iPhone, on this phone: copy the link, paste it into the browser, confirm, the iPhone's sync steps", async () => {
+  it("Google on an iPhone, on this phone: the same helper page, confirm, the iPhone's sync steps", async () => {
     ua.phone = true; ua.ios = true;
     add();
     pick(t("way_google"));
     pick(S.on_phone);
-    expect(step()).toEqual([of(1, 6), undefined, undefined]);
-    expect(dlg().queryAllByRole("link")).toEqual([]);  // nothing like Android's intent
-    await act(async () => { btn(S.copy_btn); });
+    expect(step()).toEqual([of(1, 5), undefined, undefined]);
+    expect(dlg().getByRole("link", { name: S.g_open }).getAttribute("href")).toBe(go(gcal));
+    await act(async () => { btn(S.copy_alt); });
     expect(writeText).toHaveBeenCalledWith(gcal);
     expect(screen.getByRole("status").textContent).toBe(t("copied"));
-    expect(step()).toEqual([of(2, 6), S.ctx_browser, S.g_paste]);
+    expect(step()).toEqual([of(2, 5), S.ctx_browser, S.g_confirm]);
     btn(t("next"));
-    expect(step()).toEqual([of(3, 6), S.ctx_browser, S.g_confirm]);
-    btn(t("next"));
-    expect(step()).toEqual([of(4, 6), undefined, S.sync_i[0]]);
+    expect(step()).toEqual([of(3, 5), undefined, S.sync_i[0]]);
     dlg().getByRole("link", { name: S.sync_btn });
   });
 
@@ -366,7 +365,7 @@ describe("adding a calendar", () => {
     expect(vis()).toContain(S.ui_import);
   });
 
-  it("Outlook on a phone asks how too; on this phone: Android opens it in Chrome (or copies the link), an iPhone copies and pastes; no sync steps", async () => {
+  it("Outlook on a phone asks how too; on this phone: the helper page (or the copied link) on Android and iPhone alike; no sync steps", async () => {
     ua.phone = true;
     add();
     pick(t("way_outlook"));
@@ -374,13 +373,13 @@ describe("adding a calendar", () => {
     expect(names()).toEqual([S.on_phone, S.on_pc]);
     pick(S.on_phone);
     expect(step()).toEqual([of(1, 2), undefined, undefined]);
-    const open = dlg().getByRole("link", { name: S.open_browser });
-    expect([open.getAttribute("href"), open.hasAttribute("target")]).toEqual([inChrome(outlook), false]);
+    const open = dlg().getByRole("link", { name: S.o_open });
+    expect([open.getAttribute("href"), open.getAttribute("target")]).toEqual([go(outlook), "_blank"]);
     await act(async () => { btn(S.copy_alt); });
     expect(writeText).toHaveBeenCalledWith(outlook);
     expect(step()).toEqual([of(2, 2), S.ctx_browser, S.o_confirm]);
     btn(t("back"));
-    tap(dlg().getByRole("link", { name: S.open_browser }));
+    tap(dlg().getByRole("link", { name: S.o_open }));
     expect(step()).toEqual([of(2, 2), S.ctx_browser, S.o_confirm]);
     btn(t("done"));
     expect(title()).toBe(S.done);
@@ -391,13 +390,11 @@ describe("adding a calendar", () => {
     add();
     pick(t("way_outlook"));
     pick(S.on_phone);
-    expect(step()).toEqual([of(1, 3), undefined, undefined]);
-    expect(dlg().queryAllByRole("link")).toEqual([]);
-    await act(async () => { btn(S.copy_btn); });
+    expect(step()).toEqual([of(1, 2), undefined, undefined]);
+    expect(dlg().getByRole("link", { name: S.o_open }).getAttribute("href")).toBe(go(outlook));
+    await act(async () => { btn(S.copy_alt); });
     expect(writeText).toHaveBeenCalledWith(outlook);
-    expect(step()).toEqual([of(2, 3), S.ctx_browser, S.g_paste]);
-    btn(t("next"));
-    expect(step()).toEqual([of(3, 3), S.ctx_browser, S.o_confirm]);
+    expect(step()).toEqual([of(2, 2), S.ctx_browser, S.o_confirm]);
     dlg().getByRole("button", { name: t("done") });
   });
 

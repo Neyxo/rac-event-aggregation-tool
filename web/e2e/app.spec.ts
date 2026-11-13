@@ -53,11 +53,12 @@ test.describe("first visit", () => {
       await expect(h2).toHaveText("How do you want to add it?");
       await ob.locator(".way", { hasText: "On this phone" }).click();
       await expect(n).toHaveAccessibleName("Step 1 of 6");
-      // Android hands a calendar.google.com link to the app: this one opens it in Chrome (not clicked here: it would navigate)
+      // a tapped calendar.google.com link goes to the app: this one opens the helper page, which opens it in this browser
       const open = ob.locator(".sfstep a.linkbtn");
-      await expect(open).toHaveText("Open in Chrome");
-      await expect(open).toHaveAttribute("href", /^intent:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*bern\.ics#Intent;scheme=https;package=com\.android\.chrome;end$/);
-      await ob.getByRole("button", { name: "Didn't open? Copy the link" }).click();  // done: on to the next step by itself
+      await expect(open).toHaveText("Open Google Calendar");
+      await expect(open).toHaveAttribute("href", /^go\.html#https%3A%2F%2Fcalendar\.google\.com%2Fcalendar%2Fr%3Fcid%3Dwebcal.*bern\.ics$/);
+      await expect(open).toHaveAttribute("target", "_blank");
+      await ob.getByRole("button", { name: "Didn't open? Copy the link and paste it in your browser" }).click();  // done: on to the next step by itself
       await expect(n).toHaveAccessibleName("Step 2 of 6");
       expect(await copied(page)).toMatch(/^https:\/\/calendar\.google\.com\/calendar\/r\?cid=webcal.*bern\.ics$/);
       at = 2;
@@ -258,9 +259,9 @@ test.describe("member", () => {
       await expect(popup.locator("h2")).toHaveText("How do you want to add it?");
       await expect(popup.locator(".way b")).toHaveText(["On this phone", "On a computer"]);
       await popup.locator(".way", { hasText: "On this phone" }).click();
-      await expect(open).toHaveText("Open in Chrome");
-      await expect(open).toHaveAttribute("href", /^intent:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern#Intent;scheme=https;package=com\.android\.chrome;end$/);
-      await popup.getByRole("button", { name: "Didn't open? Copy the link" }).click();
+      await expect(open).toHaveText("Open Outlook");
+      await expect(open).toHaveAttribute("href", /^go\.html#https%3A%2F%2Foutlook\.live\.com%2Fcalendar%2F0%2Faddfromweb%3Furl%3Dwebcal.*luzern\.ics%26name%3DRotaract%2520Luzern$/);
+      await popup.getByRole("button", { name: "Didn't open? Copy the link and paste it in your browser" }).click();
       expect(await copied(page)).toMatch(/^https:\/\/outlook\.live\.com\/calendar\/0\/addfromweb\?url=webcal.*luzern\.ics&name=Rotaract%20Luzern$/);
     } else {
       await expect(open).toHaveText("Open Outlook");
@@ -495,4 +496,25 @@ test("a missing events.json shows the error state, and its button retries", asyn
   fail = false;
   await err.getByRole("button", { name: "Refresh" }).click();
   await expect(page.locator("main a.event").first()).toBeVisible();
+});
+
+// static/go.html: the calendar's page opened by a form the page submits itself, which a phone's browser keeps instead of handing it to
+// the calendar app like a tapped link
+test.describe("go.html", () => {
+  const G = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent("webcal://example.org/rotaract/all.ics");
+  test("goes on to the calendar's address by itself, with every parameter; once per tab", async ({ page }) => {
+    const req = page.waitForRequest(r => r.url().startsWith("https://calendar.google.com/"));
+    await page.goto("./go.html#" + encodeURIComponent(G));
+    expect((await req).url()).toBe(G.replace(/%20/g, "+"));
+    // back on the page (Back): it waits with the link instead of bouncing forward again
+    await page.goto("./go.html#" + encodeURIComponent(G));
+    await expect(page.locator("#a")).toHaveAttribute("href", G);
+    await expect(page.locator("#a")).toBeVisible();
+    await expect(page).toHaveURL(/go\.html#/);
+  });
+  test("goes nowhere but Google Calendar and Outlook", async ({ page }) => {
+    await page.goto("./go.html#" + encodeURIComponent("https://example.com/?cid=x"));
+    await expect(page.locator("#a")).toBeHidden();
+    await expect(page).toHaveURL(/go\.html#/);
+  });
 });

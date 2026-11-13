@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { store, type StoreKey } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
-import { ClubMark, clubLabel, FeedRow, Footer, MoreLink, toast, useData, type IconName } from "../components";
+import { ClubMark, clubLabel, FeedRow, feedUrls, Footer, goUrl, MoreLink, toast, useData, type IconName } from "../components";
 import { version } from "../../../package.json";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
@@ -465,11 +465,37 @@ function Feeds({ own, up, rot, rotClubs }: { own: Event[]; up: Event[]; rot: Eve
   );
 }
 
+/** On a phone, which way of opening Google's and Outlook's "add this calendar" page stays in the browser instead of landing in the
+ *  calendar app? Tap each on the phone in question; the flow uses the one marked "in use" (components/Subscribe.tsx, static/go.html). */
+function LinkLab() {
+  const { webcal } = feedUrls("all.ics");
+  const g = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal);
+  const o = `https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=Rotaract`;
+  const intent = (u: string) => `intent://${u.replace(/^https:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
+  const u = new URL(g);
+  return (
+    <>
+      <p className="meta">Tap each on your phone and note where it lands: in the browser (good) or in the calendar app (bad).</p>
+      <div className="links">
+        <Link label="1 · Google: plain link" to={g} />
+        <a className="linkbtn" href={goUrl(g)} target="_blank" rel="noopener">2 · Google: helper page (in use)</a>
+        <form method="get" action={u.origin + u.pathname} target="_blank"><input type="hidden" name="cid" value={u.searchParams.get("cid") ?? ""} /><button type="submit" className="linkbtn">3 · Google: form you submit</button></form>
+        <a className="linkbtn" href={intent(g)}>4 · Google: Chrome intent</a>
+        <Btn label="5 · Google: by script, 6 s after the tap" onClick={() => setTimeout(() => { location.href = g; }, 6000)} />
+        <Link label="6 · Outlook: plain link" to={o} />
+        <a className="linkbtn" href={goUrl(o)} target="_blank" rel="noopener">7 · Outlook: helper page (in use)</a>
+      </div>
+      <p className="meta devua">{navigator.userAgent}</p>
+    </>
+  );
+}
+
 // the pages under #/dev/<id>: title, one line for the overview's card, icon
 const PAGES = {
   runs: ["Runs", "Every build of the last weeks, green or not", "refresh"],
   commits: ["Commits", "What changed in the app, and when", "book"],
   build: ["This build", "Its run's steps, layers, counts and files", "info"],
+  links: ["Link lab", "Which calendar link stays in the browser on a phone", "ext"],
   preview: ["Preview on this device", "Guest view, new marks, a pretend date", "phone"],
   device: ["This device", "Service worker, cache and stored settings", "laptop"],
   checks: ["Content checks", "What clubs could fix on Polaris", "alert"],
@@ -496,6 +522,7 @@ export default function Dev({ route }: ScreenProps) {
       runs: () => <Runs run={st.run} />,
       commits: () => <Commits />,
       build: () => <Build st={st} own={own} up={up} rot={rot.events} />,
+      links: () => <LinkLab />,
       preview: () => <Preview />,
       device: () => <DeviceInfo dev={dev} />,
       checks: () => <div className="qa"><Checks own={own} up={up} /></div>,

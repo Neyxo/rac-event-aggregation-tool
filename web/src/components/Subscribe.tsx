@@ -35,17 +35,13 @@ const otherFeeds = (D: AppData, shown: Feed[]): Feed[] =>
 
 // ---------- drawings
 
-// the three calendars' app icons, drawn on a 24x24 grid
-const TILE = {
-  apple: <><rect x="1.5" y="1.5" width="21" height="21" rx="5" fill="#fff" stroke="#d6d6db" /><text x="12" y="8.2" textAnchor="middle" fontSize="4.6" fontWeight="700" fill="#ff3b30" letterSpacing=".3">MON</text><text x="12" y="19.4" textAnchor="middle" fontSize="12.5" fontWeight="300" fill="#1c1c1e">17</text></>,
-  google: <><path d="M6 6h12v12H6z" fill="#fff" /><path d="M18 22l4-4h-4z" fill="#ea4335" /><path d="M18 6h4v12h-4z" fill="#fbbc04" /><path d="M6 18h12v4H6z" fill="#34a853" /><path d="M2 18v2.5A1.5 1.5 0 0 0 3.5 22H6v-4z" fill="#188038" /><path d="M22 6V3.5A1.5 1.5 0 0 0 20.5 2H18v4z" fill="#1967d2" /><path d="M18 2H3.5A1.5 1.5 0 0 0 2 3.5V18h4V6h12z" fill="#4285f4" /><text x="12" y="15.2" textAnchor="middle" fontSize="7.5" fontWeight="700" fill="#4285f4">31</text></>,
-  outlook: <><rect x="8" y="4" width="14.5" height="16" rx="2" fill="#28a8ea" /><path d="M8 4h7.25v8H8z" fill="#0078d4" /><path d="M15.25 12h7.25v6a2 2 0 0 1-2 2h-5.25z" fill="#0f5ea8" /><rect x="1.5" y="6.5" width="12" height="11" rx="2" fill="#0f6cbd" /><ellipse cx="7.5" cy="12" rx="2.7" ry="3" fill="none" stroke="#fff" strokeWidth="1.7" /></>,
-};
-export function WayIcon({ way }: { way: keyof typeof TILE }) {
-  return <i className="wi"><svg viewBox="0 0 24 24" aria-hidden="true">{TILE[way]}</svg></i>;
+/** Apple's, Google's and Microsoft's own calendar icons (static/img/cal, from Wikimedia Commons; their trademarks, used to name them) */
+const LOGO = { apple: "img/cal/apple.svg", google: "img/cal/google.svg", outlook: "img/cal/outlook.svg" };
+export function WayIcon({ way }: { way: keyof typeof LOGO }) {
+  return <img className="wi" src={LOGO[way]} alt="" width="34" height="34" />;
 }
 
-type VisKind = "confirm" | "bar" | "send" | "home" | "menu" | "list" | "toggle" | "tick" | "file" | "done";
+type VisKind = "confirm" | "send" | "home" | "menu" | "list" | "toggle" | "tick" | "file" | "done";
 /** What to tap, drawn: the other app's screen in outline, inside a phone or a browser window so it is clear where this is, the
  *  one thing to tap in colour with a ring around it, and the new calendar with its colour dot. A drawing, not a screenshot: it
  *  survives their redesigns; the frame, the dashed border and the ring say it isn't a control of this app. label: the button's or row's text in this
@@ -66,12 +62,10 @@ function Vis({ kind, label = "", phone = PHONE }: { kind: VisKind; label?: strin
       return <>{phone ? ph : win}<rect x={x0} y="46" width={x1 - x0} height="82" rx="10" className="pn dl" />{line(x0 + 12, 60, 70)}{line(x0 + 12, 72, 46)}
         <rect x={x1 - 10 - w} y="96" width={w} height="22" rx="11" className="hl" /><text x={x1 - 10 - w / 2} y="110.5" textAnchor="middle" className="on">{label}</text>{tap(x1 - 14, 117, 10)}</>;
     },
-    // a browser, the address bar
-    bar: () => <>{phone ? ph : win}<rect x={phone ? 80 : 60} y={phone ? 32 : 48} width={phone ? 120 : 160} height="24" rx="12" className="hl o" /><text x={phone ? 92 : 74} y={phone ? 48 : 64} className="tx">https://…</text>{tap(phone ? 192 : 212, phone ? 54 : 70, 10)}{line(phone ? 84 : 64, phone ? 76 : 92, 90)}{line(phone ? 84 : 64, phone ? 90 : 106, 60)}</>,
     // from the phone to a computer
     send: () => <><rect x="52" y="30" width="44" height="82" rx="8" className="pn" /><rect x="64" y="62" width="20" height="8" rx="4" className="hl" /><path d="M108 71h44m-10-9 10 9-10 9" className="ar" /><rect x="168" y="40" width="76" height="52" rx="6" className="pn" /><path d="M158 102h96" className="ar" /><rect x="186" y="62" width="40" height="8" rx="4" className="hl" /></>,
     // the phone's home screen, the Google Calendar app
-    home: () => <>{ph}{[0, 1, 2, 3, 4, 6, 7].map(i => <rect key={i} x={84 + (i % 4) * 29} y={36 + Math.floor(i / 4) * 34} width="22" height="22" rx="6" className="ln" />)}{tap(124, 81)}<g transform="translate(113 70) scale(.92)">{TILE.google}</g></>,
+    home: () => <>{ph}{[0, 1, 2, 3, 4, 6, 7].map(i => <rect key={i} x={84 + (i % 4) * 29} y={36 + Math.floor(i / 4) * 34} width="22" height="22" rx="6" className="ln" />)}{tap(124, 81)}<image href={LOGO.google} x="113" y="70" width="22" height="22" /></>,
     // in the app: the menu button, then its drawer, which ends in Settings (the calendar list above it doesn't have the new one yet)
     menu: () => <>
       <rect x="20" y="14" width="96" height="112" rx="10" className="pn" /><rect x="29" y="23" width="22" height="22" rx="11" className="hl" /><path d="M35 30h10M35 34h10M35 38h10" className="onl thin" />{tap(40, 34)}{line(58, 31, 44)}
@@ -106,9 +100,10 @@ function Vis({ kind, label = "", phone = PHONE }: { kind: VisKind; label?: strin
 const SYNCSELECT = "https://calendar.google.com/calendar/syncselect";
 // Apple Calendar takes webcal: on an iPhone, iPad or Mac; Windows and Android have nothing that opens it
 const apple = () => IOS || /Macintosh/.test(navigator.userAgent);
-/** On Android a tap on a calendar.google.com or outlook.live.com link is handed to that calendar's app, which can't subscribe.
- *  This address opens the same page in Chrome instead. (An iPhone has nothing like it: there the link is copied and pasted.) */
-const inChrome = (u: string) => `intent://${u.replace(/^https:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;end`;
+/** On a phone a tapped link to calendar.google.com or outlook.live.com is handed to that calendar's app, which can't subscribe.
+ *  static/go.html opens the same address by submitting a form by itself, which every browser keeps for itself: whatever the
+ *  browser, no app in between, nothing to copy. */
+export const goUrl = (u: string) => "go.html#" + encodeURIComponent(u);
 const OsPick = ({ os, onPick }: { os: Os; onPick: (o: Os) => void }) => (
   <div className="seg sfseg" role="group">
     {(["android", "ios"] as const).map(o => <button key={o} type="button" aria-pressed={o === os} onClick={() => onPick(o)}>{o === "ios" ? "iPhone" : "Android"}</button>)}
@@ -130,10 +125,10 @@ function syncSteps(os: Os): Step[] {
  *  next: an action done. */
 function stepsFor(way: Way, via: "phone" | "pc" | null, os: Os, setOs: (o: Os) => void, feed: Feed, next: () => void): Step[] {
   const S = tx("sf"), { https, webcal } = feedUrls(feed.file);
-  const open = (to: string, label: string) => <a className="linkbtn primary" href={to} target={to.startsWith("http") ? "_blank" : undefined} rel="noopener" onClick={next}><Icon name="ext" />{label}</a>;
+  const open = (to: string, label: string) => <a className="linkbtn primary" href={to} target={to.startsWith("webcal:") ? undefined : "_blank"} rel="noopener" onClick={next}><Icon name="ext" />{label}</a>;
   const send = (title: string, url: string) => <button className="linkbtn primary" type="button" onClick={() => void share({ title, url }).then(next)}><Icon name="share" />{t("sp_g_send")}</button>;
   const copyBtn = (url: string, label: string, cls: string) => <button className={cls} type="button" onClick={() => void copy(url).then(next)}>{label}</button>;
-  const confirm = (text: string, label: string, ctx?: Ctx): Step => ({ text, ctx, vis: <Vis kind="confirm" label={label} phone={ctx === "pc" ? false : PHONE} /> });
+  const confirm = (text: string, label: string, ctx?: Ctx, note?: string): Step => ({ text, ctx, note, vis: <Vis kind="confirm" label={label} phone={ctx === "pc" ? false : PHONE} /> });
   if (way === "ics") {
     const [, s1 = "", s2 = ""] = tx("ics_steps");
     return [{ text: t("ics_stale_feed"), warn: true, action: <IcsDl to={https} onDone={next} /> }, { text: s1, vis: <Vis kind="file" /> }, confirm(s2, S.ui_add)];
@@ -142,12 +137,11 @@ function stepsFor(way: Way, via: "phone" | "pc" | null, os: Os, setOs: (o: Os) =
   // Google and Outlook are web pages: the address that subscribes, its opening button, the confirming step, what follows it
   const where: Ctx = via === "pc" ? "pc" : "browser";
   const [url, openLabel, sure, after]: [string, string, Step, (o: Os) => Step[]] = way === "google"
-    ? ["https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), S.g_open, confirm(S.g_confirm, S.ui_add, where), syncSteps]
+    ? ["https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(webcal), S.g_open, confirm(S.g_confirm, S.ui_add, where, PHONE && via !== "pc" ? S.g_desktop : undefined), syncSteps]
     : [`https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(feed.name)}`, S.o_open, confirm(S.o_confirm, S.ui_import, where), () => []];
   if (!PHONE) return [{ action: open(url, openLabel) }, sure, ...(way === "google" ? [{ text: S.phone_q, choice: <OsPick os={os} onPick={setOs} /> }] : []), ...after(os)];
   const first: Step[] = via === "pc" ? [{ action: send(t(`way_${way}`), url) }, { text: way === "google" ? S.pc : S.o_pc, ctx: "pc", vis: <Vis kind="send" /> }]
-    : IOS ? [{ action: copyBtn(url, S.copy_btn, "linkbtn primary") }, { text: S.g_paste, ctx: "browser", vis: <Vis kind="bar" /> }]
-    : [{ action: open(inChrome(url), S.open_browser), alt: copyBtn(url, S.copy_alt, "sfmore") }];
+    : [{ action: open(goUrl(url), openLabel), alt: copyBtn(url, S.copy_alt, "sfmore") }];
   return [...first, sure, ...after(IOS ? "ios" : "android")];
 }
 

@@ -6,7 +6,7 @@ export { Popup } from "./Popup";
 export { EventCard, NewIds, StarButton, DatePane, DeadlineTag, NextUp, Status, Skel } from "./Event";
 export { ClubMark, ClubLabel, ClubChip, ClubChips, clubLabel } from "./Club";
 export { MoreLink, HelpLinks, Footer, QaList, IcsLink, Warn, feedUrls, share, copy, LangSelect, type HelpKey } from "./Links";
-export { FeedRow, SubscribeSheet, SyncSheet, WayIcon, feedsFor, useSubFlow, type Feed } from "./Subscribe";
+export { FeedRow, SubscribeSheet, SyncSheet, WayIcon, feedsFor, goUrl, useSubFlow, type Feed } from "./Subscribe";
 export { CtaBlock, NewsCard, NewsStrip, Rich, PillarPic, LoadError, DataBoundary } from "./Blocks";
 export { useData, useSaved, useStored, useWash, useMorphHead, useStickyHeads, stickyHeads, useTitle, useEventListener, useInstallPrompt, useModal } from "./hooks";
 export { useRoute, useNav, navigate, replaceQuery, inPageLink } from "./router";

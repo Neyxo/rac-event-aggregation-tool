@@ -6,7 +6,7 @@ import { t, tx } from "../i18n";
 import { club, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../lib/data";
 import { BRAND, cx, vars } from "../lib/color";
 import { guessClubs } from "../lib/geo";
-import { chromeUrl, install, isInstalled } from "../lib/install";
+import { chromeUrl, inApp, install, isInstalled } from "../lib/install";
 import { guessOS } from "../lib/geo";
 import type { Pillar } from "../lib/pillars";
 import { store } from "../lib/store";
@@ -47,6 +47,8 @@ function InstallStep({ title, onWeb }: { title: (text: string) => ReactNode; onW
   return (
     <>
       {title(t("ob_inst"))}
+      {/* inside another app on an iPhone: no button can leave it, so say how */}
+      {inApp() && !chrome ? <p>{t("ob_inapp")}</p> : null}
       <div className="choice">
         {chrome ? <a className="btn big" href={chrome}>{t("inst_chrome")}</a>
           : <button className="btn big" type="button" onClick={() => { if (prompt) void install(); else setHow(true); }}>{t("inst_btn")}</button>}

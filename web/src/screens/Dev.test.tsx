@@ -91,7 +91,7 @@ describe("developer screen", () => {
     m.getByText(/^Next nightly run about /);
     m.getByText("✓ No failures in the last run");
     expect(m.getAllByRole("link").filter(a => a.classList.contains("more")).map(a => a.getAttribute("href")))
-      .toEqual(["#/dev/runs", "#/dev/commits", "#/dev/build", "#/dev/preview", "#/dev/device", "#/dev/checks", "#/dev/clubs", "#/dev/feeds"]);
+      .toEqual(["#/dev/runs", "#/dev/commits", "#/dev/build", "#/dev/links", "#/dev/preview", "#/dev/device", "#/dev/checks", "#/dev/clubs", "#/dev/feeds"]);
     m.getByRole("link", { name: "Source & data on GitHub" });
   });
 
