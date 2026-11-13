@@ -6,12 +6,12 @@ import { t, tx } from "../i18n";
 import { club, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../lib/data";
 import { BRAND, cx, vars } from "../lib/color";
 import { guessClubs } from "../lib/geo";
-import { chromeUrl, inApp, install, isInstalled } from "../lib/install";
+import { appUrl, chromeUrl, install, isInstalled } from "../lib/install";
 import { guessOS } from "../lib/geo";
 import type { Pillar } from "../lib/pillars";
 import { store } from "../lib/store";
 import type { Settings } from "../lib/types";
-import { ClubChips, feedsFor, Icon, PillarPic, toast, useData, useInstallPrompt, useModal, useSubFlow, type IconName } from "../components";
+import { ClubChips, copy, feedsFor, Icon, PillarPic, toast, useData, useInstallPrompt, useModal, useSubFlow, type IconName } from "../components";
 
 interface Ob {
   /** the clubs being chosen; saved on finish */
@@ -36,22 +36,20 @@ function ObNav({ next, skip, onNext, onSkip }: { next: string; skip?: string; on
 }
 
 const HOW = { ios: "g_ios", android: "g_android", desktop: "g_desktop" } as const;
-/** The app first: one big button, and a faint way past it. With the browser's prompt the button installs; without one (iPhone,
- *  Firefox) it shows this system's three steps. Installed, the website's part is over: "use the app from here". */
+/** The app first: one big button, and a faint way past it. With the browser's prompt the button installs, in whatever browser
+ *  this is; without one (iPhone, Firefox, DuckDuckGo, inside another app) it shows this system's three steps, with the way to
+ *  the browser they name: a link to Chrome on Android, and the address to copy. Installed, the website's part is over. */
 function InstallStep({ title, onWeb }: { title: (text: string) => ReactNode; onWeb: () => void }) {
-  const prompt = useInstallPrompt(), chrome = chromeUrl();
+  const prompt = useInstallPrompt();
   const [how, setHow] = useState(false);
   const web = (k: "ob_web" | "ob_web_back") => <button className="skip web" type="button" onClick={onWeb}>{t(k)}</button>;
   if (isInstalled()) return <>{title(t("ob_inst_done"))}<p>{t("ob_inst_done_t")}</p>{web("ob_web_back")}</>;
-  if (how) return <>{title(t("inst_btn"))}<ol className="qsteps">{tx(HOW[guessOS()]).map((s, i) => <li key={i}>{s}</li>)}</ol><p>{t("ob_inst_then")}</p>{web("ob_web")}</>;
+  if (how) return <>{title(t("inst_btn"))}<ol className="qsteps">{tx(HOW[guessOS()]).map((s, i) => <li key={i}>{s}</li>)}</ol><div className="links">{chromeUrl() && <a className="linkbtn primary" href={chromeUrl()!}><Icon name="ext" />{t("inst_chrome")}</a>}<button className="linkbtn" type="button" onClick={() => void copy(appUrl())}>{t("copy_link")}</button></div><p>{t("ob_inst_then")}</p>{web("ob_web")}</>;
   return (
     <>
       {title(t("ob_inst"))}
-      {/* inside another app on an iPhone: no button can leave it, so say how */}
-      {inApp() && !chrome ? <p>{t("ob_inapp")}</p> : null}
       <div className="choice">
-        {chrome ? <a className="btn big" href={chrome}>{t("inst_chrome")}</a>
-          : <button className="btn big" type="button" onClick={() => { if (prompt) void install(); else setHow(true); }}>{t("inst_btn")}</button>}
+        <button className="btn big" type="button" onClick={() => { if (prompt) void install(); else setHow(true); }}>{t("inst_btn")}</button>
         {web("ob_web")}
       </div>
     </>

@@ -4,9 +4,9 @@ import { t, tx } from "../i18n";
 import { setRotary, setSettings, withAlsoToggled, withHome } from "../lib/data";
 import { anyDevFlag } from "../lib/dev";
 import { guessOS, type OS } from "../lib/geo";
-import { chromeUrl, install, isInstalled } from "../lib/install";
+import { appUrl, chromeUrl, install, isInstalled } from "../lib/install";
 import { href } from "../lib/route";
-import { setTheme, store } from "../lib/store";
+import { resetAll, setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
 import { ClubChips, ClubLabel, copy, Footer, Icon, LangSelect, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
 import { useNav } from "../components/router";
@@ -29,7 +29,7 @@ function Cur({ ids }: { ids: string[] }) {
 }
 
 /** installed: a note; Chrome's prompt available: one button; otherwise the steps per system, the reader's own first
- *  (on Samsung Internet under a link that opens the app in Chrome) */
+ *  (on Android under a link that opens the app in Chrome) */
 function Install() {
   const prompt = useInstallPrompt();
   const [os, setOS] = useState<OS>(guessOS);
@@ -57,7 +57,7 @@ function RowLink({ to, k, hidden }: { to: string; k: "subscribe_link" | "rerun" 
 export default function Settings(_props: ScreenProps) {
   const D = useData();
   const { pop } = useNav();
-  const [picker, setPicker] = useState<"home" | "also" | null>(null);
+  const [picker, setPicker] = useState<"home" | "also" | "reset" | null>(null);
   // anything but "dark" is light, as index.html's inline script reads it
   const dark = useStored("rac.theme", "light") === "dark";
   const rotary = useStored("rac.rotary", false);
@@ -92,8 +92,9 @@ export default function Settings(_props: ScreenProps) {
   useEffect(() => {
     if (!pop && location.hash.endsWith("#install")) document.getElementById("install")?.scrollIntoView({ block: "center" });
   }, []);
-  // the app's address, without index.html or the route
-  const shareLink = location.origin + location.pathname.replace(/[^/]*$/, "");
+  const shareLink = appUrl();
+  // everything forgotten, the app starts as on a first visit
+  const reset = () => { resetAll(); location.replace("./"); };
 
   return (
     <main className="wrap settings">
@@ -130,6 +131,7 @@ export default function Settings(_props: ScreenProps) {
         <RowLink to={href("subscribe")} k="subscribe_link" />
         <RowLink to="./?welcome" k="rerun" />
         <RowLink to={href("public")} k="app_h" />
+        <button className="setrow link danger" type="button" onClick={() => setPicker("reset")}><span>{t("reset")}</span><Icon name="back" className="chev" /></button>
       </section>
       <section className="glass" id="devSec" hidden={!unlocked} ref={devSec}><h2>{t("dev_h")}</h2>
         <div className="setrow"><span>{t("dev_mode")}</span><OnOff on={dev} onPick={pickDev} /></div>
@@ -144,6 +146,11 @@ export default function Settings(_props: ScreenProps) {
       {picker === "also" && (
         <Popup title={t("pick_also")} onClose={() => setPicker(null)}>
           <ClubChips selected={new Set(s.also)} exclude={[s.home]} onPick={pickAlso} />
+        </Popup>
+      )}
+      {picker === "reset" && (
+        <Popup title={t("reset")} onClose={() => setPicker(null)} action={<button className="linkbtn primary danger" type="button" onClick={reset}>{t("reset_yes")}</button>}>
+          <p>{t("reset_q")}</p>
         </Popup>
       )}
     </main>

@@ -47,6 +47,11 @@ export const store = {
   subscribe: changes.subscribe,
 };
 
+/** forgets everything the app keeps on this device: its own keys only, other projects share the origin */
+export function resetAll(): void {
+  try { for (const s of [localStorage, sessionStorage]) Object.keys(s).filter(k => k.startsWith("rac.")).forEach(k => s.removeItem(k)); } catch { /* storage off */ }
+}
+
 /** sessionStorage rac.here: the approximate position found after a tap, kept for this tab */
 export const here = {
   get(): [number, number] | null { try { return JSON.parse(sessionStorage.getItem("rac.here") ?? "null") as [number, number] | null; } catch { return null; } },

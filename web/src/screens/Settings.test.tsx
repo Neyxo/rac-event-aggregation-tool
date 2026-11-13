@@ -138,16 +138,40 @@ describe("Settings", () => {
     expect(steps()).not.toEqual(before);
   });
 
-  it("install on Samsung Internet (Play Protect blocks its installs): the prompt is not offered; a link opens the app in Chrome, above the Android steps", () => {
-    vi.spyOn(navigator, "userAgent", "get").mockReturnValue("Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36");
-    const ev = Object.assign(new Event("beforeinstallprompt", { cancelable: true }), { prompt: vi.fn(async () => {}) });
-    dispatchEvent(ev);
-    expect(ev.defaultPrevented).toBe(true);
+  it("install on Android in a browser without a prompt (DuckDuckGo, Firefox): a link opens the app in Chrome, above the Android steps", () => {
+    vi.spyOn(navigator, "userAgent", "get").mockReturnValue("Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/125.0.0.0 Mobile DuckDuckGo/5 Safari/537.36");
     show();
     expect(screen.queryByRole("button", { name: "Install app" })).toBeNull();
     expect(screen.getByRole("link", { name: "Open in Chrome" }).getAttribute("href")).toBe("intent://localhost:3000/#Intent;scheme=https;package=com.android.chrome;end");
     expect(screen.getByRole("tab", { name: "Android" }).getAttribute("aria-selected")).toBe("true");
     vi.restoreAllMocks();
+  });
+
+  it("install on Samsung Internet: its own prompt is offered like any browser's", () => {
+    vi.spyOn(navigator, "userAgent", "get").mockReturnValue("Mozilla/5.0 (Linux; Android 14; SM-S921B) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/27.0 Chrome/125.0.0.0 Mobile Safari/537.36");
+    dispatchEvent(Object.assign(new Event("beforeinstallprompt", { cancelable: true }), { prompt: vi.fn(async () => {}), userChoice: Promise.resolve({ outcome: "dismissed" }) }));
+    show();
+    button("Install app");
+    vi.restoreAllMocks();
+  });
+
+  it("Reset the app: asks first; only Yes forgets the app's own keys and starts over", () => {
+    const replace = vi.fn();
+    vi.stubGlobal("location", { ...location, replace, hash: "#/settings" });
+    localStorage.setItem("rac.saved", "[\"x\"]");
+    localStorage.setItem("other.app", "1");
+    show();
+    fireEvent.click(button(t("reset")));
+    screen.getByText(t("reset_q"));
+    fireEvent.click(button("Close"));
+    expect(localStorage.getItem("rac.saved")).not.toBeNull();
+    fireEvent.click(button(t("reset")));
+    fireEvent.click(button(t("reset_yes")));
+    expect(Object.keys(localStorage).filter(k => k.startsWith("rac."))).toEqual([]);
+    expect(localStorage.getItem("other.app")).toBe("1");
+    expect(replace).toHaveBeenCalledWith("./");
+    localStorage.removeItem("other.app");
+    vi.unstubAllGlobals();
   });
 
   it("install: the browser's prompt, caught before Settings was opened, is one button; dismissed, the steps come back", async () => {

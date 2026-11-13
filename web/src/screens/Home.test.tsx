@@ -243,7 +243,9 @@ describe("welcome steps", () => {
     expect(title().textContent).toBe(t("inst_btn"));
     expect([...dlg().querySelectorAll("ol.qsteps li")].map(li => li.textContent)).toEqual(tx("g_desktop"));
     inDlg().getByText(t("ob_inst_then"));
-    expect(inDlg().getAllByRole("button").map(b => [b.className, b.textContent])).toEqual([["skip web", t("ob_web")]]);
+    // no link to Chrome on a computer; the address to paste into the browser the steps name
+    expect(inDlg().queryByRole("link")).toBeNull();
+    expect(inDlg().getAllByRole("button").map(b => [b.className, b.textContent])).toEqual([["linkbtn", t("copy_link")], ["skip web", t("ob_web")]]);
     click(t("ob_web"));
     expect(title().textContent).toBe(t("ob_welcome"));
   });

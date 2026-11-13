@@ -350,7 +350,7 @@ dialog.ob.full { width: 100%; max-width: none; height: 100dvh; max-height: none;
 .setrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; padding: 4px 0; }
 .setrow[hidden] { display: none; } button.setrow { width: 100%; background: none; border: 0; text-align: left; } .setrow + .setrow { border-top: 1px solid var(--line); }
 .setrow .cur { flex: 1; display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
-.setrow.link { text-decoration: none; color: inherit; } .setrow.link:active { opacity: .6; } .setrow.link .chev { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; transform: scaleX(-1); flex: 0 0 auto; }
+.setrow.link { text-decoration: none; color: inherit; } .setrow.danger span { color: var(--danger); } .linkbtn.primary.danger, .linkbtn.primary.danger:hover { background: var(--danger); border-color: var(--danger); } .setrow.link:active { opacity: .6; } .setrow.link .chev { width: 18px; height: 18px; stroke: var(--muted); fill: none; stroke-width: 2; transform: scaleX(-1); flex: 0 0 auto; }
 .setrow > span:first-child { white-space: nowrap; } .setrow.col { flex-direction: column; align-items: stretch; } .setrow.col .linkbox { margin-top: 6px; }
 .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
 .tile { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 6px 8px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface-2); font: inherit; color: var(--text); transition: transform .12s, border-color .15s, background .15s; }

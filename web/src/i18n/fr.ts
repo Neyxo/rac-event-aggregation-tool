@@ -98,6 +98,10 @@ const fr: Messages = {
   copy: "Copier",
   copied: "Lien copié",
   rerun: "Revoir les étapes de bienvenue",
+  copy_link: "Copier le lien",
+  reset: "Réinitialiser l'app",
+  reset_q: "Supprimer vos clubs, vos événements enregistrés et tous les réglages sur cet appareil ? L'app redémarre ensuite comme la première fois. Les calendriers auxquels vous êtes abonné restent dans votre calendrier.",
+  reset_yes: "Oui, tout supprimer",
   updated: "Mis à jour {t}",
   made_by: "Par Jean-Michel Carrel pour le Rotaract Club Luzern",
   source: "Code source & données sur GitHub",
@@ -115,7 +119,6 @@ const fr: Messages = {
   ob_inst_done: "C'est fait ✓",
   ob_inst_done_t: "Ouvrez Rotaract Events depuis l'écran d'accueil et continuez là.",
   ob_inst_then: "Ouvrez ensuite l'app depuis l'écran d'accueil.",
-  ob_inapp: "Vous êtes dans le navigateur d'une autre app. Ouvrez d'abord cette page dans Safari ou Chrome : ⋯ › Ouvrir dans le navigateur.",
   ob_facts: [
     "Uniquement les événements publics",
     "Mis à jour sous 48 heures",

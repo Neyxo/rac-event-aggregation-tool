@@ -101,6 +101,10 @@ const en = {
   copy: "Copy",
   copied: "Link copied",
   rerun: "Show the welcome steps again",
+  copy_link: "Copy link",
+  reset: "Reset the app",
+  reset_q: "Delete your clubs, saved events and all settings on this device? The app then starts like the first time. Calendars you subscribed to stay in your calendar.",
+  reset_yes: "Yes, delete everything",
   updated: "Updated {t}",
   made_by: "Made by Jean-Michel Carrel for Rotaract Club Luzern",
   source: "Source & data on GitHub",
@@ -118,7 +122,6 @@ const en = {
   ob_inst_done: "All done ✓",
   ob_inst_done_t: "Open Rotaract Events from your home screen and carry on there.",
   ob_inst_then: "Then open the app from your home screen.",
-  ob_inapp: "You're in another app's browser. Open this page in Safari or Chrome first: ⋯ › Open in browser.",
   ob_facts: [
     "Only public events",
     "Updated within 48 hours",
