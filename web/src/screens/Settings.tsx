@@ -8,7 +8,7 @@ import { appUrl, chromeUrl, install, isInstalled } from "../lib/install";
 import { href } from "../lib/route";
 import { resetAll, setTheme, store } from "../lib/store";
 import type { ScreenProps } from "../App";
-import { ClubChips, ClubLabel, copy, Footer, Icon, LangSelect, Popup, toast, useData, useInstallPrompt, useStored } from "../components";
+import { ClubChips, ClubLabel, copy, Footer, Icon, LangSelect, Popup, share, toast, useData, useInstallPrompt, useStored } from "../components";
 import { useNav } from "../components/router";
 import { version } from "../../../package.json";
 
@@ -125,6 +125,7 @@ export default function Settings(_props: ScreenProps) {
         <div className="setrow col" id="install"><span>{t("inst_title")}</span><Install /></div>
         <div className="setrow col"><span>{t("share_title")}</span>
           <div className="linkbox"><input type="text" readOnly value={shareLink} aria-label={t("share_title")} /><button type="button" onClick={() => void copy(shareLink)}>{t("copy")}</button></div>
+          <button className="linkbtn primary" type="button" onClick={() => void share({ title: "Rotaract Events", text: t("share_text"), url: shareLink })}><Icon name="share" />{t("share_send")}</button>
         </div>
       </section>
       <section className="glass"><h2>{t("set_help_h")}</h2>

@@ -95,6 +95,8 @@ const de: Messages = {
     "«Installieren» klicken. Oder die Seite einfach als Lesezeichen speichern.",
   ],
   share_title: "Mit anderen teilen",
+  share_send: "Jemandem schicken",
+  share_text: "Hey, schau dir mal Rotaract Events an: Die App zeigt alle Rotaract-Anlässe in der Schweiz, und du kannst die Kalender abonnieren. Von Rotaractern für Rotaracter.",
   copy: "Kopieren",
   copied: "Link kopiert",
   rerun: "Willkommensschritte nochmals anzeigen",

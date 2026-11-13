@@ -98,6 +98,8 @@ const en = {
     "Click \"Install\". Or simply bookmark the page.",
   ],
   share_title: "Share with others",
+  share_send: "Send to someone",
+  share_text: "Hey, have a look at Rotaract Events: the app shows all Rotaract events in Switzerland, and you can subscribe to the calendars. By Rotaractors, for Rotaractors.",
   copy: "Copy",
   copied: "Link copied",
   rerun: "Show the welcome steps again",

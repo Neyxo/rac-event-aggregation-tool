@@ -95,6 +95,8 @@ const it: Messages = {
     "Clicca «Installa». Oppure aggiungi la pagina ai preferiti.",
   ],
   share_title: "Condividi con altri",
+  share_send: "Invia a qualcuno",
+  share_text: "Ehi, guarda Rotaract Events: l'app mostra tutti gli eventi Rotaract in Svizzera, e puoi abbonarti ai calendari. Da Rotaractiani, per Rotaractiani.",
   copy: "Copia",
   copied: "Link copiato",
   rerun: "Mostra di nuovo i passi di benvenuto",

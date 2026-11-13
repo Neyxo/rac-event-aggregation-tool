@@ -194,6 +194,15 @@ describe("Settings", () => {
     expect(document.getElementById("installBody")!.textContent).toBe(t("inst_done"));
   });
 
+  it("Send to someone: the system's share sheet gets the app's address and the short text about it", async () => {
+    const shareFn = vi.fn(async () => {});
+    Object.assign(navigator, { share: shareFn });
+    show();
+    await act(async () => { fireEvent.click(button(t("share_send"))); });
+    expect(shareFn).toHaveBeenCalledWith({ title: "Rotaract Events", text: t("share_text"), url: (screen.getByRole("textbox") as HTMLInputElement).value });
+    delete (navigator as { share?: unknown }).share;
+  });
+
   it("copies the share link", async () => {
     const writeText = vi.fn(async () => {});
     Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
