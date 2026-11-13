@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { I18N, nEvents, pickLang, t, tx } from ".";
+import be from "./be";
 
 describe("pickLang", () => {
   it("prefers ?lang=, then the saved choice, then the device", () => {
@@ -42,6 +43,14 @@ describe("every language", () => {
       if (typeof v !== "string") continue;
       const vars = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort();
       expect(vars(I18N[l][k as keyof typeof I18N.en] as string), `${l}:${k}`).toEqual(vars(v));
+    }
+  });
+  it("Bärndütsch only overrides German: same placeholders and list lengths", () => {
+    const vars = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort();
+    for (const [k, v] of Object.entries(be)) {
+      const d = I18N.de[k as keyof typeof I18N.de];
+      if (typeof v === "string") expect(vars(v), k).toEqual(vars(d as string));
+      else expect((v as unknown[]).length, k).toBe((d as unknown[]).length);
     }
   });
   it("writes Swiss German (ss, never ß)", () => { expect(JSON.stringify(I18N.de)).not.toContain("ß"); });

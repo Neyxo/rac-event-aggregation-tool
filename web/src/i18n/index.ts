@@ -4,6 +4,7 @@ import en, { type Messages, type Pair } from "./en";
 import de from "./de";
 import fr from "./fr";
 import it from "./it";
+import be from "./be";
 
 export type { Messages, Pair };
 export const I18N = { en, de, fr, it } satisfies Record<string, Messages>;
@@ -17,12 +18,16 @@ export function pickLang(search: string, saved: unknown, device: string | undefi
   const q = new URLSearchParams(search).get("lang");
   return [q, saved, (device || "en").slice(0, 2)].find(isLang) ?? "en";
 }
-function savedLang(): unknown { try { return JSON.parse(localStorage.getItem("rac.lang") ?? "null"); } catch { return null; } }
+const saved = (k: string): unknown => { try { return JSON.parse(localStorage.getItem(k) ?? "null"); } catch { return null; } };
 
-export const LANG: Lang = typeof location === "undefined" ? "en" : pickLang(location.search, savedLang(), navigator.language);
+export const LANG: Lang = typeof location === "undefined" ? "en" : pickLang(location.search, saved("rac.lang"), navigator.language);
 export const LOCALE = LOCALES[LANG];
-if (typeof document !== "undefined") document.documentElement.lang = LANG;
-const M: Messages = I18N[LANG];
+/** Bärndütsch (be.ts): the Easter egg on top of German. rac.be exists (true or false) once it was unlocked; from then on it is
+ *  a choice in the language control. */
+export const BE_UNLOCKED: boolean = typeof location !== "undefined" && saved("rac.be") !== null;
+export const BE: boolean = LANG === "de" && typeof location !== "undefined" && saved("rac.be") === true;
+if (typeof document !== "undefined") document.documentElement.lang = BE ? "gsw-CH" : LANG;
+const M: Messages = BE ? { ...de, ...be } : I18N[LANG];
 
 /** Keys whose value is a plain string: the only ones t() accepts. */
 export type StrKey = { [K in keyof Messages]: Messages[K] extends string ? K : never }[keyof Messages];
@@ -40,9 +45,9 @@ export function tx<K extends DataKey>(key: K): Messages[K] { return M[key]; }
 
 export function nEvents(n: number): string { return n === 1 ? t("one_event") : t("n_events", { n }); }
 
-/** Saves the choice and reloads without ?lang= (the language is read once per load: every module reads its texts at start). */
-export function setLang(l: Lang): void {
-  try { localStorage.setItem("rac.lang", JSON.stringify(l)); } catch { /* private mode */ }
+/** Saves the choice (bern: German as Bärndütsch) and reloads without ?lang= (the language is read once per load: every module reads its texts at start). */
+export function setLang(l: Lang, bern = false): void {
+  try { localStorage.setItem("rac.lang", JSON.stringify(l)); if (bern || BE_UNLOCKED) localStorage.setItem("rac.be", JSON.stringify(bern)); } catch { /* private mode */ }
   const u = new URL(location.href); u.searchParams.delete("lang");
   // with a hash route, assigning the same URL only scrolls: reload when ?lang= was not there
   if (u.href === location.href) location.reload(); else location.href = u.href;

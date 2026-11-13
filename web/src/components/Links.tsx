@@ -1,6 +1,6 @@
 // Links and small blocks shared by several screens.
 import { useState, type MouseEventHandler, type ReactNode } from "react";
-import { LANG, LANGS, setLang, t, tx, type Lang, type Pair } from "../i18n";
+import { BE, BE_UNLOCKED, LANG, LANGS, setLang, t, tx, type Lang, type Pair } from "../i18n";
 import { BRAND, vars } from "../lib/color";
 import { href } from "../lib/route";
 import { Icon, type IconName } from "./Icon";
@@ -103,13 +103,15 @@ export function IcsLink({ href: to, children }: { href: string; children: ReactN
   );
 }
 
-/** the language as a segmented control: four short choices, no native menu that opens somewhere else on screen. A tap saves and reloads. */
+/** the language as a segmented control: four short choices (five with Bärndütsch unlocked), no native menu that opens somewhere else on screen. A tap saves and reloads. */
 export function LangSelect() {
   return (
     <div className="seg" role="group" aria-label={t("language")}>
       {(Object.entries(LANGS) as [Lang, string][]).map(([k, v]) => (
-        <button key={k} type="button" title={v} lang={k} aria-label={`${k.toUpperCase()} (${v})`} aria-pressed={k === LANG} onClick={() => setLang(k)}>{k.toUpperCase()}</button>
+        <button key={k} type="button" title={v} lang={k} aria-label={`${k.toUpperCase()} (${v})`} aria-pressed={k === LANG && !BE} onClick={() => setLang(k)}>{k.toUpperCase()}</button>
       ))}
+      {/* the Easter egg (i18n/be.ts): only once it was unlocked on the Bern crest */}
+      {BE_UNLOCKED && <button type="button" title="Bärndütsch" lang="gsw" aria-label="BE (Bärndütsch)" aria-pressed={BE} onClick={() => setLang("de", true)}>BE</button>}
     </div>
   );
 }

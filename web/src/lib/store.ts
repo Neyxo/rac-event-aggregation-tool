@@ -7,6 +7,8 @@ export interface StoreKeys {
   "rac.saved": string[];
   "rac.theme": "light" | "dark";
   "rac.lang": string;
+  /** Bärndütsch on top of German (i18n/be.ts) */
+  "rac.be": boolean;
   "rac.seen": Seen;
   "rac.seenPrev": Record<string, string>;
   "rac.rotary": boolean;

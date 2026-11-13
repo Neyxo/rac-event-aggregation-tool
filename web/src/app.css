@@ -340,6 +340,17 @@ dialog.ob.full { width: 100%; max-width: none; height: 100dvh; max-height: none;
 .ob .feeds { gap: 8px; } .ob .lang { margin: 2px 0 6px; }
 .ob .credit { font-size: .78rem; color: var(--muted); margin-top: 14px; text-align: center; }
 .toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: .9rem; box-shadow: var(--shadow); opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 1200; }
+/* Easter eggs (components/Festive): a few dozen boxes, transform and opacity only, played once. Above the page, below the bars. */
+.fest { position: fixed; inset: 0; z-index: 1000; overflow: hidden; pointer-events: none; contain: strict; }
+.fest i { position: absolute; width: 8px; height: 12px; background: var(--c); opacity: 0; }
+.fest.zibele i { left: calc(var(--x) * 1%); top: -16px; border-radius: 2px; animation: confetti 2.6s linear calc(var(--i) * 70ms) both; }
+/* 1 August: rocket --b leaves the bottom edge at --b * .8s and climbs for .7s to (--l, --t), where its sparks then fly apart */
+.fest.aug1 i { left: calc(var(--l) * 1%); top: calc(var(--t) * 1%); width: 4px; height: 12px; border-radius: 2px; animation: spark 1.1s ease-out calc(var(--b) * .8s + .7s) both; }
+.fest.aug1 i.r { top: 100%; height: 18px; animation: rocket .7s ease-out calc(var(--b) * .8s) both; }
+@keyframes confetti { 0% { opacity: 1; transform: none; } 85% { opacity: 1; } 100% { opacity: 0; transform: translate3d(calc((var(--x) - 50) * .6px), 105vh, 0) rotate(calc(var(--x) * 9deg)); } }
+@keyframes rocket { 0% { opacity: 1; transform: none; } 92% { opacity: 1; } 100% { opacity: 0; transform: translateY(calc((var(--t) - 100) * 1vh)); } }
+/* 0% is what a waiting spark looks like (fill: both), so it starts invisible */
+@keyframes spark { 0% { opacity: 0; transform: rotate(calc(var(--a) * 36deg)) translateY(-6px); } 4%, 70% { opacity: 1; } 100% { opacity: 0; transform: rotate(calc(var(--a) * 36deg)) translateY(-120px); } }
 .toast.show { opacity: 1; pointer-events: auto; }
 .toast button { margin-left: 10px; background: var(--accent); color: var(--on-accent); border: 0; border-radius: 99px; padding: 4px 10px; font-weight: 600; }
 

@@ -2,7 +2,7 @@
  * The app shell: one page, hash routes (#/, #/discover?..., #/event/<id> ...). #root is display: contents (app.css), so header#top,
  * the screen's main and nav#tabs are styled as children of body.
  *
- * Rendered here, in body order: #frost, the skip link (home/discover/calendar), header#top (TopBar), the screen, nav#tabs (Tabs), #toast.
+ * Rendered here, in body order: #frost, the skip link (home/discover/calendar), header#top (TopBar), the screen, nav#tabs (Tabs), #toast, .fest (two days a year).
  * Per route (ROUTE_META below) App sets body[data-page], the body classes calpage / frosted, the default document.title, the active
  * top-bar button and tab and the back button. A new navigation scrolls to the top; back/forward restores the position.
  *
@@ -40,6 +40,7 @@ import { t } from "./i18n";
 import type { Route, RouteName } from "./lib/route";
 import { Tabs, TopBar, type Active } from "./components/Chrome";
 import { Toast } from "./components/Toast";
+import { Festive } from "./components/Festive";
 import { DataBoundary } from "./components/Blocks";
 import { LoadFailed } from "./lib/data";
 import { inPageLink, scrollTarget, useNav, useRoute } from "./components/router";
@@ -135,6 +136,7 @@ export default function App() {
       </DataBoundary>
       <Tabs active={meta.active} />
       <Toast />
+      <Festive page={meta.page} id={route.params.id} />
     </>
   );
 }

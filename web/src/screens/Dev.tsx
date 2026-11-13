@@ -7,10 +7,11 @@ import { clubVars, cx, DISTRICT_IDS, DISTRICTS } from "../lib/color";
 import { fmt, isPast } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { href } from "../lib/route";
-import { store, type StoreKey } from "../lib/store";
+import { store, type StoreKey, type StoreKeys } from "../lib/store";
 import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
 import { ClubMark, clubLabel, FeedRow, feedUrls, Footer, goUrl, MoreLink, toast, useData, type IconName } from "../components";
+import { playFestive } from "../components/Festive";
 import { version } from "../../../package.json";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
@@ -282,12 +283,17 @@ function Build({ st, own, up, rot }: { st: Stat; own: Event[]; up: Event[]; rot:
 }
 
 /** an Off / On control for a preview switch; reads the key itself, not devFlag(), so it shows what is stored */
+/** Sets a preview switch and reloads. The switches only count while developer mode is on (lib/dev), and this screen also opens
+ *  without it (#/dev typed in, or after an app reset): turning one on turns developer mode on, or it would silently do nothing. */
+function preview<K extends PreviewKey | "rac.devDate">(k: K, v: StoreKeys[K]): void {
+  store.set(k, v);
+  if (v) store.set("rac.dev", true);
+  reload();
+}
+
 function Switch({ k }: { k: PreviewKey }) {
-  const on = !!store.get(k, false);
-  const pick = (v: boolean) => {
-    store.set(k, v);
-    reload();
-  };
+  const on = store.get("rac.dev", false) && !!store.get(k, false);  // what is in effect, not what is stored
+  const pick = (v: boolean) => preview(k, v);
   return (
     <div className="seg">
       <button type="button" aria-pressed={!on} onClick={() => pick(false)}>Off</button>
@@ -296,12 +302,12 @@ function Switch({ k }: { k: PreviewKey }) {
   );
 }
 
+/** plays it right here, whatever the date and page; says why when the device setting keeps it away */
+const playEgg = (k: "aug1" | "zibele") => matchMedia("(prefers-reduced-motion: reduce)").matches ? toast("Reduce motion is on on this device, so it is skipped") : playFestive(k);
+
 function Preview() {
-  const day = store.get("rac.devDate", "") || "";
-  const setDay = (v: string) => {
-    store.set("rac.devDate", v);
-    reload();
-  };
+  const day = devFlag("Date") || "";  // what is in effect: nothing while developer mode is off
+  const setDay = (v: string) => preview("rac.devDate", v);
   const guideAgain = () => {
     localStorage.removeItem("rac.guideSeen");
     toast("Done: it is back on Home");
@@ -317,6 +323,13 @@ function Preview() {
           {day ? <Btn label="Real date" onClick={() => setDay("")} /> : null}
         </div>
       </Row>
+      <Row label="Play an Easter egg">
+        <div className="tools">
+          <Btn label="1 August" onClick={() => playEgg("aug1")} />
+          <Btn label="Zibelemärit" onClick={() => playEgg("zibele")} />
+        </div>
+      </Row>
+      <p className="meta">By date they play once per page load: the firework on Home on 1 August, the confetti on the Bern club page on the fourth Monday of November (2026-11-23). Never with "reduce motion" on.</p>
       <p className="meta">As a guest your clubs are hidden, not deleted, and club changes are not saved meanwhile. The Dev button in the top bar stays lit while a switch is on.</p>
       <div className="links">
         <Link label="Run the welcome steps" to="./?welcome" />

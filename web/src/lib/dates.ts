@@ -12,6 +12,13 @@ export const dayN = (d: DateLike): number => Math.round((startOfDay(d).getTime()
 export const lastDay = (e: Event): Date => new Date(new Date(e.end).getTime() - 1);
 export const isPast = (e: Event): boolean => new Date(e.end) < new Date();
 
+/** the two days with an Easter egg (components/Festive): 1 August, and Zibelemärit, the fourth Monday of November */
+export function festive(d: Date = new Date()): "aug1" | "zibele" | null {
+  if (d.getMonth() === 7 && d.getDate() === 1) return "aug1";
+  if (d.getMonth() === 10 && d.getDay() === 1 && d.getDate() >= 22 && d.getDate() <= 28) return "zibele";
+  return null;
+}
+
 const f = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(LOCALE, o);
 export const fmt = {
   day: f({ day: "numeric" }), mon: f({ month: "short" }), month: f({ month: "long", year: "numeric" }),

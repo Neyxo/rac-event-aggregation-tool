@@ -200,3 +200,18 @@ describe("blocks", () => {
     expect(close).toHaveBeenCalled();
   });
 });
+
+describe("Festive", () => {
+  it("shows nothing on an ordinary day; playFestive plays 24 boxes once and removes them", async () => {
+    const { Festive, playFestive } = await import("./Festive");
+    vi.stubGlobal("matchMedia", () => ({ matches: false }));
+    const { container } = render(<Festive page="dev" id={undefined} />);
+    expect(container.innerHTML).toBe("");
+    act(() => playFestive("zibele"));
+    const boxes = container.querySelectorAll(".fest.zibele i");
+    expect(boxes).toHaveLength(24);
+    fireEvent.animationEnd(boxes[23]!);
+    expect(container.innerHTML).toBe("");
+    vi.unstubAllGlobals();
+  });
+});

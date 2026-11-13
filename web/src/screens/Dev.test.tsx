@@ -180,7 +180,18 @@ describe("developer screen", () => {
     expect(box.querySelector('a[href="#/club/luzern"]')).not.toBeNull();
   });
 
+  it("with developer mode off nothing shows as on, and turning a switch on turns developer mode on", async () => {
+    localStorage.setItem("rac.dev", "false");
+    localStorage.setItem("rac.devDate", JSON.stringify("2027-08-01"));
+    const preview = await page("preview");
+    const date = preview.getByLabelText("Pretend date") as HTMLInputElement;
+    expect(date.value).toBe("");
+    fireEvent.change(date, { target: { value: "2027-08-01" } });
+    expect(localStorage.getItem("rac.dev")).toBe("true");
+  });
+
   it("preview switches store their key; the date gets a Real date button", async () => {
+    localStorage.setItem("rac.dev", "true");
     localStorage.setItem("rac.devGuest", "true");
     localStorage.setItem("rac.devDate", JSON.stringify("2026-12-20"));
     const preview = await page("preview");
@@ -191,6 +202,7 @@ describe("developer screen", () => {
     expect((preview.getByLabelText("Pretend date") as HTMLInputElement).value).toBe("2026-12-20");
     fireEvent.click(row("Show the old-data banner").getByRole("button", { name: "On" }));
     expect(localStorage.getItem("rac.devStale")).toBe("true");
+    expect(localStorage.getItem("rac.dev")).toBe("true");
     fireEvent.click(preview.getByRole("button", { name: "Real date" }));
     expect(localStorage.getItem("rac.devDate")).toBe('""');
   });

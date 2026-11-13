@@ -49,6 +49,11 @@ export default function MapScreen(_props: ScreenProps) {
     // the grey national map, so the markers carry the colour
     L.tileLayer(SWISSTOPO_GREY, { maxZoom: 18, attribution: "© swisstopo" }).addTo(map);
     layer.current = L.layerGroup().addTo(map);
+    // Easter egg: the Röstigraben, a faint dashed line once you zoom in. Roughly the language border from Biel/Bienne to Sierre/Siders.
+    // Two lines: the one you see, and an invisible wide one under it so a finger can hit it.
+    const pts: L.LatLngTuple[] = [[47.14, 7.25], [47.05, 7.09], [46.93, 7.12], [46.81, 7.16], [46.70, 7.14], [46.61, 7.24], [46.48, 7.20], [46.36, 7.22], [46.29, 7.53]];
+    const graben = L.featureGroup([L.polyline(pts, { weight: 24, opacity: 0 }), L.polyline(pts, { color: BRAND.cranberry, weight: 3, opacity: .45, dashArray: "2 9", interactive: false })]).bindPopup("Röstigraben 🥔");
+    map.on("zoomend", () => { if (map.getZoom() >= 10) graben.addTo(map); else graben.remove(); });
     return () => {
       map.remove();
       layer.current = null;

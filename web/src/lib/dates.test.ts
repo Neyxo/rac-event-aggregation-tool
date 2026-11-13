@@ -1,6 +1,6 @@
 // Run with TZ=Europe/Zurich (npm test): the DST cases are Swiss weekends.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { dayN, daysUntil, deadlineState, isPast, lastDay, metaLine, placeShort, sameDay, startOfDay, whenLong, whenShort } from "./dates";
+import { dayN, daysUntil, deadlineState, festive, isPast, lastDay, metaLine, placeShort, sameDay, startOfDay, whenLong, whenShort } from "./dates";
 import { ev } from "../test/ev";
 
 const at = (s: string) => vi.setSystemTime(new Date(s));
@@ -88,5 +88,16 @@ describe("deadlineState", () => {
     expect(deadlineState(ev({ id: "a", deadline: "2026-11-10T23:59" }))).toBeNull();
     expect(deadlineState(ev({ id: "a", deadline: "" }))).toBeNull();
     expect(deadlineState(ev({ id: "a", deadline: "2026-11-20T00:00", cancelled: true }))).toBeNull();
+  });
+});
+
+describe("festive", () => {
+  it("is 1 August and the fourth Monday of November, nothing else", () => {
+    expect(festive(new Date("2026-08-01T12:00"))).toBe("aug1");
+    expect(festive(new Date("2026-11-23T12:00"))).toBe("zibele");
+    expect(festive(new Date("2027-11-22T12:00"))).toBe("zibele");
+    expect(festive(new Date("2026-11-16T12:00"))).toBeNull();
+    expect(festive(new Date("2026-11-30T12:00"))).toBeNull();
+    expect(festive(new Date("2026-11-24T12:00"))).toBeNull();
   });
 });

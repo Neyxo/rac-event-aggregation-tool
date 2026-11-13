@@ -1,8 +1,8 @@
 // A club: sticky compacting head (crest, name, subscribe), colour block with the site / social / share buttons, next event, about,
 // news, projects, photos, more events. An unknown id lists all clubs.
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
 import type { ScreenProps } from "../App";
-import { t } from "../i18n";
+import { BE, setLang, t } from "../i18n";
 import { freshNews } from "../lib/data";
 import { clubVars, DISTRICTS, isDistrict } from "../lib/color";
 import { isPast } from "../lib/dates";
@@ -10,7 +10,7 @@ import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Club as ClubT, Partner } from "../lib/types";
 import {
-  ClubChip, EventCard, SubscribeSheet, Footer, HelpLinks, Icon, ICON, NewsStrip, NextUp, Popup, Rich, share,
+  ClubChip, EventCard, SubscribeSheet, Footer, HelpLinks, Icon, ICON, NewsStrip, NextUp, Popup, Rich, share, toast,
   useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
 } from "../components";
 
@@ -80,6 +80,17 @@ export default function Club({ route }: ScreenProps) {
   useEventListener("scroll", drift);
   useLayoutEffect(drift, [c]);
 
+  // Easter egg: seven taps on the Bern crest switch Bärndütsch on (and off again). A mouse/touch extra on purpose, so the crest
+  // stays a plain image for screen readers and the keyboard.
+  const taps = useRef(0);
+  const bear = c?.id === "bern" ? (ev: MouseEvent<HTMLImageElement>) => {
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) ev.currentTarget.animate?.([{ rotate: "-10deg" }, { rotate: "10deg" }, { rotate: "0deg" }], 250);
+    if (++taps.current < 7) return;
+    taps.current = 0;
+    toast(BE ? "Adieu, merci!" : "Äuä!");
+    setTimeout(() => setLang("de", !BE), 900);  // long enough to read the toast; setLang reloads
+  } : undefined;
+
   if (!c) {
     return (
       <main className="wrap clubpage">
@@ -102,7 +113,7 @@ export default function Club({ route }: ScreenProps) {
       {/* two parts: a sticky header whose box is always 64px (crest and name draw big over the block at rest and compact as you scroll),
           and the colour block with the buttons, which simply scrolls away. No height changes while sticking, so nothing bounces. */}
       <div className="cstick morph" ref={head}>
-        {c.logo ? <img className="c" src={c.logo} alt="" /> : null}
+        {c.logo ? <img className="c" src={c.logo} alt="" onClick={bear} /> : null}
         <h1>{c.name}</h1>
         <div className="sub">{subLine}</div>
         <a className="go" href={href("subscribe")} title={t("cp_sub")} onClick={ev => { ev.preventDefault(); setSub(true); }}><Icon name="calendar" /><span>{t("subscribe")}</span></a>
