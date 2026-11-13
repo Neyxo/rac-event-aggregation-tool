@@ -136,7 +136,7 @@ body.wash .event { border: 1px solid var(--glass-line); }
 .row { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; align-items: center; }
 .row::-webkit-scrollbar { display: none; }
 .panel .row { padding: 8px 0 2px; } #clubs, #districts { flex-wrap: wrap; }
-a.fbtn { padding: 0; width: var(--h-btn); justify-content: center; }  /* icon only: a round button */
+a.fbtn, .fbtn.ic { padding: 0; width: var(--h-btn); justify-content: center; }  /* icon only: a round button */
 .rowlabel { flex: 0 0 auto; font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-right: 2px; }
 .chip { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; height: var(--h-chip); border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: var(--r-chip); padding: 0 10px; font-size: .8rem; font-weight: 600; line-height: 1; white-space: nowrap; text-decoration: none; transition: transform .12s, background .15s, border-color .15s, color .15s; }
 .chip:hover { border-color: var(--muted); } .chip:active { transform: scale(.95); }
@@ -513,6 +513,19 @@ a.tile { text-decoration: none; }
 /* Easter egg: the bunker door in the Gotthard and its archive: the usual event cards in a bunker skin (hazard stripe, typewriter type, faded colours, a file number and a few black bars on each) */
 .mapbunker svg { width: 38px; height: 38px; stroke-linejoin: round; filter: drop-shadow(0 1px 2px rgba(0,0,0,.5)); transition: transform .15s; } .mapbunker:hover svg, .mapbunker:focus-visible svg { transform: scale(1.15); }
 .mapbunker path { fill: #3f4439; stroke: #fff; stroke-width: 1.6; paint-order: stroke; } .mapbunker path + path { fill: #e8b400; stroke: #1c1f1a; stroke-width: 1; }
+/* Wheel of Fate (Discover): the brand wheel, big, as a wheel of fortune, the events inside its rim as segments (crest, date); it turns until the chosen one is on top */
+.fate .wheel { position: relative; container-type: inline-size; width: min(100%, 380px, 46dvh); aspect-ratio: 1; margin: 12px auto 16px; overflow: hidden; }  /* hidden: the turning square's corners must not widen the popup */
+.fate .disc { position: absolute; inset: 0; transition: transform 3.6s cubic-bezier(.12,.62,.1,1); } .fate .disc > img { display: block; width: 100%; height: 100%; }
+/* the segments fill the wheel inside its rim, over the spokes; a label runs outwards from the middle: the date, on the club's crest as a faint backdrop (as on an event card) */
+.fate .segs { position: absolute; inset: 21%; border-radius: 50%; }
+.fate .segs::after { content: ""; position: absolute; inset: 0; margin: auto; width: 9cqw; height: 9cqw; border-radius: 50%; background: #d41367; box-shadow: 0 0 0 .8cqw var(--surface); }
+.fate .segs span { position: absolute; left: 50%; top: 50%; width: 23cqw; height: 11cqw; margin-top: -5.5cqw; transform-origin: 0 50%; transform: rotate(calc(var(--a) - 90deg)) translateX(5.5cqw); display: flex; align-items: center; justify-content: center; font-size: 3.3cqw; font-weight: 700; line-height: 1; white-space: nowrap; color: var(--text); }
+.fate .segs img, .fate .segs .dot { position: absolute; z-index: -1; right: 1.5cqw; top: .75cqw; width: 9.5cqw; height: 9.5cqw; object-fit: contain; border-radius: 0; rotate: 90deg; opacity: .26; }
+/* the pointer on top; while the wheel turns it ticks against the segments */
+.fate .tick { position: absolute; z-index: 1; left: 50%; top: 0; margin-left: -11px; border: 11px solid transparent; border-top: 26px solid var(--text); border-bottom: 0; transform-origin: 50% 0; filter: drop-shadow(0 0 2px var(--surface)); }
+.fate .spin .tick { animation: fatetick .14s ease-in-out infinite alternate; }
+.fate .k { margin-bottom: 6px; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); } .fate p { text-align: center; } .fate .skip[aria-disabled=true] { opacity: .5; }
+@keyframes fatetick { to { transform: rotate(-22deg); } }
 dialog.bunker { background: #1c1f1a; color: #dfe2d3; font-family: ui-monospace, Menlo, Consolas, monospace; }
 .bunker .ob-in { display: block; overflow: auto; border-top: 10px solid; border-image: repeating-linear-gradient(-45deg, #e8b400 0 12px, #1c1f1a 12px 24px) 10; }
 .bunker h2 { text-transform: uppercase; letter-spacing: .08em; font-size: 1.05rem; } .bunker .obback { background: #2b2f27; color: inherit; border-color: #4b5143; } .bunker .ob-in > p { color: #a3a993; font-size: .82rem; }

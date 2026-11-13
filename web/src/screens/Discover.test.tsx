@@ -165,4 +165,53 @@ describe("Discover", () => {
     expect(ids()).toEqual(["179502", "179501"]);  // Luzern's, most recent first
     expect(location.hash).toBe("#/discover?r=25&view=past");
   });
+
+  // the Wheel of Fate: reduced motion, so the choice shows at once (no spin to wait for)
+  const reduced = () => vi.stubGlobal("matchMedia", (q: string) => ({ matches: true, media: q }));
+  const fated = () => screen.getByRole("dialog").querySelector("a.event")!.getAttribute("href");  // the usual event card
+
+  it("the Wheel of Fate waits for Spin the wheel, then picks one of the upcoming events the filters leave; Reset the wheel starts over; the past view spins the upcoming ones", async () => {
+    reduced();
+    const rnd = vi.spyOn(Math, "random").mockReturnValue(0);
+    await show("#/discover?view=past");
+    fireEvent.click(btn("Wheel of Fate"));
+    const dlg = screen.getByRole("dialog");
+    expect(screen.getByRole("heading", { name: "Wheel of Fate" })).toBeTruthy();
+    expect(dlg.querySelector("a.event")).toBeNull();  // nothing chosen before the tap
+    const n = dlg.querySelectorAll(".segs span").length;
+    expect(n).toBeGreaterThan(1);
+    expect(n).toBeLessThanOrEqual(10);
+    fireEvent.click(btn("Spin the wheel"));
+    expect(within(dlg).getByText("Fate has chosen")).toBeTruthy();
+    const first = fated();
+    expect(first).toMatch(/^#\/event\//);
+    fireEvent.click(btn("Reset the wheel"));
+    expect(dlg.querySelector("a.event")).toBeNull();
+    rnd.mockReturnValue(0.99);
+    fireEvent.click(btn("Spin the wheel"));
+    expect(fated()).not.toBe(first);
+    rnd.mockRestore();
+  });
+
+  it("the Wheel of Fate with filters that leave nothing says so, without a wheel or a button to spin", async () => {
+    reduced();
+    await show("#/discover?q=zzzz");
+    fireEvent.click(btn("Wheel of Fate"));
+    const dlg = screen.getByRole("dialog");
+    expect(screen.getByText(/Fate has nothing in store here/)).toBeTruthy();
+    expect(dlg.querySelector(".wheel")).toBeNull();
+    expect(within(dlg).queryByRole("button", { name: "Spin the wheel" })).toBeNull();
+  });
+
+  it("the wheel turns first: the choice shows when it lands, and it cannot be spun again meanwhile", async () => {
+    vi.stubGlobal("matchMedia", (q: string) => ({ matches: false, media: q }));
+    await show();
+    fireEvent.click(btn("Wheel of Fate"));
+    const dlg = screen.getByRole("dialog");
+    fireEvent.click(btn("Spin the wheel"));
+    expect(within(dlg).queryByRole("link")).toBeNull();
+    expect(btn("Reset the wheel").getAttribute("aria-disabled")).toBe("true");
+    fireEvent.transitionEnd(dlg.querySelector(".disc")!);
+    expect(dlg.querySelector("a.event")).toBeTruthy();
+  });
 });

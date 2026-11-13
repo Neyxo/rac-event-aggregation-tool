@@ -1,12 +1,15 @@
 // Discover: every event of Rotaract, with search, district and club chips, place and radius, and the
 // views upcoming / near me / saved / past. The filters live in the URL (#/discover?q=&d=&clubs=&place=&r=&view=).
-import { useRef, useState } from "react";
+// And the Wheel of Fate: the round wheel button opens a wheel of fortune, which picks one upcoming event of the list for you.
+import { useEffect, useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, myClubs } from "../lib/data";
-import { clubVars, DISTRICT_IDS, DISTRICTS } from "../lib/color";
+import { BRAND, clubVars, cx, DISTRICT_IDS, DISTRICTS, vars, WHEEL } from "../lib/color";
+import { fmt } from "../lib/dates";
 import { activeCount, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
-import { ClubChips, clubLabel, ClubMark, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
+import { ClubChips, clubLabel, ClubMark, EventCard, Icon, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
+import type { Event } from "../lib/types";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, type FilterApi } from "./EventList";
 
@@ -70,7 +73,7 @@ function PlaceInput({ api }: { api: FilterApi }) {
 }
 
 /** search, the Filters button (with the number of filters in use), the map, the views, and the panel the button opens */
-function FilterBar({ api }: { api: FilterApi }) {
+function FilterBar({ api, onFate }: { api: FilterApi; onFate: () => void }) {
   const [open, setOpen] = useState(false);
   // the chips, place and radius count; typing a search doesn't
   const n = activeCount(api.live);
@@ -89,6 +92,7 @@ function FilterBar({ api }: { api: FilterApi }) {
         <a className="fbtn" href={href("map")} aria-label={t("map")} title={t("map")}>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" /></svg>
         </a>
+        <button className="fbtn ic" type="button" aria-label={t("fate")} title={t("fate")} onClick={onFate}><Icon name="wheel" /></button>
       </div>
       <Views views={["all", "near", "saved", "past"]} pressed={api.live.view} onPick={api.setView} />
       <div className="panel glass" id="panel" hidden={!open}>
@@ -108,6 +112,44 @@ function FilterBar({ api }: { api: FilterApi }) {
   );
 }
 
+/** The Wheel of Fate's popup: the Rotaract wheel, big, as a wheel of fortune. Inside its rim, in place of the spokes, up to ten of
+ *  the events as segments (the date, on a wash of the club's colour and its crest as a backdrop, as on an event card); a pointer on
+ *  top. Nothing moves until "Spin the wheel" is tapped; then the whole wheel turns (a CSS transition) until the chosen segment is
+ *  under the pointer, and the event shows below as its usual card. "Reset the wheel" starts over, with other events on the wheel.
+ *  At once under reduced motion. */
+function Fate({ pool, onClose }: { pool: Event[]; onClose: () => void }) {
+  // more than ten would be unreadable: then ten in a row, from a random start
+  const draw = () => pool.length <= 10 ? pool : Array.from({ length: 10 }, (_, i) => pool[(Math.floor(Math.random() * pool.length) + i) % pool.length]!);
+  // gen: which wheel it is (a reset makes a new one, standing still); k: the chosen segment, once spun; landed: the turn is over
+  const [w, setW] = useState(() => ({ gen: 0, segs: draw(), k: -1, landed: false }));
+  const { segs, k } = w, a = 360 / segs.length, spun = k >= 0, done = spun && (w.landed || matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const lead = (e: Event) => club(e.clubs[0] ?? ""), wash = (e: Event) => `color-mix(in srgb, ${lead(e).color || BRAND.cranberry} 30%, var(--surface))`;
+  // on a small screen the wheel and the card are taller than the popup: when the card appears, the popup scrolls down to it and the button under it
+  const result = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (done) result.current?.closest(".ob-in")?.scrollTo?.({ top: 1e6, behavior: "smooth" }); }, [done]);
+  const button = !spun ? <button className="btn" type="button" onClick={() => setW({ ...w, k: Math.floor(Math.random() * segs.length) })}>{t("fate_spin")}</button>
+    : <button className="skip" type="button" aria-disabled={!done} onClick={() => done && setW({ gen: w.gen + 1, segs: draw(), k: -1, landed: false })}>{t("fate_reset")}</button>;
+  return (
+    <Popup title={t("fate")} onClose={onClose} className="ob fate" action={segs.length ? button : undefined}>
+      <p>{t(segs.length ? "fate_lead" : "fate_none")}</p>
+      {segs.length > 0 && (
+        <div className={cx("wheel", spun && !done && "spin")} aria-hidden="true">
+          <i className="tick" />
+          {/* the wheel turns as one piece, five times and on to where the middle of segment k is on top: the brand wheel, and inside its
+              rim the segments (lines of the popup's own colour between them). key: a reset wheel stands at the start, without turning back */}
+          <div key={w.gen} className="disc" onTransitionEnd={ev => ev.target === ev.currentTarget && setW(x => ({ ...x, landed: true }))} style={{ transform: `rotate(${spun ? 1800 - (k + .5) * a : 0}deg)` }}>
+            <img src={WHEEL} alt="" />
+            <div className="segs" style={{ background: `repeating-conic-gradient(var(--surface) 0 1.2deg, transparent 1.2deg ${a}deg), conic-gradient(${segs.map((e, i) => `${wash(e)} ${i * a}deg ${(i + 1) * a}deg`).join()})` }}>
+              {segs.map((e, i) => <span key={i} style={vars({ "--a": (i + .5) * a + "deg", "--c": lead(e).color || BRAND.cranberry })}><ClubMark c={lead(e)} />{fmt.dms.format(new Date(e.start))}</span>)}
+            </div>
+          </div>
+        </div>
+      )}
+      <div aria-live="polite" ref={result}>{done ? <><div className="k">{t("fate_chosen")}</div><EventCard e={segs[k]!} /></> : null}</div>
+    </Popup>
+  );
+}
+
 /** A new navigation to Discover (its tab, a link, back/forward) starts over from the URL; App only
  *  remounts a screen when the route name changes. replaceQuery is not a navigation. */
 export default function Discover({ route }: ScreenProps) {
@@ -119,16 +161,22 @@ function DiscoverScreen({ route }: ScreenProps) {
   const api = useFilters(route.query, "discover");
   useStickyHeads();
   const f = api.shown;
-  const res = f ? selectEvents(D.data.events, f, { page: "discover", mine: myClubs(), saved: D.saved, scope: null, club }) : null;
+  const ctx = { page: "discover", mine: myClubs(), saved: D.saved, scope: null, club } as const;
+  const res = f ? selectEvents(D.data.events, f, ctx) : null;
+  // the Wheel of Fate is open with these: the upcoming events the filters leave, never a cancelled one (the past view has none of
+  // its own: there the wheel takes the upcoming ones)
+  const [fate, setFate] = useState<Event[] | null>(null);
+  const openFate = () => { if (f) setFate(selectEvents(D.data.events, { ...f, view: f.view === "past" ? "all" : f.view }, ctx).matches.filter(e => !e.cancelled)); };
   return (
     <>
       <StaleBanner />
       <main className="wrap" id="main">
-        <FilterBar api={api} />
+        <FilterBar api={api} onFate={openFate} />
         <ListHead title={t("events")} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
         <Results res={res} view={f?.view ?? "all"} onClear={api.clear} />
         <Foot />
       </main>
+      {fate && <Fate pool={fate} onClose={() => setFate(null)} />}
     </>
   );
 }

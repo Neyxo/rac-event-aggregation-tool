@@ -5,6 +5,8 @@ import type { CSSProperties } from "react";
 /** Rotary's azure, a green, Rotaract's cranberry (also any club's colour until it has its own) */
 export const BRAND = { azure: "#0067c8", green: "#009739", cranberry: "#d41367" } as const;
 /** the three in turn, for rows of boxes and tiles */
+/** the wheel alone as an image source, cut out of the brand mark (as static/icon.svg does) */
+export const WHEEL = "rotaract.svg#svgView(viewBox(320,0,149.3,149.6))";
 export const BRAND3 = [BRAND.cranberry, BRAND.azure, BRAND.green] as const;
 /** the Swiss districts: the key of their name and their colour on the maps */
 export const DISTRICTS = { "1980": { key: "d1980", color: BRAND.azure }, "1990": { key: "d1990", color: BRAND.cranberry }, "2000": { key: "d2000", color: BRAND.green } } as const;
