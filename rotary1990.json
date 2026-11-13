@@ -587,12 +587,12 @@
    "registration": "Anmeldung bis: 10.12.2026 22:55"
   },
   "first_seen": "20261111T095123Z",
-  "modified": "20261111T095123Z",
-  "sequence": 0,
+  "modified": "20261113T093847Z",
+  "sequence": 1,
   "status": "active",
   "vevent": [
    "UID:polaris-222952@rotary.ch",
-   "SUMMARY:Info / Commande de Saumon 2026",
+   "SUMMARY:Commande de Saumon 2026",
    "DESCRIPTION:Commandez votre saumon directement dans Polaris. C'est encore devenu plus simple !  Commandes ouvertes jusqu'à 10. décembre 2025 Le lieu exact et la date de la collecte seront communiqués ultérieurement.",
    "LOCATION:-",
    "URL:https://yverdon-les-bains.rotary1990.ch/de/agenda/show/222952",
