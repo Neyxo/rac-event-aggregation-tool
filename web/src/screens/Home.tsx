@@ -5,7 +5,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, freshNews, myClubs } from "../lib/data";
 import { BRAND, clubVars, cx } from "../lib/color";
-import { dayLine, dayN, isPast, relDay } from "../lib/dates";
+import { dayLine, dayN, isPast, racYear, racYearLabel, relDay } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { whatChanged, type Changes } from "../lib/changes";
 import { hasFilters, isFilterLink, scopeClubs, selectEvents } from "../lib/filters";
@@ -117,6 +117,13 @@ function SubOffer() {
   );
 }
 
+/** 1 to 14 July: the year that just ended, in numbers (screens/Review) */
+function ReviewOffer({ member }: { member: boolean }) {
+  const now = new Date();
+  if (now.getMonth() !== 6 || now.getDate() > 14) return null;
+  return <MoreLink to={href("review")} title={t(member ? "rv_title" : "rv_title_all", { y: racYearLabel(racYear(now) - 1) })} sub={t("rv_offer_sub")} ic="star" p={BRAND.cranberry} />;
+}
+
 /** explore mode: an invitation to the welcome steps, and the club finder (which also tells the list where the visitor is) */
 function ExploreBox({ onStart, onPlace }: { onStart: () => void; onPlace: (pos: [number, number]) => void }) {
   return (
@@ -190,6 +197,7 @@ function HomeScreen({ route }: ScreenProps) {
         <div className="home">
           {changes ? <MemberBox cols={cols} mineEv={mineEv} changes={changes} /> : null}
           {!member ? <ExploreBox onStart={() => setObRun(n => n + 1)} onPlace={pos => api.update({ center: pos }, true)} /> : null}
+          <ReviewOffer member={member} />
         </div>
         {/* in the main flow next to the list title, not in a wrapper: the heading then stays stuck until the title pushes it */}
         {news.length ? <h3 className="sh hn">{t("news")}</h3> : null}

@@ -31,7 +31,8 @@ export interface Event {
 }
 
 export interface NewsItem { url: string; title: string; date: string; image: string }
-export interface InstaPost { url: string; image: string; caption: string }
+/** date: the day it was posted ("2026-11-08"); "" or absent when the feed did not say */
+export interface InstaPost { url: string; image: string; caption: string; date?: string }
 /** a partner in clubs.toml: url "#/club/<id>" means another club of this app */
 export interface Partner { name: string; url: string; note?: string }
 

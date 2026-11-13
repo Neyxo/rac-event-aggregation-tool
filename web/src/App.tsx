@@ -63,6 +63,7 @@ import Intl from "./screens/Intl";
 // whose Refresh loads the app again
 const screen = (load: () => Promise<{ default: ComponentType<ScreenProps> }>) => lazy(() => load().catch((e: unknown) => { throw new LoadFailed("screen code: " + String(e), { cause: e }); }));
 const MapScreen = screen(() => import("./screens/Map"));  // Leaflet only loads here
+const Review = screen(() => import("./screens/Review"));  // two weeks a year, or from a shared link
 const Dev = screen(() => import("./screens/Dev"));  // only developers ever open it
 
 export interface ScreenProps { route: Route }
@@ -102,6 +103,7 @@ export const ROUTE_META: Record<RouteName, Meta> = {
   guide: { screen: Guide, page: "guide", active: "about", back: true, title: T("New in the club"), main: "wrap fam" },
   words: { screen: Words, page: "words", active: "about", back: true, title: T("Rotaract words") },
   intl: { screen: Intl, page: "intl", active: "about", back: true, title: T("International events"), main: "wrap fam" },
+  review: { screen: Review, page: "review", active: null, back: true, title: T("Year in review") },
   dev: { screen: Dev, page: "dev", active: "dev", title: T("Developer"), main: "wrap settings dev" },
 };
 

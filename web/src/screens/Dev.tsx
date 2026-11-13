@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { I18N, t, tx } from "../i18n";
 import { club } from "../lib/data";
 import { clubVars, cx, DISTRICT_IDS, DISTRICTS } from "../lib/color";
-import { dayLine, fmt, isPast } from "../lib/dates";
+import { dayLine, fmt, isPast, racYear, racYearLabel } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { href } from "../lib/route";
 import { store, type StoreKey, type StoreKeys } from "../lib/store";
@@ -337,8 +337,15 @@ function Preview() {
           {bingo && <Bingo onClose={() => setBingo(false)} />}
         </div>
       </Row>
+      <Row label="Year in review">
+        <div className="tools">
+          <Link label={racYearLabel(racYear() - 1)} to={href("review")} />
+          <Link label={racYearLabel(racYear()) + " so far"} to={href("review", null, "y=" + racYear())} />
+        </div>
+      </Row>
       <Row label="Home's line today"><span className="meta">{dayLine().text}</span></Row>
       <p className="meta">A "did you know" a day; a line of its own on 23 Feb, 13 Mar, 19 Apr, 4 May, 1 Jul, 1 Aug, 29 Sep, 24 Oct, 5 Nov and the fourth Monday of November, and the theme of the Rotary month on the first of most months. Set the pretend date above to see one.</p>
+      <p className="meta">Home offers the year in review from 1 to 14 July (set the pretend date above).</p>
       <p className="meta">By date they play once per page load: the firework on Home on 1 August, the confetti on the Bern club page on the fourth Monday of November (2026-11-23). Never with "reduce motion" on.</p>
       <p className="meta">As a guest your clubs are hidden, not deleted, and club changes are not saved meanwhile. The Dev button in the top bar stays lit while a switch is on.</p>
       <div className="links">

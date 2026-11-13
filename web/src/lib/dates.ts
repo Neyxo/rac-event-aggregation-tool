@@ -12,6 +12,11 @@ export const dayN = (d: DateLike): number => Math.round((startOfDay(d).getTime()
 export const lastDay = (e: Event): Date => new Date(new Date(e.end).getTime() - 1);
 export const isPast = (e: Event): boolean => new Date(e.end) < new Date();
 
+/** the Rotaract year a day is in, named by the year it began on 1 July: 30 June 2027 -> 2026, 1 July 2027 -> 2027 */
+export const racYear = (d: Date = new Date()): number => d.getFullYear() - (d.getMonth() < 6 ? 1 : 0);
+/** 2026 -> "2026/27" */
+export const racYearLabel = (y: number): string => `${y}/${String((y + 1) % 100).padStart(2, "0")}`;
+
 /** the two days with an Easter egg (components/Festive): 1 August, and Zibelemärit, the fourth Monday of November */
 export function festive(d: Date = new Date()): "aug1" | "zibele" | null {
   if (d.getMonth() === 7 && d.getDate() === 1) return "aug1";

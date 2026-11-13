@@ -1,6 +1,6 @@
 // Hash routes: #/ (home), #/discover?q=..., #/event/<id>, #/club/<id>, #/settings ... Parsing and links only; the hook is in components/router.ts.
 
-export const ROUTES = ["home", "discover", "calendar", "map", "event", "club", "settings", "subscribe", "about", "about-more", "family", "public", "guide", "words", "intl", "dev"] as const;
+export const ROUTES = ["home", "discover", "calendar", "map", "event", "club", "settings", "subscribe", "about", "about-more", "family", "public", "guide", "words", "intl", "review", "dev"] as const;
 export type RouteName = typeof ROUTES[number];
 export interface Route {
   name: RouteName;
