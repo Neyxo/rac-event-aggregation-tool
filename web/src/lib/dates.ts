@@ -1,6 +1,6 @@
 // Dates as the app shows them. Event times are local times without a zone ("2026-11-14T18:00"); "now" is new Date(),
 // which the pretend-date switch shifts (dev.ts), so tests set the clock with vi.setSystemTime.
-import { LOCALE, t } from "../i18n";
+import { LOCALE, t, tx } from "../i18n";
 import type { Event } from "./types";
 
 type DateLike = Date | string | number;
@@ -17,6 +17,21 @@ export function festive(d: Date = new Date()): "aug1" | "zibele" | null {
   if (d.getMonth() === 7 && d.getDate() === 1) return "aug1";
   if (d.getMonth() === 10 && d.getDay() === 1 && d.getDate() >= 22 && d.getDate() <= 28) return "zibele";
   return null;
+}
+
+/** the dates on which Home's daily line (below) is about the day itself: Rotary's and Rotaract's own, and festive()'s two */
+export type Special = NonNullable<ReturnType<typeof festive>> | "rotary" | "rotaract" | "harris" | "women" | "rotaryYear" | "philippines" | "polio" | "interact";
+const FIXED: Record<string, Special> = { "2-23": "rotary", "3-13": "rotaract", "4-19": "harris", "5-4": "women", "7-1": "rotaryYear", "9-29": "philippines", "10-24": "polio", "11-5": "interact" };
+/** the year the lines with "{n} years ago" count from */
+const SINCE: Partial<Record<Special, number>> = { rotary: 1905, rotaract: 1968, interact: 1962 };
+export const special = (d: Date = new Date()): Special | null => festive(d) ?? FIXED[`${d.getMonth() + 1}-${d.getDate()}`] ?? null;
+/** Home's one line a day. A special date has its own; the first of a month names the month's theme in the Rotary calendar (where
+ *  tx("months") has one); any other day the next "did you know" of the list (the same all day, no Math.random: a redraw never changes it). */
+export function dayLine(d: Date = new Date()): { special: Special | null; text: string } {
+  const k = special(d), facts = tx("facts"), theme = d.getDate() === 1 && tx("months")[d.getMonth()];
+  if (k) return { special: k, text: t(`day_${k}` as const, { n: d.getFullYear() - (SINCE[k] ?? 0) }) };
+  if (theme) return { special: null, text: t("day_month", { m: new Intl.DateTimeFormat(LOCALE, { month: "long" }).format(d), x: theme }) };
+  return { special: null, text: facts[Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5 % facts.length]! };
 }
 
 const f = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(LOCALE, o);

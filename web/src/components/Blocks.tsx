@@ -1,5 +1,5 @@
 // Bigger shared blocks: the call to action, news teasers, a club's rich text, the pillar pictures, the offline state.
-import { Component, Suspense, useEffect, useState, type ReactNode } from "react";
+import { Component, Suspense, useEffect, useState, type ComponentType, type ReactNode } from "react";
 import { t } from "../i18n";
 import { getData, LoadFailed, retryLoad } from "../lib/data";
 import { BRAND, clubVars, vars } from "../lib/color";
@@ -14,12 +14,14 @@ import { ClubChip, ClubMark } from "./Club";
 import { Skel } from "./Event";
 import { useData } from "./hooks";
 
-/** call to action: "your club" with its next event when a main club is set, "find your club" (town search, near me) otherwise.
+/** call to action: "your club" with its next event when a main club is set, "find your club" (town search, near me) otherwise;
+ *  for the undecided, "let the hat decide" opens the sorting ceremony (components/Sorting, fetched on that tap).
  *  onPlace(coords) tells the screen where the visitor is once they typed a town or tapped "near me" (Home lists nearby events then). */
 export function CtaBlock({ onPlace }: { onPlace?: (pos: Coords) => void }) {
   const D = useData();
   const home = D.settings.home ? D.clubs[D.settings.home] : undefined;
   const [q, setQ] = useState(""), [hint, setHint] = useState(""), [pos, setPos] = useState<Coords | null>(null);
+  const [Hat, setHat] = useState<ComponentType<{ onClose: () => void }> | null>(null);
   const show = (p: Coords) => { here.set(p); setPos(p); onPlace?.(p); };
   // a position found earlier in this tab is shown right away; the approximate position is only looked up on a tap, never on load
   useEffect(() => { const p = here.get(); if (p && !home) show(p); }, []);
@@ -49,7 +51,9 @@ export function CtaBlock({ onPlace }: { onPlace?: (pos: Coords) => void }) {
       <div className="near">
         {pos ? nearestClubs(D.data.clubs, pos, 3).map(({ c, d }) => <ClubChip key={c.id} id={c.id}><small>{Math.round(d) + " km"}</small></ClubChip>)
           : <button className="linkbtn" type="button" onClick={() => void me()}>{"📍 " + t("near_btn")}</button>}
+        <button className="linkbtn" type="button" onClick={() => void import("./Sorting").then(m => setHat(() => m.default), () => setHint(t("place_err")))}>{"🎩 " + t("hat_btn")}</button>
       </div>
+      {Hat && <Hat onClose={() => setHat(null)} />}
     </div>
   );
 }

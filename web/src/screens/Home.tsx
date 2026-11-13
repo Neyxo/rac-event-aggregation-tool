@@ -5,7 +5,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { t } from "../i18n";
 import { club, freshNews, myClubs } from "../lib/data";
 import { BRAND, clubVars, cx } from "../lib/color";
-import { dayN, isPast, relDay } from "../lib/dates";
+import { dayLine, dayN, isPast, relDay } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { whatChanged, type Changes } from "../lib/changes";
 import { hasFilters, isFilterLink, scopeClubs, selectEvents } from "../lib/filters";
@@ -38,6 +38,12 @@ function Row({ e, label, soon = false }: { e: Event; label: string; soon?: boole
   );
 }
 
+/** one muted line a day: a "did you know", or the special date's own line (lib/dates) */
+function DayLine() {
+  const { special, text } = dayLine();
+  return <p className="fact">{special ? null : <b>{t("dyk")} </b>}{text}</p>;
+}
+
 function Hello({ cols, mineEv }: { cols: string[]; mineEv: Event[] }) {
   const h = new Date().getHours();
   const week = mineEv.filter(e => dayN(e.start) < 7).length;
@@ -45,6 +51,7 @@ function Hello({ cols, mineEv }: { cols: string[]; mineEv: Event[] }) {
     <div className="hello">
       <h1>{(h < 11 ? t("greet_morning") : h < 18 ? t("greet_day") : t("greet_evening")) + " 👋"}</h1>
       <p className="sub">{week === 0 ? t("wk_none") : week === 1 ? t("wk_one") : t("wk_events", { n: week })}</p>
+      <DayLine />
       <div className="chips">{cols.map(id => <ClubChip key={id} id={id} extra={id === cols[0] ? "main" : ""} />)}</div>
     </div>
   );
@@ -121,6 +128,7 @@ function ExploreBox({ onStart, onPlace }: { onStart: () => void; onPlace: (pos: 
           <button className="primary" type="button" onClick={onStart}>{t("ob_start")}</button>
           <a href={href("about")}>{t("explore_all")}</a>
         </div>
+        <DayLine />
       </div>
       <CtaBlock onPlace={onPlace} />
     </>

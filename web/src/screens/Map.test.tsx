@@ -1,4 +1,4 @@
-// The map screen: markers for upcoming events with coordinates, the "past" switch, the count, the popup link.
+// The map screen: markers for upcoming events with coordinates, the "past" switch, the count, the popup link, the bunker Easter egg.
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { fixture } from "../test/fixture";
@@ -6,7 +6,7 @@ import { parseHash } from "../lib/route";
 import { getData, loadData } from "../lib/data";
 import { isPast } from "../lib/dates";
 import { nEvents } from "../i18n";
-import MapScreen from "./Map";
+import MapScreen, { archive } from "./Map";
 
 const route = parseHash("#/map");
 
@@ -54,5 +54,24 @@ describe("map", () => {
     expect(past().checked).toBe(true);
     await waitFor(() => expect(screen.getByText(nEvents(withCoords().length))).toBeTruthy());
     history.replaceState(null, "");
+  });
+
+  it("the bunker only shows once zoomed in; its door opens the archive of past events, newest first, each linking to its event", () => {
+    const first = render(<MapScreen route={route} />);
+    expect(first.container.querySelector(".mapbunker")).toBeNull();
+    expect(document.querySelector("dialog.bunker")).toBeNull();
+    first.unmount();
+    // #/map?bunker starts zoomed in at the Gotthard with the archive open; close it (jsdom has no dialog.close(), so by its event) and open it again through the door
+    const { container } = render(<MapScreen route={parseHash("#/map?bunker")} />);
+    act(() => { document.querySelector("dialog.bunker")?.dispatchEvent(new Event("close")); });
+    expect(document.querySelector("dialog.bunker")).toBeNull();
+    act(() => { fireEvent.click(container.querySelector(".mapbunker")!); });
+    const files = archive(getData().data.events);
+    expect(files.length).toBeGreaterThan(1);
+    expect(files.every(isPast)).toBe(true);
+    expect(files[0]!.start >= files[1]!.start).toBe(true);
+    const links = [...document.querySelectorAll<HTMLAnchorElement>("dialog.bunker a.event")];
+    expect(links.map(a => a.getAttribute("href"))).toEqual(files.slice(0, 30).map(e => "#/event/" + e.id));
+    expect(document.querySelector("dialog.bunker p")!.textContent).toContain(String(files.length));
   });
 });

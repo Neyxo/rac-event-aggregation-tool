@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { I18N, t, tx } from "../i18n";
 import { club } from "../lib/data";
 import { clubVars, cx, DISTRICT_IDS, DISTRICTS } from "../lib/color";
-import { fmt, isPast } from "../lib/dates";
+import { dayLine, fmt, isPast } from "../lib/dates";
 import { devFlag } from "../lib/dev";
 import { href } from "../lib/route";
 import { store, type StoreKey, type StoreKeys } from "../lib/store";
@@ -12,6 +12,8 @@ import type { Club, Event, Status } from "../lib/types";
 import type { ScreenProps } from "../App";
 import { ClubMark, clubLabel, FeedRow, feedUrls, Footer, goUrl, MoreLink, toast, useData, type IconName } from "../components";
 import { playFestive } from "../components/Festive";
+import Sorting from "../components/Sorting";
+import Bingo from "../components/Bingo";
 import { version } from "../../../package.json";
 
 /** status.json as written by the feed run; on a fetch error only clubs and failures are known */
@@ -308,6 +310,7 @@ const playEgg = (k: "aug1" | "zibele") => matchMedia("(prefers-reduced-motion: r
 function Preview() {
   const day = devFlag("Date") || "";  // what is in effect: nothing while developer mode is off
   const setDay = (v: string) => preview("rac.devDate", v);
+  const [hat, setHat] = useState(false), [bingo, setBingo] = useState(false);
   const guideAgain = () => {
     localStorage.removeItem("rac.guideSeen");
     toast("Done: it is back on Home");
@@ -327,8 +330,15 @@ function Preview() {
         <div className="tools">
           <Btn label="1 August" onClick={() => playEgg("aug1")} />
           <Btn label="Zibelemärit" onClick={() => playEgg("zibele")} />
+          <Link label="Gotthard bunker" to="#/map?bunker" />
+          <Btn label="Sorting hat" onClick={() => setHat(true)} />
+          {hat && <Sorting onClose={() => setHat(false)} />}
+          <Btn label="Event bingo" onClick={() => setBingo(true)} />
+          {bingo && <Bingo onClose={() => setBingo(false)} />}
         </div>
       </Row>
+      <Row label="Home's line today"><span className="meta">{dayLine().text}</span></Row>
+      <p className="meta">A "did you know" a day; a line of its own on 23 Feb, 13 Mar, 19 Apr, 4 May, 1 Jul, 1 Aug, 29 Sep, 24 Oct, 5 Nov and the fourth Monday of November, and the theme of the Rotary month on the first of most months. Set the pretend date above to see one.</p>
       <p className="meta">By date they play once per page load: the firework on Home on 1 August, the confetti on the Bern club page on the fourth Monday of November (2026-11-23). Never with "reduce motion" on.</p>
       <p className="meta">As a guest your clubs are hidden, not deleted, and club changes are not saved meanwhile. The Dev button in the top bar stays lit while a switch is on.</p>
       <div className="links">

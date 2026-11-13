@@ -1,6 +1,7 @@
 // Run with TZ=Europe/Zurich (npm test): the DST cases are Swiss weekends.
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { dayN, daysUntil, deadlineState, festive, isPast, lastDay, metaLine, placeShort, sameDay, startOfDay, whenLong, whenShort } from "./dates";
+import { tx } from "../i18n";
+import { dayLine, dayN, daysUntil, deadlineState, festive, isPast, lastDay, metaLine, placeShort, sameDay, special, startOfDay, whenLong, whenShort } from "./dates";
 import { ev } from "../test/ev";
 
 const at = (s: string) => vi.setSystemTime(new Date(s));
@@ -99,5 +100,27 @@ describe("festive", () => {
     expect(festive(new Date("2026-11-16T12:00"))).toBeNull();
     expect(festive(new Date("2026-11-30T12:00"))).toBeNull();
     expect(festive(new Date("2026-11-24T12:00"))).toBeNull();
+  });
+});
+
+describe("special and dayLine", () => {
+  const day = (s: string) => new Date(s + "T12:00");
+  it("knows the Rotary dates and keeps festive's days", () => {
+    const got = ["2026-02-23", "2026-03-13", "2026-04-19", "2026-05-04", "2026-07-01", "2026-08-01", "2026-09-29", "2026-10-24", "2026-11-05", "2026-11-23"].map(s => special(day(s)));
+    expect(got).toEqual(["rotary", "rotaract", "harris", "women", "rotaryYear", "aug1", "philippines", "polio", "interact", "zibele"]);
+    for (const s of ["2026-04-01", "2026-03-01", "2026-11-13"]) expect(special(day(s)), s).toBeNull();
+  });
+  it("shows the special date's line with the years, else a fact: the same all day, the next one tomorrow, all of them in turn", () => {
+    expect(dayLine(day("2026-03-13")).text).toContain("58 years ago");
+    expect(dayLine(day("2026-02-23")).text).toContain("turns 121");
+    expect(dayLine(day("2026-11-05")).text).toContain("64 years ago");
+    expect(dayLine(day("2026-11-01")).text).toBe("🗓️ November is Rotary's month for The Rotary Foundation.");
+    const facts = tx("facts");
+    expect(facts).toContain(dayLine(day("2026-04-01")).text);  // a month without a theme line
+    expect(dayLine(new Date("2026-11-13T00:05")).text).toBe(dayLine(new Date("2026-11-13T23:55")).text);
+    const run = Array.from({ length: facts.length }, (_, i) => dayLine(new Date(2026, 5, 2 + i, 12)).text);  // 2 to 29 June: no special date, no first of a month
+    expect(new Set(run).size).toBe(facts.length);
+    expect(facts).toContain(run[0]);
+    for (const f of facts) expect(f.length, f).toBeLessThanOrEqual(110);
   });
 });

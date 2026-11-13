@@ -3,8 +3,10 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
-import { t } from "../i18n";
-import { getData, loadData, setSettings } from "../lib/data";
+import { t, tx } from "../i18n";
+import { club, getData, loadData, setSettings } from "../lib/data";
+import { DISTRICT_IDS } from "../lib/color";
+import { sortClub, WISHES, type Answers } from "./Sorting";
 import { ClubChip, ClubChips, CtaBlock, EventCard, NewIds, Footer, HelpLinks, NewsStrip, NextUp, Popup, QaList, Rich, Tabs, TopBar, Toast, toast } from ".";
 
 beforeAll(async () => {
@@ -162,6 +164,40 @@ describe("blocks", () => {
     expect(screen.getByRole("textbox", { name: t("ab_find_ph") })).toBeTruthy();
     expect(screen.getByRole("button", { name: t("ab_find_btn") })).toBeTruthy();
     expect(screen.getByRole("button", { name: "📍 " + t("near_btn") })).toBeTruthy();
+  });
+  it("sorting ceremony: the hat link opens it; three answers name a club with a link to its page; Ask again starts over", async () => {
+    setSettings({ home: "", also: [] });
+    render(<CtaBlock />);
+    fireEvent.click(screen.getByRole("button", { name: "🎩 " + t("hat_btn") }));
+    const dlg = within(await screen.findByRole("dialog", { hidden: true }));
+    const tap = (name: string) => fireEvent.click(dlg.getByRole("button", { name, hidden: true }));
+    expect(dlg.getByText(tx("hat_q")[0]!)).toBeTruthy();
+    tap("Deutsch"); tap(tx("hat_where")[1]!); tap(tx("hat_wish")[0]!);  // German, district 1990, many events
+    expect(dlg.getByText(t("hat_verdict"))).toBeTruthy();
+    expect(dlg.getByText("Rotaract Bern")).toBeTruthy();
+    expect(dlg.getByRole("link", { name: t("hat_go"), hidden: true }).getAttribute("href")).toBe("#/club/bern");
+    tap(t("hat_again"));
+    expect(dlg.getByText(tx("hat_q")[0]!)).toBeTruthy();
+  });
+  it("sorting: every combination of answers names a real club; language first, then district, then the wish; the same answers, the same club", () => {
+    // the real clubs by district, the national club and a pseudo-club; upcoming events: Luzern 2, St. Gallen 3, Fribourg 1 (and a cancelled one)
+    const ids = { "1980": ["luzern", "basel", "solothurn"], "1990": ["bern", "fribourg", "geneve-international"], "2000": ["zuerich", "zurich-international", "stgallen", "ticino"], "": ["schweiz"] };
+    const clubs = [...Object.entries(ids).flatMap(([district, l]) => l.map(id => ({ ...club("luzern"), id, district }))), { ...club("luzern"), id: "international", source: "international" }];
+    const events = ["luzern", "luzern", "stgallen", "stgallen", "stgallen", "fribourg", "international", "schweiz"].map((c, i) => ev({ id: "s" + i, clubs: [c] })).concat(ev({ id: "x", clubs: ["fribourg"], cancelled: true }));
+    const sort = (...a: Answers) => sortClub(clubs, events, a)?.id;
+    at("2026-11-11T10:00", () => {
+      for (const l of ["de", "fr", "it", "en"] as const) for (const d of DISTRICT_IDS) for (const w of WISHES) {
+        expect([l, d, w, ids[d].concat(ids["1990"], ids["2000"]).includes(sort(l, d, w)!)]).toEqual([l, d, w, true]);
+        expect(sort(l, d, w)).toBe(sort(l, d, w));
+      }
+      expect([sort("de", "1980", "many"), sort("de", "1980", "small"), sort("de", "2000", "many")]).toEqual(["luzern", "basel", "stgallen"]);  // a tie: the first in the data
+      expect(sort("it", "1990", "many")).toBe("ticino");  // the language outweighs the district
+      expect([sort("fr", "1990", "many"), sort("fr", "1990", "small"), sort("fr", "1980", "world")]).toEqual(["fribourg", "geneve-international", "geneve-international"]);
+      expect(sort("de", "2000", "world")).toBe("zurich-international");  // an international club outweighs the language ...
+      expect(sort("de", "1980", "world")).toBe("luzern");  // ... but not language and district together
+      expect(sort("en", "1990", "many")).toBe("geneve-international");
+    });
+    expect(sortClub([], [], ["de", "1980", "many"])).toBeUndefined();
   });
   it("call to action with a main club: its name and a link to its next event", () => {
     at("2026-11-10T12:00", () => { setSettings({ home: "luzern", also: [] }); render(<CtaBlock />); });
