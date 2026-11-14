@@ -93,16 +93,14 @@ describe("loadData", () => {
     expect(m.eventById(m.getData(), id)?.layer).toBe("rotary");
     expect(m.eventById(m.getData(), "nope")).toBeUndefined();
   });
-  it("a failed fetch rejects and stays failed for that navigation; the next navigation tries again", async () => {
+  it("a failed fetch rejects and stays failed until retryLoad() (App: the next navigation)", async () => {
     const f = json({}, false);
     vi.stubGlobal("fetch", f);
     const m = await fresh();
-    m.retryLoad(1);
     await expect(m.loadData()).rejects.toThrow("500");
     vi.stubGlobal("fetch", json(fixture));
-    m.retryLoad(1);
     await expect(m.loadData()).rejects.toThrow("500");
-    m.retryLoad(2);
+    m.retryLoad();
     await expect(m.loadData()).resolves.toBeTruthy();
   });
   it("guest preview with developer mode on", async () => {

@@ -22,7 +22,7 @@ import {
   useInstallPrompt,
   useStored,
 } from "../../components";
-import { useNav } from "../../components/router";
+import { useNav } from "../../router";
 import { version } from "../../../../package.json";
 
 /** an Off / On segmented control (Rotary layer, developer mode) */

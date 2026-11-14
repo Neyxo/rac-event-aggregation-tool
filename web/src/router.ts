@@ -2,8 +2,8 @@
 // query without a navigation (Discover keeps its filters in the URL like it did with history.replaceState).
 // Scroll: a new navigation starts at the top; back/forward returns to where that entry was left (App.tsx applies it).
 import { useMemo, useSyncExternalStore } from "react";
-import { parseHash, type Route } from "../lib/route";
-import { emitter } from "../lib/store";
+import { parseHash, type Route } from "./lib/route";
+import { emitter } from "./lib/store";
 
 // depth: how many in-app navigations led to this entry (kept in history.state, so it survives a reload): 0 is where the app was opened
 interface Nav {
@@ -46,6 +46,8 @@ if (typeof window !== "undefined") {
   );
 }
 
+/** f runs on every navigation (and replaceQuery), outside React */
+export const onNav = subscribe;
 const getNav = () => nav;
 /** the navigation state: id changes on every navigation (not on replaceQuery), pop is true for back/forward */
 export const useNav = (): Nav => useSyncExternalStore(subscribe, getNav);
@@ -77,7 +79,7 @@ export function replaceQuery(q: URLSearchParams): void {
  *  link opened in a tab that was somewhere else before would leave the app) */
 export const canGoBack = (): boolean => nav.depth > 0;
 /** where to scroll after a navigation: 0 for a new one, the remembered position for back/forward */
-export const scrollTarget = (n: Nav): number => (n.pop ? (positions.get(n.key) ?? 0) : 0);
+export const scrollTarget = (n: Pick<Nav, "pop" | "key">): number => (n.pop ? (positions.get(n.key) ?? 0) : 0);
 
 /** an in-page link (#main, #results): hash hrefs are routes here, so it scrolls instead of navigating */
 export function inPageLink(id: string) {

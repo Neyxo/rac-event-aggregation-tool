@@ -7,8 +7,8 @@ import { anyDevFlag } from "../../lib/dev";
 import { href } from "../../lib/route";
 import { store } from "../../lib/store";
 import { Icon, type IconName } from "../Icon";
-import { useStored } from "../hooks";
-import { canGoBack } from "../router";
+import { useStored } from "../../hooks";
+import { canGoBack } from "../../router";
 
 /** what the top bar and tabs mark as current */
 export type Active = "home" | "discover" | "calendar" | "about" | "app" | "settings" | "dev" | null;

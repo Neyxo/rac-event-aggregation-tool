@@ -1,6 +1,6 @@
 // The sticky pieces of a screen, each with its rules inside: the head that compacts as you scroll, and the section headings.
 import { useRef, type ReactNode } from "react";
-import { useMorphHead, useStickyHeads } from "../hooks";
+import { useMorphHead, useStickyHeads } from "../../hooks";
 
 /** The head of the event and club screens: sticks under the top bar and compacts as you scroll (hooks' useMorphHead has the how).
  *  Renders its own sentinel. Its primary button is a child with class "go"; <GoPlace /> in the button row below keeps that

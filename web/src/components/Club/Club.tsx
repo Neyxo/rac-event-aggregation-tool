@@ -5,7 +5,7 @@ import { club } from "../../lib/data";
 import { clubVars, cx } from "../../lib/color";
 import { href } from "../../lib/route";
 import type { Club } from "../../lib/types";
-import { useData } from "../hooks";
+import { useData } from "../../hooks";
 
 /** the crest, or a dot in the club colour */
 export function ClubMark({ c }: { c: Club }) {

@@ -1,6 +1,6 @@
 // Installing the app: the browser's install prompt (Chrome, Edge, Android) and whether the app already runs installed.
 // The prompt fires once, early, often before the screen that offers it is shown: it is caught here, at start, for the welcome
-// steps and Settings alike (useInstallPrompt() in components/hooks re-renders when it arrives or is used up).
+// steps and Settings alike (useInstallPrompt() in src/hooks re-renders when it arrives or is used up).
 import { emitter } from "./store";
 
 /** the beforeinstallprompt event; not in TypeScript's DOM types */

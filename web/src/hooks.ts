@@ -1,8 +1,8 @@
 // Hooks every screen can use: the data, stored values, the colour wash, the morphing hero, the sticky headings.
 import { use, useEffect, useLayoutEffect, useMemo, useRef, useSyncExternalStore, type RefObject } from "react";
-import { getData, loadData, loaded, subscribeData, type AppData } from "../lib/data";
-import { getInstallPrompt, subscribeInstall, type InstallPrompt } from "../lib/install";
-import { store, type StoreKey, type StoreKeys } from "../lib/store";
+import { getData, loadData, loaded, subscribeData, type AppData } from "./lib/data";
+import { getInstallPrompt, subscribeInstall, type InstallPrompt } from "./lib/install";
+import { store, type StoreKey, type StoreKeys } from "./lib/store";
 
 /** events.json and what the app derives from it (lib/data's state): D.data.events, D.clubs, D.settings, D.saved. Re-renders whenever an
  *  action (setSettings, toggleSaved, setRotary) changes the state. Until events.json is in, the screen suspends (App's DataBoundary

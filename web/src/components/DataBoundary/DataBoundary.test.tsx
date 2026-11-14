@@ -4,25 +4,26 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ComponentType } from "react";
-import { fixture } from "../test/fixture";
-import { t, tx } from "../i18n";
-import { parseHash, type RouteName } from "../lib/route";
-import type { ScreenProps } from "../App";
-import { DataBoundary } from "./Blocks/Blocks";
-import Home from "../screens/Home/Home";
-import Discover from "../screens/Discover/Discover";
-import Calendar from "../screens/Calendar/Calendar";
-import Event from "../screens/Event/Event";
-import Club from "../screens/Club/Club";
-import Settings from "../screens/Settings/Settings";
-import Subscribe from "../screens/Subscribe/Subscribe";
-import About from "../screens/About/About";
-import AboutMore from "../screens/AboutMore/AboutMore";
-import Family from "../screens/Family/Family";
-import Guide from "../screens/Guide/Guide";
-import Intl from "../screens/Intl/Intl";
-import Dev from "../screens/Dev/Dev";
-import MapScreen from "../screens/Map/Map";
+import { fixture } from "../../test/fixture";
+import { t, tx } from "../../i18n";
+import { retryLoad } from "../../lib/data";
+import { parseHash, type RouteName } from "../../lib/route";
+import type { ScreenProps } from "../../App";
+import { DataBoundary } from "./DataBoundary";
+import Home from "../../screens/Home/Home";
+import Discover from "../../screens/Discover/Discover";
+import Calendar from "../../screens/Calendar/Calendar";
+import Event from "../../screens/Event/Event";
+import Club from "../../screens/Club/Club";
+import Settings from "../../screens/Settings/Settings";
+import Subscribe from "../../screens/Subscribe/Subscribe";
+import About from "../../screens/About/About";
+import AboutMore from "../../screens/AboutMore/AboutMore";
+import Family from "../../screens/Family/Family";
+import Guide from "../../screens/Guide/Guide";
+import Intl from "../../screens/Intl/Intl";
+import Dev from "../../screens/Dev/Dev";
+import MapScreen from "../../screens/Map/Map";
 
 window.matchMedia ??= ((q: string) => ({
   matches: false,
@@ -54,14 +55,17 @@ function held(ok: boolean) {
   );
   return { f, answer: () => answer() };
 }
-/** each screen shown as a navigation of its own (App passes useNav().id) */
+/** each screen shown as a navigation of its own (App passes useNav().id, and has a failed load dropped on every navigation) */
 let nav = 0;
 const boundary = (Screen: ComponentType<ScreenProps>, hash: string, n: number) => (
   <DataBoundary nav={n} main="wrap evpage" skel={3}>
     <Screen route={parseHash(hash)} />
   </DataBoundary>
 );
-const show = (Screen: ComponentType<ScreenProps>, hash: string) => render(boundary(Screen, hash, ++nav));
+const show = (Screen: ComponentType<ScreenProps>, hash: string) => {
+  retryLoad();
+  return render(boundary(Screen, hash, ++nav));
+};
 const offlineOnly = async () => {
   await screen.findByText(t("offline")); // React shows what a boundary waited for a little later (its fallback throttle)
   expect(screen.getByRole("main").textContent).toBe(t("offline") + t("refresh"));
@@ -168,6 +172,7 @@ describe("DataBoundary", () => {
     const { f, answer } = held(true);
     vi.stubGlobal("fetch", f);
     await act(async () => {
+      retryLoad();
       r.rerender(boundary(Calendar, "#/calendar", ++nav));
     }); // same key in App: the boundary stays
     expect(f).toHaveBeenCalledTimes(1);

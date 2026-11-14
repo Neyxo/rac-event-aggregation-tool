@@ -6,33 +6,7 @@
  * Per route (ROUTE_META below) App sets body[data-page], the body classes calpage / frosted, the default document.title, the active
  * top-bar button and tab and the back button. A new navigation scrolls to the top; back/forward restores the position.
  *
- * HOW A SCREEN WORKS (web/src/screens/<Name>/<Name>.tsx, with <Name>.css listed in app.css and <Name>.test.tsx beside it):
- * - export default function Name({ route }: ScreenProps). route.params.id is the id of #/event/<id> and #/club/<id>; route.query is
- *   the URLSearchParams after "?" in the hash (Discover's filters). The screen (and its DataBoundary) is remounted when the route name or id changes.
- * - Render what sits between </header> and <nav>: usually <main className="..."> (id="main" on the skip-link screens), plus siblings such as the stale banner
- *   before main, the calendar sheet or the onboarding <dialog>.
- *   No wrapper elements: app.css has child selectors. Never render header, nav, #frost or #toast: App does.
- * - Data: const D = useData(). The screen only renders once events.json is in: until then App's DataBoundary shows a skeleton, and
- *   the offline note when it can't be loaded (no loading or error states in a screen). D is a read-only snapshot:
- *   D.data.events / D.data.clubs / D.clubs / D.settings / D.saved, with myClubs(), club(id), isRac(), nClubs(), eventById(id) (keeps
- *   the shared-link exception for a Rotary event) from lib/data. Change it only through lib/data's actions: setSettings(s),
- *   toggleSaved(id), setRotary(on); every component that called useData() (or useSaved(id) for one star) re-renders.
- *   Cards tag NEW only below <NewIds.Provider> (Home). Status for the dev screen: fetch("status.json") yourself (types: lib/types Status).
- * - Logic is in lib/ (dates, filters, calendar, changes, geo, rich, pillars, color, share, route) with tests; reuse it, don't re-port.
- * - Text: t("key", vars) for strings, tx("key") for lists/pairs/nm/intl, nEvents(n), LANG, LOCALE (i18n/index.ts). A key built at
- *   run time needs a literal type: t(`ab_${k}` as const) with k a union, or a lookup table.
- * - Links are hashes: href("event", id), href("club", id), href("discover", null, "clubs=bern") (lib/route). In-page anchors (#main,
- *   #results, settings #install) would change the route: use inPageLink("results") (components/router). Leave the URL with navigate().
- *   Discover writes its filters back with replaceQuery(params) instead of history.replaceState.
- * - Sticky pieces (components/Sticky): <Sh lv1> / <Sh> for section headings, <MorphHead className> for the event / club head.
- * - Hooks (components/hooks): useWash(c1, c2, c3) for body.wash; useTitle(text) for a title of its own; useStored(key, default) for a localStorage value that re-renders; a top-bar button of
- *   the screen's own is ROUTE_META's extra (About's share). toast(msg, action?) from components/Toast; <Popup title onClose> for a popup.
- * - Share buttons: shareUrl({ event: id }), shareUrl({ club: id }) or shareUrl("about") (lib/share).
- * - Settings: setTheme() (lib/store) and setRotary() (lib/data) apply at once; setLang() (i18n) reloads the page (every text is
- *   read once, at start).
- * - Map and AboutMore use Leaflet from npm: import L from "leaflet" and "leaflet/dist/leaflet.css" inside the screen (Map is lazy-loaded
- *   here, so Leaflet is only fetched there; AboutMore should import("leaflet") in an effect for the same reason).
- * - Home: takeWelcome() (lib/route) is true once when the app was opened with ?welcome.
+ * How to write a screen: docs/screens.md.
  */
 import { lazy, useLayoutEffect, type ComponentType } from "react";
 import { t } from "./i18n";
@@ -40,9 +14,9 @@ import type { Route, RouteName } from "./lib/route";
 import { Tabs, TopBar, type Active } from "./components/Chrome/Chrome";
 import { Toast } from "./components/Toast/Toast";
 import { Festive } from "./components/Festive/Festive";
-import { DataBoundary } from "./components/Blocks/Blocks";
-import { LoadFailed } from "./lib/data";
-import { inPageLink, scrollTarget, useNav, useRoute } from "./components/router";
+import { DataBoundary } from "./components/DataBoundary/DataBoundary";
+import { LoadFailed, retryLoad } from "./lib/data";
+import { inPageLink, onNav, scrollTarget, useNav, useRoute } from "./router";
 import Home from "./screens/Home/Home";
 import Discover from "./screens/Discover/Discover";
 import Calendar from "./screens/Calendar/Calendar";
@@ -69,6 +43,9 @@ const screen = (load: () => Promise<{ default: ComponentType<ScreenProps> }>) =>
 const MapScreen = screen(() => import("./screens/Map/Map")); // Leaflet only loads here
 const Review = screen(() => import("./screens/Review/Review")); // two weeks a year, or from a shared link
 const Dev = screen(() => import("./screens/Dev/Dev")); // only developers ever open it
+
+// a load that failed is tried again by the first screen of the next navigation (the DataBoundary forgets the failure then)
+onNav(retryLoad);
 
 export interface ScreenProps {
   route: Route;

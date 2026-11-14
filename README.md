@@ -61,6 +61,7 @@ git tag v0.10.0 && git push --tags       # optional: a tag becomes a GitHub rele
 ## More detail
 
 - [The site](docs/site.md): the app, routes, languages, share pages, what is stored on the device
+- [Writing a screen](docs/screens.md): what a screen renders, where its data, texts and links come from
 - [How events are tracked](docs/tracking.md): updates, cancellations, safety brake, locations
 - [Layers](docs/layers.md): members-only events, international events, Rotary events, Instagram pictures
 - [Design rules](docs/design.md): buttons, chips, status, cards, frosted glass

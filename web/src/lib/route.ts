@@ -1,4 +1,4 @@
-// Hash routes: #/ (home), #/discover?q=..., #/event/<id>, #/club/<id>, #/settings ... Parsing and links only; the hook is in components/router.ts.
+// Hash routes: #/ (home), #/discover?q=..., #/event/<id>, #/club/<id>, #/settings ... Parsing and links only; the hook is in src/router.ts.
 
 export const ROUTES = [
   "home",

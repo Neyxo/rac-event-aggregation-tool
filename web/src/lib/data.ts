@@ -1,6 +1,6 @@
 // events.json, fetched once per app session, and the state the app derives from it and from this device's storage: clubs by id,
 // the settings, the saved events, the Rotary layer. The state is private and never changed in place: the actions below replace it
-// and notify subscribers, and useData() / useSaved() (components/hooks) re-render every mounted component that reads it.
+// and notify subscribers, and useData() / useSaved() (src/hooks) re-render every mounted component that reads it.
 import type { Club, Event, EventsJson, Settings } from "./types";
 import { emitter, store } from "./store";
 import { devFlag } from "./dev";
@@ -82,7 +82,6 @@ export function initData(json: EventsJson): void {
 /** the load: its promise is where it stands (useData() reads it with use()); a failed one stays until retryLoad() drops it */
 let pending: Promise<AppData> | null = null;
 let failed = false;
-let lastNav = -1;
 /** fetches events.json once per session and sets the state from it; rejects with LoadFailed */
 export function loadData(): Promise<AppData> {
   pending ??= (async () => {
@@ -96,11 +95,9 @@ export function loadData(): Promise<AppData> {
   });
   return pending;
 }
-/** a screen of navigation nav (components/router's nav id) needs the data: after a failed load, the first screen of a later
- *  navigation loads it again. Once per navigation: React may build a screen's boundary anew while it renders it, which must not fetch again. */
-export function retryLoad(nav: number): void {
-  if (nav === lastNav) return;
-  lastNav = nav;
+/** drops a failed load, so the next screen that needs the data fetches it again. App calls it on every navigation: from the
+ *  router's event, not from a render (React may render a screen, and build its boundary, more than once). */
+export function retryLoad(): void {
   if (failed) {
     failed = false;
     pending = null;

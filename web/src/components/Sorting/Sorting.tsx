@@ -10,7 +10,7 @@ import { LANG_CLUBS } from "../../lib/geo";
 import { href } from "../../lib/route";
 import type { Club, Event } from "../../lib/types";
 import { ClubMark } from "../Club/Club";
-import { useData } from "../hooks";
+import { useData } from "../../hooks";
 import { Popup } from "../Popup/Popup";
 
 const LANG_IDS = Object.keys(LANGS) as Lang[];

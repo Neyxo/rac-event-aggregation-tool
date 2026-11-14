@@ -7,7 +7,7 @@ import { useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { t } from "../../i18n";
 import { Icon } from "../Icon";
-import { useModal } from "../hooks";
+import { useModal } from "../../hooks";
 
 export function Popup({
   title,

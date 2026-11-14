@@ -11,7 +11,7 @@ import type { Event } from "../../lib/types";
 import { Icon, type IconName } from "../Icon";
 import { ClubChip } from "../Club/Club";
 import { toast } from "../Toast/Toast";
-import { useData, useSaved } from "../hooks";
+import { useData, useSaved } from "../../hooks";
 
 /** the events the cards below tag NEW: Home provides the ones new since the last visit; anywhere else nothing is new */
 export const NewIds = createContext<ReadonlySet<string>>(new Set());

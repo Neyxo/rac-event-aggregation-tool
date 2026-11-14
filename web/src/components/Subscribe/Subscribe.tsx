@@ -10,7 +10,7 @@ import type { Club } from "../../lib/types";
 import type { AppData } from "../../lib/data";
 import { ClubMark } from "../Club/Club";
 import { Icon, type IconName } from "../Icon";
-import { useData } from "../hooks";
+import { useData } from "../../hooks";
 import { copy, feedUrls, IcsDl, share, Warn } from "../Links/Links";
 import { Popup } from "../Popup/Popup";
 
