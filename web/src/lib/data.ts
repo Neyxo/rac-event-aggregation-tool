@@ -45,34 +45,50 @@ export const subscribeData = changes.subscribe;
 export function mergeRotary(raw: EventsJson, on: boolean): EventsJson {
   const rot = raw.rotary ?? { clubs: [], events: [] };
   if (!on) return { ...raw, clubs: [...raw.clubs], events: [...raw.events] };
-  return { ...raw, clubs: [...raw.clubs, ...rot.clubs], events: [...raw.events, ...rot.events].sort((a, b) => a.start.localeCompare(b.start)) };
+  return {
+    ...raw,
+    clubs: [...raw.clubs, ...rot.clubs],
+    events: [...raw.events, ...rot.events].sort((a, b) => a.start.localeCompare(b.start)),
+  };
 }
 
 /** rac.settings without the clubs that no longer exist; the guest preview starts with none */
-export function resolveSettings(clubs: Readonly<Record<string, Club>>, stored: Settings | null, guest: boolean): Settings {
+export function resolveSettings(
+  clubs: Readonly<Record<string, Club>>,
+  stored: Settings | null,
+  guest: boolean,
+): Settings {
   if (guest || !stored) return { home: "", also: [] };
   const home = clubs[stored.home] ? stored.home : "";
-  return { home, also: (stored.also ?? []).filter(id => clubs[id] && id !== home) };
+  return { home, also: (stored.also ?? []).filter((id) => clubs[id] && id !== home) };
 }
 
 /** The state for events.json and what this device stored: the Rotary switch, the saved events, the settings. loadData() calls it once; setRotary() again, so switching gives what a reload would. */
 export function initData(json: EventsJson): void {
   raw = json;
   const data = mergeRotary(json, store.get("rac.rotary", false));
-  const clubs = Object.fromEntries(data.clubs.map(c => [c.id, c]));
+  const clubs = Object.fromEntries(data.clubs.map((c) => [c.id, c]));
   const settings = resolveSettings(clubs, store.get("rac.settings", null), !!devFlag("Guest"));
   loaded = true;
-  commit({ data, clubs, settings, saved: new Set(store.get("rac.saved", [])), rotary: json.rotary ?? { clubs: [], events: [] } });
+  commit({
+    data,
+    clubs,
+    settings,
+    saved: new Set(store.get("rac.saved", [])),
+    rotary: json.rotary ?? { clubs: [], events: [] },
+  });
 }
 
 /** the load: its promise is where it stands (useData() reads it with use()); a failed one stays until retryLoad() drops it */
-let pending: Promise<AppData> | null = null, failed = false, lastNav = -1;
+let pending: Promise<AppData> | null = null;
+let failed = false;
+let lastNav = -1;
 /** fetches events.json once per session and sets the state from it; rejects with LoadFailed */
 export function loadData(): Promise<AppData> {
   pending ??= (async () => {
     const r = await fetch("events.json", { cache: "no-cache" });
     if (!r.ok) throw new Error(String(r.status));
-    initData(await r.json() as EventsJson);
+    initData((await r.json()) as EventsJson);
     return state;
   })().catch((e: unknown) => {
     failed = true;
@@ -85,7 +101,10 @@ export function loadData(): Promise<AppData> {
 export function retryLoad(nav: number): void {
   if (nav === lastNav) return;
   lastNav = nav;
-  if (failed) { failed = false; pending = null; }
+  if (failed) {
+    failed = false;
+    pending = null;
+  }
 }
 
 /** the main club and the others to show; stored, except during the guest preview (a look at the app as a new visitor) */
@@ -95,9 +114,12 @@ export function setSettings(settings: Settings): void {
 }
 
 /** s with id as the main club, which is never also in "also show" */
-export const withHome = (s: Settings, id: string): Settings => ({ home: id, also: s.also.filter(x => x !== id) });
+export const withHome = (s: Settings, id: string): Settings => ({ home: id, also: s.also.filter((x) => x !== id) });
 /** s with id added to "also show", or taken out */
-export const withAlsoToggled = (s: Settings, id: string): Settings => ({ ...s, also: s.also.includes(id) ? s.also.filter(x => x !== id) : [...s.also, id] });
+export const withAlsoToggled = (s: Settings, id: string): Settings => ({
+  ...s,
+  also: s.also.includes(id) ? s.also.filter((x) => x !== id) : [...s.also, id],
+});
 
 /** save / unsave an event; returns whether it is saved now */
 export function toggleSaved(id: string): boolean {
@@ -119,13 +141,33 @@ export function setRotary(on: boolean): void {
 
 /** an event by id. A Rotary event with the layer off still opens from a shared link (#/event/<id>), without its district:
  *  it is looked up here and never added to the lists. */
-export const eventById = (id: string): Event | undefined => state.data.events.find(e => e.id === id) ?? state.rotary.events.find(e => e.id === id);
+export const eventById = (id: string): Event | undefined =>
+  state.data.events.find((e) => e.id === id) ?? state.rotary.events.find((e) => e.id === id);
 /** the main club first, then the others; only clubs that exist */
-export const myClubs = (): string[] => [state.settings.home, ...state.settings.also].filter(id => state.clubs[id]);
+export const myClubs = (): string[] => [state.settings.home, ...state.settings.also].filter((id) => state.clubs[id]);
 /** a club by id, or a stand-in with the id as its name */
-export const club = (id: string): Club => state.clubs[id] ?? { id, name: id, short: id, color: BRAND.cranberry, logo: "", url: "", district: "", coords: null, photos: [], news: [], projects: [], instagram: [], links: {}, source: "", how: "", partners: [] };
+export const club = (id: string): Club =>
+  state.clubs[id] ?? {
+    id,
+    name: id,
+    short: id,
+    color: BRAND.cranberry,
+    logo: "",
+    url: "",
+    district: "",
+    coords: null,
+    photos: [],
+    news: [],
+    projects: [],
+    instagram: [],
+    links: {},
+    source: "",
+    how: "",
+    partners: [],
+  };
 /** a real Rotaract club: in a district, and not a pseudo-club ("source": international, or a Rotary district, which has a district too) */
 export const isRac = (c: Club): boolean => !!c.district && !c.source;
 export const nClubs = (): number => state.data.clubs.filter(isRac).length;
 /** news teasers older than a year are not news */
-export const freshNews = (c: Club, now = Date.now()) => (c.news || []).filter(n => !n.date || now - new Date(n.date).getTime() < 365 * 864e5);
+export const freshNews = (c: Club, now = Date.now()) =>
+  (c.news || []).filter((n) => !n.date || now - new Date(n.date).getTime() < 365 * 864e5);

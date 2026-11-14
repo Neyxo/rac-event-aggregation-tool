@@ -1,0 +1,170 @@
+/* map page: the map fills the screen between the bars */
+.mapwrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+#map {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+} /* white like the map's own edge tiles, so the area outside Switzerland is one surface */
+.mapopt {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 500;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border-radius: var(--r-chip);
+  padding: 6px 10px;
+}
+.mapdot span {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--c);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s;
+}
+.mapdot:hover span {
+  transform: scale(1.15);
+}
+.mapdot img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+}
+/* Easter egg: the bunker door in the Gotthard and its archive: the usual event cards in a bunker skin (hazard stripe, typewriter type, faded colours, a file number and a few black bars on each) */
+.mapbunker svg {
+  width: 38px;
+  height: 38px;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+  transition: transform 0.15s;
+}
+.mapbunker:hover svg,
+.mapbunker:focus-visible svg {
+  transform: scale(1.15);
+}
+.mapbunker path {
+  fill: #3f4439;
+  stroke: #fff;
+  stroke-width: 1.6;
+  paint-order: stroke;
+}
+.mapbunker path + path {
+  fill: #e8b400;
+  stroke: #1c1f1a;
+  stroke-width: 1;
+}
+dialog.bunker {
+  background: #1c1f1a;
+  color: #dfe2d3;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+.bunker .ob-in {
+  display: block;
+  overflow: auto;
+  border-top: 10px solid;
+  border-image: repeating-linear-gradient(-45deg, #e8b400 0 12px, #1c1f1a 12px 24px) 10;
+}
+.bunker h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 1.05rem;
+}
+.bunker .obback {
+  background: #2b2f27;
+  color: inherit;
+  border-color: #4b5143;
+}
+.bunker .ob-in > p {
+  color: #a3a993;
+  font-size: 0.82rem;
+}
+.bunker .stamp {
+  float: right;
+  font-style: normal;
+  margin: 0 2px 6px 10px;
+  padding: 2px 8px;
+  border: 2px solid;
+  border-radius: 4px;
+  color: #e0523f;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  rotate: 8deg;
+}
+.bunker .files {
+  display: grid;
+  gap: 10px;
+  clear: both;
+  counter-reset: file;
+}
+.bunker .event {
+  counter-increment: file;
+  filter: saturate(0.6) sepia(0.2);
+  border: 1px dashed #6b705c;
+  border-radius: 4px;
+  box-shadow: none;
+  padding-bottom: 26px;
+}
+.bunker .event::after {
+  content: "№ " counter(file, decimal-leading-zero) " · " var(--stamp);
+  position: absolute;
+  left: 10px;
+  bottom: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+/* redactions, decoration only: a bar over part of the meta line (not on every third card) and one across the picture; the event page has it all */
+.bunker .event .meta {
+  position: relative;
+}
+.bunker .event .meta::after,
+.bunker .side:has(.thumb)::after {
+  content: "";
+  position: absolute;
+  background: #14160f;
+  border-radius: 1px;
+}
+.bunker .event .meta::after {
+  top: 12%;
+  height: 76%;
+  left: 0;
+  width: 24%;
+}
+.bunker .event:nth-child(3n + 1) .meta::after {
+  left: 52%;
+  width: 30%;
+}
+.bunker .event:nth-child(3n + 2) .meta::after {
+  display: none;
+}
+.bunker .side:has(.thumb)::after {
+  right: 0;
+  bottom: 20px;
+  width: 84px;
+  height: 14px;
+  rotate: -3deg;
+}
+.mappop {
+  display: block;
+  text-decoration: none;
+  color: #1f1c26;
+}
+.mappop b {
+  display: block;
+  font-size: 0.95rem;
+}
+.mappop span {
+  color: #5f5a6a;
+}

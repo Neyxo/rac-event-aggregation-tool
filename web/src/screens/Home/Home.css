@@ -1,0 +1,168 @@
+/* home: personal overview on a wash of the chosen clubs' colours */
+body.wash::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      300px 240px at 10% 0%,
+      color-mix(in srgb, var(--c1) 65%, transparent) 0%,
+      color-mix(in srgb, var(--c1) 14%, transparent) 55%,
+      transparent 70%
+    ),
+    radial-gradient(260px 200px at 100% 180px, color-mix(in srgb, var(--c2) 55%, transparent) 0%, transparent 65%),
+    radial-gradient(320px 260px at 40% 85%, color-mix(in srgb, var(--c3) 45%, transparent) 0%, transparent 65%),
+    var(--bg);
+}
+body.wash .glass,
+body.wash .event {
+  background: var(--pane);
+  backdrop-filter: var(--frost-2);
+  -webkit-backdrop-filter: var(--frost-2);
+}
+body.wash .event {
+  border: 1px solid var(--glass-line);
+}
+.hello {
+  padding: 10px 0 8px;
+}
+.hello h1 {
+  margin: 0;
+  font-size: 1.45rem;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.hello .sub {
+  margin: 2px 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.home .fact {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--muted);
+} /* the line of the day, in the greeting and in explore mode */
+.explore .fact {
+  margin-top: 10px;
+}
+.hello .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.news {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 0.8rem;
+  margin: 8px 0;
+  text-decoration: none;
+  color: var(--text);
+}
+.news b {
+  color: var(--accent);
+}
+.news svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  margin-left: auto;
+  flex: 0 0 auto;
+  transform: scaleX(-1);
+}
+.panes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.pane {
+  padding: 9px 11px;
+  font-size: 0.8rem;
+  border-radius: 16px;
+  min-width: 0;
+}
+.pane .k {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-weight: 800;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pane .k svg {
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+.pane .r {
+  display: grid;
+  grid-template-columns: 7px 1fr auto auto;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 0;
+  border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  text-decoration: none;
+  color: var(--text);
+}
+.pane .r:nth-child(2) {
+  border: 0;
+}
+.pane .r i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--c);
+}
+.pane .r span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pane .r b {
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.pane .r.soon b {
+  color: var(--danger);
+}
+.pane .m {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+/* home banner */
+.home {
+  margin: 6px 0 0;
+}
+.explore {
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-top: 14px;
+  background: linear-gradient(135deg, color-mix(in srgb, #d41367 10%, var(--surface)), var(--surface));
+}
+.explore .k {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  font-weight: 800;
+}
+.explore p {
+  margin: 4px 0 0;
+}
+.explore .links {
+  margin-top: 10px;
+}

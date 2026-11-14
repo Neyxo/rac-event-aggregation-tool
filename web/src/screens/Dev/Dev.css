@@ -1,0 +1,215 @@
+/* developer page (dev.html): the Settings look, plus a status line, small counters, plain lists */
+.dev h3 {
+  margin: 14px 0 4px;
+}
+.dev .links {
+  margin: 10px 0 2px;
+}
+.dev .setrow .tools {
+  margin: 0;
+  justify-content: flex-end;
+}
+.devstate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.devstate i {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #009739;
+}
+.devstate.warn i {
+  background: #e8a317;
+}
+.devstate.bad i {
+  background: var(--danger);
+}
+.devok {
+  margin: 6px 0;
+  font-size: 0.9rem;
+  color: #00843a;
+}
+:root[data-theme="dark"] .devok {
+  color: #5fd08a;
+}
+.devfail {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.devfacts {
+  margin: 10px 0;
+  --p: var(--accent);
+}
+.devfacts div {
+  background: var(--surface-2);
+  padding: 8px 4px;
+  border-radius: 12px;
+}
+.devua {
+  overflow-wrap: anywhere;
+  font-size: 0.74rem;
+}
+.devkey {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 2px 6px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+.devkey code {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.devkey span {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 0.74rem;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+  max-height: 3.6em;
+  overflow: hidden;
+}
+.devkey .linkbtn {
+  grid-row: 1 / 3;
+}
+.devlist {
+  display: grid;
+  gap: 6px;
+  padding: 8px 0 2px;
+  font-size: 0.86rem;
+}
+.devlist a {
+  color: var(--text);
+}
+.devclub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.devclub:first-child {
+  border-top: 0;
+}
+.devclub span {
+  flex: 1;
+  min-width: 0;
+}
+.devsteps {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+  font-size: 0.82rem;
+}
+.devsteps li {
+  display: flex;
+  gap: 8px;
+  padding: 3px 0;
+}
+.devsteps b {
+  width: 1em;
+  text-align: center;
+}
+.devsteps .success b {
+  color: #00843a;
+}
+.devsteps .failure b,
+.devsteps .cancelled b {
+  color: var(--danger);
+}
+.devsteps .skipped {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .devsteps .success b {
+  color: #5fd08a;
+}
+.devrecent {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: grid;
+  gap: 6px;
+}
+.devrecent li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  font-size: 0.86rem;
+  font-weight: 400;
+  margin: 0;
+}
+.devrecent li.devstate i {
+  align-self: center;
+}
+.devrecent a {
+  color: inherit;
+  flex: 1 1 60%;
+  min-width: 0;
+}
+.devrecent small {
+  color: var(--muted);
+}
+/* Developer overview: one overall state, the runs as dots, a back link on the pages under it */
+.devhealth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.devhealth i {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #009739;
+  flex: 0 0 auto;
+}
+.devhealth.warn i {
+  background: #e8a317;
+}
+.devhealth.bad i {
+  background: var(--danger);
+}
+.devstrip {
+  display: flex;
+  gap: 3px;
+  margin: 0 0 10px;
+}
+.devstrip i {
+  flex: 1 1 0;
+  max-width: 14px;
+  height: 18px;
+  border-radius: 3px;
+  background: #009739;
+}
+.devstrip i.warn {
+  background: #e8a317;
+}
+.devstrip i.bad {
+  background: var(--danger);
+}
+.dev .devback {
+  display: inline-block;
+  margin: 4px 0 0;
+  font-weight: 600;
+  text-decoration: none;
+}
+.dev > .more {
+  margin-bottom: 8px;
+}

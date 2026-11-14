@@ -1,0 +1,36 @@
+/* a club's structured text (rich()): headings, numbered step cards, a check list */
+.rich p {
+  color: var(--text);
+  margin: 0 0 10px;
+}
+.rich h3:first-child {
+  margin-top: 4px;
+}
+.rich .nsteps {
+  margin: 0 0 4px;
+}
+.rich .step {
+  background: var(--surface-2);
+  align-items: flex-start;
+  padding: 10px 12px;
+}
+.rich .step span b {
+  display: inline;
+}
+.rich .pts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 4px;
+  display: grid;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+.rich .pts li {
+  display: flex;
+  gap: 8px;
+}
+.rich .pts li::before {
+  content: "✓";
+  color: #009739;
+  font-weight: 800;
+}

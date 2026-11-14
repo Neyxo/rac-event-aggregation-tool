@@ -4,7 +4,10 @@
 import { emitter } from "./store";
 
 /** the beforeinstallprompt event; not in TypeScript's DOM types */
-export interface InstallPrompt extends Event { prompt(): Promise<void>; userChoice: Promise<{ outcome?: string }> }
+export interface InstallPrompt extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome?: string }>;
+}
 
 let caught: InstallPrompt | null = null;
 /** installed from this tab (the prompt accepted, or the browser says so): the tab itself still runs in the browser */
@@ -13,17 +16,24 @@ const { subscribe, emit } = emitter();
 
 /** on Android, a link that opens the app in Chrome, for a browser that can't install it (DuckDuckGo, Firefox, the browser inside
  *  another app); null elsewhere (a page can name Chrome, but not "the default browser"; an iPhone has no such link at all) */
-export const chromeUrl = (): string | null => /Android/.test(navigator.userAgent) ? `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end` : null;
+export const chromeUrl = (): string | null =>
+  /Android/.test(navigator.userAgent)
+    ? `intent://${location.host}${location.pathname}#Intent;scheme=https;package=com.android.chrome;end`
+    : null;
 /** the app's address, without index.html or the route: what to share, or to paste into another browser */
 export const appUrl = (): string => location.origin + location.pathname.replace(/[^/]*$/, "");
 
 if (typeof window !== "undefined") {
-  addEventListener("beforeinstallprompt", e => {
+  addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     caught = e as InstallPrompt;
     emit();
   });
-  addEventListener("appinstalled", () => { installed = true; caught = null; emit(); });
+  addEventListener("appinstalled", () => {
+    installed = true;
+    caught = null;
+    emit();
+  });
 }
 
 export const getInstallPrompt = (): InstallPrompt | null => caught;
@@ -40,6 +50,7 @@ export async function install(): Promise<void> {
 }
 
 /** running as the installed app */
-export const standalone = (): boolean => matchMedia("(display-mode: standalone)").matches || !!(navigator as { standalone?: boolean }).standalone;
+export const standalone = (): boolean =>
+  matchMedia("(display-mode: standalone)").matches || !!(navigator as { standalone?: boolean }).standalone;
 /** running installed, or installed from this tab a moment ago: no install steps to show */
 export const isInstalled = (): boolean => standalone() || installed;

@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "TZ=Europe/Zurich vitest run",
     "typecheck": "tsc -b",
-    "lint": "oxlint web/src",
+    "lint": "oxlint web/src && biome check --error-on-warnings",
+    "format": "biome format --write",
     "e2e": "playwright test",
     "prepare": "git config core.hooksPath .githooks || true"
   },
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
+    "@biomejs/biome": "2.6.7",
     "@playwright/test": "^1.61.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",

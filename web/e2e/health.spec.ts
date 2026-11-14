@@ -3,8 +3,28 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, go, MEMBER, standalone, test } from "./fixtures";
 
-const SCREENS = ["#/", "#/discover", "#/calendar", "#/map", "#/event/223112", "#/club/luzern", "#/settings", "#/subscribe", "#/about", "#/about-more",
-  "#/family", "#/public", "#/guide", "#/words", "#/intl", "#/dev", "#/dev/feeds", "#/dev/links", "#/event/nope", "#/club/nope"];
+const SCREENS = [
+  "#/",
+  "#/discover",
+  "#/calendar",
+  "#/map",
+  "#/event/223112",
+  "#/club/luzern",
+  "#/settings",
+  "#/subscribe",
+  "#/about",
+  "#/about-more",
+  "#/family",
+  "#/public",
+  "#/guide",
+  "#/words",
+  "#/intl",
+  "#/dev",
+  "#/dev/feeds",
+  "#/dev/links",
+  "#/event/nope",
+  "#/club/nope",
+];
 
 // The axe findings that stay, as "<screen> <rule>"; anything not listed here fails the test.
 const KNOWN_A11Y = new Set<string>([
@@ -29,7 +49,7 @@ test.describe("member", () => {
   });
 
   test("every screen: no new accessibility violations (axe, WCAG 2.1 A/AA)", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });  // nothing measured halfway through a fade
+    await page.emulateMedia({ reducedMotion: "reduce" }); // nothing measured halfway through a fade
     await page.goto("./");
     await expect(page.locator(".hello")).toBeVisible();
     const found: string[] = [];
@@ -37,8 +57,10 @@ test.describe("member", () => {
       await go(page, h);
       await expect(page.locator("main")).toBeVisible();
       await page.waitForLoadState("networkidle");
-      for (const v of (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze()).violations)
-        if (!KNOWN_A11Y.has(`${h} ${v.id}`)) found.push(`${h} ${v.id}: ${v.nodes.map(n => n.target.join(" ")).join(", ")}`);
+      for (const v of (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze())
+        .violations)
+        if (!KNOWN_A11Y.has(`${h} ${v.id}`))
+          found.push(`${h} ${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
     }
     expect(found).toEqual([]);
   });
@@ -54,7 +76,7 @@ test.describe("member", () => {
     await expect(body).toHaveClass(/wash/);
     await page.locator("#tabs a.tab", { hasText: "Calendar" }).click();
     await clean("calendar", /^Calendar ·/);
-    await expect(body).toHaveClass("calpage");  // Home's wash is gone
+    await expect(body).toHaveClass("calpage"); // Home's wash is gone
     await expect(body).not.toHaveAttribute("style", /--c1/);
     await page.locator("#tabs a.tab", { hasText: "Discover" }).click();
     await clean("discover", /^Discover ·/);
@@ -62,7 +84,7 @@ test.describe("member", () => {
     await page.locator("main a.event").first().click();
     await clean("event", / · Rotaract Events$/);
     await expect(body).toHaveClass(/wash/);
-    await expect(page.locator("header#top .lft a.hbtn")).toHaveCount(1);  // the back button
+    await expect(page.locator("header#top .lft a.hbtn")).toHaveCount(1); // the back button
     await page.locator("main .evdetail .tags a.chip, main .evdetail a.chip").first().click();
     await clean("club", / · Rotaract Events$/);
     await page.locator("header#top a.hbtn[href='#/settings']").click();
@@ -70,8 +92,9 @@ test.describe("member", () => {
     await expect(body).toHaveClass("");
     await expect(body).not.toHaveAttribute("style", /--c1/);
     // the sticky offset of the club's compact head is reset to the bar
-    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--stick").trim())).toBe(
-      await page.evaluate(() => document.getElementById("top")!.offsetHeight + "px"));
+    expect(
+      await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--stick").trim()),
+    ).toBe(await page.evaluate(() => document.getElementById("top")!.offsetHeight + "px"));
     await page.locator("header#top a.hbtn[href='#/about']").click();
     await clean("about", /^What is Rotaract\? ·/);
     await page.locator("main a[href='#/about-more']").first().click();
@@ -84,16 +107,21 @@ test.describe("member", () => {
     await clean("dev", /^Developer ·/);
     await page.locator("header#top a.brand").click();
     await clean("home", /^Rotaract Events$/);
-    await expect(page.locator("header#top .lft a.hbtn")).toHaveCount(0);  // no back button on Home
+    await expect(page.locator("header#top .lft a.hbtn")).toHaveCount(0); // no back button on Home
   });
 
   test("50 times back and forth: no window listeners pile up", async ({ page }) => {
     await page.addInitScript(() => {
       const live = new Map<string, Set<unknown>>();
-      (window as unknown as { __live: () => Record<string, number> }).__live = () => Object.fromEntries([...live].map(([k, s]) => [k, s.size]));
-      const add = EventTarget.prototype.addEventListener, rm = EventTarget.prototype.removeEventListener;
+      (window as unknown as { __live: () => Record<string, number> }).__live = () =>
+        Object.fromEntries([...live].map(([k, s]) => [k, s.size]));
+      const add = EventTarget.prototype.addEventListener;
+      const rm = EventTarget.prototype.removeEventListener;
       EventTarget.prototype.addEventListener = function (type: string, f: unknown, o?: unknown) {
-        if (f && (this === window || this === document)) { if (!live.has(type)) live.set(type, new Set()); live.get(type)!.add(f); }
+        if (f && (this === window || this === document)) {
+          if (!live.has(type)) live.set(type, new Set());
+          live.get(type)!.add(f);
+        }
         return add.call(this, type, f as EventListener, o as AddEventListenerOptions);
       };
       EventTarget.prototype.removeEventListener = function (type: string, f: unknown, o?: unknown) {
@@ -104,7 +132,7 @@ test.describe("member", () => {
     const live = () => page.evaluate(() => (window as unknown as { __live: () => Record<string, number> }).__live());
     await page.goto("./");
     await expect(page.locator(".hello")).toBeVisible();
-    const screens = SCREENS.filter(h => h !== "#/map" && h !== "#/");  // the map screen loads Leaflet, whose own listeners are its business
+    const screens = SCREENS.filter((h) => h !== "#/map" && h !== "#/"); // the map screen loads Leaflet, whose own listeners are its business
     for (const h of screens) await go(page, h);
     await go(page, "#/");
     await expect(page.locator(".hello")).toBeVisible();

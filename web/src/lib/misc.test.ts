@@ -10,8 +10,13 @@ import { devFlag, installPretendDate } from "./dev";
 import { fixture } from "../test/fixture";
 import { ev } from "../test/ev";
 
-beforeEach(() => { localStorage.clear(); sessionStorage.clear(); });
-afterEach(() => { vi.unstubAllGlobals(); });
+beforeEach(() => {
+  localStorage.clear();
+  sessionStorage.clear();
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("geo", () => {
   it("km", () => {
@@ -20,15 +25,18 @@ describe("geo", () => {
     expect(km([47.0502, 8.3093], [46.948, 7.4474])).toBeLessThan(67);
   });
   it("nearestClubs: real clubs only, by distance, within maxKm", () => {
-    const pos: [number, number] = [47.05, 8.3];  // Luzern
+    const pos: [number, number] = [47.05, 8.3]; // Luzern
     const near = nearestClubs(fixture.clubs, pos, 3);
     expect(near[0]!.c.id).toBe("luzern");
-    expect(near.map(x => x.d)).toEqual([...near.map(x => x.d)].sort((a, b) => a - b));
-    expect(near.some(x => x.c.id === "international")).toBe(false);
-    expect(nearestClubs(fixture.clubs, pos, 5, 10).map(x => x.c.id)).toEqual(["luzern"]);
+    expect(near.map((x) => x.d)).toEqual([...near.map((x) => x.d)].sort((a, b) => a - b));
+    expect(near.some((x) => x.c.id === "international")).toBe(false);
+    expect(nearestClubs(fixture.clubs, pos, 5, 10).map((x) => x.c.id)).toEqual(["luzern"]);
   });
   it("guessClubs: the language default when the position is outside CH/LI", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => ({ json: async () => ({ latitude: "48.1", longitude: "11.5", country_code: "DE" }) })));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => ({ json: async () => ({ latitude: "48.1", longitude: "11.5", country_code: "DE" }) })),
+    );
     expect(await guessClubs(fixture.clubs, "it")).toEqual(["ticino"]);
     expect(await guessClubs(fixture.clubs, "de")).toEqual([]);
   });
@@ -67,7 +75,12 @@ describe("pillars", () => {
     expect(PILLAR_RE.help.test("Bénévolat")).toBe(true);
   });
   it("falls back to the last fitting picture, then the last picture", () => {
-    const es = [ev({ id: "a", title: "Stamm", image: "a.jpg" }), ev({ id: "b", title: "Workshop", image: "b.jpg" }), ev({ id: "c", title: "Stamm 2", image: "c.jpg" }), ev({ id: "d", title: "Party" })];
+    const es = [
+      ev({ id: "a", title: "Stamm", image: "a.jpg" }),
+      ev({ id: "b", title: "Workshop", image: "b.jpg" }),
+      ev({ id: "c", title: "Stamm 2", image: "c.jpg" }),
+      ev({ id: "d", title: "Party" }),
+    ];
     expect(pillarFallback(es, "party")).toBe("c.jpg");
     expect(pillarFallback(es, "learn")).toBe("b.jpg");
     expect(pillarFallback(es, "help")).toBe("c.jpg");
@@ -82,9 +95,13 @@ describe("route", () => {
     expect(parseHash("#/nope").name).toBe("home");
     expect(parseHash("#main").name).toBe("home");
     const e = parseHash("#/event/a%20b?x=1");
-    expect(e.name).toBe("event"); expect(e.params.id).toBe("a b"); expect(e.query.get("x")).toBe("1");
+    expect(e.name).toBe("event");
+    expect(e.params.id).toBe("a b");
+    expect(e.query.get("x")).toBe("1");
     const d = parseHash("#/discover?clubs=bern,luzern&view=past");
-    expect(d.name).toBe("discover"); expect(d.params.id).toBe(""); expect(d.query.get("clubs")).toBe("bern,luzern");
+    expect(d.name).toBe("discover");
+    expect(d.params.id).toBe("");
+    expect(d.query.get("clubs")).toBe("bern,luzern");
     expect(parseHash("#/about-more").name).toBe("about-more");
   });
   it("builds hrefs", () => {
@@ -119,18 +136,22 @@ describe("store", () => {
     expect(store.get("rac.saved", [])).toEqual([]);
     localStorage.setItem("rac.saved", "{broken");
     expect(store.get("rac.saved", ["d"])).toEqual(["d"]);
-    const f = vi.fn(), off = store.subscribe(f);
+    const f = vi.fn();
+    const off = store.subscribe(f);
     store.set("rac.theme", "dark");
     expect(localStorage.getItem("rac.theme")).toBe('"dark"');
     store.remove("rac.theme");
     expect(f).toHaveBeenCalledTimes(2);
-    off(); store.set("rac.rotary", true); expect(f).toHaveBeenCalledTimes(2);
+    off();
+    store.set("rac.rotary", true);
+    expect(f).toHaveBeenCalledTimes(2);
   });
 });
 
 describe("dev", () => {
   it("preview flags only count while developer mode is on", () => {
-    store.set("rac.devGuest", true); store.set("rac.devDate", "2026-12-24");
+    store.set("rac.devGuest", true);
+    store.set("rac.devDate", "2026-12-24");
     expect(devFlag("Guest")).toBeNull();
     store.set("rac.dev", true);
     expect(devFlag("Guest")).toBe(true);
@@ -140,19 +161,25 @@ describe("dev", () => {
   it("pretend date: now moves to that day, explicit dates stay", () => {
     const Real = Date;
     try {
-      store.set("rac.dev", true); store.set("rac.devDate", "2030-01-15");
+      store.set("rac.dev", true);
+      store.set("rac.devDate", "2030-01-15");
       installPretendDate();
       const now = new Date();
       expect([now.getFullYear(), now.getMonth(), now.getDate()]).toEqual([2030, 0, 15]);
       expect(Math.abs(Date.now() - now.getTime())).toBeLessThan(1000);
       expect(new Date("2026-11-11T18:00").getFullYear()).toBe(2026);
       expect(new Date(2020, 1, 2).getMonth()).toBe(1);
-    } finally { globalThis.Date = Real; }
+    } finally {
+      globalThis.Date = Real;
+    }
   });
   it("pretend date off, or invalid: Date untouched", () => {
     const Real = Date;
-    installPretendDate(); expect(globalThis.Date).toBe(Real);
-    store.set("rac.dev", true); store.set("rac.devDate", "nonsense");
-    installPretendDate(); expect(globalThis.Date).toBe(Real);
+    installPretendDate();
+    expect(globalThis.Date).toBe(Real);
+    store.set("rac.dev", true);
+    store.set("rac.devDate", "nonsense");
+    installPretendDate();
+    expect(globalThis.Date).toBe(Real);
   });
 });

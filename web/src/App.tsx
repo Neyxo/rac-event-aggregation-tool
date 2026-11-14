@@ -6,7 +6,7 @@
  * Per route (ROUTE_META below) App sets body[data-page], the body classes calpage / frosted, the default document.title, the active
  * top-bar button and tab and the back button. A new navigation scrolls to the top; back/forward restores the position.
  *
- * HOW A SCREEN WORKS (web/src/screens/<Name>.tsx):
+ * HOW A SCREEN WORKS (web/src/screens/<Name>/<Name>.tsx, with <Name>.css listed in app.css and <Name>.test.tsx beside it):
  * - export default function Name({ route }: ScreenProps). route.params.id is the id of #/event/<id> and #/club/<id>; route.query is
  *   the URLSearchParams after "?" in the hash (Discover's filters). The screen (and its DataBoundary) is remounted when the route name or id changes.
  * - Render what sits between </header> and <nav>: usually <main className="..."> (id="main" on the skip-link screens), plus siblings such as the stale banner
@@ -37,35 +37,42 @@
 import { lazy, useLayoutEffect, type ComponentType } from "react";
 import { t } from "./i18n";
 import type { Route, RouteName } from "./lib/route";
-import { Tabs, TopBar, type Active } from "./components/Chrome";
-import { Toast } from "./components/Toast";
-import { Festive } from "./components/Festive";
-import { DataBoundary } from "./components/Blocks";
+import { Tabs, TopBar, type Active } from "./components/Chrome/Chrome";
+import { Toast } from "./components/Toast/Toast";
+import { Festive } from "./components/Festive/Festive";
+import { DataBoundary } from "./components/Blocks/Blocks";
 import { LoadFailed } from "./lib/data";
 import { inPageLink, scrollTarget, useNav, useRoute } from "./components/router";
-import Home from "./screens/Home";
-import Discover from "./screens/Discover";
-import Calendar from "./screens/Calendar";
-import Event from "./screens/Event";
-import Club from "./screens/Club";
-import Settings from "./screens/Settings";
-import Subscribe from "./screens/Subscribe";
-import About, { ShareButton as AboutShare } from "./screens/About";
-import AboutMore from "./screens/AboutMore";
-import Family from "./screens/Family";
-import Public from "./screens/Public";
-import Guide from "./screens/Guide";
-import Words from "./screens/Words";
-import Intl from "./screens/Intl";
+import Home from "./screens/Home/Home";
+import Discover from "./screens/Discover/Discover";
+import Calendar from "./screens/Calendar/Calendar";
+import Event from "./screens/Event/Event";
+import Club from "./screens/Club/Club";
+import Settings from "./screens/Settings/Settings";
+import Subscribe from "./screens/Subscribe/Subscribe";
+import About, { ShareButton as AboutShare } from "./screens/About/About";
+import AboutMore from "./screens/AboutMore/AboutMore";
+import Family from "./screens/Family/Family";
+import Public from "./screens/Public/Public";
+import Guide from "./screens/Guide/Guide";
+import Words from "./screens/Words/Words";
+import Intl from "./screens/Intl/Intl";
 
 // a screen's code that can't be fetched (offline, or replaced by a newer deploy) is shown like data that can't: the offline note,
 // whose Refresh loads the app again
-const screen = (load: () => Promise<{ default: ComponentType<ScreenProps> }>) => lazy(() => load().catch((e: unknown) => { throw new LoadFailed("screen code: " + String(e), { cause: e }); }));
-const MapScreen = screen(() => import("./screens/Map"));  // Leaflet only loads here
-const Review = screen(() => import("./screens/Review"));  // two weeks a year, or from a shared link
-const Dev = screen(() => import("./screens/Dev"));  // only developers ever open it
+const screen = (load: () => Promise<{ default: ComponentType<ScreenProps> }>) =>
+  lazy(() =>
+    load().catch((e: unknown) => {
+      throw new LoadFailed("screen code: " + String(e), { cause: e });
+    }),
+  );
+const MapScreen = screen(() => import("./screens/Map/Map")); // Leaflet only loads here
+const Review = screen(() => import("./screens/Review/Review")); // two weeks a year, or from a shared link
+const Dev = screen(() => import("./screens/Dev/Dev")); // only developers ever open it
 
-export interface ScreenProps { route: Route }
+export interface ScreenProps {
+  route: Route;
+}
 interface Meta {
   screen: ComponentType<ScreenProps>;
   /** body[data-page] */
@@ -89,15 +96,61 @@ const T = (s: string) => s + " · Rotaract Events";
 export const ROUTE_META: Record<RouteName, Meta> = {
   home: { screen: Home, page: "home", active: "home", title: "Rotaract Events", skip: true, skel: 3 },
   discover: { screen: Discover, page: "discover", active: "discover", title: T("Discover"), skip: true, skel: 3 },
-  calendar: { screen: Calendar, page: "calendar", cls: "calpage", active: "calendar", title: T("Calendar"), skip: true, main: "calwrap" },
-  map: { screen: MapScreen, page: "map", cls: "calpage", active: "discover", back: true, title: T("Map"), main: "mapwrap" },
-  event: { screen: Event, page: "event", active: null, back: true, title: "Rotaract Events", main: "wrap evpage", skel: 1 },
+  calendar: {
+    screen: Calendar,
+    page: "calendar",
+    cls: "calpage",
+    active: "calendar",
+    title: T("Calendar"),
+    skip: true,
+    main: "calwrap",
+  },
+  map: {
+    screen: MapScreen,
+    page: "map",
+    cls: "calpage",
+    active: "discover",
+    back: true,
+    title: T("Map"),
+    main: "mapwrap",
+  },
+  event: {
+    screen: Event,
+    page: "event",
+    active: null,
+    back: true,
+    title: "Rotaract Events",
+    main: "wrap evpage",
+    skel: 1,
+  },
   club: { screen: Club, page: "club", active: null, back: true, title: "Rotaract Club", main: "wrap clubpage" },
   settings: { screen: Settings, page: "settings", active: "settings", title: T("Settings"), main: "wrap settings" },
   subscribe: { screen: Subscribe, page: "subscribe", active: null, back: true, title: T("Subscribe") },
-  about: { screen: About, page: "about", active: "about", title: T("What is Rotaract?"), extra: AboutShare, main: "wrap about" },
-  "about-more": { screen: AboutMore, page: "about-more", cls: "frosted", active: "about", back: true, title: T("Rotary, districts & the world"), main: "wrap more" },
-  family: { screen: Family, page: "family", active: "about", back: true, title: T("The Rotary family"), main: "wrap fam" },
+  about: {
+    screen: About,
+    page: "about",
+    active: "about",
+    title: T("What is Rotaract?"),
+    extra: AboutShare,
+    main: "wrap about",
+  },
+  "about-more": {
+    screen: AboutMore,
+    page: "about-more",
+    cls: "frosted",
+    active: "about",
+    back: true,
+    title: T("Rotary, districts & the world"),
+    main: "wrap more",
+  },
+  family: {
+    screen: Family,
+    page: "family",
+    active: "about",
+    back: true,
+    title: T("The Rotary family"),
+    main: "wrap fam",
+  },
   public: { screen: Public, page: "public", active: "app", title: T("About this app") },
   guide: { screen: Guide, page: "guide", active: "about", back: true, title: T("New in the club"), main: "wrap fam" },
   words: { screen: Words, page: "words", active: "about", back: true, title: T("Rotaract words") },
@@ -113,26 +166,43 @@ function Page({ meta, nav }: { meta: Meta; nav: ReturnType<typeof useNav> }) {
   useLayoutEffect(() => {
     const b = document.body;
     b.dataset.page = meta.page;
-    b.classList.toggle("calpage", meta.cls === "calpage"); b.classList.toggle("frosted", meta.cls === "frosted");
+    b.classList.toggle("calpage", meta.cls === "calpage");
+    b.classList.toggle("frosted", meta.cls === "frosted");
     document.title = meta.title;
   }, [meta]);
   useLayoutEffect(() => {
     const y = scrollTarget(nav);
     scrollTo(0, y);
-    if (y) { const id = requestAnimationFrame(() => scrollTo(0, y)); return () => cancelAnimationFrame(id); }
+    if (y) {
+      const id = requestAnimationFrame(() => scrollTo(0, y));
+      return () => cancelAnimationFrame(id);
+    }
   }, [nav.id]);
   return null;
 }
 
 export default function App() {
-  const route = useRoute(), nav = useNav(), meta = ROUTE_META[route.name], Screen = meta.screen, Extra = meta.extra;
+  const route = useRoute();
+  const nav = useNav();
+  const meta = ROUTE_META[route.name];
+  const Screen = meta.screen;
+  const Extra = meta.extra;
   return (
     <>
       <Page meta={meta} nav={nav} />
       <div id="frost" aria-hidden="true" />
-      {meta.skip && <a className="skip" {...inPageLink("main")}>{t("skip_to")}</a>}
+      {meta.skip && (
+        <a className="skip" {...inPageLink("main")}>
+          {t("skip_to")}
+        </a>
+      )}
       <TopBar active={meta.active} back={meta.back} extra={Extra && <Extra />} />
-      <DataBoundary key={route.name + "/" + route.params.id} nav={nav.id} main={meta.main ?? "wrap"} skel={meta.skel ?? 0}>
+      <DataBoundary
+        key={route.name + "/" + route.params.id}
+        nav={nav.id}
+        main={meta.main ?? "wrap"}
+        skel={meta.skel ?? 0}
+      >
         <Screen route={route} />
       </DataBoundary>
       <Tabs active={meta.active} />

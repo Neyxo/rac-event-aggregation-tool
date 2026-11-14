@@ -8,15 +8,15 @@ One page app in React 19 and TypeScript, built with Vite. `npm run build` writes
 |---|---|
 | `index.html` | The one page. |
 | `src/App.tsx` | The shell: top bar, screen, tabs, toast; one line per route. Its top comment explains how a screen is built. |
-| `src/screens/` | One file per route. |
-| `src/components/` | Cards, chips, popup, toast, the router and shared hooks. |
+| `src/screens/` | One folder per route: the screen, its stylesheet and its test (`Home/Home.tsx`, `Home.css`, `Home.test.tsx`). |
+| `src/components/` | Cards, chips, popup, toast, each in a folder with its stylesheet; the router, the icons and the shared hooks as single files. |
 | `src/lib/` | Logic with tests: dates, filters, calendar, changes since the last visit, geo, share links, routes, the device store. |
 | `src/i18n/` | The texts, one file per language. |
 | `src/app.css` | The list of all stylesheets, in cascade order. Each one sits next to what it styles (`components/Chrome.css`, `screens/Home.css` …); shared looks are in `src/styles/` (see [design rules](design.md)). |
 | `static/` | Copied as is: icons, crests, pictures, the manifest, `sw.js`. |
 | `e2e/` | The browser tests (Playwright, `npm run e2e`). |
 
-`npm test` runs the unit tests (Vitest), `npm run typecheck` the TypeScript check, `npm run dev` the app with the real data from `public/`.
+`npm test` runs the unit tests (Vitest), `npm run typecheck` the TypeScript check, `npm run lint` the linters (oxlint for TypeScript; Biome for the formatting, the CSS and a few readability rules, see `biome.jsonc`), `npm run format` rewrites every file in the one format, `npm run dev` the app with the real data from `public/`.
 
 ## Routes
 

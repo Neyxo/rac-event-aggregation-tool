@@ -6,7 +6,7 @@ const PORT = 4319;
 export default defineConfig({
   testDir: "web/e2e",
   timeout: 30_000,
-  outputDir: "node_modules/.cache/e2e-results",  // traces of failed tests; inside node_modules so git never sees them
+  outputDir: "node_modules/.cache/e2e-results", // traces of failed tests; inside node_modules so git never sees them
   expect: { timeout: 5_000 },
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -17,7 +17,8 @@ export default defineConfig({
     timezoneId: "Europe/Zurich",
     locale: "en-GB",
     serviceWorkers: "block",
-    permissions: ["geolocation"], geolocation: { latitude: 47.05, longitude: 8.3 },  // the device is near Lucerne  // page.route can't see what a service worker answers; the SW tests switch it on
+    permissions: ["geolocation"],
+    geolocation: { latitude: 47.05, longitude: 8.3 }, // the device is near Lucerne  // page.route can't see what a service worker answers; the SW tests switch it on
     trace: "retain-on-failure",
   },
   projects: [

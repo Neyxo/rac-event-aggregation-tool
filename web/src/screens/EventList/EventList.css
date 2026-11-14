@@ -1,0 +1,169 @@
+.list-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 12px 2px 6px;
+}
+.list-head.sh {
+  margin: 10px calc(50% - 50vw) 4px;
+  padding: 3px calc(50vw - 50% + 2px) 2px;
+}
+.list-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text);
+}
+.list-head .summary {
+  margin: 0;
+  font-size: 0.78rem;
+}
+.seg.views {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: 6px;
+}
+.filters .seg.views {
+  margin: 10px 0 0;
+}
+.seg.views::-webkit-scrollbar {
+  display: none;
+}
+.seg.views button {
+  flex: 1 1 auto;
+  font-size: 0.8rem;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+#results > h3:first-child {
+  margin-top: 8px;
+}
+.seg.views button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+/* filters */
+.filters {
+  padding: 16px 0 4px;
+}
+.top {
+  display: flex;
+  gap: 8px;
+}
+.search {
+  position: relative;
+  flex: 1;
+}
+.search svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  stroke: var(--muted);
+  fill: none;
+  stroke-width: 2;
+}
+.search input {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  height: var(--h-btn);
+  padding: 0 14px 0 42px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.fbtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 99px;
+  min-height: var(--h-btn);
+  padding: 0 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+}
+.fbtn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.fbtn .n {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 99px;
+  font-size: 0.75rem;
+  min-width: 20px;
+  height: 20px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 5px;
+}
+.fbtn .n[hidden] {
+  display: none;
+}
+.fbtn[aria-expanded="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 4px 12px 12px;
+  margin-top: 10px;
+}
+.panel[hidden] {
+  display: none;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0 2px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  align-items: center;
+}
+.row::-webkit-scrollbar {
+  display: none;
+}
+.panel .row {
+  padding: 8px 0 2px;
+}
+#clubs,
+#districts {
+  flex-wrap: wrap;
+}
+a.fbtn,
+.fbtn.ic {
+  padding: 0;
+  width: var(--h-btn);
+  justify-content: center;
+} /* icon only: a round button */
+.rowlabel {
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  margin-right: 2px;
+}

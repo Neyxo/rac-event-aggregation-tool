@@ -69,7 +69,8 @@ const be: Partial<Messages> = {
   inst_done: "✓ Du bruuchsch die installierti App.",
   share_title: "Mit angerne teile",
   share_send: "Öpperem schicke",
-  share_text: "Hey, lueg dr mau Rotaract Events aa: D App zeigt aui Rotaract-Aaläss i dr Schwyz, u du chasch d Kaländer abonniere. Vo Rotaracter für Rotaracter.",
+  share_text:
+    "Hey, lueg dr mau Rotaract Events aa: D App zeigt aui Rotaract-Aaläss i dr Schwyz, u du chasch d Kaländer abonniere. Vo Rotaracter für Rotaracter.",
   copy: "Kopiere",
   copy_link: "Link kopiere",
   reset: "App zrüggsetzä",

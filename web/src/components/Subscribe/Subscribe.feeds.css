@@ -1,0 +1,129 @@
+.feeds {
+  display: grid;
+  gap: 6px;
+}
+.feeds h3 {
+  margin: 12px 2px 4px;
+}
+.feed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 8px 8px 8px 12px;
+}
+.feed .name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.feed .name img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.feed .name a {
+  color: inherit;
+  text-decoration: none;
+}
+.feed .nm {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.25;
+}
+.feed .nm small {
+  font-weight: 400;
+  font-size: 0.78rem;
+}
+.subbtn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 99px;
+  background: var(--azure);
+  color: #fff;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.subbtn svg,
+.way svg,
+.facts2 svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
+}
+.subbtn:active,
+.way:active {
+  transform: scale(0.97);
+}
+.how {
+  display: grid;
+  gap: 8px;
+}
+.how details {
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0;
+}
+.how summary {
+  font-weight: 600;
+  color: var(--text);
+}
+.how ol {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+.how li {
+  margin: 4px 0;
+}
+.steps {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+.steps li {
+  margin: 4px 0;
+}
+.linkbox {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.linkbox input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.9rem;
+  height: var(--h-btn);
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+.linkbox button {
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface);
+  padding: 0 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}

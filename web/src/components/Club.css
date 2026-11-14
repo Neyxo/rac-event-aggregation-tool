@@ -1,5 +1,0 @@
-/* club page: "how this club works" popup, and the partner clubs as a footnote */
-/* on a card the club is information, not a second link inside the card link: crest and name, no pill */
-.cl { display: inline-flex; align-items: center; gap: 4px; font-size: .74rem; font-weight: 700; color: color-mix(in srgb, var(--c) 75%, #000); }
-:root[data-theme=dark] .cl { color: color-mix(in srgb, var(--c) 60%, #fff); }
-.cl img { width: 14px; height: 14px; object-fit: contain; } .cl .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--c); }

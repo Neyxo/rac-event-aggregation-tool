@@ -8,60 +8,95 @@ import { fixture } from "../test/fixture";
 import { t, tx } from "../i18n";
 import { parseHash, type RouteName } from "../lib/route";
 import type { ScreenProps } from "../App";
-import { DataBoundary } from "./Blocks";
-import Home from "../screens/Home";
-import Discover from "../screens/Discover";
-import Calendar from "../screens/Calendar";
-import Event from "../screens/Event";
-import Club from "../screens/Club";
-import Settings from "../screens/Settings";
-import Subscribe from "../screens/Subscribe";
-import About from "../screens/About";
-import AboutMore from "../screens/AboutMore";
-import Family from "../screens/Family";
-import Guide from "../screens/Guide";
-import Intl from "../screens/Intl";
-import Dev from "../screens/Dev";
-import MapScreen from "../screens/Map";
+import { DataBoundary } from "./Blocks/Blocks";
+import Home from "../screens/Home/Home";
+import Discover from "../screens/Discover/Discover";
+import Calendar from "../screens/Calendar/Calendar";
+import Event from "../screens/Event/Event";
+import Club from "../screens/Club/Club";
+import Settings from "../screens/Settings/Settings";
+import Subscribe from "../screens/Subscribe/Subscribe";
+import About from "../screens/About/About";
+import AboutMore from "../screens/AboutMore/AboutMore";
+import Family from "../screens/Family/Family";
+import Guide from "../screens/Guide/Guide";
+import Intl from "../screens/Intl/Intl";
+import Dev from "../screens/Dev/Dev";
+import MapScreen from "../screens/Map/Map";
 
-window.matchMedia ??= ((q: string) => ({ matches: false, media: q, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); document.body.className = ""; document.body.removeAttribute("style"); });
+window.matchMedia ??= ((q: string) => ({
+  matches: false,
+  media: q,
+  addEventListener() {},
+  removeEventListener() {},
+})) as unknown as typeof window.matchMedia;
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+  document.body.className = "";
+  document.body.removeAttribute("style");
+});
 
 const failing = () => vi.fn(async () => ({ ok: false, status: 500, json: async () => ({}) }));
 /** a fetch that answers when told to */
 function held(ok: boolean) {
   let answer!: () => void;
-  const f = vi.fn(() => new Promise(res => { answer = () => res(ok ? { ok: true, json: async () => structuredClone(fixture) } : { ok: false, status: 500, json: async () => ({}) }); }));
+  const f = vi.fn(
+    () =>
+      new Promise((res) => {
+        answer = () =>
+          res(
+            ok
+              ? { ok: true, json: async () => structuredClone(fixture) }
+              : { ok: false, status: 500, json: async () => ({}) },
+          );
+      }),
+  );
   return { f, answer: () => answer() };
 }
 /** each screen shown as a navigation of its own (App passes useNav().id) */
 let nav = 0;
 const boundary = (Screen: ComponentType<ScreenProps>, hash: string, n: number) => (
-  <DataBoundary nav={n} main="wrap evpage" skel={3}><Screen route={parseHash(hash)} /></DataBoundary>
+  <DataBoundary nav={n} main="wrap evpage" skel={3}>
+    <Screen route={parseHash(hash)} />
+  </DataBoundary>
 );
 const show = (Screen: ComponentType<ScreenProps>, hash: string) => render(boundary(Screen, hash, ++nav));
 const offlineOnly = async () => {
-  await screen.findByText(t("offline"));  // React shows what a boundary waited for a little later (its fallback throttle)
+  await screen.findByText(t("offline")); // React shows what a boundary waited for a little later (its fallback throttle)
   expect(screen.getByRole("main").textContent).toBe(t("offline") + t("refresh"));
   screen.getByRole("button", { name: t("refresh") });
 };
 
 const SCREENS: [RouteName, ComponentType<ScreenProps>, string][] = [
-  ["home", Home, "#/"], ["discover", Discover, "#/discover"], ["calendar", Calendar, "#/calendar"], ["map", MapScreen, "#/map"],
-  ["event", Event, "#/event/217812"], ["club", Club, "#/club/luzern"], ["settings", Settings, "#/settings"],
-  ["about", About, "#/about"], ["about-more", AboutMore, "#/about-more"], ["family", Family, "#/family"], ["guide", Guide, "#/guide"],
-  ["intl", Intl, "#/intl"], ["dev", Dev, "#/dev"],
+  ["home", Home, "#/"],
+  ["discover", Discover, "#/discover"],
+  ["calendar", Calendar, "#/calendar"],
+  ["map", MapScreen, "#/map"],
+  ["event", Event, "#/event/217812"],
+  ["club", Club, "#/club/luzern"],
+  ["settings", Settings, "#/settings"],
+  ["about", About, "#/about"],
+  ["about-more", AboutMore, "#/about-more"],
+  ["family", Family, "#/family"],
+  ["guide", Guide, "#/guide"],
+  ["intl", Intl, "#/intl"],
+  ["dev", Dev, "#/dev"],
 ];
 
 describe("DataBoundary", () => {
   it("while events.json loads: a skeleton in place of the screen; when it fails: the offline note, and nothing of the screen", async () => {
     const { f, answer } = held(false);
     vi.stubGlobal("fetch", f);
-    await act(async () => { show(Event, "#/event/217812"); });  // an awaited act: React only retries a suspension started in one
+    await act(async () => {
+      show(Event, "#/event/217812");
+    }); // an awaited act: React only retries a suspension started in one
     expect(screen.getByRole("main").getAttribute("aria-busy")).toBe("true");
     expect(screen.getByRole("main").querySelectorAll(".skel")).toHaveLength(3);
-    expect(screen.getByRole("main").className).toBe("wrap evpage");  // where the screen's own content would sit
-    await act(async () => { answer(); });
+    expect(screen.getByRole("main").className).toBe("wrap evpage"); // where the screen's own content would sit
+    await act(async () => {
+      answer();
+    });
     await offlineOnly();
     // the screen never ran: no club colours, no wash
     expect(document.body.classList.contains("wash")).toBe(false);
@@ -70,29 +105,43 @@ describe("DataBoundary", () => {
   it("a failed load is not tried again while the screen stays, nor when its boundary is built anew: one fetch, the note stays", async () => {
     const f = failing();
     vi.stubGlobal("fetch", f);
-    await act(async () => { show(Home, "#/"); });
+    await act(async () => {
+      show(Home, "#/");
+    });
     await offlineOnly();
-    await act(async () => { await new Promise(r => setTimeout(r, 30)); });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 30));
+    });
     expect(f).toHaveBeenCalledTimes(1);
     cleanup();
-    await act(async () => { render(boundary(Home, "#/", nav)); });  // same navigation
+    await act(async () => {
+      render(boundary(Home, "#/", nav));
+    }); // same navigation
     await offlineOnly();
     expect(f).toHaveBeenCalledTimes(1);
   });
 
   it.each(SCREENS)("%s: main holds only the offline note", async (_name, Screen, hash) => {
     vi.stubGlobal("fetch", failing());
-    await act(async () => { show(Screen, hash); });
+    await act(async () => {
+      show(Screen, hash);
+    });
     await offlineOnly();
     expect(document.querySelector(".leaflet-container")).toBeNull();
   });
 
   it("the calendar help is text, there without the events; adding a calendar needs them: then the offline note", async () => {
-    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) { this.open = true; };
+    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
+      this.open = true;
+    };
     vi.stubGlobal("fetch", failing());
-    await act(async () => { show(Subscribe, "#/subscribe"); });
+    await act(async () => {
+      show(Subscribe, "#/subscribe");
+    });
     screen.getByRole("heading", { name: t("sub_fix_h") });
-    await act(async () => { fireEvent.click(screen.getAllByRole("button", { name: tx("sf").add })[0]!); });
+    await act(async () => {
+      fireEvent.click(screen.getAllByRole("button", { name: tx("sf").add })[0]!);
+    });
     await offlineOnly();
     expect(document.querySelector("dialog")).toBeNull();
   });
@@ -101,7 +150,9 @@ describe("DataBoundary", () => {
     const f = failing();
     vi.stubGlobal("fetch", f);
     history.replaceState(null, "", "/#/?clubs=bern");
-    await act(async () => { show(Home, "#/?clubs=bern"); });
+    await act(async () => {
+      show(Home, "#/?clubs=bern");
+    });
     expect(location.hash).toBe("#/discover?clubs=bern");
     expect(f).not.toHaveBeenCalled();
     history.replaceState(null, "", "/");
@@ -110,14 +161,20 @@ describe("DataBoundary", () => {
   it("a new navigation to the same screen (#/discover?clubs=x to #/discover) tries again", async () => {
     vi.stubGlobal("fetch", failing());
     let r!: ReturnType<typeof render>;
-    await act(async () => { r = show(Calendar, "#/calendar"); });
+    await act(async () => {
+      r = show(Calendar, "#/calendar");
+    });
     await offlineOnly();
     const { f, answer } = held(true);
     vi.stubGlobal("fetch", f);
-    await act(async () => { r.rerender(boundary(Calendar, "#/calendar", ++nav)); });  // same key in App: the boundary stays
+    await act(async () => {
+      r.rerender(boundary(Calendar, "#/calendar", ++nav));
+    }); // same key in App: the boundary stays
     expect(f).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("main").getAttribute("aria-busy")).toBe("true");
-    await act(async () => { answer(); });
-    await screen.findByRole("button", { name: t("prev_month") });  // the calendar itself
+    await act(async () => {
+      answer();
+    });
+    await screen.findByRole("button", { name: t("prev_month") }); // the calendar itself
   });
 });

@@ -10,6 +10,6 @@ export const PILLAR_RE: Record<Pillar, RegExp> = {
 };
 /** the picture used when img/<k>.jpg fails: the last event picture whose title fits, else the last event picture */
 export function pillarFallback(events: Event[], k: Pillar): string | undefined {
-  const withPic = events.filter(e => e.image);
-  return (withPic.filter(e => PILLAR_RE[k].test(e.title)).at(-1) ?? withPic.at(-1))?.image;
+  const withPic = events.filter((e) => e.image);
+  return (withPic.filter((e) => PILLAR_RE[k].test(e.title)).at(-1) ?? withPic.at(-1))?.image;
 }

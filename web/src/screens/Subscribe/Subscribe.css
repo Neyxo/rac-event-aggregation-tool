@@ -1,0 +1,37 @@
+/* calendar help: a problem's question and its fixes */
+.fixask {
+  margin-top: 8px;
+}
+.fixask p {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+.fixask .seg {
+  display: flex;
+}
+.fixask .seg button {
+  flex: 1;
+  color: var(--text);
+}
+.fixcase {
+  display: grid;
+  gap: 2px;
+  justify-items: start;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  animation: fade 0.25s ease-out;
+}
+.fixcase span {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.fixcase .linkbtn {
+  margin-top: 8px;
+  background: var(--surface);
+}
+.sfseg button[aria-pressed="true"],
+.fixask .seg button[aria-pressed="true"] {
+  color: var(--on-accent);
+}

@@ -1,0 +1,40 @@
+// One tool for the look of the code: "npm run format" rewrites, "npm run lint" checks (CI runs it on every push).
+// oxlint stays the linter for TypeScript's correctness rules; Biome formats everything and lints the CSS.
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.7/schema.json",
+  "files": { "includes": ["web/src/**", "web/e2e/**", "!web/e2e/fixture", "*.ts", "biome.jsonc"] },
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 120 },
+  "javascript": { "formatter": { "quoteStyle": "double" } },
+  "assist": { "enabled": false },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "none",
+      // readability, the things a formatter can't fix: one declaration per statement, no ternary inside a ternary, and no
+      // function that needs more than a screenful of branching to follow
+      "style": { "useSingleVarDeclarator": "error", "noNestedTernary": "error" },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": { "level": "error", "options": { "maxAllowedComplexity": 15 } },
+        "noCommaOperator": "error"
+      }
+    }
+  },
+  "overrides": [
+    // a browser test is one long script of steps and checks by nature
+    {
+      "includes": ["web/e2e/**"],
+      "linter": { "rules": { "complexity": { "noExcessiveCognitiveComplexity": "off" } } }
+    },
+    {
+      "includes": ["**/*.css"],
+      "linter": {
+        "rules": {
+          "preset": "recommended",
+          // the stylesheets are ordered by component (app.css lists them), not by specificity: a shared look comes first and a
+          // component's own, more specific rule may sit in an earlier file
+          "style": { "noDescendingSpecificity": "off" }
+        }
+      }
+    }
+  ]
+}

@@ -20,9 +20,12 @@ export function installPretendDate(): void {
   if (isNaN(off)) return;
   class Shifted extends Real {
     constructor(...a: unknown[]) {
-      if (a.length) super(...(a as [string])); else super(Real.now() + off);
+      if (a.length) super(...(a as [string]));
+      else super(Real.now() + off);
     }
-    static override now() { return Real.now() + off; }
+    static override now() {
+      return Real.now() + off;
+    }
   }
   globalThis.Date = Shifted as DateConstructor;
 }

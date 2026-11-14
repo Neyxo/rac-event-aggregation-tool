@@ -13,7 +13,9 @@ async function firstVisit(page: Page): Promise<void> {
 }
 function countData(context: BrowserContext): { n: number } {
   const c = { n: 0 };
-  context.on("request", r => { if (r.serviceWorker() && /\/events\.json/.test(r.url())) c.n++; });
+  context.on("request", (r) => {
+    if (r.serviceWorker() && /\/events\.json/.test(r.url())) c.n++;
+  });
   return c;
 }
 
@@ -30,7 +32,7 @@ test("after one visit the app works offline: reload shows the events", async ({ 
 test("events.json: no request within 30 minutes, a fresh one after", async ({ page, context }) => {
   const net = countData(context);
   await firstVisit(page);
-  const after = net.n;  // the worker fetched it once on install
+  const after = net.n; // the worker fetched it once on install
   await page.reload();
   await expect(page.locator("main a.event").first()).toBeVisible();
   await page.reload();
@@ -38,7 +40,10 @@ test("events.json: no request within 30 minutes, a fresh one after", async ({ pa
   expect(net.n).toBe(after);
   // 31 minutes later, in the worker (it keeps its own clock)
   const sw = context.serviceWorkers()[0]!;
-  await sw.evaluate(() => { const real = Date.now; Date.now = () => real() + 31 * 60e3; });
+  await sw.evaluate(() => {
+    const real = Date.now;
+    Date.now = () => real() + 31 * 60e3;
+  });
   await page.clock.fastForward("31:00");
   await page.reload();
   await expect(page.locator("main a.event").first()).toBeVisible();

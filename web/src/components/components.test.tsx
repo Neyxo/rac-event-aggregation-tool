@@ -6,16 +6,47 @@ import { ev } from "../test/ev";
 import { t, tx } from "../i18n";
 import { club, getData, loadData, setSettings } from "../lib/data";
 import { DISTRICT_IDS } from "../lib/color";
-import { sortClub, WISHES, type Answers } from "./Sorting";
-import { ClubChip, ClubChips, CtaBlock, EventCard, NewIds, Footer, HelpLinks, NewsStrip, NextUp, Popup, QaList, Rich, Tabs, TopBar, Toast, toast } from ".";
+import { sortClub, WISHES, type Answers } from "./Sorting/Sorting";
+import {
+  ClubChip,
+  ClubChips,
+  CtaBlock,
+  EventCard,
+  NewIds,
+  Footer,
+  HelpLinks,
+  NewsStrip,
+  NextUp,
+  Popup,
+  QaList,
+  Rich,
+  Tabs,
+  TopBar,
+  Toast,
+  toast,
+} from ".";
 
 beforeAll(async () => {
-  vi.stubGlobal("fetch", vi.fn(async () => ({ ok: true, json: async () => structuredClone(fixture) })));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => ({ ok: true, json: async () => structuredClone(fixture) })),
+  );
   await loadData();
   vi.unstubAllGlobals();
 });
-afterEach(() => { cleanup(); localStorage.clear(); });
-const at = (d: string, f: () => void) => { vi.useFakeTimers(); vi.setSystemTime(new Date(d)); try { f(); } finally { vi.useRealTimers(); } };
+afterEach(() => {
+  cleanup();
+  localStorage.clear();
+});
+const at = (d: string, f: () => void) => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date(d));
+  try {
+    f();
+  } finally {
+    vi.useRealTimers();
+  }
+};
 const link = (name: string | RegExp) => screen.getByRole("link", { name });
 
 describe("chrome", () => {
@@ -26,11 +57,14 @@ describe("chrome", () => {
     expect(back.hasAttribute("title")).toBe(false);
     expect(within(link("Rotaract Events")).getByRole("img").getAttribute("src")).toBe("rotaract.svg");
     const right = [link("Rotaract"), link(t("info")), link(t("settings"))];
-    expect(right.map(a => a.getAttribute("href"))).toEqual(["#/about", "#/public", "#/settings"]);
-    expect(right.map(a => a.classList.contains("on"))).toEqual([true, false, false]);
+    expect(right.map((a) => a.getAttribute("href"))).toEqual(["#/about", "#/public", "#/settings"]);
+    expect(right.map((a) => a.classList.contains("on"))).toEqual([true, false, false]);
     for (const a of right) expect(a.getAttribute("title")).toBe(a.getAttribute("aria-label"));
     expect(screen.queryByRole("link", { name: "Dev" })).toBeNull();
-    act(() => { localStorage.setItem("rac.dev", "true"); window.dispatchEvent(new StorageEvent("storage")); });
+    act(() => {
+      localStorage.setItem("rac.dev", "true");
+      window.dispatchEvent(new StorageEvent("storage"));
+    });
     rerender(<TopBar active="dev" />);
     expect(link("Dev").getAttribute("href")).toBe("#/dev");
     expect(link("Dev").classList.contains("on")).toBe(true);
@@ -39,7 +73,11 @@ describe("chrome", () => {
   it("tabs: home, discover, calendar; the current one marked", () => {
     render(<Tabs active="calendar" />);
     const nav = screen.getByRole("navigation", { name: "Main" });
-    expect(within(nav).getAllByRole("link").map(a => a.getAttribute("href"))).toEqual(["#/", "#/discover", "#/calendar"]);
+    expect(
+      within(nav)
+        .getAllByRole("link")
+        .map((a) => a.getAttribute("href")),
+    ).toEqual(["#/", "#/discover", "#/calendar"]);
     expect(within(nav).getByRole("link", { current: "page" })).toHaveProperty("textContent", t("calendar"));
   });
 });
@@ -48,25 +86,58 @@ describe("event card", () => {
   it("links to the event and shows date, meta, clubs, status and picture", () => {
     let c!: HTMLElement;
     at("2026-11-10T12:00", () => {
-      const e = ev({ id: "x", clubs: ["luzern", "nope"], title: "Stamm", start: "2026-11-11T18:00", end: "2026-11-11T21:30", members: true, deadline: "2026-11-11T12:00", image: "p.jpg" });
+      const e = ev({
+        id: "x",
+        clubs: ["luzern", "nope"],
+        title: "Stamm",
+        start: "2026-11-11T18:00",
+        end: "2026-11-11T21:30",
+        members: true,
+        deadline: "2026-11-11T12:00",
+        image: "p.jpg",
+      });
       c = render(<EventCard e={e} i={20} />).container;
     });
     const a = link(/^Stamm/);
     expect(a.getAttribute("href")).toBe("#/event/x");
-    expect(a.getAttribute("style")).toContain("--i: 12");  // the entrance stagger is capped
+    expect(a.getAttribute("style")).toContain("--i: 12"); // the entrance stagger is capped
     expect(within(a).getByText("11")).toBeTruthy();
     expect(within(a).getByText("Wed 18:00–21:30")).toBeTruthy();
     expect(within(a).getByRole("link", { name: "Rotaract Luzern" }).getAttribute("href")).toBe("#/club/luzern");
-    expect(within(a).getAllByRole("link").map(l => l.getAttribute("href"))).toContain("#/club/nope");
+    expect(
+      within(a)
+        .getAllByRole("link")
+        .map((l) => l.getAttribute("href")),
+    ).toContain("#/club/nope");
     expect(within(a).getByText(t("members_only"))).toBeTruthy();
-    expect(within(a).getByText(/^Register by/).classList.contains("soon")).toBe(true);  // red in the last two days
-    expect(within(a).getByRole("button", { name: t("save") + ": Stamm" }).getAttribute("aria-pressed")).toBe("false");
+    expect(
+      within(a)
+        .getByText(/^Register by/)
+        .classList.contains("soon"),
+    ).toBe(true); // red in the last two days
+    expect(
+      within(a)
+        .getByRole("button", { name: t("save") + ": Stamm" })
+        .getAttribute("aria-pressed"),
+    ).toBe("false");
     expect(c.querySelector("img.thumb")?.getAttribute("referrerpolicy")).toBe("no-referrer");
   });
   it("cancelled, NEW under NewIds, club colours, decorative crest and date pane", () => {
     let c!: HTMLElement;
     at("2026-11-10T12:00", () => {
-      const card = <EventCard e={ev({ id: "c", clubs: ["luzern"], cancelled: true, image: "p.jpg", organiser: "RC X", location: "Bern, Hotel" })} i={3} />;
+      const card = (
+        <EventCard
+          e={ev({
+            id: "c",
+            clubs: ["luzern"],
+            cancelled: true,
+            image: "p.jpg",
+            organiser: "RC X",
+            location: "Bern, Hotel",
+          })}
+          i={3}
+        />
+      );
       c = render(<NewIds.Provider value={new Set(["c"])}>{card}</NewIds.Provider>).container;
     });
     const a = link(/^c/);
@@ -79,7 +150,13 @@ describe("event card", () => {
     expect(c.querySelector(".date")?.getAttribute("aria-hidden")).toBe("true");
   });
   it("the star saves and says so; every star of the event follows", () => {
-    render(<><EventCard e={ev({ id: "s" })} /><EventCard e={ev({ id: "s" })} /><Toast /></>);
+    render(
+      <>
+        <EventCard e={ev({ id: "s" })} />
+        <EventCard e={ev({ id: "s" })} />
+        <Toast />
+      </>,
+    );
     const [star, twin] = screen.getAllByRole("button", { name: t("save") + ": s" });
     fireEvent.click(star!);
     expect(star!.getAttribute("aria-pressed")).toBe("true");
@@ -91,7 +168,14 @@ describe("event card", () => {
     expect(star!.getAttribute("aria-pressed")).toBe("false");
   });
   it("next up: countdown, title, time and place, picture", () => {
-    at("2026-11-10T12:00", () => { render(<NextUp e={ev({ id: "n", start: "2026-11-11T20:00", end: "2026-11-11T22:00", location: "Luzern, X", image: "a.jpg" })} label="L" />); });
+    at("2026-11-10T12:00", () => {
+      render(
+        <NextUp
+          e={ev({ id: "n", start: "2026-11-11T20:00", end: "2026-11-11T22:00", location: "Luzern, X", image: "a.jpg" })}
+          label="L"
+        />,
+      );
+    });
     const a = link(/tomorrow/);
     expect(a.getAttribute("href")).toBe("#/event/n");
     for (const s of ["L", "tomorrow", "n", "Wed 20:00–22:00 · Luzern"]) expect(within(a).getByText(s)).toBeTruthy();
@@ -101,28 +185,47 @@ describe("event card", () => {
 
 describe("clubs", () => {
   it("club chip: crest or a dot, club colours, opens the club", () => {
-    const { container } = render(<><ClubChip id="luzern" /><ClubChip id="nope" /></>);
+    const { container } = render(
+      <>
+        <ClubChip id="luzern" />
+        <ClubChip id="nope" />
+      </>,
+    );
     const a = link("Rotaract Luzern");
-    expect(a.textContent).toBe("Luzern"); expect(a.getAttribute("style")).toBe("--c: #0b5cad; --on-c: #fff;");
+    expect(a.textContent).toBe("Luzern");
+    expect(a.getAttribute("style")).toBe("--c: #0b5cad; --on-c: #fff;");
     expect(a.querySelector("img")?.getAttribute("alt")).toBe("");
     const b = container.querySelector('a[href="#/club/nope"]')!;
-    expect(b.querySelector("img")).toBeNull(); expect(b.querySelector(".dot")).not.toBeNull();
+    expect(b.querySelector("img")).toBeNull();
+    expect(b.querySelector(".dot")).not.toBeNull();
   });
   it("club chip with a distance", () => {
-    render(<ClubChip id="bern" extra="main"><small>3 km</small></ClubChip>);
-    const a = screen.getByRole("link", { name: /^Bern ?3 km$/ });  // the distance is part of the name; the full name is the tooltip
-    expect(a.classList.contains("main")).toBe(true); expect(a.textContent).toBe("Bern3 km"); expect(a.title).toBe("Rotaract Bern");
+    render(
+      <ClubChip id="bern" extra="main">
+        <small>3 km</small>
+      </ClubChip>,
+    );
+    const a = screen.getByRole("link", { name: /^Bern ?3 km$/ }); // the distance is part of the name; the full name is the tooltip
+    expect(a.classList.contains("main")).toBe(true);
+    expect(a.textContent).toBe("Bern3 km");
+    expect(a.title).toBe("Rotaract Bern");
   });
   it("chips: pressed state per club, limited to only", () => {
     render(<ClubChips selected={new Set(["bern"])} only={["bern", "international"]} onPick={() => {}} />);
-    expect(screen.getAllByRole("button").map(b => [b.getAttribute("aria-label"), b.getAttribute("aria-pressed")])).toEqual([["Rotaract Bern", "true"], [getData().clubs.international!.name, "false"]]);
+    expect(
+      screen.getAllByRole("button").map((b) => [b.getAttribute("aria-label"), b.getAttribute("aria-pressed")]),
+    ).toEqual([
+      ["Rotaract Bern", "true"],
+      [getData().clubs.international!.name, "false"],
+    ]);
   });
   it("chip picker: single with None, no pseudo-clubs", () => {
     const pick = vi.fn();
     render(<ClubChips single selected="bern" onPick={pick} />);
     expect(screen.queryByRole("button", { name: "Rotaract International" })).toBeNull();
     expect(screen.getByRole("button", { pressed: true })).toHaveProperty("textContent", "Bern");
-    fireEvent.click(screen.getByRole("button", { name: t("none") })); expect(pick).toHaveBeenCalledWith("");
+    fireEvent.click(screen.getByRole("button", { name: t("none") }));
+    expect(pick).toHaveBeenCalledWith("");
   });
 });
 
@@ -136,11 +239,18 @@ describe("blocks", () => {
     expect(fn).toHaveBeenCalled();
   });
   it("help links, footer, Q&A, news", () => {
-    render(<><HelpLinks keys={["guide", "intl"]} /><Footer source /><QaList items={[["Q", "A"]]} /><NewsStrip items={[{ url: "https://x", title: "T", date: "2026-01-02", image: "" }]} /></>);
-    const hrefs = screen.getAllByRole("link").map(a => a.getAttribute("href"));
+    render(
+      <>
+        <HelpLinks keys={["guide", "intl"]} />
+        <Footer source />
+        <QaList items={[["Q", "A"]]} />
+        <NewsStrip items={[{ url: "https://x", title: "T", date: "2026-01-02", image: "" }]} />
+      </>,
+    );
+    const hrefs = screen.getAllByRole("link").map((a) => a.getAttribute("href"));
     expect(hrefs.slice(0, 2)).toEqual(["#/guide", "#/intl"]);
     expect(link(t("source")).getAttribute("target")).toBe("_blank");
-    expect(screen.getByText("Q").closest("details")?.getAttribute("name")).toBe("qa");  // one answer open at a time
+    expect(screen.getByText("Q").closest("details")?.getAttribute("name")).toBe("qa"); // one answer open at a time
     expect(within(link(/^T/)).getByText("2 Jan 2026")).toBeTruthy();
   });
   it("rich text: heading, joined paragraph lines, numbered steps, points, bold, the accent colour", () => {
@@ -150,7 +260,8 @@ describe("blocks", () => {
     expect(screen.getByText("A B").tagName).toBe("P");
     const [steps, points] = screen.getAllByRole("list");
     const [s1, s2] = within(steps!).getAllByRole("listitem");
-    expect(within(s1!).getByText("T").tagName).toBe("B"); expect(within(s1!).getByText("x: y")).toBeTruthy();
+    expect(within(s1!).getByText("T").tagName).toBe("B");
+    expect(within(s1!).getByText("x: y")).toBeTruthy();
     expect(s2!.textContent).toBe("2U");
     expect(within(points!).getByRole("listitem").textContent).toBe("p");
     expect(screen.getByText("end").tagName).toBe("P");
@@ -172,7 +283,9 @@ describe("blocks", () => {
     const dlg = within(await screen.findByRole("dialog", { hidden: true }));
     const tap = (name: string) => fireEvent.click(dlg.getByRole("button", { name, hidden: true }));
     expect(dlg.getByText(tx("hat_q")[0]!)).toBeTruthy();
-    tap("Deutsch"); tap(tx("hat_where")[1]!); tap(tx("hat_wish")[0]!);  // German, district 1990, many events
+    tap("Deutsch");
+    tap(tx("hat_where")[1]!);
+    tap(tx("hat_wish")[0]!); // German, district 1990, many events
     expect(dlg.getByText(t("hat_verdict"))).toBeTruthy();
     expect(dlg.getByText("Rotaract Bern")).toBeTruthy();
     expect(dlg.getByRole("link", { name: t("hat_go"), hidden: true }).getAttribute("href")).toBe("#/club/bern");
@@ -181,26 +294,54 @@ describe("blocks", () => {
   });
   it("sorting: every combination of answers names a real club; language first, then district, then the wish; the same answers, the same club", () => {
     // the real clubs by district, the national club and a pseudo-club; upcoming events: Luzern 2, St. Gallen 3, Fribourg 1 (and a cancelled one)
-    const ids = { "1980": ["luzern", "basel", "solothurn"], "1990": ["bern", "fribourg", "geneve-international"], "2000": ["zuerich", "zurich-international", "stgallen", "ticino"], "": ["schweiz"] };
-    const clubs = [...Object.entries(ids).flatMap(([district, l]) => l.map(id => ({ ...club("luzern"), id, district }))), { ...club("luzern"), id: "international", source: "international" }];
-    const events = ["luzern", "luzern", "stgallen", "stgallen", "stgallen", "fribourg", "international", "schweiz"].map((c, i) => ev({ id: "s" + i, clubs: [c] })).concat(ev({ id: "x", clubs: ["fribourg"], cancelled: true }));
+    const ids = {
+      "1980": ["luzern", "basel", "solothurn"],
+      "1990": ["bern", "fribourg", "geneve-international"],
+      "2000": ["zuerich", "zurich-international", "stgallen", "ticino"],
+      "": ["schweiz"],
+    };
+    const clubs = [
+      ...Object.entries(ids).flatMap(([district, l]) => l.map((id) => ({ ...club("luzern"), id, district }))),
+      { ...club("luzern"), id: "international", source: "international" },
+    ];
+    const events = ["luzern", "luzern", "stgallen", "stgallen", "stgallen", "fribourg", "international", "schweiz"]
+      .map((c, i) => ev({ id: "s" + i, clubs: [c] }))
+      .concat(ev({ id: "x", clubs: ["fribourg"], cancelled: true }));
     const sort = (...a: Answers) => sortClub(clubs, events, a)?.id;
     at("2026-11-11T10:00", () => {
-      for (const l of ["de", "fr", "it", "en"] as const) for (const d of DISTRICT_IDS) for (const w of WISHES) {
-        expect([l, d, w, ids[d].concat(ids["1990"], ids["2000"]).includes(sort(l, d, w)!)]).toEqual([l, d, w, true]);
-        expect(sort(l, d, w)).toBe(sort(l, d, w));
-      }
-      expect([sort("de", "1980", "many"), sort("de", "1980", "small"), sort("de", "2000", "many")]).toEqual(["luzern", "basel", "stgallen"]);  // a tie: the first in the data
-      expect(sort("it", "1990", "many")).toBe("ticino");  // the language outweighs the district
-      expect([sort("fr", "1990", "many"), sort("fr", "1990", "small"), sort("fr", "1980", "world")]).toEqual(["fribourg", "geneve-international", "geneve-international"]);
-      expect(sort("de", "2000", "world")).toBe("zurich-international");  // an international club outweighs the language ...
-      expect(sort("de", "1980", "world")).toBe("luzern");  // ... but not language and district together
+      for (const l of ["de", "fr", "it", "en"] as const)
+        for (const d of DISTRICT_IDS)
+          for (const w of WISHES) {
+            expect([l, d, w, ids[d].concat(ids["1990"], ids["2000"]).includes(sort(l, d, w)!)]).toEqual([
+              l,
+              d,
+              w,
+              true,
+            ]);
+            expect(sort(l, d, w)).toBe(sort(l, d, w));
+          }
+      expect([sort("de", "1980", "many"), sort("de", "1980", "small"), sort("de", "2000", "many")]).toEqual([
+        "luzern",
+        "basel",
+        "stgallen",
+      ]); // a tie: the first in the data
+      expect(sort("it", "1990", "many")).toBe("ticino"); // the language outweighs the district
+      expect([sort("fr", "1990", "many"), sort("fr", "1990", "small"), sort("fr", "1980", "world")]).toEqual([
+        "fribourg",
+        "geneve-international",
+        "geneve-international",
+      ]);
+      expect(sort("de", "2000", "world")).toBe("zurich-international"); // an international club outweighs the language ...
+      expect(sort("de", "1980", "world")).toBe("luzern"); // ... but not language and district together
       expect(sort("en", "1990", "many")).toBe("geneve-international");
     });
     expect(sortClub([], [], ["de", "1980", "many"])).toBeUndefined();
   });
   it("call to action with a main club: its name and a link to its next event", () => {
-    at("2026-11-10T12:00", () => { setSettings({ home: "luzern", also: [] }); render(<CtaBlock />); });
+    at("2026-11-10T12:00", () => {
+      setSettings({ home: "luzern", also: [] });
+      render(<CtaBlock />);
+    });
     expect(screen.getByText(t("your_club"))).toBeTruthy();
     expect(screen.getByText("Rotaract Luzern")).toBeTruthy();
     expect(link(t("go")).getAttribute("href")).toMatch(/^#\/(event|club)\//);
@@ -208,27 +349,62 @@ describe("blocks", () => {
   });
   it("popup: rendered into body, title focusable; the title then the round x, no back, no footer; the x closes", () => {
     const close = vi.fn();
-    render(<Popup title="Clubs" onClose={close}><p>x</p></Popup>);
+    render(
+      <Popup title="Clubs" onClose={close}>
+        <p>x</p>
+      </Popup>,
+    );
     const dlg = document.body.querySelector<HTMLDialogElement>(":scope > dialog.ob")!;
-    dlg.close = () => { fireEvent(dlg, new Event("close")); };  // jsdom has no dialog methods
+    dlg.close = () => {
+      fireEvent(dlg, new Event("close"));
+    }; // jsdom has no dialog methods
     const h2 = within(dlg).getByRole("heading", { name: "Clubs", hidden: true });
     expect(h2.getAttribute("tabindex")).toBe("-1");
     expect(document.activeElement).toBe(h2);
     expect(within(dlg).getByText("x")).toBeTruthy();
-    expect([...dlg.querySelector(".obhead")!.children].map(e => [e.tagName, e.className, e.getAttribute("aria-label")])).toEqual([["H2", "", null], ["BUTTON", "obback obx", t("close")]]);
+    expect(
+      [...dlg.querySelector(".obhead")!.children].map((e) => [e.tagName, e.className, e.getAttribute("aria-label")]),
+    ).toEqual([
+      ["H2", "", null],
+      ["BUTTON", "obback obx", t("close")],
+    ]);
     expect(dlg.querySelector(".nav")).toBeNull();
     expect(within(dlg).getAllByRole("button", { hidden: true })).toHaveLength(1);
     fireEvent.click(within(dlg).getByRole("button", { name: t("close"), hidden: true }));
     expect(close).toHaveBeenCalled();
   });
   it("popup with an action (a stepper's Next) and a way back: back, title, x in the header; the footer holds only the action", () => {
-    const close = vi.fn(), back = vi.fn();
-    render(<Popup title="Steps" onClose={close} back={back} action={<button className="btn" type="button">{t("next")}</button>}><p>x</p></Popup>);
+    const close = vi.fn();
+    const back = vi.fn();
+    render(
+      <Popup
+        title="Steps"
+        onClose={close}
+        back={back}
+        action={
+          <button className="btn" type="button">
+            {t("next")}
+          </button>
+        }
+      >
+        <p>x</p>
+      </Popup>,
+    );
     const dlg = document.body.querySelector<HTMLDialogElement>(":scope > dialog.ob")!;
-    dlg.close = () => { fireEvent(dlg, new Event("close")); };
-    expect([...dlg.querySelector(".obhead")!.children].map(e => [e.tagName, e.className, e.getAttribute("aria-label")])).toEqual([["BUTTON", "obback", t("back")], ["H2", "", null], ["BUTTON", "obback obx", t("close")]]);
-    expect([...dlg.querySelectorAll(".nav button")].map(b => [b.className, b.textContent])).toEqual([["btn", t("next")]]);
-    expect(dlg.querySelector(".nav")!.lastElementChild!.textContent).toBe(t("next"));  // on the right
+    dlg.close = () => {
+      fireEvent(dlg, new Event("close"));
+    };
+    expect(
+      [...dlg.querySelector(".obhead")!.children].map((e) => [e.tagName, e.className, e.getAttribute("aria-label")]),
+    ).toEqual([
+      ["BUTTON", "obback", t("back")],
+      ["H2", "", null],
+      ["BUTTON", "obback obx", t("close")],
+    ]);
+    expect([...dlg.querySelectorAll(".nav button")].map((b) => [b.className, b.textContent])).toEqual([
+      ["btn", t("next")],
+    ]);
+    expect(dlg.querySelector(".nav")!.lastElementChild!.textContent).toBe(t("next")); // on the right
     fireEvent.click(within(dlg).getByRole("button", { name: t("back"), hidden: true }));
     expect(back).toHaveBeenCalled();
     expect(close).not.toHaveBeenCalled();
@@ -239,7 +415,7 @@ describe("blocks", () => {
 
 describe("Festive", () => {
   it("shows nothing on an ordinary day; playFestive plays 24 boxes once and removes them", async () => {
-    const { Festive, playFestive } = await import("./Festive");
+    const { Festive, playFestive } = await import("./Festive/Festive");
     vi.stubGlobal("matchMedia", () => ({ matches: false }));
     const { container } = render(<Festive page="dev" id={undefined} />);
     expect(container.innerHTML).toBe("");

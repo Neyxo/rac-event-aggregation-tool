@@ -25,23 +25,49 @@ export interface Review {
   insta: InstaPost[];
 }
 
-export function review(y: number, events: readonly Event[], clubs: readonly Club[], mine: readonly string[], saved: ReadonlySet<string>): Review {
+export function review(
+  y: number,
+  events: readonly Event[],
+  clubs: readonly Club[],
+  mine: readonly string[],
+  saved: ReadonlySet<string>,
+): Review {
   // dates are local "2026-07-01T18:00" / "2026-07-01": comparing the text is exact, with no time zone in the way
-  const from = `${y}-07-01`, to = `${y + 1}-07-01`, inYear = (d: string) => d >= from && d < to;
-  const all = events.filter(e => !e.cancelled && inYear(e.start));
-  const evs = mine.length ? all.filter(e => e.clubs.some(c => mine.includes(c))) : all;
-  const count = (keys: (string | number)[]) => { const m = new Map<string | number, number>(); for (const k of keys) m.set(k, (m.get(k) ?? 0) + 1); return [...m].sort((a, b) => b[1] - a[1]); };
-  const month = count(evs.map(e => +e.start.slice(5, 7) - 1))[0];
-  const hosts = count(evs.flatMap(e => e.clubs)) as [string, number][];
-  const placed = evs.filter(e => e.coords);
+  const from = `${y}-07-01`;
+  const to = `${y + 1}-07-01`;
+  const inYear = (d: string) => d >= from && d < to;
+  const all = events.filter((e) => !e.cancelled && inYear(e.start));
+  const evs = mine.length ? all.filter((e) => e.clubs.some((c) => mine.includes(c))) : all;
+  const count = (keys: (string | number)[]) => {
+    const m = new Map<string | number, number>();
+    for (const k of keys) m.set(k, (m.get(k) ?? 0) + 1);
+    return [...m].sort((a, b) => b[1] - a[1]);
+  };
+  const month = count(evs.map((e) => +e.start.slice(5, 7) - 1))[0];
+  const hosts = count(evs.flatMap((e) => e.clubs)) as [string, number][];
+  const placed = evs.filter((e) => e.coords);
   let far: Review["far"] = null;
   // ponytail: every pair, O(n²); a year is a few hundred events at most
-  for (const [i, a] of placed.entries()) for (const b of placed.slice(i + 1)) { const d = km(a.coords!, b.coords!); if (d >= 1 && d > (far?.km ?? 0)) far = { a, b, km: d }; }
-  const cs = clubs.filter(c => !mine.length || mine.includes(c.id)), dated = (k: "news" | "projects") => cs.flatMap(c => c[k] ?? []).filter(n => inYear(n.date)).length;
+  for (const [i, a] of placed.entries())
+    for (const b of placed.slice(i + 1)) {
+      const d = km(a.coords!, b.coords!);
+      if (d >= 1 && d > (far?.km ?? 0)) far = { a, b, km: d };
+    }
+  const cs = clubs.filter((c) => !mine.length || mine.includes(c.id));
+  const dated = (k: "news" | "projects") => cs.flatMap((c) => c[k] ?? []).filter((n) => inYear(n.date)).length;
   return {
-    n: evs.length, month: month ? { m: +month[0], n: month[1] } : null, hosts: hosts.length > 1 ? hosts.slice(0, 3) : [],
-    months: Array.from({ length: 12 }, (_, i) => evs.filter(e => (+e.start.slice(5, 7) + 5) % 12 === i).length),
-    far, saved: all.filter(e => saved.has(e.id)).length, news: dated("news"), projects: dated("projects"),
-    insta: cs.flatMap(c => c.instagram ?? []).filter(p => inYear(p.date ?? "")).sort((a, b) => b.date!.localeCompare(a.date!)).slice(0, 6),
+    n: evs.length,
+    month: month ? { m: +month[0], n: month[1] } : null,
+    hosts: hosts.length > 1 ? hosts.slice(0, 3) : [],
+    months: Array.from({ length: 12 }, (_, i) => evs.filter((e) => (+e.start.slice(5, 7) + 5) % 12 === i).length),
+    far,
+    saved: all.filter((e) => saved.has(e.id)).length,
+    news: dated("news"),
+    projects: dated("projects"),
+    insta: cs
+      .flatMap((c) => c.instagram ?? [])
+      .filter((p) => inYear(p.date ?? ""))
+      .sort((a, b) => b.date!.localeCompare(a.date!))
+      .slice(0, 6),
   };
 }

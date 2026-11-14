@@ -2,455 +2,409 @@
 import type { EventsJson } from "../lib/types";
 
 export const fixture: EventsJson = {
- "generated": "2026-11-11T01:58",
- "clubs": [
-  {
-   "id": "luzern",
-   "name": "Rotaract Luzern",
-   "short": "Luzern",
-   "url": "https://rotaract-luzern.ch",
-   "color": "#0b5cad",
-   "logo": "crests/luzern.svg",
-   "district": "1980",
-   "coords": [
-    47.05473,
-    8.30089
-   ],
-   "photos": [
-    "https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/6a7b4874c4473.jpg"
-   ],
-   "news": [
+  generated: "2026-11-11T01:58",
+  clubs: [
     {
-     "url": "https://rotaract-luzern.ch/de/content/news/show/29657",
-     "title": "Interkultureller Austausch im Kaukasus: Rotaractors auf Mission in Armenien",
-     "date": "2026-08-01",
-     "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/BSpyujiS/6a7b4874c4473.jpg?v=1.5.16"
+      id: "luzern",
+      name: "Rotaract Luzern",
+      short: "Luzern",
+      url: "https://rotaract-luzern.ch",
+      color: "#0b5cad",
+      logo: "crests/luzern.svg",
+      district: "1980",
+      coords: [47.05473, 8.30089],
+      photos: ["https://rotaract-luzern.ch/media/cache/cloudtec_block_image_full/6a7b4874c4473.jpg"],
+      news: [
+        {
+          url: "https://rotaract-luzern.ch/de/content/news/show/29657",
+          title: "Interkultureller Austausch im Kaukasus: Rotaractors auf Mission in Armenien",
+          date: "2026-08-01",
+          image:
+            "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/BSpyujiS/6a7b4874c4473.jpg?v=1.5.16",
+        },
+        {
+          url: "https://rotaract-luzern.ch/de/content/news/show/25218",
+          title: "Programm 2024",
+          date: "2024-08-29",
+          image:
+            "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/kbM9cs0o/66d03ce72983b.png?v=1.5.16",
+        },
+      ],
+      projects: [],
+      instagram: [],
+      links: {
+        instagram: "https://www.instagram.com/racluzern/",
+      },
+      source: "",
+      how: "## In drei Schritten dabei\n1. Schreib uns: Melde dich bei luzern@rotaract.ch und frag, ob du an einen Anlass kommen kannst.\n2. Komm vorbei: Als Gast kostet das nichts und verpflichtet zu nichts. Wir möchten dich an **zwei bis drei Anlässen** kennenlernen, mehr geht immer.\n3. Werde Mitglied: Aufgenom",
+      partners: [
+        {
+          name: "Rotary eClub Zentralschweiz",
+          url: "https://eclubzentralschweiz.rotary1980.ch",
+        },
+        {
+          name: "Rotary Club Luzern Wasserturm",
+          url: "https://luzern-wasserturm.rotary1980.ch",
+        },
+        {
+          name: "Rotaract Club Sempachersee",
+          url: "#/club/sempachersee",
+        },
+      ],
+      about:
+        "Junge Leute aus der Region Luzern, die zusammen lernen, helfen und feiern. Gäste sind jederzeit willkommen.",
     },
     {
-     "url": "https://rotaract-luzern.ch/de/content/news/show/25218",
-     "title": "Programm 2024",
-     "date": "2024-08-29",
-     "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/kbM9cs0o/66d03ce72983b.png?v=1.5.16"
-    }
-   ],
-   "projects": [],
-   "instagram": [],
-   "links": {
-    "instagram": "https://www.instagram.com/racluzern/"
-   },
-   "source": "",
-   "how": "## In drei Schritten dabei\n1. Schreib uns: Melde dich bei luzern@rotaract.ch und frag, ob du an einen Anlass kommen kannst.\n2. Komm vorbei: Als Gast kostet das nichts und verpflichtet zu nichts. Wir möchten dich an **zwei bis drei Anlässen** kennenlernen, mehr geht immer.\n3. Werde Mitglied: Aufgenom",
-   "partners": [
-    {
-     "name": "Rotary eClub Zentralschweiz",
-     "url": "https://eclubzentralschweiz.rotary1980.ch"
+      id: "bern",
+      name: "Rotaract Bern",
+      short: "Bern",
+      url: "https://bern.rotaract.ch",
+      color: "#e3141a",
+      logo: "crests/bern.svg",
+      district: "1990",
+      coords: [46.95456, 7.42068],
+      photos: [],
+      news: [
+        {
+          url: "https://bern.rotaract.ch/de/content/news/show/27588",
+          title: "FAQ Aufnahmeverfahren und Clubleben Rotaract Club Bern",
+          date: "2025-07-01",
+          image: "",
+        },
+        {
+          url: "https://bern.rotaract.ch/de/content/news/show/26482",
+          title: "Generalversammlung mit Neuaufnahmen",
+          date: "2025-02-21",
+          image:
+            "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/PzKoajvU/67b8b3e2bb087.jpg?v=1.5.16",
+        },
+      ],
+      projects: [
+        {
+          url: "https://bern.rotaract.ch/de/content/projects/show/3203",
+          title: "Unterstützung des ROKJ Bern",
+          date: "2025-08-31",
+          image:
+            "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/lFEwcBAs/68b4831edfdb8.png?v=1.5.16",
+        },
+      ],
+      instagram: [],
+      links: {},
+      source: "",
+      how: "",
+      partners: [],
+      about: "",
     },
     {
-     "name": "Rotary Club Luzern Wasserturm",
-     "url": "https://luzern-wasserturm.rotary1980.ch"
+      id: "zuerich",
+      name: "Rotaract Zürich",
+      short: "Zürich",
+      url: "https://rotaract-zuerich.ch",
+      color: "#1f78d1",
+      logo: "crests/zuerich.svg",
+      district: "2000",
+      coords: [47.37721, 8.52731],
+      photos: [],
+      news: [],
+      projects: [],
+      instagram: [],
+      links: {},
+      source: "",
+      how: "",
+      partners: [],
+      about: "",
     },
     {
-     "name": "Rotaract Club Sempachersee",
-     "url": "#/club/sempachersee"
-    }
-   ],
-   "about": "Junge Leute aus der Region Luzern, die zusammen lernen, helfen und feiern. Gäste sind jederzeit willkommen."
-  },
-  {
-   "id": "bern",
-   "name": "Rotaract Bern",
-   "short": "Bern",
-   "url": "https://bern.rotaract.ch",
-   "color": "#e3141a",
-   "logo": "crests/bern.svg",
-   "district": "1990",
-   "coords": [
-    46.95456,
-    7.42068
-   ],
-   "photos": [],
-   "news": [
-    {
-     "url": "https://bern.rotaract.ch/de/content/news/show/27588",
-     "title": "FAQ Aufnahmeverfahren und Clubleben Rotaract Club Bern",
-     "date": "2025-07-01",
-     "image": ""
+      id: "zurich-international",
+      name: "Rotaract Zurich International",
+      short: "ZH Intl",
+      url: "https://zurich-international.rotaract.ch",
+      color: "#1d4f9a",
+      logo: "crests/zurich-international.svg",
+      district: "2000",
+      coords: [47.37721, 8.52731],
+      photos: [],
+      news: [],
+      projects: [
+        {
+          url: "https://zurich-international.rotaract.ch/en/content/projects/show/3466",
+          title: "Volunteering with Essen für Alle",
+          date: "2026-11-01",
+          image:
+            "https://zurich-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/5XHpgwVl/6ae7aaa2e3e39.jpeg?v=1.5.16",
+        },
+      ],
+      instagram: [],
+      links: {},
+      source: "",
+      how: "",
+      partners: [],
+      about: "",
     },
     {
-     "url": "https://bern.rotaract.ch/de/content/news/show/26482",
-     "title": "Generalversammlung mit Neuaufnahmen",
-     "date": "2025-02-21",
-     "image": "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/PzKoajvU/67b8b3e2bb087.jpg?v=1.5.16"
-    }
-   ],
-   "projects": [
-    {
-     "url": "https://bern.rotaract.ch/de/content/projects/show/3203",
-     "title": "Unterstützung des ROKJ Bern",
-     "date": "2025-08-31",
-     "image": "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/lFEwcBAs/68b4831edfdb8.png?v=1.5.16"
-    }
-   ],
-   "instagram": [],
-   "links": {},
-   "source": "",
-   "how": "",
-   "partners": [],
-   "about": ""
-  },
-  {
-   "id": "zuerich",
-   "name": "Rotaract Zürich",
-   "short": "Zürich",
-   "url": "https://rotaract-zuerich.ch",
-   "color": "#1f78d1",
-   "logo": "crests/zuerich.svg",
-   "district": "2000",
-   "coords": [
-    47.37721,
-    8.52731
-   ],
-   "photos": [],
-   "news": [],
-   "projects": [],
-   "instagram": [],
-   "links": {},
-   "source": "",
-   "how": "",
-   "partners": [],
-   "about": ""
-  },
-  {
-   "id": "zurich-international",
-   "name": "Rotaract Zurich International",
-   "short": "ZH Intl",
-   "url": "https://zurich-international.rotaract.ch",
-   "color": "#1d4f9a",
-   "logo": "crests/zurich-international.svg",
-   "district": "2000",
-   "coords": [
-    47.37721,
-    8.52731
-   ],
-   "photos": [],
-   "news": [],
-   "projects": [
-    {
-     "url": "https://zurich-international.rotaract.ch/en/content/projects/show/3466",
-     "title": "Volunteering with Essen für Alle",
-     "date": "2026-11-01",
-     "image": "https://zurich-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/5XHpgwVl/6ae7aaa2e3e39.jpeg?v=1.5.16"
-    }
-   ],
-   "instagram": [],
-   "links": {},
-   "source": "",
-   "how": "",
-   "partners": [],
-   "about": ""
-  },
-  {
-   "id": "international",
-   "name": "Rotaract International",
-   "short": "International",
-   "url": "https://rotaracteurope.eu",
-   "color": "#d41367",
-   "logo": "rotaract.svg",
-   "district": "",
-   "coords": null,
-   "photos": [],
-   "news": [],
-   "projects": [],
-   "instagram": [],
-   "links": {},
-   "source": "international",
-   "how": "",
-   "partners": [],
-   "about": ""
-  }
- ],
- "events": [
-  {
-   "id": "179501",
-   "clubs": [
-    "luzern"
-   ],
-   "title": "Stamm am Rudolfs Weihnacht",
-   "start": "2024-12-11T18:00",
-   "end": "2024-12-11T20:00",
-   "allday": false,
-   "location": "Rudolfs Weihnacht, Inseliquai, 6005 Luzern",
-   "coords": [
-    47.0407,
-    8.29266
-   ],
-   "url": "https://rotaract-luzern.ch/de/agenda/show/179501",
-   "description": "Als Weihnachtsgeschenk lädt euch der Vorstand herzlich zu einem warmen Getränk bei Rudolfs Weihnacht ein. Lasst uns geme",
-   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/DLVw1vdA/66681f402ddca.jpg?v=1.5.16",
-   "registration": "Die Anmeldefrist ist abgelaufen",
-   "deadline": "",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "179502",
-   "clubs": [
-    "luzern"
-   ],
-   "title": "Mini-GV- Besichtigung Hotel Schweizerhof",
-   "start": "2025-01-18T10:45",
-   "end": "2025-01-18T15:00",
-   "allday": false,
-   "location": "Hotel Schweizerhof Luzern, Schweizerhofquai, 6002 Luzern",
-   "coords": [
-    47.05381,
-    8.31029
-   ],
-   "url": "https://rotaract-luzern.ch/de/agenda/show/179502",
-   "description": "Wir laden Euch alle herzlich ein an unserer Mini-GV teilzunehmen. Wir werden um 10.45 Uhr beim Hotel Schweizerhof in Luz",
-   "image": "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/9RFJSSNc/66d03b6edd22d.png?v=1.5.16",
-   "registration": "",
-   "deadline": "",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "202811",
-   "clubs": [
-    "bern"
-   ],
-   "title": "Winter-GV (1. Generalversammlung)",
-   "start": "2026-01-15T18:30",
-   "end": "2026-01-15T20:00",
-   "allday": false,
-   "location": "Universität Bern, Raum A-124 in der UniS",
-   "coords": [
-    47.09862,
-    7.95494
-   ],
-   "url": "https://bern.rotaract.ch/de/agenda/show/202811",
-   "description": "Wir laden euch zur 1. Generalversammlung des rotarischen Jahres\n2025/2026 ein. Teilnahme ist obligatorisch. Bei Verhinde",
-   "image": "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/51JboDlv/6427268866.png?v=1.5.16",
-   "registration": "Die Anmeldefrist ist abgelaufen",
-   "deadline": "",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "202042",
-   "clubs": [
-    "bern"
-   ],
-   "title": "Tagesausflug Zürich - Kultur und Technik",
-   "start": "2026-02-21T09:00",
-   "end": "2026-02-21T17:00",
-   "allday": false,
-   "location": "Siehe Programm",
-   "coords": [
-    46.839,
-    7.8003
-   ],
-   "url": "https://bern.rotaract.ch/de/agenda/show/202042",
-   "description": "Kultur und Technik erleben - hautnah und exklusiv",
-   "image": "https://bern.rotaract.ch/media/cache/rotary_website_event_grid/6967f19a116ed.png",
-   "registration": "",
-   "deadline": "",
-   "cancelled": false,
-   "members": true,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "222797",
-   "clubs": [
-    "zurich-international"
-   ],
-   "title": "Essen für Alle Volunteering 28.11",
-   "start": "2026-11-07T10:30",
-   "end": "2026-11-07T14:00",
-   "allday": false,
-   "location": "Holzerhurd 60, 8046 Zürich",
-   "coords": [
-    47.42335,
-    8.49681
-   ],
-   "url": "https://zurich-international.rotaract.ch/en/agenda/show/222797",
-   "description": "Join us for a meaningful day of volunteering with Essen für Alle!\n\nEssen für Alle is a non-profit organization that dist",
-   "image": "https://zurich-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/6FGBUhj5/3811376581.jpeg?v=1.5.16",
-   "registration": "Registration until: Friday, November 27, 2026 at 11:00 AM\n\nMax. number of participants: 20",
-   "deadline": "2026-11-27T11:00",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "219091",
-   "clubs": [
-    "zuerich"
-   ],
-   "title": "Informal: Konzert in der Tonhalle Zürich",
-   "start": "2026-11-11T18:00",
-   "end": "2026-11-11T21:30",
-   "allday": false,
-   "location": "Tonhalle Zürich, Claridenstrasse 7, 8002 Zürich",
-   "coords": [
-    47.36615,
-    8.538
-   ],
-   "url": "https://rotaract-zuerich.ch/de/agenda/show/219091",
-   "description": "Am Mittwoch den 11.11.2026 haben wir die Gelegenheit ein Konzert des Tonhallen-Orchesters in der Tonhalle Zürich zu besu",
-   "image": "",
-   "registration": "Anmeldung bis: Montag, 9. November 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000",
-   "deadline": "2026-11-09T18:00",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "222796",
-   "clubs": [
-    "zurich-international"
-   ],
-   "title": "Essen für Alle Volunteering 12.11",
-   "start": "2026-11-14T11:00",
-   "end": "2026-11-14T16:00",
-   "allday": false,
-   "location": "Holzerhurd 60, 8046 Zürich",
-   "coords": [
-    47.42335,
-    8.49681
-   ],
-   "url": "https://zurich-international.rotaract.ch/en/agenda/show/222796",
-   "description": "Join us for a meaningful day of volunteering with Essen für Alle!\n\nEssen für Alle is a non-profit organization that dist",
-   "image": "https://zurich-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/9vsbLkQ8/6ae7a960bc698.jpeg?v=1.5.16",
-   "registration": "Registration until: Friday, November 13, 2026 at 11:00 AM\n\nMax. number of participants: 20",
-   "deadline": "2026-11-13T11:00",
-   "cancelled": true,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "eu2069",
-   "clubs": [
-    "international"
-   ],
-   "title": "Pre-REM Satu Mare",
-   "start": "2027-01-26T00:00",
-   "end": "2027-01-29T00:00",
-   "allday": true,
-   "location": "",
-   "coords": null,
-   "url": "https://rotaracteurope.eu/event/pre-rem-satu-mare/",
-   "description": "",
-   "image": "",
-   "registration": "",
-   "deadline": "",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  },
-  {
-   "id": "eu2067",
-   "clubs": [
-    "international"
-   ],
-   "title": "REM Cluj Napoca – REMSYLVANIA",
-   "start": "2027-01-28T00:00",
-   "end": "2027-02-01T00:00",
-   "allday": true,
-   "location": "",
-   "coords": null,
-   "url": "https://rotaracteurope.eu/event/rem-cluj-napoca-remsylvania/",
-   "description": "",
-   "image": "",
-   "registration": "",
-   "deadline": "",
-   "cancelled": false,
-   "members": false,
-   "layer": "",
-   "organiser": ""
-  }
- ],
- "rotary": {
-  "clubs": [
-   {
-    "id": "rotary1980",
-    "name": "Rotary Distrikt 1980",
-    "short": "Rotary 1980",
-    "url": "https://rotary1980.ch",
-    "color": "#17458f",
-    "logo": "img/fam/rotary.svg",
-    "district": "1980",
-    "coords": null,
-    "photos": [],
-    "news": [],
-    "projects": [],
-    "instagram": [],
-    "links": {},
-    "source": "rotary",
-    "how": "",
-    "partners": []
-   }
+      id: "international",
+      name: "Rotaract International",
+      short: "International",
+      url: "https://rotaracteurope.eu",
+      color: "#d41367",
+      logo: "rotaract.svg",
+      district: "",
+      coords: null,
+      photos: [],
+      news: [],
+      projects: [],
+      instagram: [],
+      links: {},
+      source: "international",
+      how: "",
+      partners: [],
+      about: "",
+    },
   ],
-  "events": [
-   {
-    "id": "222831",
-    "clubs": [
-     "rotary1980"
+  events: [
+    {
+      id: "179501",
+      clubs: ["luzern"],
+      title: "Stamm am Rudolfs Weihnacht",
+      start: "2024-12-11T18:00",
+      end: "2024-12-11T20:00",
+      allday: false,
+      location: "Rudolfs Weihnacht, Inseliquai, 6005 Luzern",
+      coords: [47.0407, 8.29266],
+      url: "https://rotaract-luzern.ch/de/agenda/show/179501",
+      description:
+        "Als Weihnachtsgeschenk lädt euch der Vorstand herzlich zu einem warmen Getränk bei Rudolfs Weihnacht ein. Lasst uns geme",
+      image:
+        "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/DLVw1vdA/66681f402ddca.jpg?v=1.5.16",
+      registration: "Die Anmeldefrist ist abgelaufen",
+      deadline: "",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "179502",
+      clubs: ["luzern"],
+      title: "Mini-GV- Besichtigung Hotel Schweizerhof",
+      start: "2025-01-18T10:45",
+      end: "2025-01-18T15:00",
+      allday: false,
+      location: "Hotel Schweizerhof Luzern, Schweizerhofquai, 6002 Luzern",
+      coords: [47.05381, 8.31029],
+      url: "https://rotaract-luzern.ch/de/agenda/show/179502",
+      description:
+        "Wir laden Euch alle herzlich ein an unserer Mini-GV teilzunehmen. Wir werden um 10.45 Uhr beim Hotel Schweizerhof in Luz",
+      image:
+        "https://rotaract-luzern.ch/media/cache/rotary_website_content_grid_images/rc/9RFJSSNc/66d03b6edd22d.png?v=1.5.16",
+      registration: "",
+      deadline: "",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "202811",
+      clubs: ["bern"],
+      title: "Winter-GV (1. Generalversammlung)",
+      start: "2026-01-15T18:30",
+      end: "2026-01-15T20:00",
+      allday: false,
+      location: "Universität Bern, Raum A-124 in der UniS",
+      coords: [47.09862, 7.95494],
+      url: "https://bern.rotaract.ch/de/agenda/show/202811",
+      description:
+        "Wir laden euch zur 1. Generalversammlung des rotarischen Jahres\n2025/2026 ein. Teilnahme ist obligatorisch. Bei Verhinde",
+      image:
+        "https://bern.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/51JboDlv/6427268866.png?v=1.5.16",
+      registration: "Die Anmeldefrist ist abgelaufen",
+      deadline: "",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "202042",
+      clubs: ["bern"],
+      title: "Tagesausflug Zürich - Kultur und Technik",
+      start: "2026-02-21T09:00",
+      end: "2026-02-21T17:00",
+      allday: false,
+      location: "Siehe Programm",
+      coords: [46.839, 7.8003],
+      url: "https://bern.rotaract.ch/de/agenda/show/202042",
+      description: "Kultur und Technik erleben - hautnah und exklusiv",
+      image: "https://bern.rotaract.ch/media/cache/rotary_website_event_grid/6967f19a116ed.png",
+      registration: "",
+      deadline: "",
+      cancelled: false,
+      members: true,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "222797",
+      clubs: ["zurich-international"],
+      title: "Essen für Alle Volunteering 28.11",
+      start: "2026-11-07T10:30",
+      end: "2026-11-07T14:00",
+      allday: false,
+      location: "Holzerhurd 60, 8046 Zürich",
+      coords: [47.42335, 8.49681],
+      url: "https://zurich-international.rotaract.ch/en/agenda/show/222797",
+      description:
+        "Join us for a meaningful day of volunteering with Essen für Alle!\n\nEssen für Alle is a non-profit organization that dist",
+      image:
+        "https://zurich-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/6FGBUhj5/3811376581.jpeg?v=1.5.16",
+      registration: "Registration until: Friday, November 27, 2026 at 11:00 AM\n\nMax. number of participants: 20",
+      deadline: "2026-11-27T11:00",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "219091",
+      clubs: ["zuerich"],
+      title: "Informal: Konzert in der Tonhalle Zürich",
+      start: "2026-11-11T18:00",
+      end: "2026-11-11T21:30",
+      allday: false,
+      location: "Tonhalle Zürich, Claridenstrasse 7, 8002 Zürich",
+      coords: [47.36615, 8.538],
+      url: "https://rotaract-zuerich.ch/de/agenda/show/219091",
+      description:
+        "Am Mittwoch den 11.11.2026 haben wir die Gelegenheit ein Konzert des Tonhallen-Orchesters in der Tonhalle Zürich zu besu",
+      image: "",
+      registration: "Anmeldung bis: Montag, 9. November 2026 um 18:00\n\nMaximale Anzahl Teilnehmer: 1000",
+      deadline: "2026-11-09T18:00",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "222796",
+      clubs: ["zurich-international"],
+      title: "Essen für Alle Volunteering 12.11",
+      start: "2026-11-14T11:00",
+      end: "2026-11-14T16:00",
+      allday: false,
+      location: "Holzerhurd 60, 8046 Zürich",
+      coords: [47.42335, 8.49681],
+      url: "https://zurich-international.rotaract.ch/en/agenda/show/222796",
+      description:
+        "Join us for a meaningful day of volunteering with Essen für Alle!\n\nEssen für Alle is a non-profit organization that dist",
+      image:
+        "https://zurich-international.rotaract.ch/media/cache/rotary_website_content_grid_images/rc/9vsbLkQ8/6ae7a960bc698.jpeg?v=1.5.16",
+      registration: "Registration until: Friday, November 13, 2026 at 11:00 AM\n\nMax. number of participants: 20",
+      deadline: "2026-11-13T11:00",
+      cancelled: true,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "eu2069",
+      clubs: ["international"],
+      title: "Pre-REM Satu Mare",
+      start: "2027-01-26T00:00",
+      end: "2027-01-29T00:00",
+      allday: true,
+      location: "",
+      coords: null,
+      url: "https://rotaracteurope.eu/event/pre-rem-satu-mare/",
+      description: "",
+      image: "",
+      registration: "",
+      deadline: "",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+    {
+      id: "eu2067",
+      clubs: ["international"],
+      title: "REM Cluj Napoca – REMSYLVANIA",
+      start: "2027-01-28T00:00",
+      end: "2027-02-01T00:00",
+      allday: true,
+      location: "",
+      coords: null,
+      url: "https://rotaracteurope.eu/event/rem-cluj-napoca-remsylvania/",
+      description: "",
+      image: "",
+      registration: "",
+      deadline: "",
+      cancelled: false,
+      members: false,
+      layer: "",
+      organiser: "",
+    },
+  ],
+  rotary: {
+    clubs: [
+      {
+        id: "rotary1980",
+        name: "Rotary Distrikt 1980",
+        short: "Rotary 1980",
+        url: "https://rotary1980.ch",
+        color: "#17458f",
+        logo: "img/fam/rotary.svg",
+        district: "1980",
+        coords: null,
+        photos: [],
+        news: [],
+        projects: [],
+        instagram: [],
+        links: {},
+        source: "rotary",
+        how: "",
+        partners: [],
+      },
     ],
-    "title": "Regio Apéro",
-    "start": "2026-11-11T18:00",
-    "end": "2026-11-11T19:00",
-    "allday": false,
-    "location": "Galerie - Bar",
-    "coords": [
-     47.0352,
-     7.24634
+    events: [
+      {
+        id: "222831",
+        clubs: ["rotary1980"],
+        title: "Regio Apéro",
+        start: "2026-11-11T18:00",
+        end: "2026-11-11T19:00",
+        allday: false,
+        location: "Galerie - Bar",
+        coords: [47.0352, 7.24634],
+        url: "https://rotary-olten.ch/de/agenda/show/222831",
+        description: "Regio Apéro\nJeden 2. Mittwoch im Monat",
+        image: "https://rotary1980.ch/media/cache/rotary_website_event_grid/2298069620.jpg",
+        registration: "Anmeldung bis: 11.11.2026 18:00",
+        deadline: "2026-11-11T18:00",
+        cancelled: false,
+        members: false,
+        layer: "rotary",
+        organiser: "Rotary Olten",
+      },
+      {
+        id: "222592",
+        clubs: ["rotary1980"],
+        title: "TANZINOLTEN Partneranlass",
+        start: "2026-11-11T18:30",
+        end: "2026-11-11T21:30",
+        allday: false,
+        location: "Kulturzentrum Schützenmatte",
+        coords: [47.22392, 7.45768],
+        url: "https://rotary-olten.ch/de/agenda/show/222592",
+        description: "TANZINOLTEN feiert 30 Jahre und lädt den Rotary Club zum Partneranlass mit exklu",
+        image: "https://rotary1980.ch/media/cache/rotary_website_event_grid/6ae0755d583b1.jpg",
+        registration: "",
+        deadline: "",
+        cancelled: false,
+        members: false,
+        layer: "rotary",
+        organiser: "Rotary Olten",
+      },
     ],
-    "url": "https://rotary-olten.ch/de/agenda/show/222831",
-    "description": "Regio Apéro\nJeden 2. Mittwoch im Monat",
-    "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/2298069620.jpg",
-    "registration": "Anmeldung bis: 11.11.2026 18:00",
-    "deadline": "2026-11-11T18:00",
-    "cancelled": false,
-    "members": false,
-    "layer": "rotary",
-    "organiser": "Rotary Olten"
-   },
-   {
-    "id": "222592",
-    "clubs": [
-     "rotary1980"
-    ],
-    "title": "TANZINOLTEN Partneranlass",
-    "start": "2026-11-11T18:30",
-    "end": "2026-11-11T21:30",
-    "allday": false,
-    "location": "Kulturzentrum Schützenmatte",
-    "coords": [
-     47.22392,
-     7.45768
-    ],
-    "url": "https://rotary-olten.ch/de/agenda/show/222592",
-    "description": "TANZINOLTEN feiert 30 Jahre und lädt den Rotary Club zum Partneranlass mit exklu",
-    "image": "https://rotary1980.ch/media/cache/rotary_website_event_grid/6ae0755d583b1.jpg",
-    "registration": "",
-    "deadline": "",
-    "cancelled": false,
-    "members": false,
-    "layer": "rotary",
-    "organiser": "Rotary Olten"
-   }
-  ]
- }
+  },
 };

@@ -1,4 +1,0 @@
-/* The sorting ceremony (components/Sorting): the hat, a question with its answers, then the verdict: crest, name, why, the way to the club. The hat nods once at the verdict. */
-.hat .ob-in > :not(.obhead, .nav) { text-align: center; } .hat .mark { font-size: 3rem; line-height: 1; margin: 6px 0 12px; } .hat .nod { animation: hatnod .7s ease-in-out; }
-.hat img { width: 72px; height: 72px; object-fit: contain; } .hat .dot { display: inline-block; width: 16px; height: 16px; border-radius: 99px; background: var(--c); } .hat b { display: block; margin: 6px 0 2px; font-size: 1.2rem; }
-@keyframes hatnod { 40% { rotate: -16deg; translate: 0 6px; } }

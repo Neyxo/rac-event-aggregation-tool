@@ -1,4 +1,0 @@
-/* Easter egg: event bingo, a 4 × 4 card of squares to tap */
-.bingo .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; } .bingo p b { font-size: 1.5rem; color: var(--accent); }
-.bingo .grid button { aspect-ratio: 1; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); color: var(--text); font: inherit; font-size: .68rem; font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; hyphens: auto; }
-.bingo .grid [aria-pressed=true] { background: var(--accent); color: var(--on-accent); border-color: transparent; }

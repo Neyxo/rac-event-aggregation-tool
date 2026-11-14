@@ -1,3 +1,11 @@
 /* cards are one of two things. Clickable: raised (the shadow of .glass and .event), presses in, and a single one carries a chevron.
    Container: holds rows, chips and buttons and never reacts as a whole: flat, outline only. */
-.pane.glass, .settings section.glass, .aboutc.glass, .cta.glass, .explore.glass, .fam .box.glass, .panel.glass { box-shadow: none; }
+.pane.glass,
+.settings section.glass,
+.aboutc.glass,
+.cta.glass,
+.explore.glass,
+.fam .box.glass,
+.panel.glass {
+  box-shadow: none;
+}
