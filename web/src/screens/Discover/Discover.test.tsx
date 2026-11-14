@@ -226,7 +226,7 @@ describe("Discover", () => {
 
   // the Wheel of Fate: reduced motion, so the choice shows at once (no spin to wait for)
   const reduced = () => vi.stubGlobal("matchMedia", (q: string) => ({ matches: true, media: q }));
-  const fated = () => screen.getByRole("dialog").querySelector("a.event")!.getAttribute("href"); // the usual event card
+  const fated = () => screen.getByRole("dialog").querySelector(".event > a.open")!.getAttribute("href"); // the usual event card
 
   it("the Wheel of Fate waits for Spin the wheel, then picks one of the upcoming events the filters leave; Reset the wheel starts over; the past view spins the upcoming ones", async () => {
     reduced();
@@ -235,7 +235,7 @@ describe("Discover", () => {
     fireEvent.click(btn("Wheel of Fate"));
     const dlg = screen.getByRole("dialog");
     expect(screen.getByRole("heading", { name: "Wheel of Fate" })).toBeTruthy();
-    expect(dlg.querySelector("a.event")).toBeNull(); // nothing chosen before the tap
+    expect(dlg.querySelector(".event > a.open")).toBeNull(); // nothing chosen before the tap
     const n = dlg.querySelectorAll(".segs span").length;
     expect(n).toBeGreaterThan(1);
     expect(n).toBeLessThanOrEqual(10);
@@ -244,7 +244,7 @@ describe("Discover", () => {
     const first = fated();
     expect(first).toMatch(/^#\/event\//);
     fireEvent.click(btn("Reset the wheel"));
-    expect(dlg.querySelector("a.event")).toBeNull();
+    expect(dlg.querySelector(".event > a.open")).toBeNull();
     rnd.mockReturnValue(0.99);
     fireEvent.click(btn("Spin the wheel"));
     expect(fated()).not.toBe(first);
@@ -270,6 +270,6 @@ describe("Discover", () => {
     expect(within(dlg).queryByRole("link")).toBeNull();
     expect(btn("Reset the wheel").getAttribute("aria-disabled")).toBe("true");
     fireEvent.transitionEnd(dlg.querySelector(".disc")!);
-    expect(dlg.querySelector("a.event")).toBeTruthy();
+    expect(dlg.querySelector(".event > a.open")).toBeTruthy();
   });
 });

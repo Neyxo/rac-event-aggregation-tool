@@ -145,7 +145,7 @@ test.describe("the list headings on Discover", () => {
   const openList = async (page: Page) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("./#/discover");
-    await expect(page.locator("main a.event").nth(8)).toBeVisible();
+    await expect(page.locator("main .event").nth(8)).toBeVisible();
     await settle(page);
     return heads(page);
   };
@@ -209,7 +209,7 @@ test.describe("the list headings on Discover", () => {
     await scrollToY(page, 900);
     expect((await heads(page)).frost.opacity).toBe(1);
     await page.locator("#q").fill("zzzz no such event");
-    await expect(page.locator("main a.event")).toHaveCount(0);
+    await expect(page.locator("main .event")).toHaveCount(0);
     await settle(page);
     const h = await heads(page);
     expect(h.months).toEqual([]);
@@ -264,7 +264,7 @@ test.describe("calendar", () => {
     expect(s.x + s.width).toBeLessThanOrEqual(vp.width + 0.5);
     expect(s.y).toBeGreaterThanOrEqual(0);
     expect(s.y + s.height).toBeLessThanOrEqual(vp.height + 0.5);
-    await expect(page.locator("#sheetBody a.event").first()).toBeInViewport();
+    await expect(page.locator("#sheetBody .event").first()).toBeInViewport();
   });
 });
 

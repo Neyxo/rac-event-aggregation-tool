@@ -83,7 +83,7 @@ describe("map", () => {
     expect(files.length).toBeGreaterThan(1);
     expect(files.every(isPast)).toBe(true);
     expect(files[0]!.start >= files[1]!.start).toBe(true);
-    const links = [...document.querySelectorAll<HTMLAnchorElement>("dialog.bunker a.event")];
+    const links = [...document.querySelectorAll<HTMLAnchorElement>("dialog.bunker .event > a.open")];
     expect(links.map((a) => a.getAttribute("href"))).toEqual(files.slice(0, 30).map((e) => "#/event/" + e.id));
     expect(document.querySelector("dialog.bunker p")!.textContent).toContain(String(files.length));
   });

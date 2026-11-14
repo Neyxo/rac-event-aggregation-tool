@@ -1,6 +1,7 @@
 // The event card and its parts: colour wash, crest under a frosted date pane, one meta line, chips and status, picture, star.
-// The card opens the event screen.
-import { createContext, useContext, type MouseEvent } from "react";
+// The card opens the event screen: through one link stretched over it (.open), with the chips and the star above that link, so
+// no link or button sits inside another.
+import { createContext, useContext } from "react";
 import { t } from "../../i18n";
 import { club, toggleSaved } from "../../lib/data";
 import { clubVars, cx } from "../../lib/color";
@@ -47,12 +48,7 @@ export function DatePane({ e }: { e: Event }) {
 /** save / unsave; every star of this event and every list of saved events follow */
 export function StarButton({ e }: { e: Event }) {
   const on = useSaved(e.id);
-  // the star sits inside the card's link: it must not open the event
-  const toggle = (ev: MouseEvent) => {
-    ev.preventDefault();
-    ev.stopPropagation();
-    toast(toggleSaved(e.id) ? t("saved") : t("unsaved"));
-  };
+  const toggle = () => toast(toggleSaved(e.id) ? t("saved") : t("unsaved"));
   return (
     <button className="star" type="button" aria-pressed={on} aria-label={t("save") + ": " + e.title} onClick={toggle}>
       <Icon name="star" />
@@ -81,12 +77,12 @@ export function EventCard({ e, i = 0 }: { e: Event; i?: number }) {
   const lead = club(e.clubs[0] ?? "");
   const newIds = useContext(NewIds);
   return (
-    <a
+    <article
       className={cx("event", e.cancelled && "cancelled")}
-      href={href("event", e.id)}
       style={clubVars(lead.color, { "--i": Math.min(i, 12) })}
       id={"ev-" + e.id}
     >
+      <a className="open" href={href("event", e.id)} aria-label={e.title} />
       {lead.logo ? <img className="wm" src={lead.logo} alt="" aria-hidden="true" loading="lazy" /> : null}
       <DatePane e={e} />
       <div className="body">
@@ -106,7 +102,7 @@ export function EventCard({ e, i = 0 }: { e: Event; i?: number }) {
         <StarButton e={e} />
         {e.image ? <img className="thumb" src={e.image} alt="" loading="lazy" referrerPolicy="no-referrer" /> : null}
       </div>
-    </a>
+    </article>
   );
 }
 

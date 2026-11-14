@@ -187,7 +187,9 @@ describe("club screen", () => {
     expect(document.querySelector("a.nx")?.getAttribute("href")).toBe("#/event/eu2069");
     expect(document.querySelector("a.more")?.getAttribute("href")).toBe("#/intl");
     expect(sections()).toEqual(["More events"]);
-    expect([...document.querySelectorAll("a.event")].map((a) => a.getAttribute("href"))).toEqual(["#/event/eu2067"]);
+    expect([...document.querySelectorAll(".event > a.open")].map((a) => a.getAttribute("href"))).toEqual([
+      "#/event/eu2067",
+    ]);
   });
 
   it("Instagram posts replace the photos strip when the club has them", () => {

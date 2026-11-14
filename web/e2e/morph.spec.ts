@@ -388,9 +388,9 @@ test.describe("event head", () => {
     await scrollToY(page, at + 90);
     await expect.poll(async () => isIcon(await snap(page, EVENT.head))).toBe(true);
     const y = await page.evaluate(() => scrollY);
-    const next = page.locator("main > a.event").first();
+    const next = page.locator("main > .event").first();
     const title = await next.locator("h4").innerText();
-    await next.evaluate((a: HTMLElement) => a.click());
+    await next.locator("a.open").evaluate((a: HTMLElement) => a.click());
     await expect(page.locator(EVENT.head + " h1")).toHaveText(title);
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
     await expect
@@ -545,7 +545,7 @@ test.describe("leaving a morphing screen", () => {
     await open(page, CLUB);
     await scrollToY(page, (await stickAt(page, CLUB.head)) + 200);
     await go(page, "#/discover");
-    await expect(page.locator("main a.event").nth(8)).toBeVisible();
+    await expect(page.locator("main .event").nth(8)).toBeVisible();
     await scrollToY(page, 500);
     const r = await page.evaluate(() => ({
       bar: document.getElementById("top")!.getBoundingClientRect().bottom,

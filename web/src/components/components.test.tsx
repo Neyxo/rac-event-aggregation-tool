@@ -98,8 +98,8 @@ describe("event card", () => {
       });
       c = render(<EventCard e={e} i={20} />).container;
     });
-    const a = link(/^Stamm/);
-    expect(a.getAttribute("href")).toBe("#/event/x");
+    expect(link("Stamm").getAttribute("href")).toBe("#/event/x");
+    const a = link("Stamm").closest("article")!; // the card; its link is stretched over it
     expect(a.getAttribute("style")).toContain("--i: 12"); // the entrance stagger is capped
     expect(within(a).getByText("11")).toBeTruthy();
     expect(within(a).getByText("Wed 18:00–21:30")).toBeTruthy();
@@ -140,7 +140,7 @@ describe("event card", () => {
       );
       c = render(<NewIds.Provider value={new Set(["c"])}>{card}</NewIds.Provider>).container;
     });
-    const a = link(/^c/);
+    const a = link(/^c/).closest("article")!;
     expect(a.classList.contains("cancelled")).toBe(true);
     expect(a.getAttribute("style")).toMatch(/--c: #0b5cad;.*--on-c: #fff;.*--i: 3/);
     expect(within(a).getByText("RC X · Sat 18:00–20:00 · Bern")).toBeTruthy();

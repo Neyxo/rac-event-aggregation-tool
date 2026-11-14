@@ -32,7 +32,8 @@
   width: 35%;
 }
 
-/* event card: colour wash into the club colour, the crest under a frosted date pane, one meta line, picture, star. The card is a link. */
+/* event card: colour wash into the club colour, the crest under a frosted date pane, one meta line, picture, star. The whole card
+   opens the event: its link (.open) is stretched over it, and only the chips and the star sit above that link. */
 .event {
   position: relative;
   overflow: hidden;
@@ -61,6 +62,19 @@
 }
 .event > * {
   position: relative;
+}
+.event > .open {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+.event > .open:focus-visible {
+  outline-offset: -3px; /* the card clips what is outside it */
+}
+.event .chip,
+.event .star {
+  z-index: 2;
 }
 .event .wm,
 .evdetail .wm {

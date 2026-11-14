@@ -167,7 +167,7 @@ test.describe("member", () => {
     await expect(page.locator(".hello h1")).toHaveText("Good morning 👋");
     await expect(page.locator(".hello .chips .chip")).toHaveText(["Luzern", "Sempach"]);
     await expect(page.locator("#listTitle")).toHaveText("Coming up");
-    const cards = page.locator("main a.event");
+    const cards = page.locator("main .event");
     await expect(cards.first()).toBeVisible();
     // my clubs, plus the international events (Home shows those to everyone)
     for (const chips of await cards.locator(".tags").allInnerTexts())
@@ -181,7 +181,7 @@ test.describe("member", () => {
 
   test("Discover: search and district filters go into the URL and survive a reload", async ({ page }) => {
     await page.goto("./#/discover");
-    const cards = page.locator("main a.event");
+    const cards = page.locator("main .event");
     await expect(cards.first()).toBeVisible();
     const all = await cards.count();
     await page.locator("#q").fill("stamm");
@@ -429,7 +429,7 @@ test.describe("member", () => {
 
   test("Settings: the Rotary layer adds Rotary events to Discover", async ({ page }) => {
     await page.goto("./#/discover");
-    await expect(page.locator("main a.event").first()).toBeVisible();
+    await expect(page.locator("main .event").first()).toBeVisible();
     await expect(page.locator(`#ev-${ROTARY}`)).toHaveCount(0);
     await go(page, "#/settings");
     await page.locator("#rotarySeg").getByRole("button", { name: "On" }).click();
@@ -469,15 +469,16 @@ test.describe("member", () => {
 
   test("back and forward restore the scroll position", async ({ page }) => {
     await page.goto("./#/discover");
-    await expect(page.locator("main a.event").nth(20)).toBeVisible();
-    await page.locator("main a.event").nth(20).scrollIntoViewIfNeeded();
+    await expect(page.locator("main .event").nth(20)).toBeVisible();
+    await page.locator("main .event").nth(20).scrollIntoViewIfNeeded();
     await page.mouse.wheel(0, 200);
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(300);
     const y = await page.evaluate(() => scrollY);
     // a click right where it is: Playwright's click would first scroll the card back into view
     await page
-      .locator("main a.event")
+      .locator("main .event")
       .nth(20)
+      .locator("a.open")
       .evaluate((a: HTMLElement) => a.click());
     await expect(page.locator("body")).toHaveAttribute("data-page", "event");
     await expect.poll(() => page.evaluate(() => scrollY)).toBe(0);
@@ -550,7 +551,7 @@ test("a missing events.json shows the error state, and its button retries", asyn
   await expect(err).toBeVisible();
   fail = false;
   await err.getByRole("button", { name: "Refresh" }).click();
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
 });
 
 // static/go.html: the calendar's page opened by a form the page submits itself, which a phone's browser keeps instead of handing it to

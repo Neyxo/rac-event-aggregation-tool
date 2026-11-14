@@ -81,7 +81,7 @@ test.describe("member", () => {
     await page.locator("#tabs a.tab", { hasText: "Discover" }).click();
     await clean("discover", /^Discover ·/);
     await expect(body).toHaveClass("");
-    await page.locator("main a.event").first().click();
+    await page.locator("main .event").first().click();
     await clean("event", / · Rotaract Events$/);
     await expect(body).toHaveClass(/wash/);
     await expect(page.locator("header#top .lft a.hbtn")).toHaveCount(1); // the back button

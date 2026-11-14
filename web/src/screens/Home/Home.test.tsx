@@ -62,7 +62,10 @@ const cards = () =>
     .queryAllByRole("link")
     .filter((a) => href(a)!.startsWith("#/event/"));
 const ids = () => cards().map((a) => href(a)!.slice("#/event/".length));
-const card = (id: string) => cards().find((a) => href(a) === "#/event/" + id)!;
+const card = (id: string) =>
+  cards()
+    .find((a) => href(a) === "#/event/" + id)!
+    .closest("article")!;
 const toastText = () => document.getElementById("toast")?.textContent;
 const views = () => within(screen.getByRole("group", { name: "Filters" }));
 const hello = () => within(screen.getByRole("heading", { level: 1 }).parentElement!);

@@ -7,7 +7,7 @@ test.use({ serviceWorkers: "allow", storage: MEMBER });
 
 async function firstVisit(page: Page): Promise<void> {
   await page.goto("./");
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForFunction(() => !!navigator.serviceWorker.controller);
 }
@@ -24,9 +24,9 @@ test("after one visit the app works offline: reload shows the events", async ({ 
   await context.setOffline(true);
   await page.reload();
   await expect(page.locator(".hello h1")).toHaveText("Good morning 👋");
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
   await page.locator("#tabs a.tab", { hasText: "Discover" }).click();
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
 });
 
 test("events.json: no request within 30 minutes, a fresh one after", async ({ page, context }) => {
@@ -34,9 +34,9 @@ test("events.json: no request within 30 minutes, a fresh one after", async ({ pa
   await firstVisit(page);
   const after = net.n; // the worker fetched it once on install
   await page.reload();
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
   await page.reload();
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
   expect(net.n).toBe(after);
   // 31 minutes later, in the worker (it keeps its own clock)
   const sw = context.serviceWorkers()[0]!;
@@ -46,6 +46,6 @@ test("events.json: no request within 30 minutes, a fresh one after", async ({ pa
   });
   await page.clock.fastForward("31:00");
   await page.reload();
-  await expect(page.locator("main a.event").first()).toBeVisible();
+  await expect(page.locator("main .event").first()).toBeVisible();
   await expect.poll(() => net.n).toBe(after + 1);
 });
