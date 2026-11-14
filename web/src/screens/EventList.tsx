@@ -9,7 +9,7 @@ import { fromParams, radiusOf, toParams, type Filters, type ListResult, type Vie
 import { geocode } from "../lib/geo";
 import { href } from "../lib/route";
 import type { Event } from "../lib/types";
-import { EventCard, Footer, Skel, replaceQuery, toast, useData } from "../components";
+import { EventCard, Footer, Sh, Skel, replaceQuery, toast, useData, useStickyHeads } from "../components";
 
 export type Page = "home" | "discover";
 
@@ -153,6 +153,7 @@ export function StaleBanner() {
 export function ListHead({ titleId, title, summary, clear, onClear }: {
   titleId?: string; title: string; summary: string; clear: boolean; onClear: () => void;
 }) {
+  useStickyHeads();
   return (
     <div className="list-head sh lv1">
       <h3 id={titleId}>{title}</h3>
@@ -195,7 +196,7 @@ function MonthRun({ events }: { events: Event[] }) {
         const card = <EventCard key={e.id} e={e} i={i} />;
         if (m === month) return [card];
         month = m;
-        return [<h3 key={"m" + m} className="sh">{m}</h3>, card];
+        return [<Sh key={"m" + m}>{m}</Sh>, card];
       })}
     </>
   );

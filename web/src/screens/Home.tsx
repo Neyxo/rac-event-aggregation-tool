@@ -13,7 +13,7 @@ import { href, takeWelcome } from "../lib/route";
 import { here, store } from "../lib/store";
 import type { Event } from "../lib/types";
 import {
-  ClubChip, CtaBlock, HelpLinks, Icon, MoreLink, SubscribeSheet, NewIds, NewsStrip, NextUp, inPageLink, navigate, useData, useNav, useStickyHeads,
+  ClubChip, CtaBlock, HelpLinks, Icon, MoreLink, SubscribeSheet, NewIds, NewsStrip, NextUp, inPageLink, navigate, useData, useNav, Sh,
   useStored, useWash,
 } from "../components";
 import type { ScreenProps } from "../App";
@@ -163,7 +163,6 @@ function HomeScreen({ route }: ScreenProps) {
   const [obRun, setObRun] = useState(0);
   // a guest's list title is only decided in the "upcoming" view; the saved view keeps the last one, so it doesn't flip to a generic title
   const guestTitle = useRef<"v_all" | "explore_near" | "home_soon">("v_all");
-  useStickyHeads();
 
   useEffect(() => {
     const shared = [...route.query.keys()].some(k => k !== "lang" && k !== "welcome");
@@ -200,7 +199,7 @@ function HomeScreen({ route }: ScreenProps) {
           <ReviewOffer member={member} />
         </div>
         {/* in the main flow next to the list title, not in a wrapper: the heading then stays stuck until the title pushes it */}
-        {news.length ? <h3 className="sh hn">{t("news")}</h3> : null}
+        {news.length ? <Sh className="hn">{t("news")}</Sh> : null}
         {news.length ? <NewsStrip items={news} className="strip teasers hn" /> : null}
         <ListHead titleId="listTitle" title={title} summary={res && f ? summaryText(res, f) : t("loading")} clear={!!f && hasFilters(f)} onClear={api.clear} />
         <Views views={["all", "saved"]} pressed={api.live.view} onPick={api.setView} />

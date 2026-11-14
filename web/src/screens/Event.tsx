@@ -1,6 +1,5 @@
 // The event screen: a frosted card on the lead club's colour wash, with a head that sticks and compacts as you
 // scroll, the facts, the description, then up to three more events of the same clubs.
-import { useRef, type RefObject } from "react";
 import type { ScreenProps } from "../App";
 import { t } from "../i18n";
 import { club, eventById } from "../lib/data";
@@ -10,7 +9,7 @@ import { mapsUrl } from "../lib/geo";
 import { href } from "../lib/route";
 import { shareUrl } from "../lib/share";
 import type { Event as Ev } from "../lib/types";
-import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, IcsLink, StarButton, Status, share, useData, useMorphHead, useStickyHeads, useTitle, useWash } from "../components";
+import { ClubChip, DatePane, EventCard, Footer, HelpLinks, Icon, IcsLink, StarButton, Status, share, GoPlace, MorphHead, Sh, useData, useTitle, useWash } from "../components";
 
 /** the Polaris page of the event; international events live on their organisers' sites instead */
 const onPolaris = (e: Ev) => e.url.includes("/agenda/show/");
@@ -41,13 +40,12 @@ function Hero({ src }: { src: string }) {
   );
 }
 
-/** className is static ("morph" included): useMorphHead toggles .on on it and writes its style */
-function Head({ e, headRef }: { e: Ev; headRef: RefObject<HTMLDivElement | null> }) {
+function Head({ e }: { e: Ev }) {
   const D = useData();
   const lead = club(e.clubs[0] ?? "");
   const label = goLabel(e);
   return (
-    <div className="head morph" ref={headRef}>
+    <MorphHead className="head">
       {lead.logo ? <img className="wm" src={lead.logo} alt="" aria-hidden="true" /> : null}
       <DatePane e={e} />
       <div>
@@ -61,7 +59,7 @@ function Head({ e, headRef }: { e: Ev; headRef: RefObject<HTMLDivElement | null>
       </div>
       <StarButton e={e} />
       <a className="go" href={e.url} target="_blank" rel="noopener" title={label}><Icon name="ext" /><span>{label}</span></a>
-    </div>
+    </MorphHead>
   );
 }
 
@@ -83,19 +81,15 @@ function Facts({ e }: { e: Ev }) {
 
 function Detail({ e }: { e: Ev }) {
   const D = useData();
-  const head = useRef<HTMLDivElement>(null);
-  useMorphHead(head);
-  useStickyHeads();
   const polaris = onPolaris(e);
   const more = D.data.events.filter(x => x.id !== e.id && !isPast(x) && x.clubs.some(c => e.clubs.includes(c))).slice(0, 3);
   return (
     <>
       <article className="evdetail glass">
         {e.image ? <Hero src={e.image} /> : null}
-        <i className="sent" aria-hidden="true" />
-        <Head e={e} headRef={head} />
+        <Head e={e} />
         <div className="links">
-          <span className="ph" />
+          <GoPlace />
           {/* members-only: Polaris' calendar file needs a login; international events aren't on Polaris at all */}
           {e.members || !polaris ? null : <IcsLink href={e.url.replace("/agenda/show/", "/agenda/ical/")}><Icon name="calendar" />{t("add_cal")}</IcsLink>}
           <button type="button" className="linkbtn" onClick={() => void shareEvent(e)}><Icon name="share" />{t("share_event")}</button>
@@ -106,7 +100,7 @@ function Detail({ e }: { e: Ev }) {
         {e.layer === "rotary" ? <p className="desc">{t("rotary_note")}</p> : null}
       </article>
       {polaris ? null : <HelpLinks keys={["intl"]} />}
-      <h3 className="sh">{t("more_events")}</h3>
+      <Sh>{t("more_events")}</Sh>
       {more.map((x, i) => <EventCard key={x.id} e={x} i={i} />)}
       <Footer />
     </>

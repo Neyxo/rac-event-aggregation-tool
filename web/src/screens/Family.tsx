@@ -5,7 +5,7 @@ import { t, tx } from "../i18n";
 import { isRac } from "../lib/data";
 import { BRAND, clubVars, DISTRICT_IDS, DISTRICTS, vars } from "../lib/color";
 import { href } from "../lib/route";
-import { ClubMark, Footer, Icon, useData, useStickyHeads, useWash, type IconName } from "../components";
+import { ClubMark, Footer, Icon, useData, Sh, useWash, type IconName } from "../components";
 
 // logos in static/img/fam (Rotary and Interact from Wikimedia Commons, RYLA from rotary-ribi.org, Rotex and Inner Wheel from their sites);
 // the icon stands in where there is none yet, or when the file fails to load
@@ -46,7 +46,7 @@ function Districts() {
     <>
       {DISTRICT_IDS.map(d => (
         <Fragment key={d}>
-          <h3 className="sh">{t(DISTRICTS[d].key)}</h3>
+          <Sh>{t(DISTRICTS[d].key)}</Sh>
           <div className="tiles">
             {D.data.clubs.filter(c => c.district === d && isRac(c)).map(c => (
               <a key={c.id} className="tile" href={href("club", c.id)} style={clubVars(c.color)}><ClubMark c={c} /><b>{c.short}</b></a>
@@ -60,12 +60,11 @@ function Districts() {
 
 export default function Family(_props: ScreenProps) {
   useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
-  useStickyHeads();
   return (
     <main className="wrap fam">
       <h1>{t("fam_h")}</h1>
       <Tiles />
-      <h2 className="sh lv1">{t("fam_clubs")}</h2>
+      <Sh lv1>{t("fam_clubs")}</Sh>
       {/* a box of its own: the district headings stop sticking where the clubs end */}
       <div><Districts /></div>
       <div id="foot"><Footer /></div>

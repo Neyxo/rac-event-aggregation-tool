@@ -8,7 +8,7 @@ import { nClubs } from "../lib/data";
 import { href } from "../lib/route";
 import { store } from "../lib/store";
 import type { Club, Event } from "../lib/types";
-import { Footer, HelpLinks, Icon, useData, useStickyHeads, useTitle, useWash } from "../components";
+import { Footer, HelpLinks, Icon, useData, Sh, useTitle, useWash } from "../components";
 
 
 /** one step: a link when it leads somewhere (another site in a new tab), a plain box when it doesn't */
@@ -46,7 +46,6 @@ export default function Guide(_props: ScreenProps) {
   const home: Club | undefined = D.settings.home ? D.clubs[D.settings.home] : undefined;
   // its first colour is the home club's
   useWash(home ? home.color : BRAND3[0], BRAND3[1], BRAND3[2]);
-  useStickyHeads();
   useTitle(nm.h);
   // each step leads somewhere: the club's Polaris site, Settings, Subscribe, the club's next event
   const next: Event | undefined = D.data.events.find(e => !isPast(e) && !e.cancelled && e.layer !== "rotary" && (!home || e.clubs.includes(home.id)));
@@ -54,7 +53,7 @@ export default function Guide(_props: ScreenProps) {
   return (
     <main className="wrap fam">
       <div className="hero glass" style={home ? clubVars(home.color) : undefined}><HeroContent home={home} /></div>
-      <h2 className="sh lv1">{nm.steps_h}</h2>
+      <Sh lv1>{nm.steps_h}</Sh>
       <ol className="nsteps">
         {nm.steps.map(([title, text], i) => (
           <Step key={i} n={i + 1} title={title} text={i === 3 && next ? `${fmt.dm.format(new Date(next.start))} · ${next.title}` : text} to={to[i]} />
@@ -65,7 +64,7 @@ export default function Guide(_props: ScreenProps) {
           <div key={i} className="glass" style={vars({ "--p": BRAND3[i]! })}><b>{v.replace("{n}", String(nClubs()))}</b><span>{l}</span></div>
         ))}
       </div>
-      <h2 className="sh lv1">{t("read_on")}</h2>
+      <Sh lv1>{t("read_on")}</Sh>
       <HelpLinks keys={["words", "family", "world"]} />
       <div id="foot"><Footer /></div>
     </main>

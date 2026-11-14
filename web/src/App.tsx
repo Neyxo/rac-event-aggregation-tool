@@ -24,9 +24,8 @@
  * - Links are hashes: href("event", id), href("club", id), href("discover", null, "clubs=bern") (lib/route). In-page anchors (#main,
  *   #results, settings #install) would change the route: use inPageLink("results") (components/router). Leave the URL with navigate().
  *   Discover writes its filters back with replaceQuery(params) instead of history.replaceState.
- * - Hooks (components/hooks): useWash(c1, c2, c3) for body.wash; useStickyHeads() in every screen with .sh headings; useMorphHead(ref, ready)
- *   for the event / club head (render <i className="sent" aria-hidden="true" /> right before it, className static incl. "morph");
- *   useTitle(text) for a title of its own; useStored(key, default) for a localStorage value that re-renders; a top-bar button of
+ * - Sticky pieces (components/Sticky): <Sh lv1> / <Sh> for section headings, <MorphHead className> for the event / club head.
+ * - Hooks (components/hooks): useWash(c1, c2, c3) for body.wash; useTitle(text) for a title of its own; useStored(key, default) for a localStorage value that re-renders; a top-bar button of
  *   the screen's own is ROUTE_META's extra (About's share). toast(msg, action?) from components/Toast; <Popup title onClose> for a popup.
  * - Share buttons: shareUrl({ event: id }), shareUrl({ club: id }) or shareUrl("about") (lib/share).
  * - Settings: setTheme() (lib/store) and setRotary() (lib/data) apply at once; setLang() (i18n) reloads the page (every text is

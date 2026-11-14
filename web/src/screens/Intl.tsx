@@ -4,7 +4,7 @@ import { t, tx } from "../i18n";
 import { BRAND, BRAND3, vars } from "../lib/color";
 import { isPast } from "../lib/dates";
 import { href } from "../lib/route";
-import { EventCard, Footer, HelpLinks, Icon, MoreLink, QaList, useData, useStickyHeads, useTitle, useWash, type IconName } from "../components";
+import { EventCard, Footer, HelpLinks, Icon, MoreLink, QaList, useData, Sh, useTitle, useWash, type IconName } from "../components";
 
 const KIND_IC: IconName[] = ["users", "flag", "pin", "wheel"];
 
@@ -24,13 +24,12 @@ function Next() {
 export default function Intl(_props: ScreenProps) {
   const x = tx("intl");
   useWash(BRAND.cranberry, BRAND.azure, BRAND.green);
-  useStickyHeads();
   useTitle(x.h);
   return (
     <main className="wrap fam">
       <h1>{x.h}</h1>
       <p className="lead">{x.lead}</p>
-      <h2 className="sh lv1">{x.kinds_h}</h2>
+      <Sh lv1>{x.kinds_h}</Sh>
       <div className="tiles2">
         {x.kinds.map(([title, text], i) => (
           <div key={i} className="ft glass" style={vars({ "--p": BRAND3[i % 3]! })}>
@@ -40,15 +39,15 @@ export default function Intl(_props: ScreenProps) {
           </div>
         ))}
       </div>
-      <h2 className="sh lv1">{x.next_h}</h2>
+      <Sh lv1>{x.next_h}</Sh>
       <Next />
       <section className="box tint glass" style={vars({ "--p": BRAND.cranberry })}>
         <div className="bh"><div className="ic"><Icon name="heart" /></div><h2>{x.why_h}</h2></div>
         <ul className="yes">{x.why.map((s, i) => <li key={i}>{s}</li>)}</ul>
       </section>
-      <h2 className="sh lv1">{t("faq")}</h2>
+      <Sh lv1>{t("faq")}</Sh>
       <section className="box glass"><div className="qa"><QaList items={x.qa} /></div></section>
-      <h2 className="sh lv1">{t("read_on")}</h2>
+      <Sh lv1>{t("read_on")}</Sh>
       <HelpLinks keys={["world", "family", "guide"]} />
       <div id="foot"><Footer /></div>
     </main>

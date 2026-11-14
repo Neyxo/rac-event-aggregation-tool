@@ -39,16 +39,15 @@ export function useWash(...colors: (string | undefined | null | false)[]): void 
 
 /** The hero (event head, club head) sticks under the top bar and compacts as you scroll: the CSS reads --m (0 at rest, 1 compact) and .on.
  *  Not scroll-bound: once the head has stuck for 24px it goes compact on its own; below 8px it comes back. Section headings stick under the
- *  compact hero while it is there (--stick). The screen renders, right before the head: <i className="sent" aria-hidden="true" />,
- *  and gives the head a static className that includes "morph" (React must not rewrite it: .on is toggled here). Pass ready=false while
- *  the head is not rendered yet.
+ *  compact hero while it is there (--stick). Used through components/Sticky's MorphHead, which renders the sentinel right before
+ *  the head and the "morph" class (React must not rewrite the className: .on is toggled here).
  *  The head is a fixed-height sticky box whose content overflows below it at rest, so nothing jumps while it sticks. Measured once, at
  *  rest: --bt (on the head's parent, for the CSS of the head's .go and of what follows the head) is 12px below the head's content, where
  *  its .go button sits at rest; the parent's .ph keeps that button's place in the row below. */
-export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): void {
+export function useMorphHead(ref: RefObject<HTMLElement | null>): void {
   useLayoutEffect(() => {
     const node = ref.current, sent = node?.previousElementSibling, bar = document.getElementById("top"), parent = node?.parentElement;
-    if (!ready || !node || !sent || !bar || !parent) return;
+    if (!node || !sent || !bar || !parent) return;
     const parts = [...node.children].filter(n => !n.matches(".go, .wm"));
     const bt = Math.round(Math.max(...parts.map(n => n.getBoundingClientRect().bottom)) - node.getBoundingClientRect().top) + 12;
     parent.style.setProperty("--bt", bt + "px");
@@ -65,7 +64,7 @@ export function useMorphHead(ref: RefObject<HTMLElement | null>, ready = true): 
     addEventListener("scroll", tick, { passive: true }); addEventListener("resize", tick);
     tick();
     return () => { removeEventListener("scroll", tick); removeEventListener("resize", tick); root.style.removeProperty("--stick"); };
-  }, [ref, ready]);
+  }, [ref]);
 }
 
 /** Sticky headings in two levels. Level 1 (.sh.lv1: the list title, "The clubs") sticks under the bar or the compact hero (--stick);
@@ -108,9 +107,15 @@ export function stickyHeads(): void {
 let headsRaf = 0;
 function onScroll() { if (!headsRaf) headsRaf = requestAnimationFrame(() => { headsRaf = 0; stickyHeads(); }); }
 if (typeof window !== "undefined") addEventListener("scroll", onScroll, { passive: true });
-/** call in every screen with .sh headings: re-measures after each render of that screen (scrolling re-measures on its own) */
+let headsDue = false;
+/** For a component that renders a .sh heading (components/Sticky's Sh, the list head): re-measures after each of its renders and when
+ *  it goes (scrolling re-measures on its own). Once per commit however many headings rendered: the microtask runs before the paint. */
 export function useStickyHeads(): void {
-  useLayoutEffect(() => { stickyHeads(); });
+  useLayoutEffect(() => {
+    const due = () => { if (!headsDue) { headsDue = true; queueMicrotask(() => { headsDue = false; stickyHeads(); }); } };
+    due();
+    return due;
+  });
 }
 
 /** An event listener on window (or on target's element) while the component is mounted. It always calls the latest handler, so the

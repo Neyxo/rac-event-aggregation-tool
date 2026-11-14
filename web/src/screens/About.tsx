@@ -7,7 +7,7 @@ import { nClubs } from "../lib/data";
 import { BRAND, vars } from "../lib/color";
 import type { Pillar } from "../lib/pillars";
 import { shareUrl } from "../lib/share";
-import { CtaBlock, Footer, HelpLinks, Icon, PillarPic, QaList, share, useData, useEventListener, useStickyHeads, useWash } from "../components";
+import { CtaBlock, Footer, HelpLinks, Icon, PillarPic, QaList, share, useData, useEventListener, Sh, useWash } from "../components";
 
 const PILLARS: { k: Pillar; color: string; word: string; text: string }[] = [
   { k: "learn", color: BRAND.azure, word: t("ab_learn"), text: t("ab_learn_t") },
@@ -98,7 +98,6 @@ function Stage({ phase, onWord }: { phase: Phase; onWord: (i: number) => void })
 export default function About(_props: ScreenProps) {
   const D = useData();
   useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
-  useStickyHeads();
   const track = useRef<HTMLDivElement>(null);
   const phase = usePhase(track);
   return (
@@ -111,9 +110,9 @@ export default function About(_props: ScreenProps) {
         <h2>{t("ab_people")}</h2>
         <p className="lead">{t("ab_people_t", { n: nClubs() })}</p>
         {!D.clubs[D.settings.home] && <CtaBlock />}
-        <h3 className="sh">{t("read_on")}</h3>
+        <Sh>{t("read_on")}</Sh>
         <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />
-        <h3 className="sh">{t("faq")}</h3>
+        <Sh>{t("faq")}</Sh>
         <div className="qa"><QaList items={QA.map(i => [t(`ab_q${i}`), t(`ab_a${i}`)])} /></div>
         <div id="foot"><Footer /></div>
       </section>

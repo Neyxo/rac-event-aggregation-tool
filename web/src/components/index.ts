@@ -8,5 +8,6 @@ export { ClubMark, ClubLabel, ClubChip, ClubChips, clubLabel } from "./Club";
 export { MoreLink, HelpLinks, Footer, QaList, IcsLink, Warn, feedUrls, share, copy, LangSelect, type HelpKey } from "./Links";
 export { FeedRow, SubscribeSheet, SyncSheet, WayIcon, feedsFor, goUrl, useSubFlow, type Feed } from "./Subscribe";
 export { CtaBlock, NewsCard, NewsStrip, Rich, PillarPic, LoadError, DataBoundary } from "./Blocks";
-export { useData, useSaved, useStored, useWash, useMorphHead, useStickyHeads, stickyHeads, useTitle, useEventListener, useInstallPrompt, useModal } from "./hooks";
+export { useData, useSaved, useStored, useWash, useStickyHeads, stickyHeads, useTitle, useEventListener, useInstallPrompt, useModal } from "./hooks";
+export { MorphHead, GoPlace, Sh } from "./Sticky";
 export { useRoute, useNav, navigate, replaceQuery, inPageLink } from "./router";

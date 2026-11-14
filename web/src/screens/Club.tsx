@@ -11,7 +11,7 @@ import { shareUrl } from "../lib/share";
 import type { Club as ClubT, Partner } from "../lib/types";
 import {
   ClubChip, EventCard, SubscribeSheet, Footer, HelpLinks, Icon, ICON, NewsStrip, NextUp, Popup, Rich, share, toast,
-  useData, useEventListener, useMorphHead, useStickyHeads, useTitle, useWash, type IconName,
+  GoPlace, MorphHead, Sh, useData, useEventListener, useTitle, useWash, type IconName,
 } from "../components";
 
 const isIcon = (k: string): k is IconName => k in ICON;
@@ -65,14 +65,10 @@ function Photos({ c, pastPics }: { c: ClubT; pastPics: { src: string; href: stri
 export default function Club({ route }: ScreenProps) {
   const D = useData();
   const c = D.clubs[route.params.id];
-  const head = useRef<HTMLDivElement>(null), hero = useRef<HTMLDivElement>(null);
+  const hero = useRef<HTMLDivElement>(null);
   const [sub, setSub] = useState(false);
   useWash(c?.color, c?.color, c?.color);
   useTitle(c?.name);
-  useStickyHeads();
-  // at rest the subscribe pill sits below the name (inside the sticky box, overflowing); the block starts below it (app.css) and a
-  // placeholder in the button row keeps its place, so the icon buttons line up next to it
-  useMorphHead(head, !!c);
   // the colour block drifts up a touch faster than the page: a subtle parallax that shows off the frosting
   const drift = () => {
     if (hero.current && !matchMedia("(prefers-reduced-motion: reduce)").matches) hero.current.style.transform = `translateY(${-(scrollY * .12).toFixed(1)}px)`;
@@ -109,19 +105,19 @@ export default function Club({ route }: ScreenProps) {
   const subLine = [isDistrict(c.district) ? t(DISTRICTS[c.district].key) : c.source ? null : t("national"), c.city].filter(Boolean).join(" · ");
   return (
     <main className="wrap clubpage" style={clubVars(c.color)}>
-      <i className="sent" aria-hidden="true" />
       {/* two parts: a sticky header whose box is always 64px (crest and name draw big over the block at rest and compact as you scroll),
           and the colour block with the buttons, which simply scrolls away. No height changes while sticking, so nothing bounces. */}
-      <div className="cstick morph" ref={head}>
+      <MorphHead className="cstick">
         {c.logo ? <img className="c" src={c.logo} alt="" onClick={bear} /> : null}
         <h1>{c.name}</h1>
         <div className="sub">{subLine}</div>
         <a className="go" href={href("subscribe")} title={t("cp_sub")} onClick={ev => { ev.preventDefault(); setSub(true); }}><Icon name="calendar" /><span>{t("subscribe")}</span></a>
-      </div>
+      </MorphHead>
       <div className="chero" ref={hero}>
         {c.logo ? <img className="big" src={c.logo} alt="" /> : null}
         <div className="btns">
-          <span className="ph" />
+          {/* at rest the subscribe pill sits here, below the name: the block starts below the head's content (app.css) */}
+          <GoPlace />
           <IconLink name="globe" to={c.url} label={t("cp_site")} />
           {Object.entries(c.links || {}).map(([k, to]) => <IconLink key={k} name={isIcon(k) ? k : "globe"} to={to} label={k[0]!.toUpperCase() + k.slice(1)} />)}
           <ShareButton c={c} />
@@ -130,14 +126,14 @@ export default function Club({ route }: ScreenProps) {
       {next ? <NextUp e={next} /> : <p className="meta" style={{ marginTop: 14 }}>{t("cp_none")}</p>}
       {c.source === "international" ? <HelpLinks keys={["intl"]} /> : null}
       <About c={c} />
-      {news.length ? <h3 className="sh">{t("news")}</h3> : null}
+      {news.length ? <Sh>{t("news")}</Sh> : null}
       {news.length ? <NewsStrip items={news} /> : null}
       {/* projects are not filtered by age like news: a club's projects stay its projects */}
-      {projects.length ? <h3 className="sh">{t("projects")}</h3> : null}
+      {projects.length ? <Sh>{t("projects")}</Sh> : null}
       {projects.length ? <NewsStrip items={projects} /> : null}
-      {hasPhotos ? <h3 className="sh">{t("photos")}</h3> : null}
+      {hasPhotos ? <Sh>{t("photos")}</Sh> : null}
       {hasPhotos ? <Photos c={c} pastPics={pastPics} /> : null}
-      {upcoming.length > 1 ? <h3 className="sh">{t("more_events")}</h3> : null}
+      {upcoming.length > 1 ? <Sh>{t("more_events")}</Sh> : null}
       {upcoming.slice(1, 8).map((e, i) => <EventCard key={e.id} e={e} i={i} />)}
       <div className="links center"><a href={href("discover", null, "clubs=" + c.id)}><Icon name="discover" />{t("cp_all")}</a></div>
       <Footer />

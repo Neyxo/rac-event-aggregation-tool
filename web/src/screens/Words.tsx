@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { ScreenProps } from "../App";
 import { LOCALE, t, tx } from "../i18n";
 import { fold } from "../lib/filters";
-import { Footer, HelpLinks, useStickyHeads, useTitle, useWash } from "../components";
+import { Footer, HelpLinks, Sh, useTitle, useWash } from "../components";
 import { BRAND } from "../lib/color";
 
 /** the letter heading of a word: accents folded away ("Ö" files under O) */
@@ -13,7 +13,6 @@ export default function Words(_props: ScreenProps) {
   const nm = tx("nm");
   const [q, setQ] = useState("");
   useWash(BRAND.green, BRAND.azure, BRAND.cranberry);
-  useStickyHeads();
   useTitle(nm.words_h);
   const rows = nm.words.slice().sort((a, b) => a[0].localeCompare(b[0], LOCALE));
   const needle = fold(q.trim());
@@ -35,7 +34,7 @@ export default function Words(_props: ScreenProps) {
         })}
       </dl>
       <p className="fine" hidden={!!n}>{nm.words_none}</p>
-      <h2 className="sh lv1">{t("read_on")}</h2>
+      <Sh lv1>{t("read_on")}</Sh>
       <HelpLinks keys={["guide", "family"]} />
       <div id="foot"><Footer /></div>
     </main>

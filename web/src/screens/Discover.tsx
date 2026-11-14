@@ -8,7 +8,7 @@ import { BRAND, clubVars, cx, DISTRICT_IDS, DISTRICTS, vars, WHEEL } from "../li
 import { fmt } from "../lib/dates";
 import { activeCount, hasFilters, selectEvents, type Filters } from "../lib/filters";
 import { href } from "../lib/route";
-import { ClubChips, clubLabel, ClubMark, EventCard, Icon, Popup, useData, useEventListener, useNav, useStickyHeads } from "../components";
+import { ClubChips, clubLabel, ClubMark, EventCard, Icon, Popup, useData, useEventListener, useNav } from "../components";
 import type { Event } from "../lib/types";
 import type { ScreenProps } from "../App";
 import { Foot, ListHead, Results, StaleBanner, summaryText, useFilters, Views, type FilterApi } from "./EventList";
@@ -159,7 +159,6 @@ export default function Discover({ route }: ScreenProps) {
 function DiscoverScreen({ route }: ScreenProps) {
   const D = useData();
   const api = useFilters(route.query, "discover");
-  useStickyHeads();
   const f = api.shown;
   const ctx = { page: "discover", mine: myClubs(), saved: D.saved, scope: null, club } as const;
   const res = f ? selectEvents(D.data.events, f, ctx) : null;
