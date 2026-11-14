@@ -14,6 +14,8 @@ import { SHARE_PAGES, type SharePage } from "./web/src/lib/share.ts";
 // where the site is published and where its code lives: package.json is the one place for both (polaris_feed.py reads it too)
 const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as { homepage: string; repository: string };
 const SITE = pkg.homepage;
+// the link-preview page, with {{placeholders}}: polaris_feed.py fills the same file for events and clubs
+const SHARE_TEMPLATE = readFileSync(new URL("./share.template.html", import.meta.url), "utf8");
 const PUBLIC = fileURLToPath(new URL("./public/", import.meta.url));
 const FIXTURE = fileURLToPath(new URL("./web/e2e/fixture/", import.meta.url));
 
@@ -58,26 +60,11 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 export function shareStub(lang: string, page: SharePage, m: Messages): string {
   const [title, desc] = SHARE_TEXT[page](m);
   const to = `../../?lang=${lang}#/${page === "home" ? "" : page}`;
-  return `<!doctype html>
-<html lang="${lang}">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(title)} · Rotaract Events</title>
-<meta name="description" content="${esc(desc)}">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Rotaract Events">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(desc)}">
-<meta property="og:image" content="${SITE}screenshot-wide.png">
-<meta property="og:url" content="${SITE}s/${lang}/${page}.html">
-<meta name="twitter:card" content="summary_large_image">
-<meta http-equiv="refresh" content="0; url=${to}">
-<script>location.replace(${JSON.stringify(to)})</script>
-</head>
-<body><a href="${to}">${esc(title)}</a></body>
-</html>
-`;
+  const values: Record<string, string> = {
+    lang, page_title: esc(title) + " · Rotaract Events", title: esc(title), desc: esc(desc), url: `${SITE}s/${lang}/${page}.html`, target: esc(to),
+    image: SITE + "screenshot-wide.png", target_js: JSON.stringify(to).replace(/</g, "\\u003c"),
+  };
+  return SHARE_TEMPLATE.replace(/\{\{(\w+)\}\}/g, (_, k: string) => values[k] ?? "");
 }
 function shareStubs(): Plugin {
   return {

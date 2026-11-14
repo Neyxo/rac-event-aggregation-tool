@@ -42,6 +42,8 @@ MEMBERS_ONLY = "X-MEMBERS-ONLY:TRUE"  # marks a VEVENT built from the agenda lis
 MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci", "en": "members only"}
 SITE_URL = PACKAGE["homepage"]  # share pages need absolute og:image / og:url
 DEFAULT_IMAGE = SITE_URL + "screenshot-wide.png"
+# the link-preview page, with {{placeholders}}: the Vite build fills the same file for the static screens (vite.config.ts)
+SHARE_TEMPLATE = Path(__file__).with_name("share.template.html").read_text()
 # Run-wide brake: refuse the whole run when it would cancel more than this many of all upcoming events (see global_brake)
 GLOBAL_CANCEL_MIN, GLOBAL_CANCEL_RATIO = 5, 0.3
 IG_API = "https://graph.facebook.com/v27.0"  # Instagram API with Facebook Login (Business Discovery)
@@ -620,23 +622,9 @@ UPCOMING = {"de": ("{} kommender Anlass", "{} kommende Anlässe"), "fr": ("{} é
 def share_html(lang, title, desc, image, path, target):
     """A link-preview page (WhatsApp, iMessage, Slack...) at SITE_URL + path that sends a browser on to the app route `target`."""
     esc, url = html.escape, SITE_URL + path
-    js = json.dumps(target).replace("<", "\\u003c")
-    return f"""<!doctype html>
-<html lang="{esc(lang)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)}</title>
-<meta name="description" content="{esc(desc)}">
-<link rel="canonical" href="{esc(url)}">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Rotaract Events">
-<meta property="og:title" content="{esc(title)}">
-<meta property="og:description" content="{esc(desc)}">
-<meta property="og:image" content="{esc(urllib.parse.urljoin(SITE_URL, image or DEFAULT_IMAGE))}">
-<meta property="og:url" content="{esc(url)}">
-<meta name="twitter:card" content="summary_large_image">
-<meta http-equiv="refresh" content="0; url={esc(target)}">
-<script>location.replace({js})</script>
-</head><body><p><a href="{esc(target)}">{esc(title)}</a></p></body></html>
-"""
+    values = {"lang": esc(lang), "page_title": esc(title), "title": esc(title), "desc": esc(desc), "url": esc(url), "target": esc(target),
+              "image": esc(urllib.parse.urljoin(SITE_URL, image or DEFAULT_IMAGE)), "target_js": json.dumps(target).replace("<", "\\u003c")}
+    return re.sub(r"\{\{(\w+)\}\}", lambda m: values[m.group(1)], SHARE_TEMPLATE)
 
 
 def when_text(e, lang):

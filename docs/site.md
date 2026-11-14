@@ -50,6 +50,8 @@ A shared link opens a tiny page with its own preview (title, text, picture for W
 - `c/<id>.html`: a club, with its about sentence and number of upcoming events. Written by `polaris_feed.py`.
 - `s/<lang>/<page>.html`: the other screens, per language. Written by the Vite build.
 
+All three are the same page, `share.template.html`, filled in by either side.
+
 ## Navigation
 
 One top bar (Rotaract, This app, Settings) and three bottom tabs (Home, Discover, Calendar) on every screen. On event and club screens the head sticks under the top bar and compacts as you scroll. Section headings stick in two levels on one frosted bar.

@@ -1,6 +1,8 @@
 """Run: python3 test_polaris_feed.py"""
 import copy
 import datetime as dt
+import json
+from pathlib import Path
 
 import polaris_feed
 from polaris_feed import (MEMBERS_ONLY, build_calendar, clean_vevent, deadline, europe_event, html_text, ics_text, manual_event, locate, merged_history, parse_detail, parse_list,
@@ -187,6 +189,13 @@ assert site["clubs"][0]["coords"] == [47.0, 8.0], "club city geocoded for the on
 assert "old-cancelled" not in ids and "ancient" not in ids and "c" in ids, "same visibility rule as the feed"
 assert next(e for e in site["events"] if e["id"] == "c")["cancelled"] is True
 assert ids == sorted(ids, key=lambda i: next(e["start"] for e in site["events"] if e["id"] == i)), "sorted by start"
+# the browser tests run on web/e2e/fixture/events.json: it must have the fields site_data() writes, or they would test a shape
+# the app never gets (web/src/lib/types.ts describes the same fields for the app)
+fixture = json.loads(Path(__file__).with_name("web").joinpath("e2e", "fixture", "events.json").read_text())
+assert set(fixture) == set(site), "events.json: top-level keys"
+for kind in ("events", "clubs"):
+    for row in fixture[kind] + fixture["rotary"][kind]:
+        assert set(row) | {"about"} == set(site[kind][0]) | {"about"}, f"fixture {kind} {row['id']}: {sorted(set(row) ^ set(site[kind][0]))}"
 
 # --- share pages: HTML-safe, in the lead club's language, absolute picture/URL, redirect into the app
 pg = share_page({"id": "1", "title": 'Stamm "<Test>"', "start": "2026-12-10T19:00", "allday": False, "location": "Luzern",
