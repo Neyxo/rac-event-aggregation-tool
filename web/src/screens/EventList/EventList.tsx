@@ -1,14 +1,13 @@
 // What Home and Discover share: the filter state and its URL, the view switch, the list head,
 // the event list with month headings, the stale banner and the footer. The filter logic itself is lib/filters.ts.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from "react";
 import { nEvents, t, type StrKey } from "../../i18n";
-import { getData } from "../../lib/data";
 import { fmt } from "../../lib/dates";
 import { devFlag } from "../../lib/dev";
 import { fromParams, radiusOf, toParams, type Filters, type ListResult, type View } from "../../lib/filters";
 import { geocode } from "../../lib/geo";
 import { href } from "../../lib/route";
-import type { Event } from "../../lib/types";
+import type { Coords, Event } from "../../lib/types";
 import { EventCard, Footer, Sh, Skel, replaceQuery, toast, useData, useStickyHeads } from "../../components";
 
 export type Page = "home" | "discover";
@@ -31,123 +30,155 @@ export interface FilterApi {
   draw(): void;
   setView(v: View): void;
   locate(): void;
-  setPlace(text: string): Promise<void>;
+  setPlace(text: string): Promise<Coords | null>;
   clear(): void;
 }
 
+interface FilterState {
+  /** the controls */
+  live: Filters;
+  /** the controls as the list was last drawn with them: written to the URL; null while the first draw waits for a place */
+  drawn: Filters | null;
+  hint: string;
+  placeText: string;
+}
+// The steps the state takes, each a plain function of the state before it: a handler that takes several in a row, or one after an
+// answer that came later (a geocoded place, the device position), always continues from the latest state.
+type Step = (s: FilterState) => FilterState;
+const patch =
+  (p: Partial<Filters>): Step =>
+  (s) => ({ ...s, live: { ...s.live, ...p } });
+const draw: Step = (s) => ({ ...s, drawn: s.live });
+const say =
+  (hint: string): Step =>
+  (s) => ({ ...s, hint });
+const steps =
+  (...list: Step[]): Step =>
+  (s) =>
+    list.reduce((x, f) => f(x), s);
+/** a view picked; "near" without a position is drawn once the position is in (the caller asks for it) */
+const view =
+  (v: View): Step =>
+  (s) =>
+    v === "near" && !s.live.center ? patch({ view: v })(s) : steps(patch({ view: v }), draw)(s);
+/** the position can't be had: a list waiting for "near me" would wait forever */
+const notNear: Step = (s) => (s.live.view === "near" ? view("all")(s) : s);
+
 /** The list follows the URL (#/discover?q=...&view=...), so a reload or a shared link shows the same list. The controls (live) change
- *  at once, but the list only follows on draw(), which writes them to the URL: a place counts once it is geocoded, a search 150 ms
- *  after the last key. Where the list is centred (a geocoded place, the device position) is not in the URL: draw() keeps it.
+ *  at once, but the list only follows on draw(), which has them written to the URL: a place counts once it is geocoded, a search
+ *  150 ms after the last key. Where the list is centred (a geocoded place, the device position) is not in the URL: the draw keeps it.
  *  Set up once per navigation (Home and Discover remount on one): the controls start from the URL; init adjusts them (a guest's Home
  *  starts at the position found earlier in this tab). */
 export function useFilters(query: URLSearchParams, page: Page, init: (f: Filters) => Filters = (f) => f): FilterApi {
-  const isClub = (id: string) => !!getData().clubs[id];
-  const [live, setLive] = useState(() => init(fromParams(query, isClub)));
-  const [at, setAt] = useState<Pick<Filters, "center" | "centerLabel">>(() => ({
-    center: live.center,
-    centerLabel: live.centerLabel,
-  }));
-  const [waiting, setWaiting] = useState(() => !!live.place || (live.view === "near" && !live.center));
-  const [hint, setHint] = useState("");
-  const [placeText, setPlaceText] = useState(live.place);
-  // the latest controls, for handlers that change several things in a row (state would still hold the old ones)
-  const cur = useRef(live);
+  const D = useData();
+  const isClub = (id: string) => !!D.clubs[id];
+  const [state, set] = useState<FilterState>(() => {
+    const live = init(fromParams(query, isClub));
+    const waiting = !!live.place || (live.view === "near" && !live.center);
+    return { live, drawn: waiting ? null : live, hint: "", placeText: live.place };
+  });
+  const { live, drawn } = state;
   const timer = useRef(0);
-  // a geocode or a position that answers after the screen is gone (another screen, or this one remounted for a new navigation) must
-  // not write its filters into that screen's URL
-  const alive = useRef(true);
 
-  const draw = () => {
-    if (!alive.current) return;
-    const f = cur.current;
-    setAt({ center: f.center, centerLabel: f.centerLabel });
-    setWaiting(false);
-    const q = toParams(f);
+  // a draw is written to the URL; before the paint, so the list never shows with the filters of the draw before
+  useLayoutEffect(() => {
+    if (!drawn) return;
+    const q = toParams(drawn);
     if (q.toString() !== (location.hash.split("?")[1] ?? "")) replaceQuery(q);
-  };
-  const update = (patch: Partial<Filters>, redraw = false) => {
-    const next = { ...cur.current, ...patch };
-    cur.current = next;
-    setLive(next);
-    if (redraw) draw();
-  };
+  }, [drawn]);
 
   const locate = () => {
     if (!navigator.geolocation) {
       toast(t("loc_none"));
-      // a "near me" link on a device that can't say where it is: the list would wait forever
-      if (cur.current.view === "near") setView("all");
+      set(notNear);
       return;
     }
-    setHint(t("locating"));
+    set(say(t("locating")));
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setPlaceText("");
-        setHint(t("your_location"));
-        // Home has no radius control: the "near" view then means 25 km
-        const r = page === "discover" ? cur.current.r || "25" : cur.current.r;
-        update({ center: [pos.coords.latitude, pos.coords.longitude], centerLabel: t("you"), place: "", r }, true);
-      },
+      (pos) =>
+        set((s) => {
+          // Home has no radius control: the "near" view then means 25 km
+          const r = page === "discover" ? s.live.r || "25" : s.live.r;
+          const here = {
+            center: [pos.coords.latitude, pos.coords.longitude] as Coords,
+            centerLabel: t("you"),
+            place: "",
+            r,
+          };
+          return steps(patch(here), draw)({ ...s, placeText: "", hint: t("your_location") });
+        }),
       () => {
-        setHint(t("loc_na"));
         toast(t("loc_na"));
-        if (cur.current.view === "near") setView("all");
+        set(steps(say(t("loc_na")), notNear));
       },
     );
   };
   const setView = (v: View) => {
-    update({ view: v });
-    if (v === "near" && !cur.current.center) locate();
-    else draw();
+    set(view(v));
+    if (v === "near" && !live.center) locate();
   };
-  const setPlace = async (text: string) => {
-    setHint("");
-    update({ center: null });
+  /** the place geocoded and the list drawn around it; returns where it is, null when it wasn't found */
+  const setPlace = async (text: string): Promise<Coords | null> => {
+    set(steps(say(""), patch({ center: null })));
+    let hit: Awaited<ReturnType<typeof geocode>> = null;
+    let hint = "";
     if (text.trim()) {
       try {
-        const hit = await geocode(text);
-        if (hit) {
-          update({ center: hit.coords, centerLabel: hit.label });
-          setHint("📍 " + hit.label);
-        } else {
-          setHint(t("place_nf"));
-        }
+        hit = await geocode(text);
+        hint = hit ? "📍 " + hit.label : t("place_nf");
       } catch {
-        setHint(t("place_err"));
+        hint = t("place_err");
       }
     }
-    // a place without a radius would filter nothing
-    if (cur.current.center && !cur.current.r) update({ r: "25" });
-    draw();
+    set((s) => {
+      // a place without a radius would filter nothing
+      const found = hit ? { center: hit.coords, centerLabel: hit.label, r: s.live.r || "25" } : {};
+      return steps(say(hint), patch(found), draw)(s);
+    });
+    return hit ? hit.coords : null;
   };
   const setQ = (q: string) => {
-    update({ q });
+    set(patch({ q }));
     clearTimeout(timer.current);
-    timer.current = window.setTimeout(draw, 150);
+    timer.current = window.setTimeout(() => set(draw), 150);
   };
-  const clear = () => {
-    setPlaceText("");
-    setHint("");
-    update({ q: "", place: "", r: "", center: null, d: new Set(), clubs: new Set() });
-    setView("all");
-  };
+  const clear = () =>
+    set((s) =>
+      steps(
+        patch({ q: "", place: "", r: "", center: null, d: new Set(), clubs: new Set() }),
+        view("all"),
+      )({ ...s, placeText: "", hint: "" }),
+    );
 
-  // the place from the URL geocoded, or the position looked up for "near me"; then the first draw, which also tidies the URL (unknown
-  // clubs dropped)
+  // the place from the URL geocoded, or the position looked up for "near me"; the list is drawn once that is in. stale: this
+  // screen is gone (or, in development, React set the effect up a second time): the later answer starts nothing more.
+  const start = useEffectEvent(async (stale: () => boolean) => {
+    const at = live.place ? await setPlace(live.place) : live.center;
+    if (!stale() && live.view === "near" && !at) locate();
+  });
   useEffect(() => {
-    alive.current = true;
-    void (async () => {
-      if (cur.current.place) await setPlace(cur.current.place);
-      if (cur.current.view === "near" && !cur.current.center) locate();
-      else draw();
-    })();
+    let gone = false;
+    void start(() => gone);
     return () => {
-      alive.current = false;
+      gone = true;
       clearTimeout(timer.current);
     };
   }, []);
-  const shown = waiting ? null : { ...fromParams(query, isClub), ...at };
-  return { live, shown, hint, placeText, setPlaceText, setQ, update, draw, setView, locate, setPlace, clear };
+  const shown = drawn && { ...fromParams(query, isClub), center: drawn.center, centerLabel: drawn.centerLabel };
+  return {
+    live,
+    shown,
+    hint: state.hint,
+    placeText: state.placeText,
+    setPlaceText: (placeText) => set((s) => ({ ...s, placeText })),
+    setQ,
+    update: (p, redraw = false) => set(redraw ? steps(patch(p), draw) : patch(p)),
+    draw: () => set(draw),
+    setView,
+    locate,
+    setPlace,
+    clear,
+  };
 }
 
 /** "Last updated ..., may be out of date": events.json is more than 30 hours old */

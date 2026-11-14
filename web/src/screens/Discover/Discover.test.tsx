@@ -167,7 +167,7 @@ describe("Discover", () => {
     const radius = () => screen.getByRole<HTMLSelectElement>("combobox", { name: "Radius" });
     fireEvent.input(place, { target: { value: "Zürich" } });
     await act(async () => {
-      place.dispatchEvent(new Event("change"));
+      fireEvent.blur(place);
     });
     expect(screen.getByText("📍 Zürich")).toBeTruthy();
     expect(radius().value).toBe("25");
@@ -195,7 +195,7 @@ describe("Discover", () => {
     const place = screen.getByRole("textbox", { name: "Near a place or postcode" });
     fireEvent.input(place, { target: { value: "Zürich" } });
     await act(async () => {
-      place.dispatchEvent(new Event("change"));
+      fireEvent.blur(place);
     });
     unmount();
     history.replaceState(null, "", "/#/"); // somewhere else now

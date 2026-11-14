@@ -8,17 +8,7 @@ import { BRAND, clubVars, cx, DISTRICT_IDS, DISTRICTS, vars, WHEEL } from "../..
 import { fmt } from "../../lib/dates";
 import { activeCount, hasFilters, selectEvents, type Filters } from "../../lib/filters";
 import { href } from "../../lib/route";
-import {
-  ClubChips,
-  clubLabel,
-  ClubMark,
-  EventCard,
-  Icon,
-  Popup,
-  useData,
-  useEventListener,
-  useNav,
-} from "../../components";
+import { ClubChips, clubLabel, ClubMark, EventCard, Icon, Popup, useData, useNav } from "../../components";
 import type { Event } from "../../lib/types";
 import type { ScreenProps } from "../../App";
 import {
@@ -116,28 +106,22 @@ function ClubRow({ api }: { api: FilterApi }) {
   );
 }
 
-/** the place field: it counts once committed (the native change event: blur, or Enter, which blurs) */
+/** the place field: it counts once committed (on leaving the field, or Enter, which leaves it), when it changed */
 function PlaceInput({ api }: { api: FilterApi }) {
-  const ref = useRef<HTMLInputElement>(null);
-  // the native change event, not React's onChange (which fires on every keystroke)
-  useEventListener(
-    "change",
-    () => {
-      const text = ref.current?.value ?? "";
-      api.update({ place: text });
-      void api.setPlace(text);
-    },
-    ref,
-  );
+  const commit = () => {
+    if (api.placeText === api.live.place) return;
+    api.update({ place: api.placeText });
+    void api.setPlace(api.placeText);
+  };
   return (
     <input
       type="text"
       autoComplete="off"
       placeholder={t("place_ph")}
       aria-label={t("place_ph")}
-      ref={ref}
       value={api.placeText}
       onChange={(ev) => api.setPlaceText(ev.target.value)}
+      onBlur={commit}
       onKeyDown={(ev) => {
         if (ev.key === "Enter") ev.currentTarget.blur();
       }}

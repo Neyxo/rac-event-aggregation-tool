@@ -1,5 +1,5 @@
 // Bigger shared blocks: the call to action, news teasers, a club's rich text, the pillar pictures, the offline state.
-import { Component, Suspense, useEffect, useState, type ComponentType, type ReactNode } from "react";
+import { Component, Suspense, useState, type ComponentType, type ReactNode } from "react";
 import { t } from "../../i18n";
 import { getData, LoadFailed, retryLoad } from "../../lib/data";
 import { BRAND, clubVars, vars } from "../../lib/color";
@@ -22,18 +22,15 @@ export function CtaBlock({ onPlace }: { onPlace?: (pos: Coords) => void }) {
   const home = D.settings.home ? D.clubs[D.settings.home] : undefined;
   const [q, setQ] = useState("");
   const [hint, setHint] = useState("");
-  const [pos, setPos] = useState<Coords | null>(null);
+  // a position found earlier in this tab is shown right away (Home starts its list there too); the approximate position is only
+  // looked up on a tap, never on load
+  const [pos, setPos] = useState<Coords | null>(() => here.get());
   const [Hat, setHat] = useState<ComponentType<{ onClose: () => void }> | null>(null);
   const show = (p: Coords) => {
     here.set(p);
     setPos(p);
     onPlace?.(p);
   };
-  // a position found earlier in this tab is shown right away; the approximate position is only looked up on a tap, never on load
-  useEffect(() => {
-    const p = here.get();
-    if (p && !home) show(p);
-  }, []);
   if (home) {
     const e = D.data.events.find((e) => e.clubs.includes(home.id) && !isPast(e));
     return (
@@ -77,7 +74,13 @@ export function CtaBlock({ onPlace }: { onPlace?: (pos: Coords) => void }) {
   return (
     <div className="cta glass new">
       <div className="k">{t("ab_find_title")}</div>
-      <div className="find">
+      <form
+        className="find"
+        onSubmit={(ev) => {
+          ev.preventDefault();
+          void find();
+        }}
+      >
         <input
           className="in"
           type="text"
@@ -86,14 +89,11 @@ export function CtaBlock({ onPlace }: { onPlace?: (pos: Coords) => void }) {
           autoComplete="off"
           value={q}
           onChange={(ev) => setQ(ev.target.value)}
-          onKeyDown={(ev) => {
-            if (ev.key === "Enter") void find();
-          }}
         />
-        <button className="go" type="button" onClick={() => void find()}>
+        <button className="go" type="submit">
           {t("ab_find_btn")}
         </button>
-      </div>
+      </form>
       <div className="hint">{hint}</div>
       <div className="near">
         {pos ? (
