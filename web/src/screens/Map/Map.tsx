@@ -6,7 +6,7 @@ import "leaflet/dist/leaflet.css";
 import type { ScreenProps } from "../../App";
 import { nEvents, t } from "../../i18n";
 import { BRAND, onColor } from "../../lib/color";
-import { club } from "../../lib/data";
+import { club, type AppData } from "../../lib/data";
 import { fmt, isPast } from "../../lib/dates";
 import { SWISSTOPO_GREY } from "../../lib/geo";
 import { href } from "../../lib/route";
@@ -19,22 +19,22 @@ export const archive = (events: Event[]): Event[] =>
 const FILES = 30;
 
 /** the dot: an HTML string, because Leaflet's divIcon takes markup */
-function dotHtml(e: Event): string {
-  const c = club(e.clubs[0] ?? "");
+function dotHtml(D: AppData, e: Event): string {
+  const c = club(D, e.clubs[0] ?? "");
   const color = c.color || BRAND.cranberry;
   const logo = c.logo ? `<img src="${c.logo}" alt="">` : "";
   return `<span style="--c:${color};--on-c:${onColor(color)}">${logo}</span>`;
 }
 
 /** the popup: a DOM node, so the title needs no escaping */
-function popupLink(e: Event): HTMLElement {
+function popupLink(D: AppData, e: Event): HTMLElement {
   const a = document.createElement("a");
   a.className = "mappop";
   a.href = href("event", e.id);
   const b = document.createElement("b");
   b.textContent = e.title;
   const s = document.createElement("span");
-  s.textContent = `${fmt.dm.format(new Date(e.start))} · ${club(e.clubs[0] ?? "").short}`;
+  s.textContent = `${fmt.dm.format(new Date(e.start))} · ${club(D, e.clubs[0] ?? "").short}`;
   a.append(b, s);
   return a;
 }
@@ -108,8 +108,8 @@ export default function MapScreen({ route }: ScreenProps) {
     for (const e of D.data.events) {
       if (!e.coords || (!past && isPast(e))) continue;
       n++;
-      const icon = L.divIcon({ className: "mapdot", iconSize: [32, 32], popupAnchor: [0, -14], html: dotHtml(e) });
-      L.marker(e.coords, { title: e.title, icon }).bindPopup(popupLink(e)).addTo(group);
+      const icon = L.divIcon({ className: "mapdot", iconSize: [32, 32], popupAnchor: [0, -14], html: dotHtml(D, e) });
+      L.marker(e.coords, { title: e.title, icon }).bindPopup(popupLink(D, e)).addTo(group);
     }
     setCount(n);
   }, [past]);

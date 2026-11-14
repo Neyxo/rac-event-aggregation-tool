@@ -112,7 +112,7 @@ export default function AboutMore(_props: ScreenProps) {
       <section className="vis map">
         <div className="bg" ref={swiss} />
         <div className="pane">
-          <b>{t("sp_dist", { n: nClubs() })}</b>
+          <b>{t("sp_dist", { n: nClubs(D) })}</b>
           <span>{t("sp_dist_t")}</span>
           <div className="leg">
             {DISTRICT_IDS.map((d) => (

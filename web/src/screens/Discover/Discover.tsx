@@ -88,7 +88,7 @@ function ClubRow({ api }: { api: FilterApi }) {
         {t("all")}
       </button>
       {[...clubs].map((id) => {
-        const c = club(id);
+        const c = club(D, id);
         return (
           <button
             key={id}
@@ -240,7 +240,8 @@ function Fate({ pool, onClose }: { pool: Event[]; onClose: () => void }) {
   const a = 360 / segs.length;
   const spun = k >= 0;
   const done = spun && (w.landed || matchMedia("(prefers-reduced-motion: reduce)").matches);
-  const lead = (e: Event) => club(e.clubs[0] ?? "");
+  const D = useData();
+  const lead = (e: Event) => club(D, e.clubs[0] ?? "");
   const wash = (e: Event) => `color-mix(in srgb, ${lead(e).color || BRAND.cranberry} 30%, var(--surface))`;
   // on a small screen the wheel and the card are taller than the popup: when the card appears, the popup scrolls down to it and the button under it
   const result = useRef<HTMLDivElement>(null);
@@ -314,7 +315,13 @@ function DiscoverScreen({ route }: ScreenProps) {
   const D = useData();
   const api = useFilters(route.query, "discover");
   const f = api.shown;
-  const ctx = { page: "discover", mine: myClubs(), saved: D.saved, scope: null, club } as const;
+  const ctx = {
+    page: "discover",
+    mine: myClubs(D),
+    saved: D.saved,
+    scope: null,
+    club: (id: string) => club(D, id),
+  } as const;
   const res = f ? selectEvents(D.data.events, f, ctx) : null;
   // the Wheel of Fate is open with these: the upcoming events the filters leave, never a cancelled one (the past view has none of
   // its own: there the wheel takes the upcoming ones)

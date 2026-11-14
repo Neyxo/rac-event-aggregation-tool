@@ -151,7 +151,7 @@ export default function About(_props: ScreenProps) {
       </div>
       <section className="after">
         <h2>{t("ab_people")}</h2>
-        <p className="lead">{t("ab_people_t", { n: nClubs() })}</p>
+        <p className="lead">{t("ab_people_t", { n: nClubs(D) })}</p>
         {!D.clubs[D.settings.home] && <CtaBlock />}
         <Sh>{t("read_on")}</Sh>
         <HelpLinks keys={["guide", "words", "intl", "world", "family"]} />

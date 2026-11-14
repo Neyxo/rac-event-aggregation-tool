@@ -11,7 +11,7 @@ import type { Event } from "../../lib/types";
 import { Icon, type IconName } from "../Icon";
 import { ClubChip } from "../Club/Club";
 import { toast } from "../Toast/Toast";
-import { useSaved } from "../hooks";
+import { useData, useSaved } from "../hooks";
 
 /** the events the cards below tag NEW: Home provides the ones new since the last visit; anywhere else nothing is new */
 export const NewIds = createContext<ReadonlySet<string>>(new Set());
@@ -59,7 +59,7 @@ export function StarButton({ e }: { e: Event }) {
 /** the "next up" pane on the club screen and Home */
 export function NextUp({ e, label = t("next_event") }: { e: Event; label?: string }) {
   return (
-    <a className="nx glass" href={href("event", e.id)} style={clubVars(club(e.clubs[0] ?? "").color)}>
+    <a className="nx glass" href={href("event", e.id)} style={clubVars(club(useData(), e.clubs[0] ?? "").color)}>
       <div>
         <div className="k">{label}</div>
         <div className="cd">{relDay(daysUntil(e))}</div>
@@ -74,7 +74,7 @@ export function NextUp({ e, label = t("next_event") }: { e: Event; label?: strin
 
 /** i: position in the list (staggered entrance, capped at 12) */
 export function EventCard({ e, i = 0 }: { e: Event; i?: number }) {
-  const lead = club(e.clubs[0] ?? "");
+  const lead = club(useData(), e.clubs[0] ?? "");
   const newIds = useContext(NewIds);
   return (
     <article

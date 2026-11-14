@@ -44,7 +44,11 @@ const NOTHING_NEW: ReadonlySet<string> = new Set();
 /** a pane row: colour bar, title, days left, chevron */
 function Row({ e, label, soon = false }: { e: Event; label: string; soon?: boolean }) {
   return (
-    <a className={cx("r", soon && "soon")} href={href("event", e.id)} style={clubVars(club(e.clubs[0] ?? "").color)}>
+    <a
+      className={cx("r", soon && "soon")}
+      href={href("event", e.id)}
+      style={clubVars(club(useData(), e.clubs[0] ?? "").color)}
+    >
       <i />
       <span>{e.title}</span>
       <b>{label}</b>
@@ -136,12 +140,13 @@ function Panes({ mineEv }: { mineEv: Event[] }) {
 }
 
 function MemberBox({ cols, mineEv, changes }: { cols: string[]; mineEv: Event[]; changes: Changes }) {
+  const D = useData();
   const guideSeen = useStored("rac.guideSeen", false);
   const next = mineEv[0];
   return (
     <>
       <Hello cols={cols} mineEv={mineEv} />
-      {next ? <NextUp e={next} label={t("next_event") + " · " + club(next.clubs[0] ?? "").short} /> : null}
+      {next ? <NextUp e={next} label={t("next_event") + " · " + club(D, next.clubs[0] ?? "").short} /> : null}
       <News changes={changes} />
       <Panes mineEv={mineEv} />
       {guideSeen ? null : <HelpLinks keys={["guide"]} />}
@@ -262,8 +267,9 @@ function useChanges(mine: string[]): Changes | null {
 /** The four latest news teasers of these clubs, under their heading; nothing when there are none. A fragment on purpose: in the
  *  main flow next to the list title, not in a wrapper, the heading stays stuck until the title pushes it. */
 function HomeNews({ clubs }: { clubs: string[] }) {
+  const D = useData();
   const news = clubs
-    .flatMap((id) => freshNews(club(id)))
+    .flatMap((id) => freshNews(club(D, id)))
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 4);
   if (!news.length) return null;
@@ -285,7 +291,7 @@ function useListTitle(member: boolean, found: "explore_near" | "home_soon" | nul
 
 function HomeScreen({ route }: ScreenProps) {
   const D = useData();
-  const mine = myClubs();
+  const mine = myClubs(D);
   const member = mine.length > 0;
   const api = useFilters(route.query, "home", (f) => (member ? f : { ...f, center: here.get() }));
   const [obRun, startWelcome] = useWelcome(route.query);
@@ -293,7 +299,7 @@ function HomeScreen({ route }: ScreenProps) {
   const mineEv = member ? mineEvents(D.data.events, mine) : [];
   const main = D.settings.home || mine[0] || "";
   const cols = member ? [main, ...mine.filter((id) => id !== main)] : [];
-  useWash(...cols.slice(0, 3).map((id) => club(id).color), member && BRAND.cranberry, member && BRAND.azure);
+  useWash(...cols.slice(0, 3).map((id) => club(D, id).color), member && BRAND.cranberry, member && BRAND.azure);
 
   const f = api.shown;
   const skip = member ? mineEv[0]?.id : undefined;
@@ -304,7 +310,7 @@ function HomeScreen({ route }: ScreenProps) {
         saved: D.saved,
         skip,
         scope: scopeClubs("home", mine),
-        club,
+        club: (id) => club(D, id),
       })
     : null;
   const title = useListTitle(member, res?.title);

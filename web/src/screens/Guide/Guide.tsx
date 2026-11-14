@@ -100,7 +100,7 @@ export default function Guide(_props: ScreenProps) {
       <div className="facts">
         {nm.facts.map(([v, l], i) => (
           <div key={i} className="glass" style={vars({ "--p": BRAND3[i]! })}>
-            <b>{v.replace("{n}", String(nClubs()))}</b>
+            <b>{v.replace("{n}", String(nClubs(D)))}</b>
             <span>{l}</span>
           </div>
         ))}

@@ -132,7 +132,7 @@ describe("Home, member", () => {
     expect(within(card("eu2069")).queryByText("NEW")).toBeNull();
     expect(JSON.parse(localStorage.getItem("rac.seen")!).at).toBe(Date.now());
     // the tags are Home's: a card anywhere else (Discover, a club) gets none
-    const other = render(<EventCard e={eventById("222796")!} />).container;
+    const other = render(<EventCard e={eventById(getData(), "222796")!} />).container;
     expect(within(other).queryByText("NEW")).toBeNull();
   });
 
@@ -162,7 +162,7 @@ describe("Home follows the shared state", () => {
   it("a star on a card mounted elsewhere updates Home's saved pane and the card's own star", async () => {
     await show();
     expect(savedPane().queryAllByRole("link")).toEqual([]);
-    const elsewhere = render(<EventCard e={eventById("eu2069")!} />).container;
+    const elsewhere = render(<EventCard e={eventById(getData(), "eu2069")!} />).container;
     fireEvent.click(within(elsewhere).getByRole("button", { name: "Save event: Pre-REM Satu Mare" }));
     expect(savedPane().getAllByRole("link").map(href)).toEqual(["#/event/eu2069"]);
     expect(star("Pre-REM Satu Mare").getAttribute("aria-pressed")).toBe("true");

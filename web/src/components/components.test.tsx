@@ -301,8 +301,10 @@ describe("blocks", () => {
       "": ["schweiz"],
     };
     const clubs = [
-      ...Object.entries(ids).flatMap(([district, l]) => l.map((id) => ({ ...club("luzern"), id, district }))),
-      { ...club("luzern"), id: "international", source: "international" },
+      ...Object.entries(ids).flatMap(([district, l]) =>
+        l.map((id) => ({ ...club(getData(), "luzern"), id, district })),
+      ),
+      { ...club(getData(), "luzern"), id: "international", source: "international" },
     ];
     const events = ["luzern", "luzern", "stgallen", "stgallen", "stgallen", "fribourg", "international", "schweiz"]
       .map((c, i) => ev({ id: "s" + i, clubs: [c] }))

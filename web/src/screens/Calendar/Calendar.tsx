@@ -46,7 +46,7 @@ function fit(grid: HTMLElement) {
 const absolute = (u: string) => (u ? new URL(u, document.baseURI).href : "");
 
 function Chip({ e }: { e: Event }) {
-  const c = club(e.clubs[0] ?? "");
+  const c = club(useData(), e.clubs[0] ?? "");
   return (
     <span className="ch" style={clubVars(c.color, { "--crest": `url("${absolute(c.logo)}")` })} title={e.title}>
       <i>{e.title}</i>
@@ -101,8 +101,9 @@ function Grid({
   const ref = useRef<HTMLDivElement>(null);
   const now = new Date();
   const g = monthGrid(month);
-  const days = byDay(calendarEvents(useData().data.events, scope, myClubs()), g);
-  // after every render (new month, scope, pressed day) and on resize; body already has its calpage class (the full-height column the
+  const D = useData();
+  const days = byDay(calendarEvents(D.data.events, scope, myClubs(D)), g);
+  // after every render (new month, scope, pressed day) and when the grid's size changes; body already has its calpage class (the full-height column the
   // cells are measured in): App sets it in an earlier sibling's layout effect
   useLayoutEffect(() => {
     if (ref.current) fit(ref.current);
@@ -202,7 +203,7 @@ export default function Calendar(_props: ScreenProps) {
   const [day, setDay] = useState<Date | null>(null);
   const [content, setContent] = useState<SheetContent | null>(null);
   // without clubs of my own there is nothing to narrow down to: everything, and no switch
-  const noClubs = !myClubs().length;
+  const noClubs = !myClubs(D).length;
   const scope: Scope = noClubs ? "all" : picked;
 
   const openDay = (d: Date, evs: Event[]) => {
@@ -225,7 +226,7 @@ export default function Calendar(_props: ScreenProps) {
   const goToday = () => {
     const n = new Date();
     setMonth(firstOfMonth(n));
-    const evs = calendarEvents(D.data.events, scope, myClubs()).filter((e) => sameDay(new Date(e.start), n));
+    const evs = calendarEvents(D.data.events, scope, myClubs(D)).filter((e) => sameDay(new Date(e.start), n));
     if (evs.length) openDay(startOfDay(n), evs);
   };
 

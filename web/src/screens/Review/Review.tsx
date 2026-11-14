@@ -22,7 +22,7 @@ const EventLink = ({ e }: { e: Event }) => (
 
 export default function Review({ route }: ScreenProps) {
   const D = useData();
-  const mine = myClubs();
+  const mine = myClubs(D);
   const row = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0);
   const q = Number(route.query.get("y"));
@@ -30,7 +30,7 @@ export default function Review({ route }: ScreenProps) {
   const r = review(y, D.data.events, D.data.clubs, mine, D.saved);
   const label = racYearLabel(y);
   const title = t(mine.length ? "rv_title" : "rv_title_all", { y: label });
-  const colors = mine.length ? mine.map((id) => club(id).color) : [...BRAND3];
+  const colors = mine.length ? mine.map((id) => club(D, id).color) : [...BRAND3];
   useTitle(title);
   useWash(...colors);
   const top = r.hosts[0]?.[1] ?? 1;

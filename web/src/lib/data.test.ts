@@ -73,7 +73,7 @@ describe("loadData", () => {
     expect(m.loaded).toBe(true);
     expect(m.getData().settings).toEqual({ home: "bern", also: ["luzern"] });
     expect(m.getData().saved.has("202811")).toBe(true);
-    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    expect(m.myClubs(m.getData())).toEqual(["bern", "luzern"]);
     expect(m.getData().clubs.rotary1980).toBeUndefined();
   });
   it("Rotary layer on: districts are clubs, their events are in the lists", async () => {
@@ -90,8 +90,8 @@ describe("loadData", () => {
     await m.loadData();
     const id = fixture.rotary!.events[0]!.id;
     expect(m.getData().data.events.some((e) => e.id === id)).toBe(false);
-    expect(m.eventById(id)?.layer).toBe("rotary");
-    expect(m.eventById("nope")).toBeUndefined();
+    expect(m.eventById(m.getData(), id)?.layer).toBe("rotary");
+    expect(m.eventById(m.getData(), "nope")).toBeUndefined();
   });
   it("a failed fetch rejects and stays failed for that navigation; the next navigation tries again", async () => {
     const f = json({}, false);
@@ -112,7 +112,7 @@ describe("loadData", () => {
     vi.stubGlobal("fetch", json(fixture));
     const m = await fresh();
     await m.loadData();
-    expect(m.myClubs()).toEqual([]);
+    expect(m.myClubs(m.getData())).toEqual([]);
     m.setSettings({ home: "luzern", also: [] }); // not saved during the preview
     expect(JSON.parse(localStorage.getItem("rac.settings")!).home).toBe("bern");
   });
@@ -131,7 +131,7 @@ describe("actions", () => {
     expect(before.saved.has("a")).toBe(false);
     m.setSettings({ home: "bern", also: ["luzern"] });
     expect(before.settings).toEqual({ home: "", also: [] });
-    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    expect(m.myClubs(m.getData())).toEqual(["bern", "luzern"]);
     expect(JSON.parse(localStorage.getItem("rac.settings")!)).toEqual({ home: "bern", also: ["luzern"] });
     expect(calls).toHaveBeenCalledTimes(2);
     off();
@@ -143,16 +143,16 @@ describe("actions", () => {
     vi.stubGlobal("fetch", json(fixture));
     const m = await fresh();
     await m.loadData();
-    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    expect(m.myClubs(m.getData())).toEqual(["bern", "luzern"]);
     m.setRotary(true);
     expect(localStorage.getItem("rac.rotary")).toBe("true");
     expect(m.getData().clubs.rotary1980?.source).toBe("rotary");
     expect(m.getData().data.events.some((e) => e.layer === "rotary")).toBe(true);
-    expect(m.myClubs()).toEqual(["bern", "rotary1980", "luzern"]);
+    expect(m.myClubs(m.getData())).toEqual(["bern", "rotary1980", "luzern"]);
     m.setRotary(false);
     expect(m.getData().clubs.rotary1980).toBeUndefined();
     expect(m.getData().data.events.some((e) => e.layer === "rotary")).toBe(false);
-    expect(m.myClubs()).toEqual(["bern", "luzern"]);
+    expect(m.myClubs(m.getData())).toEqual(["bern", "luzern"]);
     expect(JSON.parse(localStorage.getItem("rac.settings")!).also).toEqual(["rotary1980", "luzern"]);
   });
   it("setRotary before events.json is in only stores the switch; the load then uses it", async () => {
@@ -170,16 +170,22 @@ describe("helpers", () => {
     vi.stubGlobal("fetch", json(fixture));
     const m = await fresh();
     await m.loadData();
-    expect(m.club("nope")).toMatchObject({ id: "nope", name: "nope", short: "nope", color: "#d41367", logo: "" });
-    expect(m.isRac(m.club("bern"))).toBe(true);
-    expect(m.isRac(m.club("international"))).toBe(false);
-    expect(m.nClubs()).toBe(fixture.clubs.filter((c) => c.district && !c.source).length);
+    expect(m.club(m.getData(), "nope")).toMatchObject({
+      id: "nope",
+      name: "nope",
+      short: "nope",
+      color: "#d41367",
+      logo: "",
+    });
+    expect(m.isRac(m.club(m.getData(), "bern"))).toBe(true);
+    expect(m.isRac(m.club(m.getData(), "international"))).toBe(false);
+    expect(m.nClubs(m.getData())).toBe(fixture.clubs.filter((c) => c.district && !c.source).length);
     expect(m.toggleSaved("x")).toBe(true);
     expect(JSON.parse(localStorage.getItem("rac.saved")!)).toEqual(["x"]);
     expect(m.toggleSaved("x")).toBe(false);
     const now = new Date("2026-11-11").getTime();
     const c = {
-      ...m.club("bern"),
+      ...m.club(m.getData(), "bern"),
       news: [
         { url: "a", title: "", image: "", date: "2026-01-01" },
         { url: "b", title: "", image: "", date: "2025-01-01" },

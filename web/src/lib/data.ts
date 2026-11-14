@@ -139,15 +139,18 @@ export function setRotary(on: boolean): void {
   if (raw) initData(raw);
 }
 
+// What follows reads a snapshot (the D of useData(), or getData() outside a render): a component that shows any of it calls
+// useData(), so it re-renders when the state changes.
+
 /** an event by id. A Rotary event with the layer off still opens from a shared link (#/event/<id>), without its district:
  *  it is looked up here and never added to the lists. */
-export const eventById = (id: string): Event | undefined =>
-  state.data.events.find((e) => e.id === id) ?? state.rotary.events.find((e) => e.id === id);
+export const eventById = (D: AppData, id: string): Event | undefined =>
+  D.data.events.find((e) => e.id === id) ?? D.rotary.events.find((e) => e.id === id);
 /** the main club first, then the others; only clubs that exist */
-export const myClubs = (): string[] => [state.settings.home, ...state.settings.also].filter((id) => state.clubs[id]);
+export const myClubs = (D: AppData): string[] => [D.settings.home, ...D.settings.also].filter((id) => D.clubs[id]);
 /** a club by id, or a stand-in with the id as its name */
-export const club = (id: string): Club =>
-  state.clubs[id] ?? {
+export const club = (D: AppData, id: string): Club =>
+  D.clubs[id] ?? {
     id,
     name: id,
     short: id,
@@ -167,7 +170,7 @@ export const club = (id: string): Club =>
   };
 /** a real Rotaract club: in a district, and not a pseudo-club ("source": international, or a Rotary district, which has a district too) */
 export const isRac = (c: Club): boolean => !!c.district && !c.source;
-export const nClubs = (): number => state.data.clubs.filter(isRac).length;
+export const nClubs = (D: AppData): number => D.data.clubs.filter(isRac).length;
 /** news teasers older than a year are not news */
 export const freshNews = (c: Club, now = Date.now()) =>
   (c.news || []).filter((n) => !n.date || now - new Date(n.date).getTime() < 365 * 864e5);

@@ -64,7 +64,7 @@ function Hero({ src }: { src: string }) {
 
 function Head({ e }: { e: Ev }) {
   const D = useData();
-  const lead = club(e.clubs[0] ?? "");
+  const lead = club(D, e.clubs[0] ?? "");
   const label = goLabel(e);
   return (
     <MorphHead className="head">
@@ -156,11 +156,11 @@ function Detail({ e }: { e: Ev }) {
 }
 
 export default function Event({ route }: ScreenProps) {
-  useData();
+  const D = useData();
   // eventById: a shared link to a Rotary event opens even with the Rotary layer off
-  const e = eventById(route.params.id ?? "");
-  const lead = e ? club(e.clubs[0] ?? "") : null;
-  useWash(lead?.color, e && lead ? club(e.clubs[1] || lead.id).color : null, lead?.color);
+  const e = eventById(D, route.params.id ?? "");
+  const lead = e ? club(D, e.clubs[0] ?? "") : null;
+  useWash(lead?.color, e && lead ? club(D, e.clubs[1] || lead.id).color : null, lead?.color);
   useTitle(e?.title);
   if (!e || !lead) {
     return (

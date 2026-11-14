@@ -3,7 +3,7 @@
 // A member: welcome, clubs, good to know, calendar. A guest: welcome, three slides, clubs near.
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { t, tx } from "../../i18n";
-import { club, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../../lib/data";
+import { club, getData, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../../lib/data";
 import { BRAND, cx, vars } from "../../lib/color";
 import { guessClubs } from "../../lib/geo";
 import { appUrl, chromeUrl, install, isInstalled } from "../../lib/install";
@@ -327,8 +327,9 @@ export function Onboarding({ run }: { run: number }) {
     setSettings(s);
     store.set("rac.onboarded", true);
     setOb((o) => o && { ...o, done: true });
-    const mine = myClubs();
-    if (mine.length) toast(t("ob_showing", { clubs: mine.map((id) => club(id).short).join(", ") }));
+    const now = getData(); // the state setSettings() just set
+    const mine = myClubs(now);
+    if (mine.length) toast(t("ob_showing", { clubs: mine.map((id) => club(now, id).short).join(", ") }));
   };
   const set = (o: Partial<Ob>) => setOb((cur) => cur && { ...cur, ...o });
   return (

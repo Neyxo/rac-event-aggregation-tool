@@ -697,12 +697,13 @@ const missingTexts = (): string[] => (["de", "fr", "it"] as const).flatMap(missi
 
 /** what a club could fix on Polaris, and texts that are missing in a language */
 function Checks({ own, up }: { own: Event[]; up: Event[] }) {
-  const { data } = useData();
+  const D = useData();
+  const { data } = D;
   const ev = (e: Event) => (
     <a
       key={e.id}
       href={href("event", e.id)}
-    >{`${fmt.dms.format(new Date(e.start))} · ${club(e.clubs[0] ?? "").short} · ${e.title}`}</a>
+    >{`${fmt.dms.format(new Date(e.start))} · ${club(D, e.clubs[0] ?? "").short} · ${e.title}`}</a>
   );
   const lastOf = (c: Club) => own.filter((e) => e.clubs.includes(c.id)).at(-1);
   const quiet = data.clubs.filter((c) => !c.source).filter((c) => !up.some((e) => e.clubs.includes(c.id)));

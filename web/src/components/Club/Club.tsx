@@ -13,7 +13,7 @@ export function ClubMark({ c }: { c: Club }) {
 }
 /** a club as a plain value (a Settings row), not a link */
 export function ClubLabel({ id }: { id: string }) {
-  const c = club(id);
+  const c = club(useData(), id);
   return (
     <span className="cl" style={clubVars(c.color)}>
       <ClubMark c={c} />
@@ -28,7 +28,7 @@ export const clubLabel = (c: Club): string =>
 /** the club chip: crest and name, always opens the club; the same on cards, the event screen, Home and in "we work with".
  *  extra: more classes ("main" on Home); children go after the name (<small>12 km</small>). */
 export function ClubChip({ id, extra = "", children }: { id: string; extra?: string; children?: ReactNode }) {
-  const c = club(id);
+  const c = club(useData(), id);
   return (
     <a
       className={cx("chip club", extra)}

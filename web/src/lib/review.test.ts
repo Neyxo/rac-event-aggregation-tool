@@ -1,7 +1,7 @@
 // review(): the numbers of one Rotaract year (1 July to 30 June)
 import { describe, expect, it } from "vitest";
 import { review } from "./review";
-import { club } from "./data";
+import { club, getData } from "./data";
 import { racYear, racYearLabel } from "./dates";
 import { ev } from "../test/ev";
 
@@ -18,7 +18,7 @@ const events = [
 ];
 const clubs = [
   {
-    ...club("luzern"),
+    ...club(getData(), "luzern"),
     news: [
       { url: "", title: "", image: "", date: "2026-06-30" },
       { url: "", title: "", image: "", date: "2026-07-01" },
@@ -26,7 +26,7 @@ const clubs = [
     ],
   },
   {
-    ...club("bern"),
+    ...club(getData(), "bern"),
     projects: [
       { url: "", title: "", image: "", date: "2027-06-30" },
       { url: "", title: "", image: "", date: "2027-07-01" },
