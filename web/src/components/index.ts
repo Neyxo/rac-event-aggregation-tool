@@ -41,6 +41,7 @@ export {
   useEventListener,
   useInstallPrompt,
   useModal,
+  useResize,
 } from "../hooks";
 export { MorphHead, GoPlace, Sh } from "./Sticky/Sticky";
 export { useRoute, useNav, navigate, replaceQuery, inPageLink } from "../router";

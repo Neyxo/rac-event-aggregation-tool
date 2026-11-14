@@ -248,9 +248,21 @@ describe("fit", () => {
     if (ch) Object.defineProperty(HTMLElement.prototype, "clientHeight", ch);
   });
 
-  it("gives a day 3, 2, 1 title lines, then hides events from the end with +n; again on resize", () => {
+  it("gives a day 3, 2, 1 title lines, then hides events from the end with +n; again when the grid is resized", () => {
     setSettings({ home: "", also: [] });
     addEvents(...["a", "b", "c"].map((id) => ev({ id, start: "2026-11-19T18:00", end: "2026-11-19T20:00" })));
+    // jsdom has no ResizeObserver: this one reports a new size when told to
+    let resized = () => {};
+    vi.stubGlobal(
+      "ResizeObserver",
+      class {
+        constructor(f: () => void) {
+          resized = f;
+        }
+        observe() {}
+        disconnect() {}
+      },
+    );
     show();
     const cell = day(19);
     const more = cell.querySelector<HTMLElement>(".more")!;
@@ -260,7 +272,7 @@ describe("fit", () => {
     const resize = (px: number) =>
       act(() => {
         H = px;
-        window.dispatchEvent(new Event("resize"));
+        resized();
       });
     resize(100);
     expect(cell.style.getPropertyValue("--l")).toBe("2");

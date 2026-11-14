@@ -1,7 +1,7 @@
 // Home: for a member, a personal overview (greeting, next event, what changed, deadlines, saved) above the
 // upcoming events of their clubs; for a guest, "explore mode" (an invitation, the club finder, events near them). The welcome steps
 // (onboarding dialog) open on the first visit, from ?welcome and from "Get started".
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useLayoutEffect, useState } from "react";
 import { t } from "../../i18n";
 import { club, freshNews, myClubs } from "../../lib/data";
 import { BRAND, clubVars, cx } from "../../lib/color";
@@ -232,7 +232,7 @@ export default function Home({ route }: ScreenProps) {
   const toDiscover = isFilterLink(route.query);
   useLayoutEffect(() => {
     if (toDiscover) navigate(href("discover", null, route.query), { replace: true });
-  }, [toDiscover]);
+  }, [toDiscover, route.query]);
   return toDiscover ? null : <HomeScreen key={id} route={route} />;
 }
 
@@ -240,23 +240,30 @@ export default function Home({ route }: ScreenProps) {
  *  with ?welcome, but not on a shared link. Returns the run counter for <Onboarding> and what starts them again. */
 function useWelcome(query: URLSearchParams): [number, () => void] {
   const [run, setRun] = useState(0);
-  useEffect(() => {
+  // once, when Home opens, with the query it opened with
+  const opened = useEffectEvent(() => {
     const shared = [...query.keys()].some((k) => k !== "lang" && k !== "welcome");
     if (takeWelcome() || (!shared && !store.get("rac.onboarded", false))) setRun(1);
-  }, []);
+  });
+  useEffect(() => opened(), []);
   return [run, () => setRun((n) => n + 1)];
 }
 
-/** What changed in my clubs since the last visit (null for a guest), and the visit is remembered. Computed once per set of clubs:
- *  remembering the visit would change the answer for a redraw. */
+/** What changed in my clubs since the last visit (null for a guest), and the visit is remembered. Computed once per set of clubs
+ *  and kept in state: remembering the visit would change the answer for a redraw. */
 function useChanges(mine: string[]): Changes | null {
   const D = useData();
-  const changes = useMemo(() => {
+  const clubs = mine.join();
+  const compute = () => {
     if (!mine.length) return null;
     const seen = store.get("rac.seen", null);
     const seenPrev = store.get("rac.seenPrev", null);
     return whatChanged(mineEvents(D.data.events, mine), seen, seenPrev, Date.now(), !!devFlag("New"));
-  }, [mine.join()]);
+  };
+  const [at, setAt] = useState(() => ({ clubs, changes: compute() }));
+  // other clubs (the welcome steps just finished): again, while rendering, so no draw shows the old answer
+  if (at.clubs !== clubs) setAt({ clubs, changes: compute() });
+  const changes = at.clubs === clubs ? at.changes : null;
   useEffect(() => {
     if (changes?.seenPrev) store.set("rac.seenPrev", changes.seenPrev);
     if (changes?.seen) store.set("rac.seen", changes.seen);
@@ -284,9 +291,9 @@ function HomeNews({ clubs }: { clubs: string[] }) {
 /** The list's title. A member's is fixed. A guest's is only decided in the "upcoming" view (found); the saved view keeps the
  *  last one, so it doesn't flip to a generic title. */
 function useListTitle(member: boolean, found: "explore_near" | "home_soon" | null | undefined): string {
-  const guestTitle = useRef<"v_all" | "explore_near" | "home_soon">("v_all");
-  if (found) guestTitle.current = found;
-  return member ? t("home_soon") : t(guestTitle.current);
+  const [guestTitle, setGuestTitle] = useState<"v_all" | "explore_near" | "home_soon">("v_all");
+  if (found && found !== guestTitle) setGuestTitle(found);
+  return member ? t("home_soon") : t(found ?? guestTitle);
 }
 
 function HomeScreen({ route }: ScreenProps) {

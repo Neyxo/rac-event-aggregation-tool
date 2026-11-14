@@ -147,14 +147,16 @@ function Page({ meta, nav }: { meta: Meta; nav: ReturnType<typeof useNav> }) {
     b.classList.toggle("frosted", meta.cls === "frosted");
     document.title = meta.title;
   }, [meta]);
+  // per navigation (id): replaceQuery gives a new nav too, and must not scroll
+  const { id, pop, key } = nav;
   useLayoutEffect(() => {
-    const y = scrollTarget(nav);
+    const y = scrollTarget({ pop, key });
     scrollTo(0, y);
     if (y) {
-      const id = requestAnimationFrame(() => scrollTo(0, y));
-      return () => cancelAnimationFrame(id);
+      const raf = requestAnimationFrame(() => scrollTo(0, y));
+      return () => cancelAnimationFrame(raf);
     }
-  }, [nav.id]);
+  }, [id, pop, key]);
   return null;
 }
 

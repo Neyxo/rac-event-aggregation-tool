@@ -1,7 +1,7 @@
 // The welcome steps: the onboarding dialog Home opens on the first visit, from ?welcome and from "Get started".
 // In the browser it first offers the app (step -1); installed, it stops there: the welcome goes on in the app.
 // A member: welcome, clubs, good to know, calendar. A guest: welcome, three slides, clubs near.
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { useRef, useState, type ReactNode, type RefObject } from "react";
 import { t, tx } from "../../i18n";
 import { club, getData, isRac, myClubs, setSettings, withAlsoToggled, withHome } from "../../lib/data";
 import { BRAND, cx, vars } from "../../lib/color";
@@ -312,15 +312,17 @@ export function Onboarding({ run }: { run: number }) {
   const dlg = useRef<HTMLDialogElement>(null);
   const h2 = useRef<HTMLHeadingElement>(null);
   const [ob, setOb] = useState<Ob | null>(null);
-  useEffect(() => {
-    if (run)
-      setOb({
-        s: { home: D.settings.home, also: [...D.settings.also] },
-        member: null,
-        step: isInstalled() ? 0 : -1,
-        guess: [],
-      });
-  }, [run]);
+  // a new run starts the steps over from the settings as they are: set while rendering, no draw in between shows the old steps
+  const [ran, setRan] = useState(0);
+  if (run !== ran) {
+    setRan(run);
+    setOb({
+      s: { home: D.settings.home, also: [...D.settings.also] },
+      member: null,
+      step: isInstalled() ? 0 : -1,
+      guess: [],
+    });
+  }
   // every step (and every chip tap) puts the focus on the title, so a screen reader reads where it is; finished, it closes
   useModal(dlg, !!ob && !ob.done, { focus: h2, refocus: ob });
   const finish = (s: Settings) => {

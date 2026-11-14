@@ -1,7 +1,7 @@
 // Adding a calendar: one flow, the same wherever it starts (the welcome steps, Home, a club's page, the calendar help screen).
 // Which calendar, where (Apple, Google, Outlook, a file), then one step per page: where you are now (this browser, a computer, the
 // phone's calendar app), a drawing of what to tap there, one sentence.
-import { useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
+import { useState, type ReactNode } from "react";
 import { t, tx } from "../../i18n";
 import { IOS, PHONE } from "../../lib/geo";
 import { clubVars } from "../../lib/color";
@@ -495,29 +495,32 @@ interface FlowPage {
   finished: boolean;
 }
 
+interface FlowAt {
+  feed: Feed | null;
+  /** the list of every other club, behind "Another club" */
+  others: boolean;
+  way: Way | null;
+  via: "phone" | "pc" | null;
+  /** the step of the chosen way */
+  i: number;
+  finished: boolean;
+}
+const FLOW_START: FlowAt = { feed: null, others: false, way: null, via: null, i: 0, finished: false };
+
 /** The flow's state, for whatever frames it (a popup, the welcome steps): the title, the content, where Back goes (if anywhere),
  *  the main button (Next / Done; none while a tap on a row moves on), and whether it has reached its end.
  *  start: the calendar it is about, which skips the choice. */
 export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; pickTitle?: string } = {}): FlowPage {
   const S = tx("sf");
   const D = useData();
-  const [feed, setFeed] = useState<Feed | null>(start ?? null);
-  /** the list of every other club, behind "Another club" */
-  const [others, setOthers] = useState(false);
-  const [way, setWay] = useState<Way | null>(null);
-  const [via, setVia] = useState<"phone" | "pc" | null>(null);
+  // where the flow is: one value, so "another calendar" starts it over in one step. The phone's system and the calendars added
+  // so far outlive that.
+  const [at, setAt] = useState<FlowAt>({ ...FLOW_START, feed: start ?? null });
+  const go = (p: Partial<FlowAt>) => setAt((a) => ({ ...a, ...p }));
+  const { feed, others, way, via, i, finished } = at;
   const [os, setOs] = useState<Os>(IOS ? "ios" : "android");
-  const [i, setI] = useState(0);
   const [added, setAdded] = useState<string[]>([]);
-  const [finished, setFinished] = useState(false);
-  const again = () => {
-    setFeed(null);
-    setOthers(false);
-    setWay(null);
-    setVia(null);
-    setI(0);
-    setFinished(false);
-  };
+  const again = () => setAt(FLOW_START);
   const feedRow = (f: Feed) =>
     row(
       f.file,
@@ -530,7 +533,7 @@ export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; 
       ),
       f.name,
       null,
-      () => setFeed(f),
+      () => go({ feed: f }),
       added.includes(f.file),
     );
 
@@ -555,7 +558,7 @@ export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; 
       title: S.other,
       finished,
       primary: null,
-      back: () => setOthers(false),
+      back: () => go({ others: false }),
       body: <div className="ways">{otherFeeds(D, feeds).map(feedRow)}</div>,
     };
   if (!feed)
@@ -567,7 +570,7 @@ export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; 
       body: (
         <div className="ways">
           {[...feeds, ...otherFeeds(D, feeds).filter((f) => added.includes(f.file))].map(feedRow)}
-          {more("discover", S.other, () => setOthers(true))}
+          {more("discover", S.other, () => go({ others: true }))}
         </div>
       ),
     };
@@ -576,15 +579,15 @@ export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; 
       title: t("way_pick"),
       finished,
       primary: null,
-      back: start && !added.length ? undefined : () => setFeed(null),
+      back: start && !added.length ? undefined : () => go({ feed: null }),
       body: (
         <div>
           <p className="sfn">{feed.name}</p>
           <div className="ways">
             {(["apple", "google", "outlook"] as const).map((w) =>
-              row(w, <WayIcon way={w} />, t(`way_${w}`), t(`way_${w}_s`), () => setWay(w)),
+              row(w, <WayIcon way={w} />, t(`way_${w}`), t(`way_${w}_s`), () => go({ way: w })),
             )}
-            {more("calendar", t("way_ics"), () => setWay("ics"))}
+            {more("calendar", t("way_ics"), () => go({ way: "ics" }))}
           </div>
         </div>
       ),
@@ -594,11 +597,11 @@ export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; 
       title: S.how,
       finished,
       primary: null,
-      back: () => setWay(null),
+      back: () => go({ way: null }),
       body: (
         <div className="ways">
-          {row("phone", <Icon name="phone" />, S.on_phone, S.on_phone_s, () => setVia("phone"))}
-          {row("pc", <Icon name="laptop" />, S.on_pc, S.on_pc_s, () => setVia("pc"))}
+          {row("phone", <Icon name="phone" />, S.on_phone, S.on_phone_s, () => go({ via: "phone" }))}
+          {row("pc", <Icon name="laptop" />, S.on_pc, S.on_pc_s, () => go({ via: "pc" }))}
         </div>
       ),
     };
@@ -609,12 +612,12 @@ export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; 
     setOs,
     feed,
     i,
-    setI,
+    setI: (step) => setAt((a) => ({ ...a, i: step(a.i) })),
     // back from the first step: to the choice that led here
-    leave: () => (via ? setVia(null) : setWay(null)),
+    leave: () => go(via ? { via: null } : { way: null }),
     end: () => {
       setAdded((a) => [...a, feed.file]);
-      setFinished(true);
+      go({ finished: true });
     },
   });
 }
@@ -638,7 +641,7 @@ function stepsPage({
   setOs: (o: Os) => void;
   feed: Feed;
   i: number;
-  setI: Dispatch<SetStateAction<number>>;
+  setI: (step: (i: number) => number) => void;
   leave: () => void;
   end: () => void;
 }): FlowPage {
@@ -650,13 +653,13 @@ function stepsPage({
   return {
     title: t(`way_${way}`),
     finished: false,
-    back: () => (i > 0 ? setI(i - 1) : leave()),
+    back: () => (i > 0 ? setI((n) => n - 1) : leave()),
     // a step with a button of its own: that is the thing to tap, Next stays quiet beside it
     primary: s.dead ? null : (
       <button
         className={s.action && !last ? "btn quiet" : "btn"}
         type="button"
-        onClick={last ? end : () => setI(i + 1)}
+        onClick={last ? end : () => setI((n) => n + 1)}
       >
         {last ? t("done") : t("next")}
       </button>

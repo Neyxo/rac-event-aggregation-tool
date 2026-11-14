@@ -1,6 +1,6 @@
 // The map: every event with coordinates as a club-coloured dot on the swisstopo map, filling the screen between the bars.
 // Leaflet owns div#map; React only renders the option label under it and tells Leaflet what to draw.
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useEffectEvent, useRef, useState, type CSSProperties } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { ScreenProps } from "../../App";
@@ -48,6 +48,7 @@ export default function MapScreen({ route }: ScreenProps) {
   const [bunker, setBunker] = useState(() => route.query.has("bunker"));
   const box = useRef<HTMLDivElement>(null);
   const layer = useRef<L.LayerGroup | null>(null);
+  const startsAtBunker = useEffectEvent(() => bunker);
 
   useEffect(() => {
     // Switzerland & Liechtenstein, no zooming out to space
@@ -93,7 +94,7 @@ export default function MapScreen({ route }: ScreenProps) {
       if (map.getZoom() >= 10) eggs.addTo(map);
       else eggs.remove();
     });
-    if (bunker) map.setView(door.getLatLng(), 11, { animate: false });
+    if (startsAtBunker()) map.setView(door.getLatLng(), 11, { animate: false });
     return () => {
       map.remove();
       layer.current = null;
@@ -112,7 +113,7 @@ export default function MapScreen({ route }: ScreenProps) {
       L.marker(e.coords, { title: e.title, icon }).bindPopup(popupLink(D, e)).addTo(group);
     }
     setCount(n);
-  }, [past]);
+  }, [past, D]);
 
   return (
     <main className="mapwrap">

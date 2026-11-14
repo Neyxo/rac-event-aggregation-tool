@@ -119,7 +119,7 @@ function RowLink({
 
 export default function Settings(_props: ScreenProps) {
   const D = useData();
-  const { pop } = useNav();
+  const { pop, id: navId } = useNav();
   const [picker, setPicker] = useState<"home" | "also" | "reset" | null>(null);
   // anything but "dark" is light, as index.html's inline script reads it
   const dark = useStored("rac.theme", "light") === "dark";
@@ -155,7 +155,7 @@ export default function Settings(_props: ScreenProps) {
   useEffect(() => {
     if (!pop && location.hash.endsWith("#install"))
       document.getElementById("install")?.scrollIntoView({ block: "center" });
-  }, []);
+  }, [pop, navId]);
   const shareLink = appUrl();
   // everything forgotten, the app starts as on a first visit
   const reset = () => {

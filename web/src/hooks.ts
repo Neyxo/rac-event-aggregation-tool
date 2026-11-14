@@ -1,5 +1,5 @@
 // Hooks every screen can use: the data, stored values, the colour wash, the morphing hero, the sticky headings.
-import { use, useEffect, useLayoutEffect, useMemo, useRef, useSyncExternalStore, type RefObject } from "react";
+import { use, useEffect, useEffectEvent, useLayoutEffect, useSyncExternalStore, type RefObject } from "react";
 import { getData, loadData, loaded, subscribeData, type AppData } from "./lib/data";
 import { getInstallPrompt, subscribeInstall, type InstallPrompt } from "./lib/install";
 import { store, type StoreKey, type StoreKeys } from "./lib/store";
@@ -22,22 +22,26 @@ export const useSaved = (id: string): boolean => useSyncExternalStore(subscribeD
 
 /** a localStorage value that re-renders when store.set()/remove() changes it */
 export function useStored<K extends StoreKey, T>(k: K, d: T): StoreKeys[K] | T {
-  const raw = useSyncExternalStore(store.subscribe, () => {
+  // subscribed to the stored text (a string compares by value); the value is parsed from it on each render
+  useSyncExternalStore(store.subscribe, () => {
     try {
       return localStorage.getItem(k);
     } catch {
       return null;
     }
   });
-  return useMemo(() => store.get(k, d), [k, raw]);
+  return store.get(k, d);
 }
 
 /** the colour wash behind a screen: body.wash with radial blobs in up to three colours (--c1..--c3); removed when the screen goes */
 export function useWash(...colors: (string | undefined | null | false)[]): void {
-  const list = colors.filter((c): c is string => !!c).slice(0, 3);
-  const key = list.join(" ");
+  const key = colors
+    .filter((c): c is string => !!c)
+    .slice(0, 3)
+    .join("|");
   useLayoutEffect(() => {
-    if (!list.length) return;
+    if (!key) return;
+    const list = key.split("|");
     const b = document.body;
     b.classList.add("wash");
     list.forEach((c, i) => b.style.setProperty("--c" + (i + 1), c));
@@ -192,15 +196,27 @@ export function useEventListener<K extends string>(
   handler: (e: EventOf<K>) => void,
   target?: RefObject<EventTarget | null>,
 ): void {
-  const latest = useRef(handler);
-  latest.current = handler;
+  const latest = useEffectEvent(handler);
   useEffect(() => {
     const el = target ? target.current : window;
     if (!el) return;
-    const h = (e: Event) => latest.current(e as EventOf<K>);
+    const h = (e: Event) => latest(e as EventOf<K>);
     el.addEventListener(type, h);
     return () => el.removeEventListener(type, h);
   }, [type, target]);
+}
+
+/** fn runs when the element's size changes, and once when it is first watched. Calls the latest fn. (Not under jsdom, which has
+ *  no ResizeObserver.) */
+export function useResize(ref: RefObject<Element | null>, fn: () => void): void {
+  const latest = useEffectEvent(fn);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => latest());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
 }
 
 /** document.title for this screen ("<title> · Rotaract Events"); App sets the route's default first, this runs after it */
@@ -237,5 +253,5 @@ export function useModal(
     }
     const id = setTimeout(() => d.close?.(), closeAfter);
     return () => clearTimeout(id);
-  }, [open, refocus]);
+  }, [dlg, open, focus, refocus, closeAfter]);
 }

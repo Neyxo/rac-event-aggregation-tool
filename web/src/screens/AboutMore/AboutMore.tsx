@@ -95,7 +95,7 @@ export default function AboutMore(_props: ScreenProps) {
   useWash(BRAND.azure, BRAND.green, BRAND.cranberry);
   const swiss = useRef<HTMLDivElement>(null);
   const world = useRef<HTMLDivElement>(null);
-  useEffect(() => drawMaps(swiss.current!, world.current!, D.data.clubs), []);
+  useEffect(() => drawMaps(swiss.current!, world.current!, D.data.clubs), [D.data.clubs]);
 
   return (
     <main className="wrap more">

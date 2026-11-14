@@ -1,13 +1,13 @@
 // The navigation chrome, identical on every screen: top bar (back · logo | extra · Dev · Rotaract · info · settings) and bottom tabs
 // (home · discover · calendar). App renders both from the route table, including a screen's own top-bar button (ROUTE_META extra).
-import { useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from "react";
+import { useRef, useSyncExternalStore, type ReactNode } from "react";
 import { t } from "../../i18n";
 import { cx } from "../../lib/color";
 import { anyDevFlag } from "../../lib/dev";
 import { href } from "../../lib/route";
 import { store } from "../../lib/store";
 import { Icon, type IconName } from "../Icon";
-import { useStored } from "../../hooks";
+import { useResize, useStored } from "../../hooks";
 import { canGoBack } from "../../router";
 
 /** what the top bar and tabs mark as current */
@@ -69,11 +69,8 @@ const TABS = [
 export function Tabs({ active }: { active: Active }) {
   const ref = useRef<HTMLElement>(null);
   // the calendar's day sheet ends above the tabs
-  useLayoutEffect(() => {
-    const id = requestAnimationFrame(() => {
-      if (ref.current) document.documentElement.style.setProperty("--tabs", ref.current.offsetHeight + "px");
-    });
-    return () => cancelAnimationFrame(id);
+  useResize(ref, () => {
+    if (ref.current) document.documentElement.style.setProperty("--tabs", ref.current.offsetHeight + "px");
   });
   return (
     <nav className="tabs-bar" id="tabs" aria-label="Main" ref={ref}>

@@ -27,23 +27,20 @@ const ROCKETS = (
     vars: { "--b": b, "--l": l, "--t": t, "--a": j, "--c": j ? c : "#f7a81b" },
   })),
 );
-// forced: asked for by playFestive; played: the day's own one has run; run: counts every start and end, so React re-renders
-let forced: Kind | null = null;
-let played = false;
-let run = 0;
+// forced: asked for by playFestive; played: the day's own one has run; run: counts every start, so a second play starts over
+let state: { forced: Kind | null; played: boolean; run: number } = { forced: null, played: false, run: 0 };
 const changes = emitter();
-const bump = () => {
-  run++;
+const set = (next: typeof state) => {
+  state = next;
   changes.emit();
 };
 export function playFestive(k: Kind): void {
-  forced = k;
-  bump();
+  set({ ...state, forced: k, run: state.run + 1 });
 }
 
 export function Festive({ page, id }: { page: string; id: string | undefined }) {
   const [today] = useState(festive);
-  const n = useSyncExternalStore(changes.subscribe, () => run);
+  const { forced, played, run } = useSyncExternalStore(changes.subscribe, () => state);
   const here = today === "aug1" ? page === "home" : today === "zibele" && page === "club" && id === "bern";
   const kind = forced ?? (here && !played ? today : null);
   if (!kind || matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
@@ -51,15 +48,11 @@ export function Festive({ page, id }: { page: string; id: string | undefined }) 
   return (
     // the last box to finish ends it: animationend bubbles, so one handler on the parent sees them all. key: a second play starts over.
     <div
-      key={n}
+      key={run}
       className={"fest " + kind}
       aria-hidden="true"
       onAnimationEnd={(ev) => {
-        if ((ev.target as HTMLElement).dataset.last) {
-          if (!forced) played = true;
-          forced = null;
-          bump();
-        }
+        if ((ev.target as HTMLElement).dataset.last) set({ forced: null, played: played || !forced, run });
       }}
     >
       {boxes.map((x, i) => (

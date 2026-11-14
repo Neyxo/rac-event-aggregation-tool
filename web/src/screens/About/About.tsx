@@ -1,6 +1,6 @@
 // What is Rotaract?: the scroll morph (Learn, Help, Celebrate open one after the other, or on a tap), then the people line, the call to
 // action, the help links and the questions. The top bar carries a share button while this screen is shown.
-import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { useCallback, useLayoutEffect, useRef, useState, type RefObject } from "react";
 import type { ScreenProps } from "../../App";
 import { t } from "../../i18n";
 import { nClubs } from "../../lib/data";
@@ -59,7 +59,7 @@ const MIDS = [0, 1, 2].map((i) => CLOSED + ((1 - CLOSED) * (i + 0.5)) / 3);
 /** The phase from the scroll position, with a little hysteresis so it never flickers at a boundary. */
 function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
   const [phase, setPhase] = useState<Phase>({ cur: -2, all: false });
-  const measure = () => {
+  const measure = useCallback(() => {
     const tr = track.current;
     if (!tr) return;
     const range = tr.offsetHeight - innerHeight;
@@ -71,14 +71,14 @@ function usePhase(track: RefObject<HTMLDivElement | null>): Phase {
       const next = Math.max(-1, Math.min(2, Math.floor(raw + (raw > ph.cur ? -0.06 : 0.06))));
       return next === ph.cur ? ph : { cur: next, all: false };
     });
-  };
-  useEventListener("scroll", () => measure());
-  useEventListener("resize", () => measure());
+  }, [track]);
+  useEventListener("scroll", measure);
+  useEventListener("resize", measure);
   useLayoutEffect(() => {
     measure();
     // reduced motion: everything open at first (no scroll-driven reveal); the next phase change takes over again
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) setPhase((ph) => ({ ...ph, all: true }));
-  }, []);
+  }, [measure]);
   return phase;
 }
 

@@ -7,7 +7,7 @@ import { byDay, calendarEvents, monthGrid } from "../../lib/calendar";
 import { fmt, sameDay, startOfDay } from "../../lib/dates";
 import { club, myClubs } from "../../lib/data";
 import { clubVars, cx, vars } from "../../lib/color";
-import { EventCard, Icon, useData, useEventListener, useModal } from "../../components";
+import { EventCard, Icon, useData, useModal, useResize } from "../../components";
 
 type Scope = "mine" | "all";
 /** what the sheet shows; kept after closing so the content stays while it slides away */
@@ -108,7 +108,7 @@ function Grid({
   useLayoutEffect(() => {
     if (ref.current) fit(ref.current);
   });
-  useEventListener("resize", () => {
+  useResize(ref, () => {
     if (ref.current) fit(ref.current);
   });
   return (
