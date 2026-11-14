@@ -1,0 +1,11 @@
+/* family page: one frosted tile per part of Rotary (icon, name, half a sentence), then the clubs by district */
+.fam h1 { font-size: 1.4rem; margin: 18px 0 2px; } .fam .lead { color: var(--muted); margin: 0 0 14px; } .fam h2 { font-size: 1.1rem; }
+.fam #know { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .fam #know b { min-width: 0; overflow-wrap: anywhere; }  /* a long word wraps instead of widening the page */
+.tiles2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.ft { border-radius: 16px; padding: 14px; }
+.ft .ic, a.more .ic, .step .ic, .bh .ic { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--p) 16%, var(--surface)); color: var(--p); margin-bottom: 8px; }
+.ft .ic svg, a.more .ic svg, .step .ic svg, .bh .ic svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ft .logo { display: block; height: 44px; max-width: 100%; object-fit: contain; object-position: left center; background: #fff; border-radius: 10px; padding: 6px 8px; margin-bottom: 8px; }
+.ft b { display: block; font-size: .98rem; } .ft span { font-size: .84rem; color: var(--muted); }
+a.tile { text-decoration: none; }
+@media (max-width: 600px) { .vis { height: 260px; } .vis.map { height: 380px; } }

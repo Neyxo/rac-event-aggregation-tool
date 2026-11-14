@@ -12,7 +12,7 @@ One page app in React 19 and TypeScript, built with Vite. `npm run build` writes
 | `src/components/` | Cards, chips, popup, toast, the router and shared hooks. |
 | `src/lib/` | Logic with tests: dates, filters, calendar, changes since the last visit, geo, share links, routes, the device store. |
 | `src/i18n/` | The texts, one file per language. |
-| `src/app.css` | All styles (see [design rules](design.md)). |
+| `src/app.css` | The list of all stylesheets, in cascade order. Each one sits next to what it styles (`components/Chrome.css`, `screens/Home.css` …); shared looks are in `src/styles/` (see [design rules](design.md)). |
 | `static/` | Copied as is: icons, crests, pictures, the manifest, `sw.js`. |
 | `e2e/` | The browser tests (Playwright, `npm run e2e`). |
 

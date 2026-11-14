@@ -18,7 +18,7 @@ if (import.meta.env.MODE !== "test") console.log(String.raw`%c
    <.   /   \   .>
      '-.v.v.v.-'
 %cRotaract Events: hello, curious one! The code is open, come and look:
-https://github.com/Neyxo/rotaract-events`, "color:#d41367;font-weight:bold", "");
+${__REPO__}`, "color:#d41367;font-weight:bold", "");
 
 // network first with a cache fallback, events.json from the cache for 30 minutes (static/sw.js); not in the dev server
 if (import.meta.env.PROD && "serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});

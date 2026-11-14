@@ -11,7 +11,9 @@ import fr from "./web/src/i18n/fr.ts";
 import it from "./web/src/i18n/it.ts";
 import { SHARE_PAGES, type SharePage } from "./web/src/lib/share.ts";
 
-const SITE = "https://neyxo.github.io/rotaract-events/";
+// where the site is published and where its code lives: package.json is the one place for both (polaris_feed.py reads it too)
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as { homepage: string; repository: string };
+const SITE = pkg.homepage;
 const PUBLIC = fileURLToPath(new URL("./public/", import.meta.url));
 const FIXTURE = fileURLToPath(new URL("./web/e2e/fixture/", import.meta.url));
 
@@ -92,9 +94,9 @@ export default defineConfig({
   root: "web",
   publicDir: "static",
   base: "./",
-  plugins: [react(), devData(), shareStubs()],
+  plugins: [react(), devData(), shareStubs(), { name: "rac-site-url", transformIndexHtml: html => html.replaceAll("%SITE%", SITE) }],
   // when and from which commit the app itself was built (the developer screen): the events in events.json can be older, a push of the app alone reuses them
-  define: { __APP_BUILT__: JSON.stringify(new Date().toISOString()), __APP_COMMIT__: JSON.stringify((process.env.GITHUB_SHA ?? "").slice(0, 7)) },
+  define: { __APP_BUILT__: JSON.stringify(new Date().toISOString()), __APP_COMMIT__: JSON.stringify((process.env.GITHUB_SHA ?? "").slice(0, 7)), __REPO__: JSON.stringify(pkg.repository) },
   // no CSS minifier: lightningcss drops "backdrop-filter" when "-webkit-backdrop-filter" follows it (the frost would vanish outside Safari)
   build: { outDir: "../dist", emptyOutDir: true, cssMinify: false },
   test: {

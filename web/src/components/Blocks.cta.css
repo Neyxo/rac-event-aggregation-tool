@@ -1,0 +1,13 @@
+/* call to action: your club / find your club */
+.cta { border-radius: 16px; background: linear-gradient(135deg, color-mix(in srgb, var(--c, #d41367) 14%, var(--surface)), var(--surface)); border: 1px solid color-mix(in srgb, var(--c, #d41367) 30%, var(--surface)); padding: 12px 14px; margin-top: 16px; }
+.cta.new { --c: #d41367; --on-c: #fff; }
+.cta .k { font-size: .68rem; text-transform: uppercase; letter-spacing: .14em; color: color-mix(in srgb, var(--c) 70%, #000); font-weight: 800; }
+:root[data-theme=dark] .cta .k { color: color-mix(in srgb, var(--c) 60%, #fff); }
+.cta .rc { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center; margin-top: 6px; }
+.cta .rc img { width: 40px; height: 40px; object-fit: contain; } .cta .rc .dot { width: 14px; height: 14px; border-radius: 99px; background: var(--c); }
+.cta .rc b { display: block; font-size: .98rem; } .cta .rc span { font-size: .78rem; color: var(--muted); }
+.cta .go { display: inline-flex; align-items: center; min-height: var(--h-btn); background: var(--c); color: var(--on-c); border: 0; border-radius: 99px; padding: 0 16px; font-size: .88rem; font-weight: 600; white-space: nowrap; text-decoration: none; transition: transform .12s; }
+.cta .find { display: flex; gap: 6px; margin-top: 8px; }
+.cta .in { flex: 1; min-width: 0; height: var(--h-btn); border: 1px solid var(--line); border-radius: 99px; padding: 0 14px; font: inherit; font-size: .9rem; background: var(--surface); color: var(--text); }
+.cta .hint { margin-top: 4px; }
+.cta .near { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }

@@ -27,7 +27,8 @@ import urllib.request
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-USER_AGENT = "rotaract-events (+https://github.com/Neyxo/rotaract-events)"
+PACKAGE = json.loads(Path(__file__).with_name("package.json").read_text())  # the one place for the site's and the repository's address
+USER_AGENT = f"rotaract-events (+{PACKAGE['repository']})"
 MAX_PAGES = 20
 DEFAULT_DURATION = dt.timedelta(hours=2)
 TZ = ZoneInfo("Europe/Zurich")
@@ -39,7 +40,7 @@ PUBLISH_PAST = dt.timedelta(days=730)  # feeds and site go back this far; data/ 
 CANCELLED = {"de": "Abgesagt", "fr": "Annulé", "it": "Annullato"}
 MEMBERS_ONLY = "X-MEMBERS-ONLY:TRUE"  # marks a VEVENT built from the agenda list because the event itself needs a login
 MEMBERS = {"de": "nur für Mitglieder", "fr": "réservé aux membres", "it": "solo per soci", "en": "members only"}
-SITE_URL = "https://neyxo.github.io/rotaract-events/"  # share pages need absolute og:image / og:url
+SITE_URL = PACKAGE["homepage"]  # share pages need absolute og:image / og:url
 DEFAULT_IMAGE = SITE_URL + "screenshot-wide.png"
 # Run-wide brake: refuse the whole run when it would cancel more than this many of all upcoming events (see global_brake)
 GLOBAL_CANCEL_MIN, GLOBAL_CANCEL_RATIO = 5, 0.3

@@ -26,7 +26,7 @@ interface Device {
 }
 type PreviewKey = Extract<StoreKey, "rac.devGuest" | "rac.devNew" | "rac.devStale">;
 
-const REPO = "https://github.com/Neyxo/rotaract-events";
+const REPO = __REPO__;
 const ALL_RUNS = `${REPO}/actions/workflows/feeds.yml`;
 // a reload, not a re-render: the switches are read once at start (pretend date, guest settings in loadData)
 const reload = () => location.reload();

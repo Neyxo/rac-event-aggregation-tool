@@ -1,0 +1,21 @@
+/* the hero (event head, club hero) sticks under the top bar and compacts as you scroll; useMorphHead() sets --m from 0 to 1 (position: sticky sits in the two hero rules, so their own position wins) */
+.sent { display: block; height: 0; }
+.morph { z-index: 5; transition: --m .3s ease; }
+@property --m { syntax: "<number>"; inherits: true; initial-value: 0; }  /* registered so the transition can interpolate it */
+/* the primary button of a morphing head: a labelled pill at rest (left, below the text, at --bt), the icon alone at the right once stuck;
+   the two heads set left (their own padding) and the colours */
+.morph .go { position: absolute; top: calc(var(--bt, 120px) * (1 - var(--m)) + 15px * var(--m)); height: calc(var(--h-btn) - 6px * var(--m)); padding: 0 calc(16px - 7px * var(--m)); display: inline-flex; align-items: center; gap: calc(6px * (1 - var(--m))); border-radius: 99px; font-size: .88rem; font-weight: 600; text-decoration: none; white-space: nowrap; z-index: 1; }
+.morph .go span { max-width: calc(200px * (1 - var(--m))); overflow: hidden; opacity: calc(1 - var(--m) * 1.5); }
+.morph .go svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+/* month and section headings stick under what is above them: the top bar (its 3 + 60 + 1 px and the notch), or the compact hero while
+   useMorphHead() sets --stick. Registered as a length so stickyHeads() reads it in px, env() resolved. */
+@property --stick { syntax: "<length>"; inherits: true; initial-value: 64px; }
+:root { --stick: calc(64px + env(safe-area-inset-top)); --stick2: var(--stick); }
+.sh { position: sticky; top: var(--stick2); z-index: 3; margin: 10px calc(50% - 50vw) 2px; padding: 4px calc(50vw - 50% + 2px) 3px; transform: translateY(var(--ty, 0px)); clip-path: inset(max(0px, calc(-1 * var(--ty, 0px))) 0 0 0); }
+.sh.lv1 { top: var(--stick); z-index: 4; }
+/* the frost behind the stack: one bar, sized by stickyHeads() (--fh); it fades in with the first stuck heading and grows with the stack.
+   A zero-height sticky element at the top of the body, so it moves with the page in the rubber-band at the end, as the headings do. */
+#frost { position: sticky; top: calc(var(--stick) - 1px); height: 0; z-index: 2; pointer-events: none; }
+#frost::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--fh, 1px); background: var(--bar); backdrop-filter: var(--frost-3); -webkit-backdrop-filter: var(--frost-3); opacity: 0; transition: height .2s, opacity .2s; }
+#frost.on::before { opacity: 1; }  /* at rest the strip is invisible: on hero pages it would otherwise draw a hairline across the hero */
+#frost.now::before { transition: height .12s, opacity .12s; }

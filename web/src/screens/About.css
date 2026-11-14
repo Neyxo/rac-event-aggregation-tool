@@ -1,0 +1,32 @@
+/* about: the morph */
+.about .track { height: 340vh; position: relative; margin: 0 -16px; }
+html:has(.about .track) { scroll-snap-type: y proximity; }
+.about .snap { position: absolute; left: 0; width: 1px; height: 1px; top: calc(var(--at) * (340vh - 100dvh)); scroll-snap-align: start; }  /* About.tsx MIDS */
+.about .stage { position: sticky; top: 63px; height: calc(100dvh - 63px - var(--tabs, calc(64px + env(safe-area-inset-bottom)))); padding: 20px 16px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; background: linear-gradient(180deg, color-mix(in srgb, var(--p, #d41367) 12%, transparent), transparent 70%); transition: background .5s; }
+.about .prog { position: absolute; right: 16px; top: 18px; display: flex; gap: 5px; }
+.about .prog i { width: 6px; height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--text) 28%, transparent); transition: background .3s, width .3s; }
+.about .prog i.on { background: var(--p); width: 18px; }
+.about .words { display: flex; flex-direction: column; gap: 4px; }
+.about .w { color: var(--p); transition: all .45s cubic-bezier(.4, 0, .2, 1); }
+.about .word { font-size: clamp(2.2rem, 9vw, 3.4rem); font-weight: 800; letter-spacing: -.06em; line-height: .95; transition: font-size .55s cubic-bezier(.4, 0, .2, 1), opacity .4s; opacity: .45; }
+.about .words.closed .word { font-size: clamp(3rem, 13vw, 4.4rem); opacity: 1; }
+.about .w.on .word { font-size: clamp(3rem, 13vw, 4.4rem); opacity: 1; }
+.about .open { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s cubic-bezier(.4, 0, .2, 1); }
+.about .open > * { overflow: hidden; min-height: 0; }
+.about .w.on .open { grid-template-rows: 1fr; }
+.about .open .pic { height: 0; transition: height .55s cubic-bezier(.4, 0, .2, 1), margin .55s; } .about .w.on .open .pic { height: min(34vh, 260px); margin: 10px 0 10px; }
+.about .open .pic img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; box-shadow: var(--shadow); display: block; }
+.about .open p { margin: 0 0 6px; color: var(--text); font-size: 1.05rem; line-height: 1.4; }
+.about .hint { position: absolute; left: 0; right: 0; bottom: 14px; text-align: center; font-size: .76rem; color: var(--muted); }
+.about .hint i { display: block; font-style: normal; animation: bob 1.4s infinite; }
+@keyframes bob { 50% { transform: translateY(4px); } }
+.about .after { padding-top: 24px; }
+.about .after h2 { font-size: 1.4rem; margin: 0 0 4px; } .about .after .lead { color: var(--muted); margin: 0; }
+.qa details { border-top: 1px solid var(--line); padding: 10px 0; }
+.qa summary { font-weight: 650; font-size: 1.02rem; list-style: none; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.qa summary::after { content: "+"; color: var(--accent); font-size: 1.3rem; transition: transform .2s; }
+.qa details[open] summary::after { transform: rotate(45deg); }
+.qa details p { margin: 8px 0 0; color: var(--muted); animation: fade .25s ease-out; }
+@media (prefers-reduced-motion: reduce) { .about .track { height: auto; } .about .snap { display: none; } .about .stage { position: static; height: auto; } .about .word { opacity: 1; } }
+/* the Learn / Help / Celebrate words open on a tap too */
+.about .word { cursor: pointer; }

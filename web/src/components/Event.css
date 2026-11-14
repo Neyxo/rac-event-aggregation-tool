@@ -1,0 +1,40 @@
+/* skeletons */
+.skel { display: grid; grid-template-columns: 54px 1fr; gap: 12px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px; }
+.skel .b { background: linear-gradient(90deg, var(--surface-2) 25%, var(--line) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; }
+.skel .d { height: 54px; } .skel .t { height: 18px; width: 70%; margin-bottom: 8px; } .skel .m { height: 12px; width: 50%; margin-bottom: 6px; } .skel .s { width: 35%; }
+
+/* event card: colour wash into the club colour, the crest under a frosted date pane, one meta line, picture, star. The card is a link. */
+.event { position: relative; overflow: hidden; display: grid; grid-template-columns: 54px 1fr auto; gap: 12px; align-items: start; text-decoration: none; color: var(--text); background: linear-gradient(110deg, color-mix(in srgb, var(--c) 14%, var(--surface)), var(--surface) 46%); border-radius: 14px; box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px; animation: rise .35s ease-out both; animation-delay: calc(var(--i, 0) * 35ms); transition: transform .2s ease, box-shadow .2s ease; }
+.event:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(31,28,38,.06), 0 12px 24px -10px color-mix(in srgb, var(--c) 45%, transparent); }
+.event > * { position: relative; }
+.event .wm, .evdetail .wm { position: absolute; left: -12px; bottom: -24px; width: 100px; height: 100px; object-fit: contain; opacity: .28; transform: rotate(-10deg); pointer-events: none; -webkit-mask-image: linear-gradient(#000 55%, transparent), linear-gradient(90deg, #000 40%, transparent 92%); mask-image: linear-gradient(#000 55%, transparent), linear-gradient(90deg, #000 40%, transparent 92%); -webkit-mask-composite: source-in; mask-composite: intersect; }
+@media (max-width: 400px) { .event .wm { width: 84px; height: 84px; left: -14px; } }
+.event .date, .evdetail .date { text-align: center; border-radius: 10px; padding: 6px 0; min-width: 54px; height: fit-content; color: color-mix(in srgb, var(--c) 80%, #000); position: relative; box-shadow: inset 0 1px 0 var(--glass-hi), 0 6px 14px -8px color-mix(in srgb, var(--c) 80%, #000); }
+.event .date::after, .evdetail .date::after { content: ""; position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(180deg, rgba(255,255,255,.3), transparent 55%); pointer-events: none; }
+.event .date.glass { backdrop-filter: none; -webkit-backdrop-filter: none; }  /* the veil stays; one filter per card is enough on long lists */
+:root[data-theme=dark] .event .date, :root[data-theme=dark] .evdetail .date { color: #fff; }
+.event .date b, .evdetail .date b { display: block; font-size: 1.35rem; line-height: 1.05; }
+.event .date span, .evdetail .date span { font-size: .68rem; text-transform: uppercase; font-weight: 700; color: var(--c); }
+:root[data-theme=dark] .event .date span { color: #fff; opacity: .85; }
+.event .body { min-width: 0; }
+.event h4 { margin: 0 0 3px; font-size: 1.04rem; line-height: 1.28; font-weight: 650; }
+.meta { color: var(--muted); font-size: .86rem; }
+.event .meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 6px; }
+/* status: icon (or dot) and coloured text. No box, so it can't be taken for a button. */
+.st { display: inline-flex; align-items: center; gap: 4px; font-size: .76rem; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.st svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; } .st i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.st.soon, .st.bad { color: var(--danger); } .st.new { color: var(--accent); }
+.side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.thumb { width: 84px; height: 62px; object-fit: cover; border-radius: 10px; background: var(--surface-2); display: block; }
+.star { background: none; border: 0; padding: 2px; color: var(--muted); line-height: 1; transition: transform .12s; }
+.star svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.star[aria-pressed=true] { color: #e8a317; } .star[aria-pressed=true] svg { fill: currentColor; } .star:active { transform: scale(1.3); }
+.cancelled h4 { text-decoration: line-through; color: var(--muted); }
+.empty { text-align: center; color: var(--muted); padding: 36px 12px; background: var(--surface); border-radius: 14px; box-shadow: var(--shadow); }
+.empty .linkbtn { margin-top: 10px; background: var(--surface-2); }
+/* 40px tap targets without changing the visual size: an invisible extender around small controls */
+.star, .chip, .summary .clear, .toast button, .calwrap .mhead > button { position: relative; }
+.star::after, .chip::after, .summary .clear::after, .toast button::after, .calwrap .mhead > button::after { content: ""; position: absolute; inset: -7px; }
+.chip::after { inset: -4px 0 -2px; } .summary .clear::after { inset: -5px -8px; } .calwrap .mhead > button::after { inset: -2px -6px; }  /* chip: 2px below is all the scrolling .row has */
+@media (max-width: 600px) { .event { grid-template-columns: 50px 1fr auto; gap: 10px; } .thumb { width: 72px; height: 56px; } }

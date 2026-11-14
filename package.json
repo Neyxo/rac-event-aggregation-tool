@@ -1,6 +1,8 @@
 {
   "name": "rotaract-events",
   "private": true,
+  "homepage": "https://neyxo.github.io/rotaract-events/",
+  "repository": "https://github.com/Neyxo/rotaract-events",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -34,6 +36,6 @@
     "vite": "^8.3.8",
     "vitest": "^5.1.0"
   },
-  "version": "0.14.1",
+  "version": "0.14.2",
   "license": "PolyForm-Noncommercial-1.0.0"
 }

@@ -1,6 +1,6 @@
 # Design rules
 
-One look per kind of element, so it is always clear what can be pressed. Loosely after Material Design. Sizes are tokens in `:root` of `web/src/app.css`.
+One look per kind of element, so it is always clear what can be pressed. Loosely after Material Design. Sizes are tokens in `:root` of `web/src/styles/base.css`.
 
 ## Controls
 

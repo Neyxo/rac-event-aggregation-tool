@@ -1,0 +1,23 @@
+/* event page */
+.evpage { padding-top: 16px; }
+.evdetail { background: var(--surface); border-radius: 18px; box-shadow: var(--shadow); overflow: clip; background-image: linear-gradient(170deg, color-mix(in srgb, var(--c) 12%, var(--surface)), var(--surface) 40%); animation: rise .35s ease-out both; }
+.evdetail .hero { position: relative; overflow: hidden; height: min(56vw, 340px); } .evdetail .hero img { position: relative; width: 100%; height: 100%; object-fit: contain; display: block; }
+.evdetail .hero .blur { position: absolute; inset: 0; object-fit: cover; filter: blur(18px) brightness(.85); transform: scale(1.25); }
+.evdetail .head { --m: 0; position: sticky; height: 64px; display: grid; grid-template-columns: calc(54px - var(--m) * 16px) 1fr auto; gap: 12px; align-items: start; padding: calc(16px - var(--m) * 8px) 16px 0; background: color-mix(in srgb, var(--surface) calc(min(1, var(--m) * 20) * 100%), transparent); box-shadow: 0 10px 18px -14px rgba(0,0,0, calc(var(--m) * .5)); }
+.evdetail .head > * { position: relative; }  /* the .go below takes position: absolute back */ .evdetail .wm { position: absolute; top: 20px; opacity: calc(.28 * (1 - var(--m))); }
+.evdetail .date { transform-origin: top left; transform: scale(calc(1 - var(--m) * .3)); }
+.evdetail .head .tags { max-height: calc(34px * (1 - var(--m))); opacity: calc(1 - var(--m) * 1.5); overflow: hidden; margin-top: calc(6px * (1 - var(--m))); }
+.evdetail .head .star { opacity: calc(1 - var(--m) * 1.5); }
+.evdetail .head > div:not(.date) { min-width: 0; padding-right: calc(var(--m) * 8px); }
+.evdetail .head.on h1, .evdetail .head.on .meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.evdetail .head .go { position: absolute; left: calc(16px + var(--m) * (100% - 66px)); background: var(--accent); color: var(--on-accent); }
+.evdetail .head .go svg { width: 15px; height: 15px; }
+.evdetail h1 { margin: 0 0 4px; font-size: calc(1.35rem - var(--m) * .4rem); line-height: 1.25; max-height: calc(1.25em * (4 - var(--m) * 3)); overflow: hidden; }
+.evdetail .links { flex-wrap: nowrap; gap: 6px; padding: 12px 16px 0; margin-top: calc(var(--bt, 76px) - 76px); }  /* the head is 64px; its content and the button at rest reach --bt - 12px */
+.evdetail .desc { white-space: pre-line; padding: 2px 16px 16px; margin: 0; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: .92rem; padding: 14px 16px 16px; margin: 0; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; white-space: pre-line; } .kv dd.soon { color: var(--danger); font-weight: 600; }
+.kv dd svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; vertical-align: -2px; margin-right: 4px; }
+/* the event's three buttons stay on one line down to small phones */
+.evdetail .links > a, .evdetail .links > button { padding: 0 12px; white-space: nowrap; }
+@media (max-width: 359px) { .evdetail .links { flex-wrap: wrap; } }

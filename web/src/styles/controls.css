@@ -1,0 +1,30 @@
+.chip { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; height: var(--h-chip); border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: var(--r-chip); padding: 0 10px; font-size: .8rem; font-weight: 600; line-height: 1; white-space: nowrap; text-decoration: none; transition: transform .12s, background .15s, border-color .15s, color .15s; }
+.chip:hover { border-color: var(--muted); } .chip:active { transform: scale(.95); }
+.chip[aria-pressed=true] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.chip.district[aria-pressed=true] { background: var(--azure); border-color: var(--azure); color: var(--on-accent); }
+.chip .dot { width: 10px; height: 10px; border-radius: 99px; background: var(--c); flex: 0 0 auto; }
+.chip img { width: 16px; height: 16px; object-fit: contain; } .chip svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; } .chip small { font-weight: 500; color: var(--muted); font-size: .72rem; }
+.chip[aria-pressed=true]::before { content: "✓"; font-weight: 800; }  /* a selected chip is filled and checked */
+.chip.club { border-color: color-mix(in srgb, var(--c) 35%, var(--surface)); } a.chip:hover { border-color: var(--c, var(--muted)); } .chip.main { outline: 1.5px solid var(--c); }
+.chip.club[aria-pressed=true] { background: var(--c); border-color: var(--c); color: var(--on-c); box-shadow: 0 4px 12px -4px color-mix(in srgb, var(--c) 70%, transparent); }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+.tools select, .tools input { font: inherit; font-size: .92rem; height: var(--h-btn); padding: 0 14px; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); color: var(--text); }
+.tools input { width: 170px; }
+.hint { font-size: .8rem; color: var(--muted); width: 100%; }
+.seg { display: inline-flex; min-height: var(--h-btn); border: 1px solid var(--line); border-radius: 99px; overflow: hidden; background: var(--surface); } .seg[hidden] { display: none; }
+.seg button { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: none; border: 0; padding: 0 14px; font-size: .88rem; font-weight: 600; transition: transform .12s, background .15s; }
+/* never wider than its place, whatever the font: the options share what there is, tighter on the narrowest phones */
+.seg { max-width: 100%; } .seg button { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+@media (max-width: 359px) { .seg button { padding: 0 8px; } }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed=true], .seg button[aria-selected=true] { background: var(--accent); color: var(--on-accent); }
+.seg button:active { transform: scale(.96); }
+.seg button:focus-visible { outline-offset: -2px; }
+.seg button[aria-pressed=true]:focus-visible, .seg button[aria-selected=true]:focus-visible { outline-color: var(--on-accent); }
+#installBody .seg { margin: 10px 0 4px; }
+.seg button svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px; margin-right: 5px; }
+.summary { display: flex; justify-content: space-between; align-items: center; gap: 10px; color: var(--muted); font-size: .9rem; margin: 14px 2px 8px; }
+.summary .r { display: flex; align-items: center; gap: 12px; }
+.summary .clear { background: none; border: 0; color: var(--accent); padding: 0; font-weight: 600; }
+h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin: 22px 2px 8px; }
+@media (max-width: 600px) { .tools input { width: 100%; } }
