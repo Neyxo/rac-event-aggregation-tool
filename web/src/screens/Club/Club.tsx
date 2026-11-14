@@ -1,6 +1,6 @@
 // A club: sticky compacting head (crest, name, subscribe), colour block with the site / social / share buttons, next event, about,
 // news, projects, photos, more events. An unknown id lists all clubs.
-import { useLayoutEffect, useRef, useState, type MouseEvent } from "react";
+import { useLayoutEffect, useRef, useState, type MouseEvent, type RefObject } from "react";
 import type { ScreenProps } from "../../App";
 import { BE, setLang, t } from "../../i18n";
 import { freshNews } from "../../lib/data";
@@ -8,7 +8,7 @@ import { clubVars, DISTRICTS, isDistrict } from "../../lib/color";
 import { isPast } from "../../lib/dates";
 import { href } from "../../lib/route";
 import { shareUrl } from "../../lib/share";
-import type { Club as ClubT, Partner } from "../../lib/types";
+import type { Club as ClubT, Event as Ev, Partner } from "../../lib/types";
 import {
   ClubChip,
   EventCard,
@@ -142,52 +142,34 @@ function Photos({ c, pastPics }: { c: ClubT; pastPics: { src: string; href: stri
   );
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 21 of 15 when the rule came in; to be split up
-export default function Club({ route }: ScreenProps) {
-  const D = useData();
-  const c = D.clubs[route.params.id];
-  const hero = useRef<HTMLDivElement>(null);
-  const [sub, setSub] = useState(false);
-  useWash(c?.color, c?.color, c?.color);
-  useTitle(c?.name);
-  // the colour block drifts up a touch faster than the page: a subtle parallax that shows off the frosting
+/** the colour block drifts up a touch faster than the page: a subtle parallax that shows off the frosting */
+function useDrift(hero: RefObject<HTMLDivElement | null>): void {
   const drift = () => {
     if (hero.current && !matchMedia("(prefers-reduced-motion: reduce)").matches)
       hero.current.style.transform = `translateY(${-(scrollY * 0.12).toFixed(1)}px)`;
   };
   useEventListener("scroll", drift);
-  useLayoutEffect(drift, [c]);
+  useLayoutEffect(drift, [hero]);
+}
 
-  // Easter egg: seven taps on the Bern crest switch Bärndütsch on (and off again). A mouse/touch extra on purpose, so the crest
-  // stays a plain image for screen readers and the keyboard.
+/** Easter egg: seven taps on the Bern crest switch Bärndütsch on (and off again). A mouse/touch extra on purpose, so the crest
+ *  stays a plain image for screen readers and the keyboard. Returns the crest's click handler; none for another club. */
+function useBernTaps(isBern: boolean): ((ev: MouseEvent<HTMLImageElement>) => void) | undefined {
   const taps = useRef(0);
-  const bear =
-    c?.id === "bern"
-      ? (ev: MouseEvent<HTMLImageElement>) => {
-          if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
-            ev.currentTarget.animate?.([{ rotate: "-10deg" }, { rotate: "10deg" }, { rotate: "0deg" }], 250);
-          if (++taps.current < 7) return;
-          taps.current = 0;
-          toast(BE ? "Adieu, merci!" : "Äuä!");
-          setTimeout(() => setLang("de", !BE), 900); // long enough to read the toast; setLang reloads
-        }
-      : undefined;
+  if (!isBern) return undefined;
+  return (ev) => {
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+      ev.currentTarget.animate?.([{ rotate: "-10deg" }, { rotate: "10deg" }, { rotate: "0deg" }], 250);
+    if (++taps.current < 7) return;
+    taps.current = 0;
+    toast(BE ? "Adieu, merci!" : "Äuä!");
+    setTimeout(() => setLang("de", !BE), 900); // long enough to read the toast; setLang reloads
+  };
+}
 
-  if (!c) {
-    return (
-      <main className="wrap clubpage">
-        <h1>{t("clubs")}</h1>
-        {D.data.clubs.map((x) => (
-          <p key={x.id}>
-            <a href={href("club", x.id)}>{x.name}</a>
-          </p>
-        ))}
-      </main>
-    );
-  }
-
-  const upcoming = D.data.events.filter((e) => e.clubs.includes(c.id) && !isPast(e));
-  const next = upcoming[0];
+/** what follows "About this club": news, projects, pictures, more events, each only when there is something to show */
+function Sections({ c, upcoming }: { c: ClubT; upcoming: Ev[] }) {
+  const D = useData();
   const pastPics = D.data.events
     .filter((e) => e.clubs.includes(c.id) && e.image && isPast(e))
     .slice(-6)
@@ -195,6 +177,53 @@ export default function Club({ route }: ScreenProps) {
   const hasPhotos = (c.instagram || []).length > 0 || (c.photos?.length ? c.photos.length : pastPics.length) > 0;
   const news = freshNews(c);
   const projects = c.projects || [];
+  return (
+    <>
+      {news.length ? <Sh>{t("news")}</Sh> : null}
+      {news.length ? <NewsStrip items={news} /> : null}
+      {/* projects are not filtered by age like news: a club's projects stay its projects */}
+      {projects.length ? <Sh>{t("projects")}</Sh> : null}
+      {projects.length ? <NewsStrip items={projects} /> : null}
+      {hasPhotos ? <Sh>{t("photos")}</Sh> : null}
+      {hasPhotos ? <Photos c={c} pastPics={pastPics} /> : null}
+      {upcoming.length > 1 ? <Sh>{t("more_events")}</Sh> : null}
+      {upcoming.slice(1, 8).map((e, i) => (
+        <EventCard key={e.id} e={e} i={i} />
+      ))}
+    </>
+  );
+}
+
+/** an unknown club id: the list of all clubs */
+function ClubList() {
+  const D = useData();
+  return (
+    <main className="wrap clubpage">
+      <h1>{t("clubs")}</h1>
+      {D.data.clubs.map((x) => (
+        <p key={x.id}>
+          <a href={href("club", x.id)}>{x.name}</a>
+        </p>
+      ))}
+    </main>
+  );
+}
+
+export default function Club({ route }: ScreenProps) {
+  const c = useData().clubs[route.params.id];
+  return c ? <ClubPage c={c} /> : <ClubList />;
+}
+
+function ClubPage({ c }: { c: ClubT }) {
+  const D = useData();
+  const hero = useRef<HTMLDivElement>(null);
+  const [sub, setSub] = useState(false);
+  useWash(c.color, c.color, c.color);
+  useTitle(c.name);
+  useDrift(hero);
+  const bear = useBernTaps(c.id === "bern");
+  const upcoming = D.data.events.filter((e) => e.clubs.includes(c.id) && !isPast(e));
+  const next = upcoming[0];
   const national = c.source ? null : t("national");
   const subLine = [isDistrict(c.district) ? t(DISTRICTS[c.district].key) : national, c.city]
     .filter(Boolean)
@@ -241,17 +270,7 @@ export default function Club({ route }: ScreenProps) {
       )}
       {c.source === "international" ? <HelpLinks keys={["intl"]} /> : null}
       <About c={c} />
-      {news.length ? <Sh>{t("news")}</Sh> : null}
-      {news.length ? <NewsStrip items={news} /> : null}
-      {/* projects are not filtered by age like news: a club's projects stay its projects */}
-      {projects.length ? <Sh>{t("projects")}</Sh> : null}
-      {projects.length ? <NewsStrip items={projects} /> : null}
-      {hasPhotos ? <Sh>{t("photos")}</Sh> : null}
-      {hasPhotos ? <Photos c={c} pastPics={pastPics} /> : null}
-      {upcoming.length > 1 ? <Sh>{t("more_events")}</Sh> : null}
-      {upcoming.slice(1, 8).map((e, i) => (
-        <EventCard key={e.id} e={e} i={i} />
-      ))}
+      <Sections c={c} upcoming={upcoming} />
       <div className="links center">
         <a href={href("discover", null, "clubs=" + c.id)}>
           <Icon name="discover" />

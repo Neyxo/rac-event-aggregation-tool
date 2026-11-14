@@ -231,52 +231,70 @@ export default function Home({ route }: ScreenProps) {
   return toDiscover ? null : <HomeScreen key={id} route={route} />;
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 19 of 15 when the rule came in; to be split up
+/** The welcome steps: on the first visit (in the browser too: there the welcome starts with the app) and when the app was opened
+ *  with ?welcome, but not on a shared link. Returns the run counter for <Onboarding> and what starts them again. */
+function useWelcome(query: URLSearchParams): [number, () => void] {
+  const [run, setRun] = useState(0);
+  useEffect(() => {
+    const shared = [...query.keys()].some((k) => k !== "lang" && k !== "welcome");
+    if (takeWelcome() || (!shared && !store.get("rac.onboarded", false))) setRun(1);
+  }, []);
+  return [run, () => setRun((n) => n + 1)];
+}
+
+/** What changed in my clubs since the last visit (null for a guest), and the visit is remembered. Computed once per set of clubs:
+ *  remembering the visit would change the answer for a redraw. */
+function useChanges(mine: string[]): Changes | null {
+  const D = useData();
+  const changes = useMemo(() => {
+    if (!mine.length) return null;
+    const seen = store.get("rac.seen", null);
+    const seenPrev = store.get("rac.seenPrev", null);
+    return whatChanged(mineEvents(D.data.events, mine), seen, seenPrev, Date.now(), !!devFlag("New"));
+  }, [mine.join()]);
+  useEffect(() => {
+    if (changes?.seenPrev) store.set("rac.seenPrev", changes.seenPrev);
+    if (changes?.seen) store.set("rac.seen", changes.seen);
+  }, [changes]);
+  return changes;
+}
+
+/** The four latest news teasers of these clubs, under their heading; nothing when there are none. A fragment on purpose: in the
+ *  main flow next to the list title, not in a wrapper, the heading stays stuck until the title pushes it. */
+function HomeNews({ clubs }: { clubs: string[] }) {
+  const news = clubs
+    .flatMap((id) => freshNews(club(id)))
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 4);
+  if (!news.length) return null;
+  return (
+    <>
+      <Sh className="hn">{t("news")}</Sh>
+      <NewsStrip items={news} className="strip teasers hn" />
+    </>
+  );
+}
+
+/** The list's title. A member's is fixed. A guest's is only decided in the "upcoming" view (found); the saved view keeps the
+ *  last one, so it doesn't flip to a generic title. */
+function useListTitle(member: boolean, found: "explore_near" | "home_soon" | null | undefined): string {
+  const guestTitle = useRef<"v_all" | "explore_near" | "home_soon">("v_all");
+  if (found) guestTitle.current = found;
+  return member ? t("home_soon") : t(guestTitle.current);
+}
+
 function HomeScreen({ route }: ScreenProps) {
   const D = useData();
   const mine = myClubs();
   const member = mine.length > 0;
   const api = useFilters(route.query, "home", (f) => (member ? f : { ...f, center: here.get() }));
-  const [obRun, setObRun] = useState(0);
-  // a guest's list title is only decided in the "upcoming" view; the saved view keeps the last one, so it doesn't flip to a generic title
-  const guestTitle = useRef<"v_all" | "explore_near" | "home_soon">("v_all");
-
-  useEffect(() => {
-    const shared = [...route.query.keys()].some((k) => k !== "lang" && k !== "welcome");
-    // the first visit, in the browser too: there the welcome starts with the app
-    if (takeWelcome() || (!shared && !store.get("rac.onboarded", false))) setObRun(1);
-  }, []);
-
-  // what changed since the last visit: computed once per set of clubs (store writes below would change the answer for a redraw)
-  const mineKey = mine.join();
-  const changes = useMemo(
-    () =>
-      member
-        ? whatChanged(
-            mineEvents(D.data.events, mine),
-            store.get("rac.seen", null),
-            store.get("rac.seenPrev", null),
-            Date.now(),
-            !!devFlag("New"),
-          )
-        : null,
-    [mineKey],
-  );
-  useEffect(() => {
-    if (changes?.seenPrev) store.set("rac.seenPrev", changes.seenPrev);
-    if (changes?.seen) store.set("rac.seen", changes.seen);
-  }, [changes]);
+  const [obRun, startWelcome] = useWelcome(route.query);
+  const changes = useChanges(mine);
   const mineEv = member ? mineEvents(D.data.events, mine) : [];
   const main = D.settings.home || mine[0] || "";
   const cols = member ? [main, ...mine.filter((id) => id !== main)] : [];
   useWash(...cols.slice(0, 3).map((id) => club(id).color), member && BRAND.cranberry, member && BRAND.azure);
 
-  const news = member
-    ? mine
-        .flatMap((id) => freshNews(club(id)))
-        .sort((a, b) => b.date.localeCompare(a.date))
-        .slice(0, 4)
-    : [];
   const f = api.shown;
   const skip = member ? mineEv[0]?.id : undefined;
   const res = f
@@ -289,8 +307,7 @@ function HomeScreen({ route }: ScreenProps) {
         club,
       })
     : null;
-  if (res?.title) guestTitle.current = res.title;
-  const title = member ? t("home_soon") : t(guestTitle.current);
+  const title = useListTitle(member, res?.title);
   // the cards tag the events new since the last visit, here only: Discover, Calendar or a club screen tag nothing
   return (
     <NewIds.Provider value={changes?.newIds ?? NOTHING_NEW}>
@@ -298,14 +315,10 @@ function HomeScreen({ route }: ScreenProps) {
       <main className="wrap" id="main">
         <div className="home">
           {changes ? <MemberBox cols={cols} mineEv={mineEv} changes={changes} /> : null}
-          {!member ? (
-            <ExploreBox onStart={() => setObRun((n) => n + 1)} onPlace={(pos) => api.update({ center: pos }, true)} />
-          ) : null}
+          {!member ? <ExploreBox onStart={startWelcome} onPlace={(pos) => api.update({ center: pos }, true)} /> : null}
           <ReviewOffer member={member} />
         </div>
-        {/* in the main flow next to the list title, not in a wrapper: the heading then stays stuck until the title pushes it */}
-        {news.length ? <Sh className="hn">{t("news")}</Sh> : null}
-        {news.length ? <NewsStrip items={news} className="strip teasers hn" /> : null}
+        <HomeNews clubs={mine} />
         <ListHead
           titleId="listTitle"
           title={title}

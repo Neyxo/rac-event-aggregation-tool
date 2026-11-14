@@ -402,7 +402,37 @@ const appCommit = __APP_COMMIT__ ? `commit ${__APP_COMMIT__}` : "local build";
 
 /** Everything at a glance: one overall state, the app and its data (each with its own age), the run history as dots, and what is
  *  wrong in this build. Details are on the pages. */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 21 of 15 when the rule came in; to be split up
+/** The runs' history: the strip of runs and its one line. While it loads or can't be read, a note saying so; nothing for a local
+ *  build, which has no runs of its own. */
+function RunsState({
+  runs,
+  health,
+  fromGh,
+  failed,
+}: {
+  runs: GhRunRow[] | null;
+  health: ReturnType<typeof runHealth> | null;
+  fromGh: boolean;
+  failed: boolean;
+}) {
+  if (runs && health)
+    return (
+      <>
+        <Strip runs={runs} />
+        <p className={cx("devstate", health.level)}>
+          <i />
+          {health.text}
+        </p>
+      </>
+    );
+  if (!fromGh) return null;
+  return (
+    <p className="meta">
+      {failed ? "The runs could not be read from GitHub (offline or rate limit)." : "Loading the runs…"}
+    </p>
+  );
+}
+
 function Health({ st }: { st: Stat }) {
   const fromGh = !!st.run?.startsWith("https://github.com/"); // a local build has no runs of its own: no request
   const r = useGh<{ workflow_runs: GhRunRow[] }>(fromGh ? RUNS : null);
@@ -426,21 +456,7 @@ function Health({ st }: { st: Stat }) {
         <i />
         {`Data · read ${stampAgo(gen)}` + (st.commit ? ` · by the run of commit ${st.commit}` : " · by a local run")}
       </p>
-      {runs && h ? (
-        <>
-          <Strip runs={runs} />
-          <p className={cx("devstate", h.level)}>
-            <i />
-            {h.text}
-          </p>
-        </>
-      ) : (
-        fromGh && (
-          <p className="meta">
-            {r === "error" ? "The runs could not be read from GitHub (offline or rate limit)." : "Loading the runs…"}
-          </p>
-        )
-      )}
+      <RunsState runs={runs} health={h} fromGh={fromGh} failed={r === "error"} />
       {st.failures.length ? (
         <pre className="devfail">{st.failures.join("\n")}</pre>
       ) : (
@@ -666,20 +682,18 @@ function DeviceInfo({ dev }: { dev: Device }) {
 }
 
 /** keys of English (and one level of sub-keys) that a language lacks; the types make this rare, the JSON-ish data can still miss */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 19 of 15 when the rule came in; to be split up
-function missingTexts(): string[] {
-  const missing: string[] = [];
-  for (const l of ["de", "fr", "it"] as const) {
-    const dict = I18N[l] as Record<string, unknown>;
-    for (const [k, v] of Object.entries(I18N.en)) {
-      if (!(k in dict)) missing.push(`${l}: ${k}`);
-      else if (v && typeof v === "object" && !Array.isArray(v)) {
-        for (const sub of Object.keys(v)) if (!(sub in (dict[k] as object))) missing.push(`${l}: ${k}.${sub}`);
-      }
-    }
-  }
-  return missing;
+/** the keys of English, and of its nested groups, that one language lacks: "de: key", "de: group.key" */
+function missingIn(l: "de" | "fr" | "it"): string[] {
+  const dict = I18N[l] as Record<string, unknown>;
+  return Object.entries(I18N.en).flatMap(([k, v]) => {
+    if (!(k in dict)) return [`${l}: ${k}`];
+    if (!v || typeof v !== "object" || Array.isArray(v)) return [];
+    return Object.keys(v)
+      .filter((sub) => !(sub in (dict[k] as object)))
+      .map((sub) => `${l}: ${k}.${sub}`);
+  });
 }
+const missingTexts = (): string[] => (["de", "fr", "it"] as const).flatMap(missingIn);
 
 /** what a club could fix on Polaris, and texts that are missing in a language */
 function Checks({ own, up }: { own: Event[]; up: Event[] }) {

@@ -1,7 +1,7 @@
 // Adding a calendar: one flow, the same wherever it starts (the welcome steps, Home, a club's page, the calendar help screen).
 // Which calendar, where (Apple, Google, Outlook, a file), then one step per page: where you are now (this browser, a computer, the
 // phone's calendar app), a drawing of what to tap there, one sentence.
-import { useState, type ReactNode } from "react";
+import { useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { t, tx } from "../../i18n";
 import { IOS, PHONE } from "../../lib/geo";
 import { clubVars } from "../../lib/color";
@@ -327,17 +327,8 @@ function syncSteps(os: Os): Step[] {
 /** The steps of one way in. A way that can't work on this device says why and what to do instead, never a tap that does nothing.
  *  via: Google or Outlook on a phone, whose apps can't subscribe: through this phone's browser, or through a computer.
  *  next: an action done. */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 16 of 15 when the rule came in; to be split up
-function stepsFor(
-  way: Way,
-  via: "phone" | "pc" | null,
-  os: Os,
-  setOs: (o: Os) => void,
-  feed: Feed,
-  next: () => void,
-): Step[] {
-  const S = tx("sf");
-  const { https, webcal } = feedUrls(feed.file);
+/** the buttons and the confirming step the ways are built from. next: the action was done */
+function stepParts(next: () => void) {
   const open = (to: string, label: string) => (
     <a
       className="linkbtn primary"
@@ -367,6 +358,21 @@ function stepsFor(
     note,
     vis: <Vis kind="confirm" label={label} phone={ctx === "pc" ? false : PHONE} />,
   });
+  return { open, send, copyBtn, confirm };
+}
+
+function stepsFor(
+  way: Way,
+  via: "phone" | "pc" | null,
+  os: Os,
+  setOs: (o: Os) => void,
+  feed: Feed,
+  next: () => void,
+): Step[] {
+  const S = tx("sf");
+  const { https, webcal } = feedUrls(feed.file);
+  const parts = stepParts(next);
+  const { open, send, confirm } = parts;
   if (way === "ics") {
     const [, s1 = "", s2 = ""] = tx("ics_steps");
     return [
@@ -379,7 +385,20 @@ function stepsFor(
     return apple()
       ? [{ action: open(webcal, S.a_open) }, confirm(S.a_confirm, S.ui_sub)]
       : [{ text: t("apple_na"), warn: true, dead: true, action: send(feed.name, https) }];
-  // Google and Outlook are web pages: the address that subscribes, its opening button, the confirming step, what follows it
+  return webSteps(way, via, os, setOs, feed.name, webcal, parts);
+}
+
+/** Google and Outlook are web pages: the address that subscribes, its opening button, the confirming step, what follows it */
+function webSteps(
+  way: "google" | "outlook",
+  via: "phone" | "pc" | null,
+  os: Os,
+  setOs: (o: Os) => void,
+  name: string,
+  webcal: string,
+  { open, send, copyBtn, confirm }: ReturnType<typeof stepParts>,
+): Step[] {
+  const S = tx("sf");
   const where: Ctx = via === "pc" ? "pc" : "browser";
   const [url, openLabel, sure, after]: [string, string, Step, (o: Os) => Step[]] =
     way === "google"
@@ -390,7 +409,7 @@ function stepsFor(
           syncSteps,
         ]
       : [
-          `https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(feed.name)}`,
+          `https://outlook.live.com/calendar/0/addfromweb?url=${encodeURIComponent(webcal)}&name=${encodeURIComponent(name)}`,
           S.o_open,
           confirm(S.o_confirm, S.ui_import, where),
           () => [],
@@ -467,14 +486,19 @@ const more = (icon: IconName, label: string, onClick: () => void) => (
   </button>
 );
 
+/** one page of the flow: its title, what it shows, where Back goes (none: the first page), its main button */
+interface FlowPage {
+  title: string;
+  body: ReactNode;
+  back?: () => void;
+  primary: ReactNode;
+  finished: boolean;
+}
+
 /** The flow's state, for whatever frames it (a popup, the welcome steps): the title, the content, where Back goes (if anywhere),
  *  the main button (Next / Done; none while a tap on a row moves on), and whether it has reached its end.
  *  start: the calendar it is about, which skips the choice. */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 22 of 15 when the rule came in; to be split up
-export function useSubFlow(
-  feeds: Feed[],
-  { start, pickTitle }: { start?: Feed; pickTitle?: string } = {},
-): { title: string; body: ReactNode; back?: () => void; primary: ReactNode; finished: boolean } {
+export function useSubFlow(feeds: Feed[], { start, pickTitle }: { start?: Feed; pickTitle?: string } = {}): FlowPage {
   const S = tx("sf");
   const D = useData();
   const [feed, setFeed] = useState<Feed | null>(start ?? null);
@@ -578,22 +602,55 @@ export function useSubFlow(
         </div>
       ),
     };
-  const end = () => {
-    setAdded((a) => [...a, feed.file]);
-    setFinished(true);
-  };
+  return stepsPage({
+    way,
+    via,
+    os,
+    setOs,
+    feed,
+    i,
+    setI,
+    // back from the first step: to the choice that led here
+    leave: () => (via ? setVia(null) : setWay(null)),
+    end: () => {
+      setAdded((a) => [...a, feed.file]);
+      setFinished(true);
+    },
+  });
+}
+
+/** The steps of the chosen way, one per page. Back goes a step back, from the first one out of the steps; the button of the last
+ *  step ends the flow. */
+function stepsPage({
+  way,
+  via,
+  os,
+  setOs,
+  feed,
+  i,
+  setI,
+  leave,
+  end,
+}: {
+  way: Way;
+  via: "phone" | "pc" | null;
+  os: Os;
+  setOs: (o: Os) => void;
+  feed: Feed;
+  i: number;
+  setI: Dispatch<SetStateAction<number>>;
+  leave: () => void;
+  end: () => void;
+}): FlowPage {
   // an action on the last step has nowhere to move on to
   const steps: Step[] = stepsFor(way, via, os, setOs, feed, () => setI((n) => Math.min(n + 1, steps.length - 1)));
+  const at = Math.min(i, steps.length - 1);
   const last = i >= steps.length - 1;
-  const s = steps[Math.min(i, steps.length - 1)]!;
+  const s = steps[at]!;
   return {
     title: t(`way_${way}`),
-    finished,
-    back: () => {
-      if (i > 0) setI(i - 1);
-      else if (via) setVia(null);
-      else setWay(null);
-    },
+    finished: false,
+    back: () => (i > 0 ? setI(i - 1) : leave()),
     // a step with a button of its own: that is the thing to tap, Next stays quiet beside it
     primary: s.dead ? null : (
       <button
@@ -604,7 +661,7 @@ export function useSubFlow(
         {last ? t("done") : t("next")}
       </button>
     ),
-    body: <StepView s={s} i={Math.min(i, steps.length - 1)} n={steps.length} />,
+    body: <StepView s={s} i={at} n={steps.length} />,
   };
 }
 

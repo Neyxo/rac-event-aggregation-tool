@@ -90,33 +90,28 @@ export interface ListResult {
   /** a guest's Home: "explore_near" when nearby events were found, else "home_soon"; null elsewhere */
   title: "explore_near" | "home_soon" | null;
 }
+/** what the view itself asks of an event, before any filter: upcoming or past, saved, and not what the screen shows elsewhere */
+function inView(e: Event, f: Filters, ctx: ListCtx, explore: boolean): boolean {
+  if (isPast(e) !== (f.view === "past")) return false;
+  if (f.view === "saved" && !ctx.saved.has(e.id)) return false;
+  if (explore && e.layer === "rotary") return false; // a guest's Home stays Rotaract; Discover, Calendar and Map show the layer
+  return !(f.view === "all" && e.id === ctx.skip);
+}
+/** a guest's Home: the events within 50 km when the place is known and there are any, otherwise all of them; the title says which */
+function guestList(matches: Event[], center: Coords | null): Pick<ListResult, "matches" | "title"> {
+  const near = center ? matches.filter((e) => e.coords && km(center, e.coords) <= 50) : [];
+  return near.length ? { matches: near, title: "explore_near" } : { matches, title: "home_soon" };
+}
 /** the events a list shows for these filters, and what its title and summary line need */
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: scored 34 of 15 when the rule came in; to be split up
 export function selectEvents(events: Event[], f: Filters, ctx: ListCtx): ListResult {
-  let noLocation = 0;
-  let matches: Event[] = [];
   const explore = ctx.page === "home" && !ctx.mine.length;
-  for (const e of events) {
-    const past = isPast(e);
-    if (f.view === "past" ? !past : past) continue;
-    if (f.view === "saved" && !ctx.saved.has(e.id)) continue;
-    if (!baseMatches(e, f, ctx)) continue;
-    if (explore && e.layer === "rotary") continue; // a guest's Home stays Rotaract; Discover, Calendar and Map show the layer
-    if (f.view === "all" && e.id === ctx.skip) continue;
-    if (!withinRadius(e, f)) {
-      if (!e.coords) noLocation++;
-      continue;
-    }
-    matches.push(e);
-  }
-  let title: ListResult["title"] = null;
-  if (explore && f.view === "all") {
-    const near = f.center ? matches.filter((e) => e.coords && km(f.center!, e.coords) <= 50) : [];
-    if (near.length) matches = near;
-    title = near.length ? "explore_near" : "home_soon";
-  }
-  if (f.view === "past") matches.reverse();
-  return { matches, shown: explore && f.view === "all" ? matches.slice(0, 12) : matches, noLocation, explore, title };
+  const guestHome = explore && f.view === "all";
+  const candidates = events.filter((e) => inView(e, f, ctx, explore) && baseMatches(e, f, ctx));
+  const inRadius = candidates.filter((e) => withinRadius(e, f));
+  const noLocation = candidates.filter((e) => !e.coords && !withinRadius(e, f)).length;
+  const list = guestHome ? guestList(inRadius, f.center) : { matches: inRadius, title: null };
+  const matches = f.view === "past" ? [...list.matches].reverse() : list.matches;
+  return { matches, shown: guestHome ? matches.slice(0, 12) : matches, noLocation, explore, title: list.title };
 }
 
 /** filters from a shared link (?q=&d=&clubs=&place=&r=&view=); unknown clubs, districts and views are dropped. center is left to geocoding. */
